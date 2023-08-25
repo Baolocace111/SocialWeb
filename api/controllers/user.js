@@ -12,6 +12,35 @@ export const getUser = (req, res) => {
   });
 };
 
+export const getUsers = (req, res) => {
+  const q = "SELECT * FROM users ORDER BY id DESC LIMIT 5";
+
+  db.query(q, (err, data) => {
+    if (err) return res.status(500).json(err);
+
+    let users = data.map(user => {
+      const { password, ...info } = user;
+      return info;
+    });
+    return res.json(users);
+  });
+};
+
+export const getFollowedUsers = (req, res) => {
+  const userId = req.params.userId;
+  const q = `
+    SELECT users.* 
+    FROM users 
+    INNER JOIN relationships ON users.id = relationships.followedUserId
+    WHERE relationships.followerUserId = ?
+  `;
+
+  db.query(q, [userId], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.json(data);
+  });
+};
+
 export const updateUser = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not authenticated!");
