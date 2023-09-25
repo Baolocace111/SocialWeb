@@ -10,7 +10,7 @@ const Register = () => {
     password: "",
     name: "",
   });
-  const [err, setErr] = useState(null);
+  const [message, setMessage] = useState(null);
 
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -21,12 +21,13 @@ const Register = () => {
 
     try {
       await axios.post("http://localhost:8800/api/auth/register", inputs);
+      setMessage("User has been created!");
     } catch (err) {
-      setErr(err.response.data);
+      setMessage(err.response.data);
     }
   };
 
-  console.log(err)
+  console.log(message)
 
   return (
     <div className="register">
@@ -70,7 +71,7 @@ const Register = () => {
               name="name"
               onChange={handleChange}
             />
-            {err && err}
+            {message && <p>{message}</p>}
             <button onClick={handleClick}>Register</button>
           </form>
         </div>
