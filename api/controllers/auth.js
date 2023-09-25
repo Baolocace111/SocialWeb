@@ -1,66 +1,43 @@
-import { db } from "../connect.js";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import { AuthService } from "../services/AuthService.js";
 
-export const register = (req, res) => {
-  //CHECK USER IF EXISTS
-
-  const q = "SELECT * FROM users WHERE username = ?";
-
-  db.query(q, [req.body.username], (err, data) => {
-    if (err) return res.status(500).json(err);
-    if (data.length) return res.status(409).json("User already exists!");
-    //CREATE A NEW USER
-    //Hash the password
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = bcrypt.hashSync(req.body.password, salt);
-
-    const q =
-      "INSERT INTO users (`username`,`email`,`password`,`name`) VALUE (?)";
-
-    const values = [
+export const register = async (req, res) => {
+  try {
+    const result = await AuthService.register(
       req.body.username,
       req.body.email,
-      hashedPassword,
-      req.body.name,
-    ];
-
-    db.query(q, [values], (err, data) => {
-      if (err) return res.status(500).json(err);
-      return res.status(200).json("User has been created.");
-    });
-  });
+      req.body.password,
+      req.body.name
+    );
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
 };
 
-export const login = (req, res) => {
-  const q = "SELECT * FROM users WHERE username = ?";
-
-  db.query(q, [req.body.username], (err, data) => {
-    if (err) return res.status(500).json(err);
-    if (data.length === 0) return res.status(404).json("User not found!");
-
-    const checkPassword = bcrypt.compareSync(
-      req.body.password,
-      data[0].password
+export const login = async (req, res) => {
+  try {
+    const result = await AuthService.login(
+      req.body.username,
+      req.body.password
     );
-
-    if (!checkPassword)
-      return res.status(400).json("Wrong password or username!");
-
-    const token = jwt.sign({ id: data[0].id }, "secretkey");
-
-    const { password, ...others } = data[0];
-
     res
-      .cookie("accessToken", token)
+      .cookie("accessToken", result.token, {
+        secure: true,
+        sameSite: "none",
+      })
       .status(200)
-      .json(others);
-  });
+      .json(result.user);
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
 };
 
 export const logout = (req, res) => {
-  res.clearCookie("accessToken",{
-    secure:true,
-    sameSite:"none"
-  }).status(200).json("User has been logged out.")
+  res
+    .clearCookie("accessToken", {
+      secure: true,
+      sameSite: "none",
+    })
+    .status(200)
+    .json("User has been logged out.");
 };

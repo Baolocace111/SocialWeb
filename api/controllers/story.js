@@ -1,6 +1,5 @@
-import { db } from "../connect.js";
 import jwt from "jsonwebtoken";
-import moment from "moment";
+import { getStoriesService, addStoryService, deleteStoryService } from "../services/StoryService.js";
 
 export const getStories = (req, res) => {
   const token = req.cookies.accessToken;
@@ -9,14 +8,9 @@ export const getStories = (req, res) => {
   jwt.verify(token, "secretkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
 
-    const userId = userInfo.id; // Truy cập userId từ userInfo
+    const userId = userInfo.id;
 
-    console.log(userId);
-
-    const q = `SELECT s.*, name FROM stories AS s JOIN users AS u ON (u.id = s.userId)
-    LEFT JOIN relationships AS r ON (s.userId = r.followedUserId AND r.followerUserId= ?) LIMIT 4`;
-
-    db.query(q, [userInfo.id], (err, data) => {
+    getStoriesService(userId, (err, data) => {
       if (err) return res.status(500).json(err);
       return res.status(200).json(data);
     });
@@ -30,16 +24,11 @@ export const addStory = (req, res) => {
   jwt.verify(token, "secretkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
 
-    const q = "INSERT INTO stories(`img`, `createdAt`, `userId`) VALUES (?)";
-    const values = [
-      req.body.img,
-      moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-      userInfo.id,
-    ];
+    const userId = userInfo.id;
 
-    db.query(q, [values], (err, data) => {
+    addStoryService(req.body.img, userId, (err, data) => {
       if (err) return res.status(500).json(err);
-      return res.status(200).json("Story has been created.");
+      return res.status(200).json(data);
     });
   });
 };
@@ -51,13 +40,12 @@ export const deleteStory = (req, res) => {
   jwt.verify(token, "secretkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
 
-    const q = "DELETE FROM stories WHERE `id`=? AND `userId` = ?";
+    const userId = userInfo.id;
 
-    db.query(q, [req.params.id, userInfo.id], (err, data) => {
+    deleteStoryService(req.params.id, userId, (err, data) => {
       if (err) return res.status(500).json(err);
-      if (data.affectedRows > 0)
-        return res.status(200).json("Story has been deleted.");
-      return res.status(403).json("You can delete only your story!");
+      if (!data) return res.status(403).json("You can delete only your story!");
+      return res.status(200).json(data);
     });
   });
 };
