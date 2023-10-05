@@ -1248,6 +1248,32 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@fortawesome/fontawesome-common-types@6.4.2":
+  version "6.4.2"
+  resolved "https://registry.npmjs.org/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-6.4.2.tgz"
+  integrity sha512-1DgP7f+XQIJbLFCTX1V2QnxVmpLdKdzzo2k8EmvDOePfchaIGQ9eCHj2up3/jNEbZuBqel5OxiaOJf37TWauRA==
+
+"@fortawesome/fontawesome-svg-core@^6.4.2":
+  version "6.4.2"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-svg-core/-/fontawesome-svg-core-6.4.2.tgz#37f4507d5ec645c8b50df6db14eced32a6f9be09"
+  integrity sha512-gjYDSKv3TrM2sLTOKBc5rH9ckje8Wrwgx1CxAPbN5N3Fm4prfi7NsJVWd1jklp7i5uSCVwhZS5qlhMXqLrpAIg==
+  dependencies:
+    "@fortawesome/fontawesome-common-types" "6.4.2"
+
+"@fortawesome/free-solid-svg-icons@^6.4.2":
+  version "6.4.2"
+  resolved "https://registry.npmjs.org/@fortawesome/free-solid-svg-icons/-/free-solid-svg-icons-6.4.2.tgz"
+  integrity sha512-sYwXurXUEQS32fZz9hVCUUv/xu49PEJEyUOsA51l6PU/qVgfbTb2glsTEaJngVVT8VqBATRIdh7XVgV1JF1LkA==
+  dependencies:
+    "@fortawesome/fontawesome-common-types" "6.4.2"
+
+"@fortawesome/react-fontawesome@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.npmjs.org/@fortawesome/react-fontawesome/-/react-fontawesome-0.2.0.tgz"
+  integrity sha512-uHg75Rb/XORTtVt7OS9WoK8uM276Ufi7gCzshVWkUJbHhh3svsUUeqXerrM96Wm7fRiDzfKRwSoahhMIkGAYHw==
+  dependencies:
+    prop-types "^15.8.1"
+
 "@humanwhocodes/config-array@^0.9.2":
   version "0.9.5"
   resolved "https://registry.npmjs.org/@humanwhocodes/config-array/-/config-array-0.9.5.tgz"
@@ -1498,7 +1524,7 @@
 
 "@mui/material@^5.14.5":
   version "5.14.5"
-  resolved "https://registry.yarnpkg.com/@mui/material/-/material-5.14.5.tgz#4610b381fd159cd208c28e1d1f29c303ea24a518"
+  resolved "https://registry.npmjs.org/@mui/material/-/material-5.14.5.tgz"
   integrity sha512-4qa4GMfuZH0Ai3mttk5ccXP8a3sf7aPlAJwyMrUSz6h9hPri6BPou94zeu3rENhhmKLby9S/W1y+pmficy8JKA==
   dependencies:
     "@babel/runtime" "^7.22.6"
@@ -1916,7 +1942,7 @@
 
 "@types/cookie@^0.3.3":
   version "0.3.3"
-  resolved "https://registry.yarnpkg.com/@types/cookie/-/cookie-0.3.3.tgz#85bc74ba782fb7aa3a514d11767832b0e3bc6803"
+  resolved "https://registry.npmjs.org/@types/cookie/-/cookie-0.3.3.tgz"
   integrity sha512-LKVP3cgXBT9RYj+t+9FDKwS5tdI+rPBXaNSkma7hvqy35lc7mAokC2zsqWJH0LaqIt3B962nuYI77hsJoT1gow==
 
 "@types/eslint-scope@^3.7.3":
@@ -1972,9 +1998,9 @@
     "@types/node" "*"
 
 "@types/hoist-non-react-statics@^3.3.1":
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/@types/hoist-non-react-statics/-/hoist-non-react-statics-3.3.1.tgz#1124aafe5118cb591977aeb1ceaaed1070eb039f"
-  integrity sha512-iMIqiko6ooLrTh1joXodJK5X9xeEALT1kM5G3ZLhD3hszxBdIEd5C75U834D9mLcINgD4OyZf5uQXjkuYydWvA==
+  version "3.3.2"
+  resolved "https://registry.npmjs.org/@types/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz"
+  integrity sha512-YIQtIg4PKr7ZyqNPZObpxfHsHEmuB8dXCxd6qVcGuQVDK2bpsF7bYNnBJ4Nn7giuACZg+WewExgrtAJ3XnA4Xw==
   dependencies:
     "@types/react" "*"
     hoist-non-react-statics "^3.3.0"
@@ -4542,9 +4568,9 @@ fs.realpath@^1.0.0:
   integrity sha1-FQStJSMVjKpA20onh8sBQRmU6k8=
 
 fsevents@^2.3.2, fsevents@~2.3.2:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.2.tgz#8a526f78b8fdf4623b709e0b975c52c24c02fd1a"
-  integrity sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.3.tgz#cac6407785d03675a2a5e1a5305c697b347d90d6"
+  integrity sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==
 
 function-bind@^1.1.1:
   version "1.1.1"
@@ -5666,7 +5692,7 @@ jest@^27.4.3:
 
 js-cookie@^3.0.5:
   version "3.0.5"
-  resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-3.0.5.tgz#0b7e2fd0c01552c58ba86e0841f94dc2557dcdbc"
+  resolved "https://registry.npmjs.org/js-cookie/-/js-cookie-3.0.5.tgz"
   integrity sha512-cEiJEAEoIbWfCZYKWhVwFuvPX1gETRYPw6LlaTKoxD3s2AkXzkCjnp6h0V77ozyqj0jakteJ4YqDJT830+lVGw==
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
@@ -7223,7 +7249,7 @@ react-app-polyfill@^3.0.0:
 
 react-cookie@^5.0.0:
   version "5.0.0"
-  resolved "https://registry.yarnpkg.com/react-cookie/-/react-cookie-5.0.0.tgz#40f04ede144dd60f1e183031cc988907aac703bb"
+  resolved "https://registry.npmjs.org/react-cookie/-/react-cookie-5.0.0.tgz"
   integrity sha512-IAO8ff0SP5QN7NZwiPNMr5P0vuCTE2Zm9ailckJqZOfokMddyZTXwCEHreHQGunj5G+EWhHTzTRl0IHmL04hmg==
   dependencies:
     "@types/hoist-non-react-statics" "^3.3.1"
@@ -8469,7 +8495,7 @@ unique-string@^2.0.0:
 
 universal-cookie@^4.0.0:
   version "4.0.4"
-  resolved "https://registry.yarnpkg.com/universal-cookie/-/universal-cookie-4.0.4.tgz#06e8b3625bf9af049569ef97109b4bb226ad798d"
+  resolved "https://registry.npmjs.org/universal-cookie/-/universal-cookie-4.0.4.tgz"
   integrity sha512-lbRVHoOMtItjWbM7TwDLdl8wug7izB0tq3/YVKhT/ahB4VDvWMyvnADfnJI8y6fSvsjh51Ix7lTGC6Tn4rMPhw==
   dependencies:
     "@types/cookie" "^0.3.3"
