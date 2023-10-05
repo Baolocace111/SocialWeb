@@ -1,8 +1,8 @@
 import mysql from "mysql2"
 
 export const db = mysql.createConnection({
-  host:"localhost",
+  host:"webgameocto.cickmqk0vibg.ap-southeast-2.rds.amazonaws.com",
   user:"root",
-  password:"123456",
+  password:"sbnhizrhthorcecl",
   database:"social"
 })
