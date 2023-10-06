@@ -14,7 +14,7 @@ import { DarkModeContext } from "../../context/darkModeContext";
 import { AuthContext } from "../../context/authContext";
 import { Popover, List, ListItemButton, ListItemText, ListItemIcon } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRightFromBracket, faCircleExclamation, faGear } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRightFromBracket, faCircleExclamation, faGear, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 
 
 const Navbar = () => {
@@ -72,51 +72,50 @@ const Navbar = () => {
         <PersonOutlinedIcon />
         <EmailOutlinedIcon />
         <NotificationsOutlinedIcon />
-        <div className="user">
+        <div className="user" onClick={handleClick} style={{ cursor:"pointer" }}>
           <img
             src={"/upload/" + currentUser.profilePic}
             alt=""
           />
-          <span onClick={handleClick}>{currentUser.name}</span>
-
-          <Popover
-            id={id}
-            open={open}
-            anchorEl={anchorEl}
-            onClose={handleClose}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            style={{ maxWidth: "2000px", paddingLeft: "20px" }}
-          >
-            <List>
-              <ListItemButton>
-                <ListItemIcon style={{ marginRight: '-25px' }}>
-                  <FontAwesomeIcon icon={faGear} />
-                </ListItemIcon>
-                <ListItemText primary="Cài đặt" />
-              </ListItemButton>
-              <ListItemButton>
-                <ListItemIcon style={{ marginRight: '-25px' }}>
-                  <FontAwesomeIcon icon={faCircleExclamation} />
-                </ListItemIcon>
-                <ListItemText primary="Ý kiến" />
-              </ListItemButton>
-              <ListItemButton onClick={handleLogout}>
-                <ListItemIcon style={{ marginRight: '-25px' }}>
-                  <FontAwesomeIcon icon={faArrowRightFromBracket} />
-                </ListItemIcon>
-                <ListItemText primary="Đăng xuất" />
-              </ListItemButton>
-            </List>
-          </Popover>
-
+          <span>{currentUser.name}</span>
+          <FontAwesomeIcon icon={faCaretDown} />
         </div>
+        <Popover
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          style={{ maxWidth: "2000px", paddingLeft: "20px" }}
+        >
+          <List>
+            <ListItemButton>
+              <ListItemIcon style={{ marginRight: '-25px' }}>
+                <FontAwesomeIcon icon={faGear} />
+              </ListItemIcon>
+              <ListItemText primary="Cài đặt" />
+            </ListItemButton>
+            <ListItemButton>
+              <ListItemIcon style={{ marginRight: '-25px' }}>
+                <FontAwesomeIcon icon={faCircleExclamation} />
+              </ListItemIcon>
+              <ListItemText primary="Ý kiến" />
+            </ListItemButton>
+            <ListItemButton onClick={handleLogout}>
+              <ListItemIcon style={{ marginRight: '-25px' }}>
+                <FontAwesomeIcon icon={faArrowRightFromBracket} />
+              </ListItemIcon>
+              <ListItemText primary="Đăng xuất" />
+            </ListItemButton>
+          </List>
+        </Popover>
       </div>
     </div>
   );
