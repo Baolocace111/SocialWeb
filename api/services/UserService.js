@@ -24,6 +24,13 @@ export const getFollowedUsers = (req, res) => {
     return res.json(data);
   });
 };
+export const findUsersByName =(req,res)=>{
+  const name=req.params.name;
+  userModel.findUserByName(name,(err,data)=>{
+    if (err) return res.status(500).json(err);
+    return res.json(data);
+  })
+}
 
 export const updateUser = (req, res) => {
   const token = req.cookies.accessToken;
