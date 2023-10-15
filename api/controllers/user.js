@@ -15,3 +15,6 @@ export const getFollowedUsers = (req, res) => {
 export const updateUser = (req, res) => {
   userService.updateUser(req, res);
 };
+export const findUserByName=(req,res)=>{
+userService.findUsersByName(req,res);
+};

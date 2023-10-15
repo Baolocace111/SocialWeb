@@ -49,7 +49,20 @@ const Navbar = () => {
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
+  const [searchText, setSearchText] = useState('');
 
+  const handleSearch = () => {
+    if (searchText.trim() !== '') {
+      navigate(`/search/${searchText}`);
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  };
+ 
   return (
     <div className="navbar">
       <div className="left">
@@ -64,8 +77,11 @@ const Navbar = () => {
         )}
         <GridViewOutlinedIcon />
         <div className="search">
-          <SearchOutlinedIcon />
-          <input type="text" placeholder="Search..." />
+          <SearchOutlinedIcon onClick={handleSearch} />
+          <input type="text" placeholder="Search..."  
+          value={searchText} 
+          onChange={(e) => setSearchText(e.target.value)}
+        onKeyPress={handleKeyPress}/>
         </div>
       </div>
       <div className="right">

@@ -9,7 +9,19 @@ export const getUserById = (userId, callback) => {
     return callback(null, info);
   });
 };
+export const findUserByName = (name, callback) => {
+  const q = `SELECT * FROM users WHERE username LIKE '%${name}%'`;
 
+  db.query(q, (err, data) => {
+    if (err) return callback(err);
+
+    let users = data.map(user => {
+      const { password, ...info } = user;
+      return info;
+    });
+    return callback(null, users);
+  });
+};
 export const getUsers = (callback) => {
   const q = "SELECT * FROM users ORDER BY id DESC LIMIT 5";
 
@@ -58,4 +70,5 @@ export const updateUser = (userInfo, callback) => {
       return callback("You can update only your post!");
     }
   );
+  
 };
