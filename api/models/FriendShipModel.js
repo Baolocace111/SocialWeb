@@ -44,25 +44,26 @@ export const getFriendByName = (userId, name, pageSize, offset, callback) => {
     return callback(null, results);
   });
 };
-export const findFriendshipByUserAndFriendAndStatus = (
+export const findFriendshipByUserAndFriendAndStatus = async (
   userId1,
   userId2,
-  status,
-  callback
+  status
 ) => {
-  const query = `
-  SELECT *
-  FROM friendships
-  WHERE user_id = ? AND friend_id = ? AND status = ?;
+  return new Promise((resolve, reject) => {
+    const query = `
+      SELECT *
+      FROM friendships
+      WHERE user_id = ? AND friend_id = ? AND status = ?;
     `;
 
-  // Thực hiện câu truy vấn
-  db.query(query, [userId1, userId2, status, offset], (error, results) => {
-    if (error) {
-      return callback(error, null);
-    }
-    // Xử lý kết quả truy vấn ở đây
-    return callback(null, results);
+    // Thực hiện câu truy vấn
+    db.query(query, [userId1, userId2, status], (error, results) => {
+      if (error) {
+        reject(error);
+      }
+      // Xử lý kết quả truy vấn ở đây
+      resolve(results);
+    });
   });
 };
 export const createFriendship = (
