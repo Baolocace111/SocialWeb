@@ -36,4 +36,15 @@ export const AuthService = {
       throw err;
     }
   },
+  async verifyUserToken(token) {
+    return new Promise((resolve, reject) => {
+      jwt.verify(token, "secretkey", (err, userInfo) => {
+        if (err) {
+          reject("Token is not valid!");
+        } else {
+          resolve(userInfo);
+        }
+      });
+    });
+  },
 };
