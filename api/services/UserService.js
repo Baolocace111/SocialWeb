@@ -1,4 +1,5 @@
 import * as userModel from "../models/UserModel.js";
+import { checkFriendshipStatus } from "./FriendshipService.js";
 
 export const getUser = (req, res) => {
   const userId = req.params.userId;
@@ -24,11 +25,24 @@ export const getFollowedUsers = (req, res) => {
     return res.json(data);
   });
 };
-export const findUsersByName =(req,res)=>{
-  const name=req.params.name;
-  userModel.findUserByName(name,(err,data)=>{
-    if (err) return res.status(500).json(err);
-    return res.json(data);
+export const findUsersByName =(userId,name,callback)=>{
+  userModel.findUserByName(name,async (err,data)=>{
+    if (err) return callback("error",null);
+    const odata = await Promise.all(
+      data.map(async (user) => {
+        const friendStatus = await checkFriendshipStatus(userId, user.id);
+    
+        return {
+          id: user.id,
+          username: user.username,
+          name: user.name,
+          profilePic: user.profilePic,
+          coverPic: user.coverPic,
+          friendStatus: friendStatus,
+        };
+      })
+    );
+    return callback(null,odata);
   })
 }
 

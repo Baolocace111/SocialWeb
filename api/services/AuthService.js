@@ -40,9 +40,9 @@ export const AuthService = {
     return new Promise((resolve, reject) => {
       jwt.verify(token, "secretkey", (err, userInfo) => {
         if (err) {
-          reject("Token is not valid!");
+          reject(-1);
         } else {
-          resolve(userInfo);
+          resolve(userInfo.id);
         }
       });
     });
