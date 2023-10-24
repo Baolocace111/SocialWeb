@@ -1,5 +1,6 @@
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
+import Chat from "./pages/chat/Chat";
 import {
   createBrowserRouter,
   RouterProvider,
@@ -82,6 +83,10 @@ function App() {
     {
       path: "/register",
       element: <Register />,
+    },
+    {
+      path: "/chat",
+      element: <Chat />
     },
   ]);
 

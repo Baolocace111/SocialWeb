@@ -3,7 +3,8 @@ import { checkFriendshipStatus } from "../services/FriendshipService.js";
 
 export const getFriendshipStatus = async (req, res) => {
   try {
-    const userId = AuthService.verifyUserToken(req.cookies.accessToken).id;
+    const userId =await AuthService.verifyUserToken(req.cookies.accessToken);
+    
     const value = await checkFriendshipStatus(userId, req.query.friendId);
     const response = {
       value: value,

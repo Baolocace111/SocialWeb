@@ -5,6 +5,7 @@ export const getUserById = (userId, callback) => {
 
   db.query(q, [userId], (err, data) => {
     if (err) return callback(err);
+    
     const { password, ...info } = data[0];
     return callback(null, info);
   });

@@ -56,6 +56,9 @@ const Profile = () => {
   const handleFollow = () => {
     mutation.mutate(relationshipData.includes(currentUser.id));
   };
+  const handleChat=()=>{
+    
+  }
 
   return (
     <div className="profile">
@@ -102,12 +105,16 @@ const Profile = () => {
                   "loading"
                 ) : userId === currentUser.id ? (
                   <button onClick={() => setOpenUpdate(true)}>update</button>
-                ) : (
+                ) : (<div>
                   <button onClick={handleFollow}>
                     {relationshipData.includes(currentUser.id)
                       ? "Following"
                       : "Follow"}
                   </button>
+                  <button hidden>
+                    Chat
+                  </button>
+                  </div>
                 )}
               </div>
               <div className="right">
