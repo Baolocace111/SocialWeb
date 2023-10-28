@@ -1,4 +1,12 @@
-import { findFriendshipByUserAndFriendAndStatus, getFriend, getFriendByName } from "../models/FriendShipModel.js";
+import {
+  findFriendshipByUserAndFriendAndStatus,
+  changeStatusFriendshipByUserAndFriendAndStatus,
+  createFriendship,
+  getFriend,
+  getFriendByName,
+  deleteFriendship,
+  deleteFriendshipByStatus,
+} from "../models/FriendShipModel.js";
 
 export const getUserFriend = (userId, offset, limit, callback) => {
   getFriend(userId, limit, offset, (err, data) => {
@@ -19,8 +27,7 @@ export const getUserFriendByName = (
   });
 };
 export const checkFriendshipStatus = async (user_id1, user_id2) => {
-  if (user_id1===user_id2)
-  return -1;
+  if (user_id1 === user_id2) return -1;
   const outgoingRequests = await findFriendshipByUserAndFriendAndStatus(
     user_id1,
     user_id2,
@@ -49,4 +56,90 @@ export const checkFriendshipStatus = async (user_id1, user_id2) => {
   }
 
   return 0; // chưa là bạn bè
+};
+export const sendFriendRequest = async (user_id1, user_id2) => {
+  if (user_id1 === user_id2) {
+    return false;
+  }
+
+  const Fstatus = await checkFriendshipStatus(user_id1, user_id2);
+
+  if (Fstatus === 1 || Fstatus === 2) {
+    return false;
+  } else if (Fstatus === 3) {
+    return false;
+  }
+
+  try {
+    await createFriendship(user_id1, user_id2, 0);
+    return true;
+  } catch (error) {
+    //console.error("Error creating friendship:", error);
+    return false;
+  }
+};
+export const acceptFriendRequest = async (user_id1, user_id2) => {
+  if (user_id1 === user_id2) {
+    return false;
+  }
+
+  const Fstatus = await checkFriendshipStatus(user_id1, user_id2);
+
+  if (Fstatus !== 2) {
+    return false;
+  }
+  try {
+    await changeStatusFriendshipByUserAndFriendAndStatus(
+      user_id2,
+      user_id1,
+      0,
+      1
+    );
+    await createFriendship(user_id1, user_id2, 1);
+    return true;
+  } catch (Err) {
+    return false;
+  }
+};
+export const unfriend = async (user_id1, user_id2) => {
+  if (user_id1 === user_id2) {
+    return false;
+  }
+
+  const Fstatus = await checkFriendshipStatus(user_id1, user_id2);
+  if (Fstatus !== 3) return false;
+  try {
+    await deleteFriendship(user_id1,user_id2);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+export const cancelFriendRequest = async(user_id1, user_id2) => {
+  if (user_id1 === user_id2) {
+    return false;
+  }
+
+  const Fstatus = await checkFriendshipStatus(user_id1, user_id2);
+  if (Fstatus !== 1) return false;
+  try {
+    await deleteFriendship(user_id1,user_id2);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+export const rejectFriendRequest = async(user_id1, user_id2) => {
+  if (user_id1 === user_id2) {
+    return false;
+  }
+
+  const Fstatus = await checkFriendshipStatus(user_id1, user_id2);
+  if (Fstatus !== 2) return false;
+  try {
+    await deleteFriendship(user_id1,user_id2);
+    return true;
+  } catch (error) {
+    return false;
+  }
 };
