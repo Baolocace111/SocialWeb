@@ -15,6 +15,8 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
 
+import Slider from "react-slick";
+
 const Stories = () => {
   const { currentUser } = useContext(AuthContext);
 
@@ -103,20 +105,25 @@ const Stories = () => {
     setOpenAdd(false);
   };
 
-  return (
-    <div className="stories">
-      <div className="story">
-        <img src={"/upload/" + currentUser.profilePic} alt="" />
-        <span>{currentUser.name}</span>
-        {/* Click to add story*/}
-        <button onClick={handleDialogOpen}>+</button>
-      </div>
+  const settings = {
+    dots: true, // Show pagination dots
+    infinite: false, // Enable infinite loop
+    speed: 500, // Transition speed in milliseconds
+    slidesToShow: 4, // Number of stories to show on a slide
+    slidesToScroll: 1, // Number of stories to scroll when dragging or clicking the arrows
+    cssEase: "ease-in-out",
+  };
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const slides = [
+    <div className="story" key={1}>
+      <img src={"/upload/" + currentUser.profilePic} alt="" />
+      <span>{currentUser.name}</span>
+      <button onClick={handleDialogOpen}>+</button>
 
-      {/* Dialog */}
       <Dialog open={openAdd} onClose={handleDialogClose}>
         <DialogTitle sx={{ m: 0, p: 2, display: 'flex', alignItems: 'center', mt: '-5px', mb: '-10px' }}>
           <MovieIcon sx={{ marginRight: '8px' }} />
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+          <Typography variant="title1" sx={{ flexGrow: 1 }}>
             Create a story
           </Typography>
         </DialogTitle>
@@ -141,7 +148,6 @@ const Stories = () => {
         </DialogContent>
         <Divider />
         <DialogActions>
-          {/* Button to add story */}
           <Button onClick={handleAddStoryClick} color="primary">
             Add Story
           </Button>
@@ -150,29 +156,43 @@ const Stories = () => {
           </Button>
         </DialogActions>
       </Dialog>
+    </div>
+  ];
 
-      {error ? (
-        "Something went wrong"
-      ) : isLoading ? (
-        "loading"
-      ) : (
-        data.map((story) => {
-          const user = users[story.userId];
-          return (
-            <div className="story" key={story.id}>
-              <div className="profile-pic">
-                {user && <img src={`/upload/${user.profilePic}`} alt="" />}
-              </div>
-              <div className="story-content">
-                <img src={"/upload/" + story.img} alt="" />
-                <span>{story.name}</span>
-              </div>
-            </div>
-          );
-        })
-      )}
+  if (data && data.length > 0) {
+    data.forEach((story) => {
+      const user = users[story.userId];
+      slides.push(
+        <div className="story" key={story.id}>
+          <div className="profile-pic">
+            {user && <img src={`/upload/${user.profilePic}`} alt="" />}
+          </div>
+          <div className="story-content">
+            <img src={"/upload/" + story.img} alt="" />
+            <span>{story.name}</span>
+          </div>
+        </div>
+      );
+    });
+  }
+
+  //Kiểm tra số lượng slide trước khi áp dụng cấu hình
+  if (slides.length <= 3) {
+    return <div className="stories">{slides}</div>;
+  }
+
+  return (
+    <div className="stories">
+      <Slider
+        {...settings}
+        afterChange={(currentSlide) => setCurrentSlide(currentSlide)}
+        className="slider-container"
+      >
+      {slides}
+      </Slider>
     </div>
   );
 };
 
 export default Stories;
+
