@@ -10,12 +10,9 @@ const UserTab = ({ user }) => {
     status =number;
     //checkStatus();
   };
-  // const [status, setStatus] = useState(0);
+  
   setStatus(user.friendStatus);
-  // useEffect(() => {
-  //   // Gọi hàm khác ở đây nếu cần
-  //   checkStatus();
-  // }, [status]);
+  
 
   const SendRequest = async () => {
     setStatus(-3);
@@ -31,7 +28,7 @@ const UserTab = ({ user }) => {
   };
   const CancelRequest = async () => {
     setStatus(-3);
-    //console.log("You clicked Cancel...");
+    
     makeRequest
       .get("/friendship/cancel/" + user.id)
       .then((response) => {
