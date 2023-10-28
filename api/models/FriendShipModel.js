@@ -66,27 +66,78 @@ export const findFriendshipByUserAndFriendAndStatus = async (
     });
   });
 };
-export const createFriendship = (
-  userId,
-  friendId,
-  status,
-  callback
+export const changeStatusFriendshipByUserAndFriendAndStatus = async (
+  userId1,
+  userId2,
+  currentStatus,
+  newStatus
 ) => {
-  const query = `
+  return new Promise((resolve, reject) => {
+    const updateQuery = `
+      UPDATE friendships
+      SET status = ?
+      WHERE user_id = ? AND friend_id = ? AND status = ?;
+    `;
+
+    // Execute the update query
+    db.query(updateQuery, [newStatus, userId1, userId2, currentStatus], (error, results) => {
+      if (error) {
+        reject(error);
+      }
+      // Handle the query results here
+      resolve(results);
+    });
+  });
+};
+export const createFriendship = async (userId, friendId, status) => {
+  try {
+    const query = `
       INSERT INTO friendships (user_id, friend_id, status)
       VALUES (?, ?, ?);
     `;
 
-  // Thực hiện câu truy vấn
-  db.query(
-    query,
-    [userId, friendId, status],
-    (error, results) => {
-      if (error) {
-        return callback(error, null);
-      }
-      // Trả về ID của bản ghi vừa tạo
-      return callback(null, results.insertId);
-    }
-  );
+    // Thực hiện câu truy vấn
+    const results = await db.query(query, [userId, friendId, status]);
+
+    // Trả về ID của bản ghi vừa tạo
+    return results.insertId;
+  } catch (error) {
+    return error;
+  }
+};
+export const deleteFriendship = async (userId, friendId) => {
+  try {
+    const query = `
+      DELETE FROM friendships
+      WHERE (user_id = ? AND friend_id = ? )
+      OR (user_id = ? AND friend_id = ? );
+    `;
+
+    // Execute the deletion query
+    const results = await db.query(query, [userId, friendId,  friendId, userId]);
+
+    // Return the number of affected rows
+    return results.affectedRows;
+  } catch (error) {
+    return error;
+  }
+};
+
+
+export const deleteFriendshipByStatus = async (userId, friendId, status) => {
+  try {
+    const query = `
+      DELETE FROM friendships
+      WHERE (user_id = ? AND friend_id = ? AND status = ?)
+      OR (user_id = ? AND friend_id = ? AND status = ?);
+    `;
+
+    // Execute the deletion query
+    const results = await db.query(query, [userId, friendId, status, friendId, userId, status]);
+
+    // Return the number of affected rows
+    return results.affectedRows;
+  } catch (error) {
+    return error;
+  }
 };
