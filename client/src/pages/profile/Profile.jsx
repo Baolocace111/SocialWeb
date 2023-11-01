@@ -16,11 +16,12 @@ import { useContext } from "react";
 import { AuthContext } from "../../context/authContext";
 import Update from "../../components/update/Update";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
   const { currentUser } = useContext(AuthContext);
-
+  const navigate = useNavigate();
   const userId = parseInt(useLocation().pathname.split("/")[2]);
 
   const { isLoading, error, data } = useQuery(["user"], () =>
@@ -57,7 +58,7 @@ const Profile = () => {
     mutation.mutate(relationshipData.includes(currentUser.id));
   };
   const handleChat=()=>{
-    
+    navigate(`/chat/${userId}`);
   }
 
   return (
@@ -111,7 +112,7 @@ const Profile = () => {
                       ? "Following"
                       : "Follow"}
                   </button>
-                  <button hidden>
+                  <button onClick={handleChat}>
                     Chat
                   </button>
                   </div>
