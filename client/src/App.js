@@ -85,7 +85,7 @@ function App() {
       element: <Register />,
     },
     {
-      path: "/chat",
+      path: "/chat/:friendid",
       element: <Chat />
     },
   ]);
