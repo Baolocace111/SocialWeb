@@ -159,26 +159,56 @@ const Stories = () => {
     </div>
   ];
 
-  if (data && data.length > 0) {
+  // if (error) {
+  //   return "Something went wrong";
+  // } else if (isLoading) {
+  //   return "loading";
+  // } else {
+  //   data.forEach((story) => {
+  //     const user = users[story.userId];
+  //     slides.push(
+  //       <div className="story" key={story.id}>
+  //         <div className="profile-pic">
+  //           {user && <img src={`/upload/${user.profilePic}`} alt="" />}
+  //         </div>
+  //         <div className="story-content">
+  //           <img src={"/upload/" + story.img} alt="" />
+  //           <span>{story.name}</span>
+  //         </div>
+  //       </div>
+  //     );
+  //   });
+  // }
+
+  if (error) {
+    return "Something went wrong";
+  } else if (isLoading) {
+    return "loading";
+  } else {
+    const userLatestStories = {};
     data.forEach((story) => {
       const user = users[story.userId];
+      if (user) {
+        if (!userLatestStories[user.id] || story.id > userLatestStories[user.id].id) {
+          userLatestStories[user.id] = story;
+        }
+      }
+    });
+    Object.keys(userLatestStories).forEach((userId) => {
+      const user = users[userId];
+      const latestStory = userLatestStories[userId];
       slides.push(
-        <div className="story" key={story.id}>
+        <div className="story" key={userId}>
           <div className="profile-pic">
             {user && <img src={`/upload/${user.profilePic}`} alt="" />}
           </div>
           <div className="story-content">
-            <img src={"/upload/" + story.img} alt="" />
-            <span>{story.name}</span>
+            <img src={"/upload/" + latestStory.img} alt="" />
+            <span>{latestStory.name}</span>
           </div>
         </div>
       );
     });
-  }
-
-  //Kiểm tra số lượng slide trước khi áp dụng cấu hình
-  if (slides.length <= 3) {
-    return <div className="stories">{slides}</div>;
   }
 
   return (
@@ -188,7 +218,7 @@ const Stories = () => {
         afterChange={(currentSlide) => setCurrentSlide(currentSlide)}
         className="slider-container"
       >
-      {slides}
+        {slides}
       </Slider>
     </div>
   );
