@@ -33,6 +33,10 @@
     max-width: 180px;
   }
 
+  .slider-container .slick-track {
+    min-width: 800px;
+  }
+
   .story {
     // flex: 1 0 auto;
     height: 270px;
@@ -54,6 +58,7 @@
       height: 100%;
       object-fit: cover;
     }
+
     span {
       position: absolute;
       bottom: 10px;
@@ -117,6 +122,15 @@
       display: flex;
       align-items: center;
       z-index: 1;
+
+      img {
+        transition: transform 0.5s ease;
+        opacity: 0.8;
+      }
+      img:hover {
+        transform: scale(1.05);
+        opacity: 0.7;
+      }
     }
   }
 }

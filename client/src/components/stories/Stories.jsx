@@ -14,6 +14,7 @@ import MovieIcon from '@mui/icons-material/Movie';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
+import { Link } from 'react-router-dom';
 
 import Slider from "react-slick";
 
@@ -159,26 +160,58 @@ const Stories = () => {
     </div>
   ];
 
-  if (data && data.length > 0) {
+  // if (error) {
+  //   return "Something went wrong";
+  // } else if (isLoading) {
+  //   return "loading";
+  // } else {
+  //   data.forEach((story) => {
+  //     const user = users[story.userId];
+  //     slides.push(
+  //       <div className="story" key={story.id}>
+  //         <div className="profile-pic">
+  //           {user && <img src={`/upload/${user.profilePic}`} alt="" />}
+  //         </div>
+  //         <div className="story-content">
+  //           <img src={"/upload/" + story.img} alt="" />
+  //           <span>{story.name}</span>
+  //         </div>
+  //       </div>
+  //     );
+  //   });
+  // }
+
+  if (error) {
+    return "Something went wrong";
+  } else if (isLoading) {
+    return "loading";
+  } else {
+    const userLatestStories = {};
     data.forEach((story) => {
       const user = users[story.userId];
+      if (user) {
+        if (!userLatestStories[user.id] || story.id > userLatestStories[user.id].id) {
+          userLatestStories[user.id] = story;
+        }
+      }
+    });
+    Object.keys(userLatestStories).forEach((userId) => {
+      const user = users[userId];
+      const latestStory = userLatestStories[userId];
       slides.push(
-        <div className="story" key={story.id}>
-          <div className="profile-pic">
-            {user && <img src={`/upload/${user.profilePic}`} alt="" />}
+        <Link to={`/stories/${userId}`} key={userId}>
+          <div className="story">
+            <div className="profile-pic">
+              {user && <img src={`/upload/${user.profilePic}`} alt="" />}
+            </div>
+            <div className="story-content">
+              <img src={"/upload/" + latestStory.img} alt="" />
+              <span>{latestStory.name}</span>
+            </div>
           </div>
-          <div className="story-content">
-            <img src={"/upload/" + story.img} alt="" />
-            <span>{story.name}</span>
-          </div>
-        </div>
+        </Link>
       );
     });
-  }
-
-  //Kiểm tra số lượng slide trước khi áp dụng cấu hình
-  if (slides.length <= 3) {
-    return <div className="stories">{slides}</div>;
   }
 
   return (
@@ -188,7 +221,7 @@ const Stories = () => {
         afterChange={(currentSlide) => setCurrentSlide(currentSlide)}
         className="slider-container"
       >
-      {slides}
+        {slides}
       </Slider>
     </div>
   );

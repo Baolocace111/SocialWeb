@@ -3,7 +3,7 @@ import moment from "moment";
 
 export const getStories = (userId, callback) => {
   const q = `SELECT s.*, name FROM stories AS s JOIN users AS u ON (u.id = s.userId)
-    LEFT JOIN relationships AS r ON (s.userId = r.followedUserId AND r.followerUserId= ?) LIMIT 4`;
+    LEFT JOIN relationships AS r ON (s.userId = r.followedUserId AND r.followerUserId= ?)`;
 
   db.query(q, [userId], (err, data) => {
     if (err) return callback(err, null);
