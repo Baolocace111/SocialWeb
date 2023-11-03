@@ -2,6 +2,7 @@
 
 .leftBar {
   @include themify($themes) {
+    min-height: 100vh;
     flex: 2;
     position: sticky;
     top: 70px;
