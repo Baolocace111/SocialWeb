@@ -1,5 +1,6 @@
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
+import Story from "./pages/story/Story";
 import Chat from "./pages/chat/Chat";
 import {
   createBrowserRouter,
@@ -73,6 +74,10 @@ function App() {
         {
           path: "/search/:searchText",
           element: <Search />,
+        },
+        {
+          path: "/stories/:userId",
+          element: <Story />
         },
       ],
     },

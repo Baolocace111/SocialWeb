@@ -14,6 +14,7 @@ import MovieIcon from '@mui/icons-material/Movie';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
+import { Link } from 'react-router-dom';
 
 import Slider from "react-slick";
 
@@ -198,15 +199,17 @@ const Stories = () => {
       const user = users[userId];
       const latestStory = userLatestStories[userId];
       slides.push(
-        <div className="story" key={userId}>
-          <div className="profile-pic">
-            {user && <img src={`/upload/${user.profilePic}`} alt="" />}
+        <Link to={`/stories/${userId}`} key={userId}>
+          <div className="story">
+            <div className="profile-pic">
+              {user && <img src={`/upload/${user.profilePic}`} alt="" />}
+            </div>
+            <div className="story-content">
+              <img src={"/upload/" + latestStory.img} alt="" />
+              <span>{latestStory.name}</span>
+            </div>
           </div>
-          <div className="story-content">
-            <img src={"/upload/" + latestStory.img} alt="" />
-            <span>{latestStory.name}</span>
-          </div>
-        </div>
+        </Link>
       );
     });
   }
