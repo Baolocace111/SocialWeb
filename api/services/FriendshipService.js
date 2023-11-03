@@ -8,8 +8,8 @@ import {
   deleteFriendshipByStatus,
 } from "../models/FriendShipModel.js";
 
-export const getUserFriend = (userId, offset, limit, callback) => {
-  getFriend(userId, limit, offset, (err, data) => {
+export const getUserFriend = (userId, offset, callback) => {
+  getFriend(userId, 10, offset, (err, data) => {
     if (err) return callback(err, null);
     return callback(null, data);
   });

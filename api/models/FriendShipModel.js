@@ -1,13 +1,14 @@
 import { db } from "../connect.js";
 export const getFriend = (userId, pageSize, offset, callback) => {
   const query = `
-    SELECT f.*
-    FROM friendships f
-    WHERE f.user_id = ?
-      AND f.status = 1
-    ORDER BY f.intimacy DESC
-    LIMIT ?
-    OFFSET ?;
+  SELECT u.*
+  FROM users u
+  INNER JOIN friendships f ON u.id = f.friend_id
+  WHERE f.user_id = ?
+    AND f.status = 1
+  ORDER BY f.intimacy DESC
+  LIMIT ?
+  OFFSET ?;  
   `;
 
   // Thực hiện câu truy vấn
@@ -15,8 +16,14 @@ export const getFriend = (userId, pageSize, offset, callback) => {
     if (error) {
       return callback(error, null);
     }
+    
     // Xử lý kết quả truy vấn ở đây
-    return callback(null, results);
+    return callback(null,results.map(result=>({
+      id: result.id,
+      username: result.username,
+      name: result.name,
+      profilePic: result.profilePic,
+    })));
   });
 };
 export const getFriendByName = (userId, name, pageSize, offset, callback) => {
@@ -80,13 +87,17 @@ export const changeStatusFriendshipByUserAndFriendAndStatus = async (
     `;
 
     // Execute the update query
-    db.query(updateQuery, [newStatus, userId1, userId2, currentStatus], (error, results) => {
-      if (error) {
-        reject(error);
+    db.query(
+      updateQuery,
+      [newStatus, userId1, userId2, currentStatus],
+      (error, results) => {
+        if (error) {
+          reject(error);
+        }
+        // Handle the query results here
+        resolve(results);
       }
-      // Handle the query results here
-      resolve(results);
-    });
+    );
   });
 };
 export const createFriendship = async (userId, friendId, status) => {
@@ -114,7 +125,7 @@ export const deleteFriendship = async (userId, friendId) => {
     `;
 
     // Execute the deletion query
-    const results = await db.query(query, [userId, friendId,  friendId, userId]);
+    const results = await db.query(query, [userId, friendId, friendId, userId]);
 
     // Return the number of affected rows
     return results.affectedRows;
@@ -122,7 +133,6 @@ export const deleteFriendship = async (userId, friendId) => {
     return error;
   }
 };
-
 
 export const deleteFriendshipByStatus = async (userId, friendId, status) => {
   try {
@@ -133,7 +143,14 @@ export const deleteFriendshipByStatus = async (userId, friendId, status) => {
     `;
 
     // Execute the deletion query
-    const results = await db.query(query, [userId, friendId, status, friendId, userId, status]);
+    const results = await db.query(query, [
+      userId,
+      friendId,
+      status,
+      friendId,
+      userId,
+      status,
+    ]);
 
     // Return the number of affected rows
     return results.affectedRows;
