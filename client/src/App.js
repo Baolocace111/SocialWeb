@@ -7,6 +7,7 @@ import {
   RouterProvider,
   Outlet,
   Navigate,
+  Link,
 } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar";
 import LeftBar from "./components/leftBar/LeftBar";
@@ -16,6 +17,10 @@ import Profile from "./pages/profile/Profile";
 import Search from "./pages/search/Search";
 
 import "./style.scss";
+import "./pages/story/story.scss";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faX } from "@fortawesome/free-solid-svg-icons";
+
 import { useCookies } from 'react-cookie';
 import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
@@ -40,6 +45,27 @@ function App() {
               <Outlet />
             </div>
             <RightBar />
+          </div>
+        </div>
+      </QueryClientProvider>
+    );
+  };
+
+  const StoryLayout = () => {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <div className={`theme-${darkMode ? "dark" : "light"}`}>
+          <div style={{ display: "flex" }}>
+            <LeftBar />
+            <div className="story-page"
+              style={{ flex: 6, display: "flex", justifyContent: "center", alignItems: "center", position: "relative", }}>
+              <Story />
+              <Link to="/">
+                <button className="close-button">
+                  <FontAwesomeIcon icon={faX} />
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
       </QueryClientProvider>
@@ -75,10 +101,6 @@ function App() {
           path: "/search/:searchText",
           element: <Search />,
         },
-        {
-          path: "/stories/:userId",
-          element: <Story />
-        },
       ],
     },
     {
@@ -88,6 +110,10 @@ function App() {
     {
       path: "/register",
       element: <Register />,
+    },
+    {
+      path: "/stories/:userId",
+      element: <StoryLayout />
     },
     {
       path: "/chat/:friendid",

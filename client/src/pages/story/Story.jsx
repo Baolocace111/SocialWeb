@@ -1,3 +1,4 @@
+import "./story.scss";
 import { makeRequest } from "../../axios";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
@@ -19,9 +20,9 @@ const UserStoryPage = () => {
       return res.data;
     })
   );
-  const name = data_user.data ? data_user.data.name :"is loading"
-  const profilePic = data_user.data ? data_user.data.profilePic :"is loading"
-  
+  const name = data_user.data ? data_user.data.name : "is loading"
+  const profilePic = data_user.data ? data_user.data.profilePic : "is loading"
+
   // Lọc các story có userId trùng với userId đã nhận được
   const userStories = data ? data.filter((story) => story.userId === userId) : [];
 
@@ -36,12 +37,15 @@ const UserStoryPage = () => {
 
   return (
     <Stories
+      storyContainerStyles={{  borderRadius: '10px' }}
       stories={stories}
+      height={680}
+      width={380}
       defaultInterval={4500}
       loop={true}
+      keyboardNavigation={true}
     />
   );
-
 };
 
 export default UserStoryPage;
