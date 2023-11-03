@@ -17,7 +17,7 @@ import { AuthContext } from "../../context/authContext";
 import Update from "../../components/update/Update";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import FriendList from "../../components/profileComponents/friendList/FriendList";
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
   const { currentUser } = useContext(AuthContext);
@@ -123,6 +123,7 @@ const Profile = () => {
                 <MoreVertIcon />
               </div>
             </div>
+            <FriendList user_id={userId}/>
             <Posts userId={userId} />
           </div>
         </>

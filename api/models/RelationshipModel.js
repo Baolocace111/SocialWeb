@@ -14,7 +14,7 @@ export const addRelationship = (followerUserId, followedUserId, callback) => {
   const values = [followerUserId, followedUserId];
 
   db.query(q, [values], (err, data) => {
-    if (err) return callback(err, null);
+    if (err) return callback("Cant following", null);
     return callback(null, "Following");
   });
 };
