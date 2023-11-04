@@ -1,15 +1,23 @@
 import express from "express";
-import { acceptFriendRequestFrom, cancelRequest, denyRequest, getFriendshipStatus, listFriendUser, sendFriendRequestTo, unfriendUser } from "../controllers/friendship.js";
-
+import {
+  RequestFriendController,
+  acceptFriendRequestFrom,
+  cancelRequest,
+  denyRequest,
+  getFriendshipStatus,
+  listFriendUser,
+  sendFriendRequestTo,
+  unfriendUser,
+} from "../controllers/friendship.js";
 
 const router = express.Router();
-router.get("/:friendId",getFriendshipStatus)
-router.get("/addfriend/:friendId",sendFriendRequestTo)
-router.get("/accept/:friendId",acceptFriendRequestFrom)
-router.get("/unfriend/:friendId",unfriendUser)
-router.get("/deny/:friendId",denyRequest)
-router.get("/cancel/:friendId",cancelRequest)
-router.post("/get_friends",listFriendUser)
-
+router.get("/:friendId", getFriendshipStatus);
+router.get("/addfriend/:friendId", sendFriendRequestTo);
+router.get("/accept/:friendId", acceptFriendRequestFrom);
+router.get("/unfriend/:friendId", unfriendUser);
+router.get("/deny/:friendId", denyRequest);
+router.get("/cancel/:friendId", cancelRequest);
+router.post("/get_friends", listFriendUser);
+router.post("/get_request_friend", RequestFriendController);
 
 export default router;

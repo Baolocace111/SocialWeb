@@ -1,5 +1,11 @@
 import jwt from "jsonwebtoken";
-import { getPostsService, addPostService, deletePostService } from "../services/postService.js";
+import {
+  getPostsService,
+  addPostService,
+  deletePostService,
+  getPostbyContentService,
+  getPostbyHashtagService,
+} from "../services/PostService.js";
 
 export const getPosts = (req, res) => {
   const userId = req.query.userId;
@@ -48,6 +54,30 @@ export const deletePost = (req, res) => {
 
     deletePostService(postId, userId, (err, data) => {
       if (err) return res.status(500).json(err);
+      return res.status(200).json(data);
+    });
+  });
+};
+export const searchPostsbyContentController = (req, res) => {
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json("Not logged in!");
+
+  jwt.verify(token, "secretkey", (err, userInfo) => {
+    if (err) return res.status(403).json("Token is not valid!");
+    getPostbyContentService(req.body.content, (e, data) => {
+      if (e) return res.status(500).json(e);
+      return res.status(200).json(data);
+    });
+  });
+};
+export const searchPostsbyHashtagController = (req, res) => {
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json("Not logged in!");
+
+  jwt.verify(token, "secretkey", (err, userInfo) => {
+    if (err) return res.status(403).json("Token is not valid!");
+    getPostbyHashtagService(req.body.hashtag, (e, data) => {
+      if (e) return res.status(500).json(e);
       return res.status(200).json(data);
     });
   });

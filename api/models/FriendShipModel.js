@@ -1,4 +1,22 @@
 import { db } from "../connect.js";
+export const getRequestFriend = (userId, pageSize, offset, callback) => {
+  const query = `SELECT u.* FROM users u INNER JOIN friendships f ON u.id=f.user_id where f.friend_id = ? AND status = 0 LIMIT ? OFFSET ?`;
+  db.query(query, [userId, pageSize, offset], (err, res) => {
+    if (err) {
+      return callback(err, null);
+    }
+    // Xử lý kết quả truy vấn ở đây
+    return callback(
+      null,
+      res.map((result) => ({
+        id: result.id,
+        username: result.username,
+        name: result.name,
+        profilePic: result.profilePic,
+      }))
+    );
+  });
+};
 export const getFriend = (userId, pageSize, offset, callback) => {
   const query = `
   SELECT u.*
@@ -16,14 +34,17 @@ export const getFriend = (userId, pageSize, offset, callback) => {
     if (error) {
       return callback(error, null);
     }
-    
+
     // Xử lý kết quả truy vấn ở đây
-    return callback(null,results.map(result=>({
-      id: result.id,
-      username: result.username,
-      name: result.name,
-      profilePic: result.profilePic,
-    })));
+    return callback(
+      null,
+      results.map((result) => ({
+        id: result.id,
+        username: result.username,
+        name: result.name,
+        profilePic: result.profilePic,
+      }))
+    );
   });
 };
 export const getFriendByName = (userId, name, pageSize, offset, callback) => {
