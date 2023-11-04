@@ -18,14 +18,15 @@ import Search from "./pages/search/Search";
 
 import "./style.scss";
 import "./pages/story/story.scss";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 
-import { useCookies } from 'react-cookie';
+import { useCookies } from "react-cookie";
 import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from "./context/authContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import SearchPost from "./pages/searchPost/SearchPost";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -57,8 +58,16 @@ function App() {
         <div className={`theme-${darkMode ? "dark" : "light"}`}>
           <div style={{ display: "flex" }}>
             <LeftBar />
-            <div className="story-page"
-              style={{ flex: 6, display: "flex", justifyContent: "center", alignItems: "center", position: "relative", }}>
+            <div
+              className="story-page"
+              style={{
+                flex: 6,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                position: "relative",
+              }}
+            >
               <Story />
               <Link to="/">
                 <button className="close-button">
@@ -73,7 +82,7 @@ function App() {
   };
 
   const ProtectedRoute = ({ children }) => {
-    const [cookies] = useCookies(['accessToken']);
+    const [cookies] = useCookies(["accessToken"]);
     if (!currentUser || !cookies.accessToken) {
       return <Navigate to="/login" />;
     }
@@ -101,6 +110,14 @@ function App() {
           path: "/search/:searchText",
           element: <Search />,
         },
+        {
+          path: "/post/:searchText",
+          element: <SearchPost isHashtag={false} />,
+        },
+        {
+          path: "/hashtag/:searchText",
+          element: <SearchPost isHashtag={true} />,
+        },
       ],
     },
     {
@@ -113,11 +130,11 @@ function App() {
     },
     {
       path: "/stories/:userId",
-      element: <StoryLayout />
+      element: <StoryLayout />,
     },
     {
       path: "/chat/:friendid",
-      element: <Chat />
+      element: <Chat />,
     },
   ]);
 

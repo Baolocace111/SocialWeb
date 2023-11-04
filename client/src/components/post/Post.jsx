@@ -12,6 +12,7 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
 import { useContext } from "react";
 import { AuthContext } from "../../context/authContext";
+import Description from "./desc";
 
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
@@ -64,7 +65,7 @@ const Post = ({ post }) => {
       <div className="container">
         <div className="user">
           <div className="userInfo">
-            <img src={"/upload/"+post.profilePic} alt="" />
+            <img src={"/upload/" + post.profilePic} alt="" />
             <div className="details">
               <Link
                 to={`/profile/${post.userId}`}
@@ -81,7 +82,9 @@ const Post = ({ post }) => {
           )}
         </div>
         <div className="content">
-          <p>{post.desc}</p>
+          <p>
+            <Description text={post.desc}></Description>
+          </p>
           <img src={"/upload/" + post.img} alt="" />
         </div>
         <div className="info">

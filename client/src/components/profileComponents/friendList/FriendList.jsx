@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { makeRequest } from "../../../axios";
 import { Link } from "react-router-dom";
+import "./friendList.scss";
 const FriendList = ({ user_id }) => {
   const [friends, setFriends] = useState([]);
   const [offset, setOffset] = useState(0);
@@ -31,14 +32,15 @@ const FriendList = ({ user_id }) => {
   return (
     <div className="friend-list">
       <h1>Friends List</h1>
-      <ul>
+
+      <div className="container">
         {friends.map((friend) => (
           <div className="user">
             <div className="userInfo">
               <img src={"/upload/" + friend.profilePic} alt="" />
               <div className="details">
                 <Link
-                  to={`/profile/${friend.userId}`}
+                  to={`/profile/${friend.id}`}
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
                   <span className="name">{friend.name}</span>
@@ -47,7 +49,7 @@ const FriendList = ({ user_id }) => {
             </div>
           </div>
         ))}
-      </ul>
+      </div>
       {loading && <p>Loading...</p>}
       {!loading && <button onClick={handleShowMore}>Show More</button>}
     </div>

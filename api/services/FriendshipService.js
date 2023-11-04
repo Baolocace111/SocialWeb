@@ -6,6 +6,7 @@ import {
   getFriendByName,
   deleteFriendship,
   deleteFriendshipByStatus,
+  getRequestFriend,
 } from "../models/FriendShipModel.js";
 
 export const getUserFriend = (userId, offset, callback) => {
@@ -109,13 +110,13 @@ export const unfriend = async (user_id1, user_id2) => {
   const Fstatus = await checkFriendshipStatus(user_id1, user_id2);
   if (Fstatus !== 3) return false;
   try {
-    await deleteFriendship(user_id1,user_id2);
+    await deleteFriendship(user_id1, user_id2);
     return true;
   } catch (error) {
     return false;
   }
 };
-export const cancelFriendRequest = async(user_id1, user_id2) => {
+export const cancelFriendRequest = async (user_id1, user_id2) => {
   if (user_id1 === user_id2) {
     return false;
   }
@@ -123,13 +124,13 @@ export const cancelFriendRequest = async(user_id1, user_id2) => {
   const Fstatus = await checkFriendshipStatus(user_id1, user_id2);
   if (Fstatus !== 1) return false;
   try {
-    await deleteFriendship(user_id1,user_id2);
+    await deleteFriendship(user_id1, user_id2);
     return true;
   } catch (error) {
     return false;
   }
 };
-export const rejectFriendRequest = async(user_id1, user_id2) => {
+export const rejectFriendRequest = async (user_id1, user_id2) => {
   if (user_id1 === user_id2) {
     return false;
   }
@@ -137,9 +138,15 @@ export const rejectFriendRequest = async(user_id1, user_id2) => {
   const Fstatus = await checkFriendshipStatus(user_id1, user_id2);
   if (Fstatus !== 2) return false;
   try {
-    await deleteFriendship(user_id1,user_id2);
+    await deleteFriendship(user_id1, user_id2);
     return true;
   } catch (error) {
     return false;
   }
+};
+export const getRequestService = (user_id, offset, callback) => {
+  getRequestFriend(user_id, 10, offset, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data);
+  });
 };
