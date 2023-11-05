@@ -54,7 +54,6 @@ const Navbar = () => {
   const handlePopover = (event) => {
     event.stopPropagation();
     const iconId = event.currentTarget.id;
-    console.log(iconId);
     let contentType = null;
     switch (iconId) {
       case "friend-icon":
@@ -150,55 +149,57 @@ const Navbar = () => {
           <span>{currentUser.name}</span>
           <FontAwesomeIcon icon={faCaretDown} />
         </div>
+        <Popover
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          style={PopoverStyle}
+        >
+          {content === "profile" && (
+            <List>
+              <ListItemButton>
+                <ListItemIcon style={{ fontSize: "20px", marginRight: "-25px" }}>
+                  <FontAwesomeIcon icon={faGear} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Cài đặt riêng tư"
+                  style={{ marginRight: "100px" }}
+                />
+              </ListItemButton>
+              <ListItemButton>
+                <ListItemIcon style={{ fontSize: "20px", marginRight: "-25px" }}>
+                  <FontAwesomeIcon icon={faCircleExclamation} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Đóng góp ý kiến"
+                  style={{ marginRight: "100px" }}
+                />
+              </ListItemButton>
+              <ListItemButton onClick={handleLogout}>
+                <ListItemIcon style={{ fontSize: "20px", marginRight: "-25px" }}>
+                  <FontAwesomeIcon icon={faArrowRightFromBracket} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Đăng xuất"
+                  style={{ marginRight: "100px" }}
+                />
+              </ListItemButton>
+            </List>
+          )}
+          {content === "friend" &&
+            <ListFriendRequest></ListFriendRequest>
+          }
+        </Popover>
       </div>
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        style={PopoverStyle}
-      >
-        {content === "profile" && (
-          <List>
-            <ListItemButton>
-              <ListItemIcon style={{ fontSize: "20px", marginRight: "-25px" }}>
-                <FontAwesomeIcon icon={faGear} />
-              </ListItemIcon>
-              <ListItemText
-                primary="Cài đặt riêng tư"
-                style={{ marginRight: "100px" }}
-              />
-            </ListItemButton>
-            <ListItemButton>
-              <ListItemIcon style={{ fontSize: "20px", marginRight: "-25px" }}>
-                <FontAwesomeIcon icon={faCircleExclamation} />
-              </ListItemIcon>
-              <ListItemText
-                primary="Đóng góp ý kiến"
-                style={{ marginRight: "100px" }}
-              />
-            </ListItemButton>
-            <ListItemButton onClick={handleLogout}>
-              <ListItemIcon style={{ fontSize: "20px", marginRight: "-25px" }}>
-                <FontAwesomeIcon icon={faArrowRightFromBracket} />
-              </ListItemIcon>
-              <ListItemText
-                primary="Đăng xuất"
-                style={{ marginRight: "100px" }}
-              />
-            </ListItemButton>
-          </List>
-        )}
-        {content === "friend" && <ListFriendRequest></ListFriendRequest>}
-      </Popover>
     </div>
   );
 };

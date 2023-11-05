@@ -1,17 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { makeRequest } from "../../../axios";
 import { Link } from "react-router-dom";
 import "./friendList.scss";
+
 const FriendList = ({ user_id }) => {
   const [friends, setFriends] = useState([]);
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    loadFriends();
-  }, []);
-
-  const loadFriends = async () => {
+  const loadFriends = useCallback(async () => {
     try {
       const response = await makeRequest.post("/friendship/get_friends", {
         user_id: user_id,
@@ -23,7 +20,11 @@ const FriendList = ({ user_id }) => {
     } catch (error) {
       console.error("Failed to fetch friends:", error);
     }
-  };
+  }, [user_id, offset, friends]);
+
+  useEffect(() => {
+    loadFriends();
+  }, [loadFriends]);
 
   const handleShowMore = () => {
     loadFriends();
