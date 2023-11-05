@@ -12,10 +12,21 @@ import axios from "axios";
 import { useContext, useState } from "react";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { AuthContext } from "../../context/authContext";
-import { Popover, List, ListItemButton, ListItemText, ListItemIcon } from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRightFromBracket, faCircleExclamation, faGear, faCaretDown } from '@fortawesome/free-solid-svg-icons';
-
+import {
+  Popover,
+  List,
+  ListItemButton,
+  ListItemText,
+  ListItemIcon,
+} from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faArrowRightFromBracket,
+  faCircleExclamation,
+  faGear,
+  faCaretDown,
+} from "@fortawesome/free-solid-svg-icons";
+import ListFriendRequest from "./ListFriendRequest";
 
 const Navbar = () => {
   const { toggle, darkMode } = useContext(DarkModeContext);
@@ -71,22 +82,22 @@ const Navbar = () => {
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
 
   const handleSearch = () => {
-    if (searchText.trim() !== '') {
+    if (searchText.trim() !== "") {
       navigate(`/search/${searchText}`);
     }
   };
 
   const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       handleSearch();
     }
   };
 
   const PopoverStyle = {
-    top: '10px',
+    top: "10px",
   };
 
   return (
@@ -104,34 +115,38 @@ const Navbar = () => {
         <GridViewOutlinedIcon />
         <div className="search">
           <SearchOutlinedIcon onClick={handleSearch} />
-          <input type="text" placeholder="Search..."
+          <input
+            type="text"
+            placeholder="Search..."
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
-            onKeyPress={handleKeyPress} />
+            onKeyPress={handleKeyPress}
+          />
         </div>
       </div>
-      <div
-        className="right">
+      <div className="right">
         <PersonOutlinedIcon
           onClick={handlePopover}
           style={{ cursor: "pointer", fontSize: "28px" }}
-          id="friend-icon" />
+          id="friend-icon"
+        />
         <EmailOutlinedIcon
           onClick={handlePopover}
           style={{ cursor: "pointer", fontSize: "28px" }}
-          id="chat-icon" />
+          id="chat-icon"
+        />
         <NotificationsOutlinedIcon
           onClick={handlePopover}
           style={{ cursor: "pointer", fontSize: "28px" }}
-          id="noti-icon" />
-        <div className="user"
+          id="noti-icon"
+        />
+        <div
+          className="user"
           onClick={handlePopover}
           style={{ cursor: "pointer" }}
-          id="profile">
-          <img
-            src={"/upload/" + currentUser.profilePic}
-            alt=""
-          />
+          id="profile"
+        >
+          <img src={"/upload/" + currentUser.profilePic} alt="" />
           <span>{currentUser.name}</span>
           <FontAwesomeIcon icon={faCaretDown} />
         </div>
@@ -154,63 +169,35 @@ const Navbar = () => {
         {content === "profile" && (
           <List>
             <ListItemButton>
-              <ListItemIcon style={{ fontSize: '20px', marginRight: '-25px' }}>
+              <ListItemIcon style={{ fontSize: "20px", marginRight: "-25px" }}>
                 <FontAwesomeIcon icon={faGear} />
               </ListItemIcon>
-              <ListItemText primary="Cài đặt riêng tư" style={{ marginRight: '100px' }} />
+              <ListItemText
+                primary="Cài đặt riêng tư"
+                style={{ marginRight: "100px" }}
+              />
             </ListItemButton>
             <ListItemButton>
-              <ListItemIcon style={{ fontSize: '20px', marginRight: '-25px' }}>
+              <ListItemIcon style={{ fontSize: "20px", marginRight: "-25px" }}>
                 <FontAwesomeIcon icon={faCircleExclamation} />
               </ListItemIcon>
-              <ListItemText primary="Đóng góp ý kiến" style={{ marginRight: '100px' }} />
+              <ListItemText
+                primary="Đóng góp ý kiến"
+                style={{ marginRight: "100px" }}
+              />
             </ListItemButton>
             <ListItemButton onClick={handleLogout}>
-              <ListItemIcon style={{ fontSize: '20px', marginRight: '-25px' }}>
+              <ListItemIcon style={{ fontSize: "20px", marginRight: "-25px" }}>
                 <FontAwesomeIcon icon={faArrowRightFromBracket} />
               </ListItemIcon>
-              <ListItemText primary="Đăng xuất" style={{ marginRight: '100px' }} />
+              <ListItemText
+                primary="Đăng xuất"
+                style={{ marginRight: "100px" }}
+              />
             </ListItemButton>
           </List>
         )}
-        {content === "friend" && (
-          <div style={{ width: "300px" }}>
-            <div style={{ display: "flex", margin: "15px 10px" }}>
-              <div style={{ display: "flex", alignItems: "center", marginRight: "15px", flex: "0 0 auto" }}>
-                <img
-                  src="https://leplateau.edu.vn/wp-content/uploads/2023/10/hinh-anh-con-gai-1.jpg"
-                  style={{ borderRadius: "50%", width: "50px", height: "50px" }}
-                  alt="User 1"
-                />
-              </div>
-              <div style={{ flex: "1", alignItems: "center", justifyContent: "space-between" }}>
-                <div style={{ marginBottom: "10px" }} >Người dùng 1</div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 10px 1fr" }}>
-                  <button >Chấp nhận</button>
-                  <div></div>
-                  <button>Bỏ qua</button>
-                </div>
-              </div>
-            </div>
-            <div style={{ display: "flex", margin: "15px 10px" }}>
-              <div style={{ display: "flex", alignItems: "center", marginRight: "15px", flex: "0 0 auto" }}>
-                <img
-                  src="https://leplateau.edu.vn/wp-content/uploads/2023/10/hinh-anh-con-gai-1.jpg"
-                  style={{ borderRadius: "50%", width: "50px", height: "50px" }}
-                  alt="User 1"
-                />
-              </div>
-              <div style={{ flex: "1", alignItems: "center", justifyContent: "space-between" }}>
-                <div style={{ marginBottom: "10px" }} >Người dùng 1</div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 10px 1fr" }}>
-                  <button >Chấp nhận</button>
-                  <div></div>
-                  <button>Bỏ qua</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        {content === "friend" && <ListFriendRequest></ListFriendRequest>}
       </Popover>
     </div>
   );

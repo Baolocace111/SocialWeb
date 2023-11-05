@@ -5,9 +5,10 @@ import { makeRequest } from "../../axios";
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [offset, setOffset] = useState(0);
+  const [loading, setLoading] = useState(false);
   const friendId = parseInt(useLocation().pathname.split("/")[2]);
   useEffect(() => {
-    console.log(messages);
     fetchMessages();
   }, []);
 
@@ -15,12 +16,17 @@ const Chat = () => {
     try {
       const response = await makeRequest.post("/messages", {
         friend_id: friendId,
-        offset: 0,
+        offset: offset,
       });
-      setMessages(response.data);
+      setMessages([...messages, ...response.data]);
+      setOffset(offset + 1);
+      setLoading(false);
     } catch (error) {
       console.error("Failed to fetch messages:", error);
     }
+  };
+  const handleShowMore = () => {
+    fetchMessages();
   };
 
   const sendMessage = async () => {
@@ -40,13 +46,16 @@ const Chat = () => {
     <div>
       <h1>Message Page</h1>
       <div className="messages">
-        {messages && messages.map((message) => (
-          <div key={message.id} className="message">
-            <p>Sent at: {message.created_at}</p>
-            <p>{message.message}</p>
-            <p>{message.is_yours ? "Gửi bởi bạn" : "Gửi bởi đối phương"}</p>
-          </div>
-        ))}
+        {messages &&
+          messages.map((message) => (
+            <div key={message.id} className="message">
+              <p>Sent at: {message.created_at}</p>
+              <p>{message.message}</p>
+              <p>{message.is_yours ? "Gửi bởi bạn" : "Gửi bởi đối phương"}</p>
+            </div>
+          ))}
+        {loading && <p>Loading...</p>}
+        {!loading && <button onClick={handleShowMore}>Show More</button>}
       </div>
       <div className="new-message">
         <input

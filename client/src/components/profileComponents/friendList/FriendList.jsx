@@ -9,7 +9,7 @@ const FriendList = ({ user_id }) => {
 
   useEffect(() => {
     loadFriends();
-  }, [offset]);
+  }, []);
 
   const loadFriends = async () => {
     try {
