@@ -6,10 +6,10 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [offset, setOffset] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const friendId = parseInt(useLocation().pathname.split("/")[2]);
   useEffect(() => {
-    fetchMessages();
+    //fetchMessages();
   }, []);
 
   const fetchMessages = async () => {
@@ -18,8 +18,11 @@ const Chat = () => {
         friend_id: friendId,
         offset: offset,
       });
-      setMessages([...messages, ...response.data]);
-      setOffset(offset + 1);
+
+      await setMessages(removeDuplicateUnits([...messages, ...response.data]));
+      //console.log(response.data);
+      //console.log(offset);
+      if (response.data.length !== 0) setOffset(offset + 10);
       setLoading(false);
     } catch (error) {
       console.error("Failed to fetch messages:", error);
@@ -41,7 +44,7 @@ const Chat = () => {
       console.error("Failed to send message:", error);
     }
   };
-
+  if (loading) fetchMessages();
   return (
     <div>
       <h1>Message Page</h1>
@@ -68,4 +71,14 @@ const Chat = () => {
     </div>
   );
 };
+
 export default Chat;
+function removeDuplicateUnits(arr) {
+  const uniqueUnits = new Map();
+
+  for (const unit of arr) {
+    uniqueUnits.set(unit.id, unit);
+  }
+
+  return Array.from(uniqueUnits.values());
+}

@@ -4,32 +4,49 @@ import { makeRequest } from "../../axios";
 const ListFriendRequest = () => {
   const [requests, setRequests] = useState([]);
   const [offset, setOffset] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [clickable, setClickable] = useState(true);
 
   const fetchRequests = useCallback(async () => {
     try {
       const res = await makeRequest.post("/friendship/get_request_friend", {
         offset: offset,
       });
+      //   console.log(offset);
+      //   console.log(res.data);
       setRequests([...requests, ...res.data]);
-      setOffset(offset + 1);
+      if (res.data.length !== 0) setOffset(offset + 10);
       setLoading(false);
     } catch (error) {
       console.error("Failed to fetch friends:", error);
     }
   }, [offset, requests]);
 
-  useEffect(() => {
-    fetchRequests();
-  }, [fetchRequests]);
-
   const handleShowMore = () => {
     fetchRequests();
   };
 
-  const handleAccept = () => { };
-  const handleDeny = () => { };
-
+  const handleAccept = (user_id) => {
+    makeRequest
+      .get("/friendship/accept/" + user_id)
+      .then((response) => {
+        setClickable(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const handleDeny = (user_id) => {
+    makeRequest
+      .get("/friendship/deny/" + user_id)
+      .then((response) => {
+        setClickable(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  if (loading) fetchRequests();
   return (
     <div style={{ width: "300px" }}>
       {requests.map((request) => (
@@ -62,9 +79,19 @@ const ListFriendRequest = () => {
                 gridTemplateColumns: "1fr 10px 1fr",
               }}
             >
-              <button onClick={handleAccept}>Chấp nhận</button>
-              <div></div>
-              <button onClick={handleDeny}>Từ chối</button>
+              {clickable ? (
+                <>
+                  <button onClick={() => handleAccept(request.id)}>
+                    Chấp nhận
+                  </button>
+                  <div></div>
+                  <button onClick={() => handleDeny(request.id)}>
+                    Từ chối
+                  </button>
+                </>
+              ) : (
+                ""
+              )}
             </div>
           </div>
         </div>

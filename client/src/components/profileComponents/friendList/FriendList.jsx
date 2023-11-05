@@ -6,7 +6,7 @@ import "./friendList.scss";
 const FriendList = ({ user_id }) => {
   const [friends, setFriends] = useState([]);
   const [offset, setOffset] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const loadFriends = useCallback(async () => {
     try {
@@ -14,8 +14,9 @@ const FriendList = ({ user_id }) => {
         user_id: user_id,
         offset: offset,
       });
+      //console.log(offset);
       setFriends([...friends, ...response.data]);
-      setOffset(offset + 1);
+      if (response.data.length !== 0) setOffset(offset + 10);
       setLoading(false);
     } catch (error) {
       console.error("Failed to fetch friends:", error);
@@ -23,12 +24,13 @@ const FriendList = ({ user_id }) => {
   }, [user_id, offset, friends]);
 
   useEffect(() => {
-    loadFriends();
+    //loadFriends();
   }, [loadFriends]);
 
   const handleShowMore = () => {
     loadFriends();
   };
+  if (loading) loadFriends();
 
   return (
     <div className="friend-list">
