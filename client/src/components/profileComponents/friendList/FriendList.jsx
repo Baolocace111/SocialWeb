@@ -35,7 +35,7 @@ const FriendList = ({ user_id }) => {
 
       <div className="container">
         {friends.map((friend) => (
-          <div className="user">
+          <div className="user" key={friend.id}>
             <div className="userInfo">
               <img src={"/upload/" + friend.profilePic} alt="" />
               <div className="details">
@@ -55,4 +55,5 @@ const FriendList = ({ user_id }) => {
     </div>
   );
 };
+
 export default FriendList;

@@ -22,6 +22,7 @@ const Navbar = () => {
   const { currentUser, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [content, setContent] = useState("");
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -39,8 +40,29 @@ const Navbar = () => {
     }
   };
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handlePopover = (event) => {
+    event.stopPropagation();
+    const iconId = event.currentTarget.id;
+    console.log(iconId);
+    let contentType = null;
+    switch (iconId) {
+      case "friend-icon":
+        contentType = "friend";
+        break;
+      case "chat-icon":
+        contentType = "chat";
+        break;
+      case "noti-icon":
+        contentType = "noti";
+        break;
+      case "profile":
+        contentType = "profile";
+        break;
+      default:
+        break;
+    }
+    setAnchorEl(event.currentTarget.parentElement);
+    setContent(contentType);
   };
 
   const handleClose = () => {
@@ -62,7 +84,11 @@ const Navbar = () => {
       handleSearch();
     }
   };
- 
+
+  const PopoverStyle = {
+    top: '10px',
+  };
+
   return (
     <div className="navbar">
       <div className="left">
@@ -78,17 +104,30 @@ const Navbar = () => {
         <GridViewOutlinedIcon />
         <div className="search">
           <SearchOutlinedIcon onClick={handleSearch} />
-          <input type="text" placeholder="Search..."  
-          value={searchText} 
-          onChange={(e) => setSearchText(e.target.value)}
-        onKeyPress={handleKeyPress}/>
+          <input type="text" placeholder="Search..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            onKeyPress={handleKeyPress} />
         </div>
       </div>
-      <div className="right">
-        <PersonOutlinedIcon />
-        <EmailOutlinedIcon />
-        <NotificationsOutlinedIcon />
-        <div className="user" onClick={handleClick} style={{ cursor:"pointer" }}>
+      <div
+        className="right">
+        <PersonOutlinedIcon
+          onClick={handlePopover}
+          style={{ cursor: "pointer", fontSize: "28px" }}
+          id="friend-icon" />
+        <EmailOutlinedIcon
+          onClick={handlePopover}
+          style={{ cursor: "pointer", fontSize: "28px" }}
+          id="chat-icon" />
+        <NotificationsOutlinedIcon
+          onClick={handlePopover}
+          style={{ cursor: "pointer", fontSize: "28px" }}
+          id="noti-icon" />
+        <div className="user"
+          onClick={handlePopover}
+          style={{ cursor: "pointer" }}
+          id="profile">
           <img
             src={"/upload/" + currentUser.profilePic}
             alt=""
@@ -96,45 +135,84 @@ const Navbar = () => {
           <span>{currentUser.name}</span>
           <FontAwesomeIcon icon={faCaretDown} />
         </div>
-        <Popover
-          id={id}
-          open={open}
-          anchorEl={anchorEl}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          style={{ maxWidth: "2000px", paddingLeft: "20px" }}
-        >
+      </div>
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        style={PopoverStyle}
+      >
+        {content === "profile" && (
           <List>
             <ListItemButton>
-              <ListItemIcon style={{ marginRight: '-25px' }}>
+              <ListItemIcon style={{ fontSize: '20px', marginRight: '-25px' }}>
                 <FontAwesomeIcon icon={faGear} />
               </ListItemIcon>
-              <ListItemText primary="Cài đặt" />
+              <ListItemText primary="Cài đặt riêng tư" style={{ marginRight: '100px' }} />
             </ListItemButton>
             <ListItemButton>
-              <ListItemIcon style={{ marginRight: '-25px' }}>
+              <ListItemIcon style={{ fontSize: '20px', marginRight: '-25px' }}>
                 <FontAwesomeIcon icon={faCircleExclamation} />
               </ListItemIcon>
-              <ListItemText primary="Ý kiến" />
+              <ListItemText primary="Đóng góp ý kiến" style={{ marginRight: '100px' }} />
             </ListItemButton>
             <ListItemButton onClick={handleLogout}>
-              <ListItemIcon style={{ marginRight: '-25px' }}>
+              <ListItemIcon style={{ fontSize: '20px', marginRight: '-25px' }}>
                 <FontAwesomeIcon icon={faArrowRightFromBracket} />
               </ListItemIcon>
-              <ListItemText primary="Đăng xuất" />
+              <ListItemText primary="Đăng xuất" style={{ marginRight: '100px' }} />
             </ListItemButton>
           </List>
-        </Popover>
-      </div>
+        )}
+        {content === "friend" && (
+          <div style={{ width: "300px" }}>
+            <div style={{ display: "flex", margin: "15px 10px" }}>
+              <div style={{ display: "flex", alignItems: "center", marginRight: "15px", flex: "0 0 auto" }}>
+                <img
+                  src="https://leplateau.edu.vn/wp-content/uploads/2023/10/hinh-anh-con-gai-1.jpg"
+                  style={{ borderRadius: "50%", width: "50px", height: "50px" }}
+                  alt="User 1"
+                />
+              </div>
+              <div style={{ flex: "1", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ marginBottom: "10px" }} >Người dùng 1</div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 10px 1fr" }}>
+                  <button >Chấp nhận</button>
+                  <div></div>
+                  <button>Bỏ qua</button>
+                </div>
+              </div>
+            </div>
+            <div style={{ display: "flex", margin: "15px 10px" }}>
+              <div style={{ display: "flex", alignItems: "center", marginRight: "15px", flex: "0 0 auto" }}>
+                <img
+                  src="https://leplateau.edu.vn/wp-content/uploads/2023/10/hinh-anh-con-gai-1.jpg"
+                  style={{ borderRadius: "50%", width: "50px", height: "50px" }}
+                  alt="User 1"
+                />
+              </div>
+              <div style={{ flex: "1", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ marginBottom: "10px" }} >Người dùng 1</div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 10px 1fr" }}>
+                  <button >Chấp nhận</button>
+                  <div></div>
+                  <button>Bỏ qua</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </Popover>
     </div>
   );
 };
-
 export default Navbar;
