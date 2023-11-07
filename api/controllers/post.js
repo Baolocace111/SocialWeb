@@ -15,7 +15,7 @@ export const getPosts = (req, res) => {
   jwt.verify(token, "secretkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
 
-    getPostsService(userId, userInfo, (err, data) => {
+    getPostsService(userId, userInfo.id, (err, data) => {
       if (err) return res.status(500).json(err);
       return res.status(200).json(data);
     });
@@ -64,7 +64,8 @@ export const searchPostsbyContentController = (req, res) => {
 
   jwt.verify(token, "secretkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
-    getPostbyContentService(req.body.content, (e, data) => {
+    const userId = userInfo.id;
+    getPostbyContentService(req.body.content, userId, (e, data) => {
       if (e) return res.status(500).json(e);
       return res.status(200).json(data);
     });
@@ -76,7 +77,8 @@ export const searchPostsbyHashtagController = (req, res) => {
 
   jwt.verify(token, "secretkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
-    getPostbyHashtagService(req.body.hashtag, (e, data) => {
+    const userId = userInfo.id;
+    getPostbyHashtagService(req.body.hashtag, userId, (e, data) => {
       if (e) return res.status(500).json(e);
       return res.status(200).json(data);
     });

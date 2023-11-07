@@ -1,3 +1,4 @@
+import { query } from "express";
 import { db } from "../connect.js";
 import moment from "moment";
 
@@ -5,11 +6,39 @@ export const getPosts = (userId, userInfo, callback) => {
   const q =
     userId !== "undefined"
       ? `SELECT p.*, u.id AS userId, name, profilePic FROM posts AS p JOIN users AS u ON (u.id = p.userId) WHERE p.userId = ? ORDER BY p.createdAt DESC`
-      : `SELECT DISTINCT p.*, u.id AS userId, name, profilePic FROM posts AS p JOIN users AS u ON (u.id = p.userId) LEFT JOIN relationships AS r ON (p.userId = r.followedUserId) WHERE r.followerUserId = ? OR p.userId = ? ORDER BY p.createdAt DESC`;
+      : `SELECT DISTINCT p.*, u.id AS userId, name, profilePic FROM posts AS p JOIN users 
+      AS u ON (u.id = p.userId) 
+      LEFT JOIN relationships AS r ON (p.userId = r.followedUserId) WHERE r.followerUserId = ? OR p.userId = ? ORDER BY p.createdAt DESC`;
 
   const values = userId !== "undefined" ? [userId] : [userInfo.id, userInfo.id];
 
   db.query(q, values, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data);
+  });
+};
+export const getPostsWithPrivateByUser = (userId, myId, callback) => {
+  const q = `
+  SELECT DISTINCT p.*, u.id, u.name, u.profilePic
+    FROM posts p
+    LEFT JOIN friendships f ON (p.userId=f.friend_id AND f.user_id = ? AND f.status = 1)
+    LEFT JOIN users u ON (p.userId = u.id)
+    WHERE p.userId = ? AND (p.status = 0 OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?)))) ORDER BY p.createdAt DESC`;
+
+  db.query(q, [myId, userId, myId, myId, myId], (error, results) => {
+    if (error) return callback(error, null);
+    return callback(null, results);
+  });
+};
+export const getPostsWithPrivate = (userId, callback) => {
+  const q = `SELECT DISTINCT p.*, u.id, u.name, u.profilePic, f.user_id
+    FROM posts p
+    LEFT JOIN friendships f ON (p.userId=f.friend_id AND f.user_id = ? AND f.status = 1)
+    LEFT JOIN users u ON (p.userId = u.id)
+    LEFT JOIN relationships r ON (p.userId = r.followedUserId)
+    WHERE (r.followerUserId = ? OR p.userId = ?) AND (p.status = 0 OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?)))) ORDER BY p.createdAt DESC`;
+
+  db.query(q, [userId, userId, userId, userId, userId, userId], (err, data) => {
     if (err) return callback(err, null);
     return callback(null, data);
   });
@@ -40,26 +69,32 @@ export const deletePost = (postId, userId, callback) => {
     return callback("You can delete only your post.", null);
   });
 };
-export const searchPostsbyContent = (content, callback) => {
+export const searchPostsbyContent = (content, userId, callback) => {
   const tuTimKiem = content;
-  const sqlQuery = `SELECT posts.*, users.name, users.profilePic
-  FROM posts
-  JOIN users ON posts.userId = users.id
-  WHERE posts.\`desc\` LIKE '%${tuTimKiem}%'`;
+  const sqlQuery = `
+  SELECT DISTINCT p.*, u.id, u.name, u.profilePic
+    FROM posts p
+    LEFT JOIN friendships f ON (p.userId=f.friend_id AND f.user_id = ? AND f.status = 1)
+    LEFT JOIN users u ON (p.userId = u.id)
+    WHERE (p.\`desc\` LIKE '%${tuTimKiem}%') AND (p.status = 0 OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?)))) ORDER BY p.createdAt DESC
+  `;
 
-  db.query(sqlQuery, (err, results) => {
+  db.query(sqlQuery, [userId, userId, userId, userId], (err, results) => {
     if (err) return callback(err, null);
     return callback(null, results);
   });
 };
-export const searchPostsbyHashtag = (hashtag, callback) => {
+export const searchPostsbyHashtag = (hashtag, userId, callback) => {
   const hashtagh = hashtag;
-  console.log(hashtagh);
-  const sqlQuery = `SELECT posts.*, users.name, users.profilePic
-  FROM posts
-  JOIN users ON posts.userId = users.id
-  WHERE posts.\`desc\` REGEXP '\\\\b${hashtagh}\\\\b'`;
-  db.query(sqlQuery, (err, results) => {
+  //console.log(hashtagh);
+  const sqlQuery = `
+  SELECT DISTINCT p.*, u.id, u.name, u.profilePic
+  FROM posts p
+  LEFT JOIN friendships f ON (p.userId=f.friend_id AND f.user_id = ? AND f.status = 1)
+  LEFT JOIN users u ON (p.userId = u.id)
+  WHERE (p.\`desc\` REGEXP '\\\\b${hashtagh}\\\\b') AND (p.status = 0 OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?)))) ORDER BY p.createdAt DESC
+  `;
+  db.query(sqlQuery, [userId, userId, userId, userId], (err, results) => {
     if (err) return callback(err, null);
     return callback(null, results);
   });

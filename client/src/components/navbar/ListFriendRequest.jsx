@@ -5,7 +5,7 @@ const ListFriendRequest = () => {
   const [requests, setRequests] = useState([]);
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [clickable, setClickable] = useState(true);
+  //const [clickable, setClickable] = useState(true);
 
   const fetchRequests = useCallback(async () => {
     try {
@@ -14,7 +14,7 @@ const ListFriendRequest = () => {
       });
       //   console.log(offset);
       //   console.log(res.data);
-      setRequests([...requests, ...res.data]);
+      setRequests(removeDuplicateUnits([...requests, ...res.data]));
       if (res.data.length !== 0) setOffset(offset + 10);
       setLoading(false);
     } catch (error) {
@@ -25,22 +25,32 @@ const ListFriendRequest = () => {
   const handleShowMore = () => {
     fetchRequests();
   };
+  const removeItemById = (idToRemove) => {
+    setRequests((requests) =>
+      requests.filter((request) => request.id !== idToRemove)
+    );
+  };
 
   const handleAccept = (user_id) => {
     makeRequest
       .get("/friendship/accept/" + user_id)
       .then((response) => {
-        setClickable(false);
+        //setClickable(false);
+        //setOffset(offset - 10);
+        removeItemById(user_id);
       })
       .catch((error) => {
-        console.log(error);
+        //console.log(error);
       });
   };
   const handleDeny = (user_id) => {
     makeRequest
       .get("/friendship/deny/" + user_id)
       .then((response) => {
-        setClickable(false);
+        //setClickable(false);
+        //setOffset(offset - 10);
+        //fetchRequests();
+        removeItemById(user_id);
       })
       .catch((error) => {
         console.log(error);
@@ -79,19 +89,13 @@ const ListFriendRequest = () => {
                 gridTemplateColumns: "1fr 10px 1fr",
               }}
             >
-              {clickable ? (
-                <>
-                  <button onClick={() => handleAccept(request.id)}>
-                    Chấp nhận
-                  </button>
-                  <div></div>
-                  <button onClick={() => handleDeny(request.id)}>
-                    Từ chối
-                  </button>
-                </>
-              ) : (
-                ""
-              )}
+              <>
+                <button onClick={() => handleAccept(request.id)}>
+                  Chấp nhận
+                </button>
+                <div></div>
+                <button onClick={() => handleDeny(request.id)}>Từ chối</button>
+              </>
             </div>
           </div>
         </div>
@@ -103,3 +107,10 @@ const ListFriendRequest = () => {
 };
 
 export default ListFriendRequest;
+function removeDuplicateUnits(arr) {
+  const uniqueUnits = new Map();
+  for (const unit of arr) {
+    uniqueUnits.set(unit.id, unit);
+  }
+  return Array.from(uniqueUnits.values());
+}
