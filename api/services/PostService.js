@@ -4,13 +4,26 @@ import {
   deletePost,
   searchPostsbyContent,
   searchPostsbyHashtag,
+  getPostsWithPrivateByUser,
+  getPostsWithPrivate,
 } from "../models/PostModel.js";
 
 export const getPostsService = (userId, userInfo, callback) => {
-  getPosts(userId, userInfo, (err, data) => {
-    if (err) return callback(err, null);
-    return callback(null, data);
-  });
+  if (userId !== "undefined") {
+    getPostsWithPrivateByUser(userId, userInfo, (err, data) => {
+      if (err) return callback(err, null);
+      return callback(null, data);
+    });
+  } else {
+    getPostsWithPrivate(userInfo, (e, data) => {
+      if (e) return callback(e, null);
+      return callback(null, data);
+    });
+  }
+  // getPosts(userId, userInfo, (err, data) => {
+  //   if (err) return callback(err, null);
+  //   return callback(null, data);
+  // });
 };
 
 export const addPostService = (post, callback) => {
@@ -26,14 +39,14 @@ export const deletePostService = (postId, userId, callback) => {
     return callback(null, data);
   });
 };
-export const getPostbyContentService = (content, callback) => {
-  searchPostsbyContent(content, (err, data) => {
+export const getPostbyContentService = (content, userId, callback) => {
+  searchPostsbyContent(content, userId, (err, data) => {
     if (err) return callback(err);
     return callback(null, data);
   });
 };
-export const getPostbyHashtagService = (hashtag, callback) => {
-  searchPostsbyHashtag(hashtag, (err, data) => {
+export const getPostbyHashtagService = (hashtag, userId, callback) => {
+  searchPostsbyHashtag(hashtag, userId, (err, data) => {
     if (err) return callback(err);
     return callback(null, data);
   });
