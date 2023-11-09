@@ -1,7 +1,9 @@
 @import "../../style.scss";
+
 .hashtag {
   color: #1417c0;
 }
+
 .post {
   @include themify($themes) {
     -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
@@ -44,6 +46,7 @@
             }
           }
         }
+
         button {
           position: absolute;
           top: 30px;
@@ -53,6 +56,10 @@
           padding: 5px;
           cursor: pointer;
           color: white;
+        }
+
+        .more:hover {
+          background-color: lightgray;
         }
       }
 
