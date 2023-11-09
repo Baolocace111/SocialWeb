@@ -7,12 +7,11 @@ const UserTab = ({ user }) => {
   let componentToRender;
   let status;
   const setStatus = (number) => {
-    status =number;
+    status = number;
     //checkStatus();
   };
-  
+
   setStatus(user.friendStatus);
-  
 
   const SendRequest = async () => {
     setStatus(-3);
@@ -28,15 +27,15 @@ const UserTab = ({ user }) => {
   };
   const CancelRequest = async () => {
     setStatus(-3);
-    
+
     makeRequest
       .get("/friendship/cancel/" + user.id)
       .then((response) => {
-        console.log("Success...");
+        //console.log("Success...");
         setStatus(0);
       })
       .catch((error) => {
-        console.log(error);
+        //console.log(error);
         setStatus(-2);
       });
   };

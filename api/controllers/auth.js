@@ -1,16 +1,30 @@
 import { AuthService } from "../services/AuthService.js";
 
 export const register = async (req, res) => {
+  const user = await req.body.username;
+  const email = await req.body.email;
+  const password = await req.body.password;
+  const name = await req.body.name;
+  const repassword = await req.body.repassword;
   try {
-    const result = await AuthService.register(
-      req.body.username,
-      req.body.email,
-      req.body.password,
-      req.body.name
-    );
-    res.status(200).json(result);
+    if (
+      user === "" ||
+      email === "" ||
+      password === "" ||
+      name === "" ||
+      repassword === ""
+    )
+      return await res.status(200).json("Fill out the form");
+    if (password !== repassword)
+      return await res
+        .status(200)
+        .json("Password and re-entered password do not match");
+    const result = await AuthService.register(user, email, password, name);
+    //await console.log(result);
+    return res.status(200).json(result);
   } catch (err) {
-    res.status(500).json(err.message);
+    //console.log(err.message);
+    return res.status(200).json(err.message);
   }
 };
 
