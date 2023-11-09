@@ -5,6 +5,7 @@ import {
   deletePost,
   searchPostsbyContentController,
   searchPostsbyHashtagController,
+  updatePost,
 } from "../controllers/post.js";
 
 const router = express.Router();
@@ -14,4 +15,5 @@ router.post("/", addPost);
 router.delete("/:postId", deletePost);
 router.post("/content", searchPostsbyContentController);
 router.post("/hashtag", searchPostsbyHashtagController);
+router.put("/:postId", updatePost);
 export default router;

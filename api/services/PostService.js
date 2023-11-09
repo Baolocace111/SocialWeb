@@ -6,6 +6,7 @@ import {
   searchPostsbyHashtag,
   getPostsWithPrivateByUser,
   getPostsWithPrivate,
+  updatePost,
 } from "../models/PostModel.js";
 
 export const getPostsService = (userId, userInfo, callback) => {
@@ -51,3 +52,11 @@ export const getPostbyHashtagService = (hashtag, userId, callback) => {
     return callback(null, data);
   });
 };
+
+export const updatePostService = (postId, updatedPost, callback) => {
+  updatePost(postId, updatedPost, (err, data) => {
+    if (err) return callback(err);
+    return callback(null, data);
+  });
+};
+
