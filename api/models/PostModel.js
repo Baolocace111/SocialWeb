@@ -19,7 +19,7 @@ export const getPosts = (userId, userInfo, callback) => {
 };
 export const getPostsWithPrivateByUser = (userId, myId, callback) => {
   const q = `
-  SELECT DISTINCT p.*, u.id, u.name, u.profilePic
+  SELECT DISTINCT p.*, u.id AS userid, u.name, u.profilePic
     FROM posts p
     LEFT JOIN friendships f ON (p.userId=f.friend_id AND f.user_id = ? AND f.status = 1)
     LEFT JOIN users u ON (p.userId = u.id)
@@ -31,7 +31,7 @@ export const getPostsWithPrivateByUser = (userId, myId, callback) => {
   });
 };
 export const getPostsWithPrivate = (userId, callback) => {
-  const q = `SELECT DISTINCT p.*, u.id, u.name, u.profilePic, f.user_id
+  const q = `SELECT DISTINCT p.*, u.id AS userid, u.name, u.profilePic, f.user_id
     FROM posts p
     LEFT JOIN friendships f ON (p.userId=f.friend_id AND f.user_id = ? AND f.status = 1)
     LEFT JOIN users u ON (p.userId = u.id)

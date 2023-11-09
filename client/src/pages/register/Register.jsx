@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./register.scss";
-import axios from "axios";
+
+import { makeRequest } from "../../axios";
 
 const Register = () => {
   const [inputs, setInputs] = useState({
     username: "",
     email: "",
     password: "",
+    repassword: "",
     name: "",
   });
   const [message, setMessage] = useState(null);
@@ -20,14 +22,22 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:8800/api/auth/register", inputs);
-      setMessage("User has been created!");
+      //const {isLoading,error,data}= axios.post("http://localhost:8800/api/auth/register", inputs);
+      makeRequest
+        .post("/auth/register", inputs)
+        .then((response) => {
+          setMessage(response.data);
+        })
+        .catch((error) => {
+          setMessage(error.data);
+        });
+      //setMessage("User has been created!");
     } catch (err) {
       setMessage(err.response.data);
     }
   };
 
-  console.log(message)
+  //console.log(message);
 
   return (
     <div className="register">
@@ -52,24 +62,35 @@ const Register = () => {
               placeholder="Username"
               name="username"
               onChange={handleChange}
+              required
             />
             <input
               type="email"
               placeholder="Email"
               name="email"
               onChange={handleChange}
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              name="password"
-              onChange={handleChange}
+              required
             />
             <input
               type="text"
               placeholder="Name"
               name="name"
               onChange={handleChange}
+              required
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              name="password"
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="password"
+              placeholder="Re-enter Password"
+              name="repassword"
+              onChange={handleChange}
+              required
             />
             {message && <p>{message}</p>}
             <button onClick={handleClick}>Register</button>
