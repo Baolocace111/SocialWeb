@@ -8,7 +8,7 @@ import commentRoutes from "./routes/comments.js";
 import likeRoutes from "./routes/likes.js";
 import friendshipRoutes from "./routes/friendship.js";
 import relationshipRoutes from "./routes/relationships.js";
-import messageRoutes from "./routes/message.js"
+import messageRoutes from "./routes/message.js";
 import cors from "cors";
 import multer from "multer";
 import cookieParser from "cookie-parser";
@@ -49,9 +49,65 @@ app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/likes", likeRoutes);
 app.use("/api/relationships", relationshipRoutes);
-app.use("/api/friendship",friendshipRoutes);
-app.use("/api/messages",messageRoutes);
+app.use("/api/friendship", friendshipRoutes);
+app.use("/api/messages", messageRoutes);
 
 app.listen(8800, () => {
   console.log("API working!");
 });
+// ---------------------------------------------------------
+
+import http from "http";
+import { WebSocketServer } from "ws";
+import { AuthService } from "./services/AuthService.js";
+
+const server = http.createServer(app);
+const wss = new WebSocketServer({ server });
+
+// Đối tượng để lưu trữ các kết nối và thông tin người dùng
+const clients = new Map();
+
+wss.on("connection", async (ws, req) => {
+  const header = await req.rawHeaders;
+  const accessTokenIndex = await header.findIndex(
+    (element) => element === "Cookie"
+  );
+
+  // Nếu 'accessToken' được tìm thấy, lấy giá trị từ phần tử kế tiếp
+  let accessToken;
+  if (accessTokenIndex !== -1 && accessTokenIndex < header.length - 1) {
+    accessToken = await header[accessTokenIndex + 1].split("=")[1];
+  }
+  try {
+    const userId = await AuthService.verifyUserToken(accessToken);
+    if (userId === -1) {
+      ws.close();
+      return;
+    }
+    clients.set(userId, ws);
+
+    // Gửi dữ liệu cho client khi kết nối thành công
+    ws.send("Welcome to the WebSocket server");
+
+    // Xử lý tin nhắn từ client
+    ws.on("message", (message) => {});
+
+    // Xử lý sự kiện khi client đóng kết nối
+    ws.on("close", () => {});
+  } catch (error) {
+    console.error("close user");
+    ws.close();
+  }
+});
+
+server.listen(3030, () => {
+  console.log("Server is listening on port 3030");
+});
+export const sendMessageToUser = (userId, message) => {
+  const userSocket = clients.get(userId);
+
+  if (userSocket) {
+    userSocket.send(message);
+  } else {
+  }
+};
