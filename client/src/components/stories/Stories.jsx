@@ -52,8 +52,6 @@ const Stories = () => {
     }
   }, [data, users]);
 
-  //TODO View story details
-
   //Show dialog add-story
   const [selectedImage, setSelectedImage] = useState(null);
 
@@ -159,27 +157,6 @@ const Stories = () => {
       </Dialog>
     </div>
   ];
-
-  // if (error) {
-  //   return "Something went wrong";
-  // } else if (isLoading) {
-  //   return "loading";
-  // } else {
-  //   data.forEach((story) => {
-  //     const user = users[story.userId];
-  //     slides.push(
-  //       <div className="story" key={story.id}>
-  //         <div className="profile-pic">
-  //           {user && <img src={`/upload/${user.profilePic}`} alt="" />}
-  //         </div>
-  //         <div className="story-content">
-  //           <img src={"/upload/" + story.img} alt="" />
-  //           <span>{story.name}</span>
-  //         </div>
-  //       </div>
-  //     );
-  //   });
-  // }
 
   if (error) {
     return "Something went wrong";

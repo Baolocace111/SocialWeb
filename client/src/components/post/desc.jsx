@@ -5,7 +5,7 @@ const Description = ({ text }) => {
   const inputString = text;
 
   const processString = (str) => {
-    const words = splitStrings(str); // Splits by any whitespace character
+    const words = str ? splitStrings(str) : [];
 
     const processedWords = words.map((word, index) => {
       if (word.startsWith("#")) {

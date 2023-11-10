@@ -5,6 +5,7 @@ import {
   deletePostService,
   getPostbyContentService,
   getPostbyHashtagService,
+  updatePostService,
 } from "../services/PostService.js";
 
 export const getPosts = (req, res) => {
@@ -84,3 +85,24 @@ export const searchPostsbyHashtagController = (req, res) => {
     });
   });
 };
+
+export const updatePost = (req, res) => {
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json("Not logged in!");
+
+  jwt.verify(token, "secretkey", (err, userInfo) => {
+    if (err) return res.status(403).json("Token is not valid!");
+
+    const postId = req.params.postId; // Lấy ID của bài viết cần sửa từ tham số URL.
+    const updatedPost = {
+      desc: req.body.desc,
+      img: req.body.img,
+    };
+
+    updatePostService(postId, updatedPost, (err, data) => {
+      if (err) return res.status(500).json(err);
+      return res.status(200).json(data);
+    });
+  });
+};
+

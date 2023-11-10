@@ -99,3 +99,14 @@ export const searchPostsbyHashtag = (hashtag, userId, callback) => {
     return callback(null, results);
   });
 };
+
+export const updatePost = (postId, updatedPost, callback) => {
+  const q = "UPDATE posts SET `desc` = ?, `img` = ? WHERE id = ?";
+  const values = [updatedPost.desc, updatedPost.img, postId];
+
+  db.query(q, values, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, "Post has been updated.");
+  });
+};
+

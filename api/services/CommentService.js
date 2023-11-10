@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import moment from "moment";
-import { getCommentsByPostId, addComment, deleteComment } from "../models/commentModel.js";
+import { getCommentsByPostId, addComment, deleteComment } from "../models/CommentModel.js";
 
 export const getCommentsService = (postId, callback) => {
   getCommentsByPostId(postId, (err, data) => {
