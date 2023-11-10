@@ -32,7 +32,7 @@ export const sendFriendRequestTo = async (req, res) => {
   try {
     const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
     const friendId = await req.params.friendId;
-    //console.log(friendId);
+
     const value = await sendFriendRequest(userId, friendId);
     addRelationshipService(userId, friendId, (error, data) => {});
     const response = {
@@ -48,7 +48,6 @@ export const acceptFriendRequestFrom = async (req, res) => {
     const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
     const friendId = await req.params.friendId;
 
-    //console.log(friendId);
     const value = await acceptFriendRequest(userId, friendId);
     addRelationshipService(userId, friendId, (error, data) => {});
     const response = {
@@ -63,7 +62,7 @@ export const unfriendUser = async (req, res) => {
   try {
     const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
     const friendId = await req.params.friendId;
-    //console.log(friendId);
+
     const value = await unfriend(userId, friendId);
     deleteRelationshipService(userId, friendId, (error, data) => {});
     deleteRelationshipService(friendId, userId, (error, data) => {});
@@ -79,7 +78,7 @@ export const cancelRequest = async (req, res) => {
   try {
     const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
     const friendId = await req.params.friendId;
-    //console.log(friendId);
+
     const value = await cancelFriendRequest(userId, friendId);
     deleteRelationshipService(userId, friendId, (error, data) => {});
     const response = {
@@ -94,7 +93,7 @@ export const denyRequest = async (req, res) => {
   try {
     const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
     const friendId = await req.params.friendId;
-    //console.log(friendId);
+
     const value = await rejectFriendRequest(userId, friendId);
     deleteRelationshipService(friendId, userId, (error, data) => {});
     const response = {
