@@ -1,5 +1,4 @@
 import {
-  getPosts,
   addPost,
   deletePost,
   searchPostsbyContent,
