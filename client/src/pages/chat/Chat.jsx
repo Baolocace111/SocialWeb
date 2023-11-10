@@ -4,13 +4,50 @@ import { makeRequest } from "../../axios";
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
+  const [ws, setWs] = useState(null);
   const [newMessage, setNewMessage] = useState("");
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(true);
   const friendId = parseInt(useLocation().pathname.split("/")[2]);
-  useEffect(() => {
-    //fetchMessages();
-  }, []);
+  if (!ws) {
+    // Lấy cookies từ document.cookie hoặc từ các nguồn khác nếu cần
+    const token = document.cookie.accessToken;
+    // Tạo kết nối WebSocket khi component được mount
+    const socket = new WebSocket(`ws://localhost:3030?token=${token}`); // Đặt URL của WebSocket server của bạn ở đây
+
+    // Xử lý sự kiện khi mở kết nối
+    socket.onopen = () => {
+      console.log("WebSocket connected");
+    };
+
+    // Xử lý sự kiện khi nhận tin nhắn từ server
+    socket.onmessage = async (event) => {
+      try {
+        const response = await makeRequest.post("/messages", {
+          friend_id: friendId,
+          offset: 0,
+        });
+        await setMessages(
+          removeDuplicateUnits([...messages, ...response.data])
+        );
+      } catch (error) {
+        console.error("Failed to fetch messages:", error);
+      }
+    };
+
+    // Xử lý sự kiện khi đóng kết nối
+    socket.onclose = () => {
+      console.log("WebSocket disconnected");
+    };
+
+    // Lưu đối tượng WebSocket vào state để sử dụng ở các phương thức khác
+    setWs(socket);
+
+    // Clear up effect khi component unmount
+    return () => {
+      socket.close();
+    };
+  }
 
   const fetchMessages = async () => {
     try {
@@ -20,8 +57,7 @@ const Chat = () => {
       });
 
       await setMessages(removeDuplicateUnits([...messages, ...response.data]));
-      //console.log(response.data);
-      //console.log(offset);
+
       if (response.data.length !== 0) setOffset(offset + 10);
       setLoading(false);
     } catch (error) {
