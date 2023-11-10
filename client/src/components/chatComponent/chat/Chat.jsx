@@ -1,15 +1,15 @@
 import { useLocation } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-import { makeRequest } from "../../axios";
-import Message from "../../components/chatComponent/message/Message";
-
-const Chat = () => {
+import { makeRequest } from "../../../axios";
+import Message from "../message/Message";
+import "./chat.scss";
+const Chat = ({ friend }) => {
   const [messages, setMessages] = useState([]);
   const [ws, setWs] = useState(null);
   const [newMessage, setNewMessage] = useState("");
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(true);
-  const friendId = parseInt(useLocation().pathname.split("/")[2]);
+  const friendId = friend.id;
   if (!ws) {
     // Lấy cookies từ document.cookie hoặc từ các nguồn khác nếu cần
     const token = document.cookie.accessToken;
@@ -94,7 +94,7 @@ const Chat = () => {
   if (loading) fetchMessages();
   return (
     <div>
-      <h1>Message Page</h1>
+      <h1>{friend.name}</h1>
       <div className="messages">
         {messages &&
           messages.map((message) => (
