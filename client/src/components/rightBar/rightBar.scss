@@ -9,17 +9,31 @@
     overflow: scroll;
     background-color: themed("bgSoft");
 
-    @include mobile{
+    @include mobile {
       display: none;
     }
-    @include tablet{
+    @include tablet {
       display: none;
     }
 
     &::-webkit-scrollbar {
       display: none;
     }
-
+    .chat-boxes {
+      position: fixed;
+      display: flex;
+      bottom: 0;
+      z-index: 1;
+      right: 0;
+      .closeButton {
+        width: 30px;
+        height: 30px;
+        position: relative;
+        left: 0;
+        top: 0;
+        color: #f0544f;
+      }
+    }
     .container {
       padding: 20px;
 
@@ -36,6 +50,7 @@
         }
 
         .user {
+          cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: space-between;
