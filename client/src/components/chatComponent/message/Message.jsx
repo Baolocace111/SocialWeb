@@ -24,13 +24,13 @@ const Message = ({ messageShow }) => {
   return (
     <div onClick={handleShow}>
       {messageShow.is_yours ? (
-        <span className="messageis_yours">
-          <p>{messageShow.message}</p>
-        </span>
+        <div className="messageis_yours">
+          <div className="mess-content">{messageShow.message}</div>
+        </div>
       ) : (
-        <span className="messageis_friends">
-          <p>{messageShow.message}</p>
-        </span>
+        <div className="messageis_friends">
+          <div className="mess-content">{messageShow.message}</div>
+        </div>
       )}
       {show && (
         <span className="date">{moment(messageShow.created_at).fromNow()}</span>
