@@ -12,6 +12,7 @@
     @include mobile {
       display: none;
     }
+
     @include tablet {
       display: none;
     }
@@ -19,12 +20,14 @@
     &::-webkit-scrollbar {
       display: none;
     }
+
     .chat-boxes {
       position: fixed;
       display: inline-flex;
       bottom: 0;
       z-index: 1;
       right: 0;
+
       .chat-box {
         width: 230px;
         height: fit-content;
@@ -35,6 +38,7 @@
         overflow: hidden;
         flex-direction: column;
       }
+
       .closeButton {
         cursor: pointer;
         width: 18px;
@@ -45,6 +49,7 @@
         align-items: center;
         display: inline-flex;
         position: absolute;
+
         span {
           color: white;
           font-size: 20px;
@@ -54,6 +59,7 @@
         }
       }
     }
+
     .container {
       padding: 20px;
 
