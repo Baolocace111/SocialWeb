@@ -1,9 +1,11 @@
-import { useLocation } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { makeRequest } from "../../../axios";
 import Message from "../message/Message";
 import "./chat.scss";
-const Chat = ({ friend }) => {
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPhone, faVideo, faX, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+
+const Chat = ({ friend, onRemoveChatBox }) => {
   const [messages, setMessages] = useState([]);
   const [ws, setWs] = useState(null);
   const [newMessage, setNewMessage] = useState("");
@@ -98,6 +100,17 @@ const Chat = ({ friend }) => {
       <div className="top-box">
         <img src={"/upload/" + friend.profilePic} alt="" />
         <div className="name">{friend.name}</div>
+        <div className="actionButton">
+          <button>
+            <span><FontAwesomeIcon icon={faVideo} /></span>
+          </button>
+          <button>
+            <span><FontAwesomeIcon icon={faPhone} /></span>
+          </button>
+          <button onClick={onRemoveChatBox}>
+            <span><FontAwesomeIcon icon={faX} /></span>
+          </button>
+        </div>
       </div>
       <div className="messages">
         {!loading && (
@@ -107,7 +120,7 @@ const Chat = ({ friend }) => {
         )}
         {messages &&
           messages.map((message) => (
-            <Message key={message.id} messageShow={message}></Message>
+            <Message key={message.id} messageShow={message} friendProfilePic={friend.profilePic}></Message>
           ))}
         {loading && <p>Loading...</p>}
       </div>
@@ -115,11 +128,12 @@ const Chat = ({ friend }) => {
         <input
           type="text"
           value={newMessage}
+          placeholder="Aa"
           onChange={(e) => setNewMessage(e.target.value)}
         />
-        <div className="send-button" onClick={sendMessage}>
-          S
-        </div>
+        <button className="send-button" onClick={sendMessage}>
+          <span><FontAwesomeIcon icon={faPaperPlane} /></span>
+        </button>
       </div>
     </div>
   );
@@ -127,11 +141,19 @@ const Chat = ({ friend }) => {
 
 export default Chat;
 function removeDuplicateUnits(arr) {
+  // Loại bỏ các phần tử trùng lặp dựa trên id
   const uniqueUnits = new Map();
 
   for (const unit of arr) {
     uniqueUnits.set(unit.id, unit);
   }
 
-  return Array.from(uniqueUnits.values());
+  // Chuyển mảng set thành mảng thông thường và sắp xếp theo createdAt tăng dần
+  const sortedArr = Array.from(uniqueUnits.values()).sort(
+    (a, b) => new Date(a.created_at) - new Date(b.created_at)
+  );
+
+  // Trả về mảng đã sắp xếp và không có phần tử trùng lặp
+  return sortedArr;
 }
+
