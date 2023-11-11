@@ -1,4 +1,8 @@
-import { getCommentsService, addCommentWithTokenService, deleteCommentWithTokenService } from "../services/CommentService.js";
+import {
+  getCommentsService,
+  addCommentWithTokenService,
+  deleteCommentWithTokenService,
+} from "../services/CommentService.js";
 
 export const getComments = (req, res) => {
   const postId = req.query.postId;
