@@ -1,34 +1,56 @@
 .parent-container {
-  max-height: 350px;
+  height: 400px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
 
   .top-box {
-    width: 100%;
-    padding-top: 3px;
-    padding-bottom: 3px;
-    padding-left: 2px;
-    padding-right: 131px;
+    width: inherit;
+    padding: 8px;
     background: #111463;
     justify-content: flex-start;
     align-items: center;
-    gap: 4px;
+    gap: 10px;
     display: flex;
 
     img {
-      width: 32px;
-      height: 32px;
-      background: #9e1e1e;
-      border-radius: 9999px;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
     }
 
     .name {
       color: white;
-      font-size: 12px;
+      font-size: 20px;
       font-family: Inter;
-      font-weight: 400;
+      font-weight: 500;
       word-wrap: break-word;
+    }
+
+    .actionButton {
+      margin-left: auto;
+      display: flex;
+      gap: 12px;
+
+      button {
+        cursor: pointer;
+        width: 25px;
+        height: 25px;
+        border: none;
+        border-radius: 50%;
+        align-items: center;
+        justify-content: center;
+        background-color: #111463;
+
+        span {
+          color: white;
+          font-size: 16px;
+        }
+      }
+
+      button:hover {
+        background-color: gainsboro;
+      }
     }
   }
 
@@ -42,6 +64,7 @@
     align-items: flex-start;
     gap: 10px;
     min-height: 250px;
+    max-height: 290px;
 
     .showMore {
       width: 100%;
@@ -57,25 +80,46 @@
   }
 
   .new-message {
-    width: 100%;
-    background: #710808;
+    width: inherit;
+    background: white;
     display: flex;
     padding: 8px;
+    border: solid;
+    border-width: 2px 0 0 0;
+    border-color: #f6f3f3;
+    justify-content: flex-start;
+    align-items: center;
 
     input {
-      max-width: 170px;
-      flex: 1;
+      max-width: 220px;
       height: 22px;
-      margin-right: 8px;
-      background: #d9d9d9;
+      font-size: 16px;
+      padding: 7px;
+      flex: 1;
+      background: #f6f3f3;
+      border: none;
+      outline: none;
       border-radius: 15px;
+      margin-right: auto;
     }
 
     .send-button {
-      width: 22px;
-      height: 22px;
+      width: 30px;
+      height: 30px;
       background: #d9d9d9;
-      border-radius: 9999px;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background-color: white;
+
+      span {
+        font-size: 20px;
+      }
+    }
+
+    button:hover {
+      background-color: gainsboro;
     }
   }
 }

@@ -12,7 +12,7 @@ export const createMessage = (content, userId1, userId2, callback) => {
 };
 export const getMessages = (userId1, userId2, offset, limit, callback) => {
   const q =
-    "SELECT * FROM messages WHERE (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?) LIMIT ? OFFSET ?";
+    "SELECT * FROM messages WHERE (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?) ORDER BY created_at DESC LIMIT ? OFFSET ?";
   const values = [userId1, userId2, userId2, userId1, limit, offset];
   //console.log(values);
   db.query(q, values, (err, data) => {

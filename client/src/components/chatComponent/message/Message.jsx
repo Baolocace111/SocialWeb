@@ -1,7 +1,7 @@
 import "./message.scss";
 import React, { useState, useEffect } from "react";
 import moment from "moment";
-const Message = ({ messageShow }) => {
+const Message = ({ messageShow, friendProfilePic }) => {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
@@ -22,18 +22,29 @@ const Message = ({ messageShow }) => {
     setShow(true);
   };
   return (
-    <div onClick={handleShow}>
+    <div className="messageContainer" onClick={handleShow}>
       {messageShow.is_yours ? (
         <div className="messageis_yours">
           <div className="mess-content">{messageShow.message}</div>
+          {show && (
+            // <span className="date">{moment(messageShow.created_at).fromNow()}</span>
+            <span className="date">
+              {moment.utc(messageShow.created_at).add(7, 'hours').local().format("dddd, Do YYYY [lúc] h:mm:ss a")}
+            </span>
+          )}
         </div>
       ) : (
         <div className="messageis_friends">
-          <div className="mess-content">{messageShow.message}</div>
+          <img src={"/upload/" + friendProfilePic} alt="" />
+          <div className="content-and-date">
+            <div className="mess-content">{messageShow.message}</div>
+            {show && (
+              <span className="date">
+                {moment.utc(messageShow.created_at).add(7, 'hours').local().format("dddd, Do YYYY [lúc] h:mm:ss a")}
+              </span>
+            )}
+          </div>
         </div>
-      )}
-      {show && (
-        <span className="date">{moment(messageShow.created_at).fromNow()}</span>
       )}
     </div>
   );

@@ -1,42 +1,56 @@
-.messageis_yours {
-  width: 160px;
+.messageContainer {
+  width: inherit;
 
-  padding: 10px;
-  background: white;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-end;
-  gap: 10px;
-  display: inline-flex;
   .mess-content {
     width: fit-content;
     height: 24px;
-    right: 10px;
-
-    position: relative;
-    background: #d9d9d9;
+    background: #f6f3f3;
     border-radius: 15px;
     overflow: hidden;
+    padding: 10px;
+    margin: 3px 0 3px 0;
   }
-}
-.messageis_friends {
-  width: 160px;
 
-  padding: 10px;
-  background: white;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-start;
-  gap: 10px;
-  display: inline-flex;
-  .mess-content {
-    width: fit-content;
-    height: 24px;
-    left: 0px;
+  .messageis_yours {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
 
-    position: relative;
-    background: #d9d9d9;
-    border-radius: 15px;
-    overflow: hidden;
+    .mess-content {
+      margin-left: auto; // Tin nhắn của bạn sẽ nằm bên phải
+      background: blue;
+      color: white;
+    }
+
+    .date {
+      font-size: 12px;
+      align-self: flex-end; // Hiển thị ngày ở bên phải
+    }
+  }
+
+  .messageis_friends {
+    display: flex;
+    align-items: center; // Căn giữa theo chiều dọc
+    gap: 10px;
+
+    img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+    }
+
+    .content-and-date {
+      display: flex;
+      flex-direction: column;
+
+      .mess-content {
+        margin-right: auto; // Tin nhắn của đối phương sẽ nằm bên trái
+      }
+
+      .date {
+        font-size: 12px;
+        align-self: flex-start; // Hiển thị ngày ở bên trái
+      }
+    }
   }
 }
