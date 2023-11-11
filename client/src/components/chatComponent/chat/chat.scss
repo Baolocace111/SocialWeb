@@ -34,6 +34,16 @@
   gap: 10px;
   display: inline-flex;
   overflow-y: scroll;
+  .showMore {
+    width: 100%;
+    color: #1c0b0b;
+    background-color: aqua;
+    display: inline-flex;
+    justify-content: center;
+  }
+  .showMore:hover {
+    color: #9e1e1e;
+  }
 }
 .new-message {
   height: 38px;
