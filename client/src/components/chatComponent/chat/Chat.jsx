@@ -19,7 +19,7 @@ const Chat = ({ friend, onRemoveChatBox }) => {
   const friendId = friend.id;
   if (!ws) {
     // Lấy cookies từ document.cookie hoặc từ các nguồn khác nếu cần
-    const token = document.cookie.accessToken;
+    //const token = document.cookie.accessToken;
     // Tạo kết nối WebSocket khi component được mount
     const socket = new WebSocket(`ws://localhost:3030/${friendId}`); // Đặt URL của WebSocket server của bạn ở đây
 

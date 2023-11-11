@@ -24,14 +24,15 @@
     padding: 10px;
   }
   .cards {
-    width: 100%;
+    width: 97%;
     height: 100%;
     padding-left: 10px;
     padding-right: 10px;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: flex-start;
     align-items: flex-start;
     gap: 10px;
-    display: inline-flex;
+    display: flex;
+    flex-wrap: wrap;
   }
 }
