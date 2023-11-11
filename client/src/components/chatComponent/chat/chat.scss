@@ -42,6 +42,18 @@
     align-items: flex-start;
     gap: 10px;
     min-height: 250px;
+
+    .showMore {
+      width: 100%;
+      color: #1c0b0b;
+      background-color: aqua;
+      display: inline-flex;
+      justify-content: center;
+    }
+
+    .showMore:hover {
+      color: #9e1e1e;
+    }
   }
 
   .new-message {

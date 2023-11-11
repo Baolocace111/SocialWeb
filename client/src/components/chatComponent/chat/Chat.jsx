@@ -70,26 +70,27 @@ const Chat = ({ friend }) => {
   };
 
   const sendMessage = async () => {
-    try {
-      await makeRequest.post("/messages/send", {
-        message: newMessage,
-        ruserid: friendId,
-      });
-      setNewMessage("");
+    if (newMessage !== "")
       try {
-        const response = await makeRequest.post("/messages", {
-          friend_id: friendId,
-          offset: 0,
+        await makeRequest.post("/messages/send", {
+          message: newMessage,
+          ruserid: friendId,
         });
-        await setMessages(
-          removeDuplicateUnits([...messages, ...response.data])
-        );
+        setNewMessage("");
+        try {
+          const response = await makeRequest.post("/messages", {
+            friend_id: friendId,
+            offset: 0,
+          });
+          await setMessages(
+            removeDuplicateUnits([...messages, ...response.data])
+          );
+        } catch (error) {
+          console.error("Failed to fetch messages:", error);
+        }
       } catch (error) {
-        console.error("Failed to fetch messages:", error);
+        console.error("Failed to send message:", error);
       }
-    } catch (error) {
-      console.error("Failed to send message:", error);
-    }
   };
   if (loading) fetchMessages();
   return (
@@ -99,12 +100,16 @@ const Chat = ({ friend }) => {
         <div className="name">{friend.name}</div>
       </div>
       <div className="messages">
+        {!loading && (
+          <div className="showMore" onClick={handleShowMore}>
+            Show More
+          </div>
+        )}
         {messages &&
           messages.map((message) => (
             <Message key={message.id} messageShow={message}></Message>
           ))}
         {loading && <p>Loading...</p>}
-        {/* {!loading && <button onClick={handleShowMore}>Show More</button>} */}
       </div>
       <div className="new-message">
         <input
@@ -113,7 +118,7 @@ const Chat = ({ friend }) => {
           onChange={(e) => setNewMessage(e.target.value)}
         />
         <div className="send-button" onClick={sendMessage}>
-          Send
+          S
         </div>
       </div>
     </div>
