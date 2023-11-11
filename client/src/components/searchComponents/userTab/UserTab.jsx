@@ -1,21 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { makeRequest } from "../../../axios";
 import { Button } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import "./userTab.scss";
 
 const UserTab = ({ user }) => {
-  let componentToRender;
-  let status;
-  const setStatus = (number) => {
-    status = number;
-    //checkStatus();
-  };
-
-  setStatus(user.friendStatus);
-
+  const [status, setStatus] = useState(user.friendStatus);
+  const navigate = useNavigate();
   const SendRequest = async () => {
     setStatus(-3);
-
     makeRequest
       .get("/friendship/addfriend/" + user.id)
       .then((response) => {
@@ -72,48 +65,46 @@ const UserTab = ({ user }) => {
         setStatus(-2);
       });
   };
-  const checkStatus = () => {
-    switch (status) {
-      case 0:
-        componentToRender = <Button onClick={SendRequest}>Kết bạn</Button>;
-        break;
-      case 1:
-        componentToRender = (
-          <Button onClick={CancelRequest}>Hủy lời mời</Button>
-        );
-        break;
-      case 2:
-        componentToRender = (
-          <div>
-            <Button onClick={AcceptRequest}>Đồng ý</Button>{" "}
-            <Button onClick={DenyRequest}>Từ chối</Button>
-          </div>
-        );
-        break;
-      case 3:
-        componentToRender = <Button onClick={Unfriend}>Unfriend</Button>;
-        break;
-      case -2:
-        componentToRender = <div>Có lỗi xảy ra...</div>;
-        break;
-      case -3:
-        componentToRender = <div>Đang tải...</div>;
-        break;
-      default:
-        componentToRender = null;
-        break;
-    }
+  const handleClicktoProfile = () => {
+    navigate(`/profile/${user.id}`);
   };
-  checkStatus();
-  return (
-    <div className="user-container">
-      <Link to={`/profile/${user.id}`}>
-        <img src={"/upload/"} alt="" />
-        <span className="name">{user.name}</span>
-      </Link>
 
-      <div>{componentToRender}</div>
-    </div>
+  return (
+    <>
+      <div className="userContainer">
+        <div className="buttonBox">
+          {status === 0 ? (
+            <Button onClick={SendRequest}>Kết bạn</Button>
+          ) : (
+            <></>
+          )}
+          {status === 1 ? (
+            <Button onClick={CancelRequest}>Hủy lời mời</Button>
+          ) : (
+            <></>
+          )}
+          {status === 2 ? (
+            <>
+              <Button onClick={AcceptRequest}>Đồng ý</Button>
+              <Button onClick={DenyRequest}>Từ chối</Button>
+            </>
+          ) : (
+            <></>
+          )}
+          {status === 3 ? <Button onClick={Unfriend}>Unfriend</Button> : <></>}
+          {status === -2 ? "Có lỗi xảy ra..." : <></>}
+          {status === -3 ? "Đang tải..." : <></>}
+        </div>
+        <img
+          onClick={handleClicktoProfile}
+          src={"/upload/" + user.profilePic}
+          alt=""
+        />
+        <div onClick={handleClicktoProfile} className="username">
+          {user.name}
+        </div>
+      </div>
+    </>
   );
 };
 export default UserTab;
