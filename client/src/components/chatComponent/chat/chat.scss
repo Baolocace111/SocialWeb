@@ -1,5 +1,5 @@
 .parent-container {
-  max-height: 400px;
+  max-height: 350px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -41,7 +41,7 @@
     justify-content: flex-end;
     align-items: flex-start;
     gap: 10px;
-    max-height: 250px;
+    min-height: 250px;
   }
 
   .new-message {
