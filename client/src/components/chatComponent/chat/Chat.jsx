@@ -3,7 +3,12 @@ import { makeRequest } from "../../../axios";
 import Message from "../message/Message";
 import "./chat.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPhone, faVideo, faX, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPhone,
+  faVideo,
+  faX,
+  faPaperPlane,
+} from "@fortawesome/free-solid-svg-icons";
 
 const Chat = ({ friend, onRemoveChatBox }) => {
   const [messages, setMessages] = useState([]);
@@ -16,7 +21,7 @@ const Chat = ({ friend, onRemoveChatBox }) => {
     // Lấy cookies từ document.cookie hoặc từ các nguồn khác nếu cần
     const token = document.cookie.accessToken;
     // Tạo kết nối WebSocket khi component được mount
-    const socket = new WebSocket(`ws://localhost:3030?token=${token}`); // Đặt URL của WebSocket server của bạn ở đây
+    const socket = new WebSocket(`ws://localhost:3030/${friendId}`); // Đặt URL của WebSocket server của bạn ở đây
 
     // Xử lý sự kiện khi mở kết nối
     socket.onopen = () => {
@@ -102,13 +107,19 @@ const Chat = ({ friend, onRemoveChatBox }) => {
         <div className="name">{friend.name}</div>
         <div className="actionButton">
           <button>
-            <span><FontAwesomeIcon icon={faVideo} /></span>
+            <span>
+              <FontAwesomeIcon icon={faVideo} />
+            </span>
           </button>
           <button>
-            <span><FontAwesomeIcon icon={faPhone} /></span>
+            <span>
+              <FontAwesomeIcon icon={faPhone} />
+            </span>
           </button>
           <button onClick={onRemoveChatBox}>
-            <span><FontAwesomeIcon icon={faX} /></span>
+            <span>
+              <FontAwesomeIcon icon={faX} />
+            </span>
           </button>
         </div>
       </div>
@@ -120,7 +131,11 @@ const Chat = ({ friend, onRemoveChatBox }) => {
         )}
         {messages &&
           messages.map((message) => (
-            <Message key={message.id} messageShow={message} friendProfilePic={friend.profilePic}></Message>
+            <Message
+              key={message.id}
+              messageShow={message}
+              friendProfilePic={friend.profilePic}
+            ></Message>
           ))}
         {loading && <p>Loading...</p>}
       </div>
@@ -132,7 +147,9 @@ const Chat = ({ friend, onRemoveChatBox }) => {
           onChange={(e) => setNewMessage(e.target.value)}
         />
         <button className="send-button" onClick={sendMessage}>
-          <span><FontAwesomeIcon icon={faPaperPlane} /></span>
+          <span>
+            <FontAwesomeIcon icon={faPaperPlane} />
+          </span>
         </button>
       </div>
     </div>
@@ -156,4 +173,3 @@ function removeDuplicateUnits(arr) {
   // Trả về mảng đã sắp xếp và không có phần tử trùng lặp
   return sortedArr;
 }
-
