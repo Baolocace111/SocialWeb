@@ -69,6 +69,8 @@ const clients = new Map();
 
 wss.on("connection", async (ws, req) => {
   const header = await req.rawHeaders;
+
+  const friendId = await req.url.split("/")[1];
   const accessTokenIndex = await header.findIndex(
     (element) => element === "Cookie"
   );
@@ -84,7 +86,7 @@ wss.on("connection", async (ws, req) => {
       ws.close();
       return;
     }
-    clients.set(userId, ws);
+    clients.set(userId + " chatwith " + friendId, ws);
 
     // Gửi dữ liệu cho client khi kết nối thành công
     ws.send("Welcome to the WebSocket server");

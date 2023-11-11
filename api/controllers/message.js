@@ -11,7 +11,7 @@ export const sendMessageController = async (req, res) => {
   const content = await req.body.message;
   sendMessageService(content, userId, r_userId, (err, data) => {
     if (err) return res.status(500).json(err);
-    sendMessageToUser(r_userId, "Có tin nhắn mới");
+    sendMessageToUser(r_userId + " chatwith " + userId, "Có tin nhắn mới");
     return res.status(200).json(data);
   });
 };
