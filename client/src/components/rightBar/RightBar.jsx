@@ -92,13 +92,13 @@ const RightBar = () => {
       ) : (
         <div className="chat-boxes">
           {chattingUser.map((user) => (
-            <div key={user.id}>
-              <button
+            <div className="chat-box" key={user.id}>
+              <div
                 className="closeButton"
                 onClick={() => handleRemoveChatBoxById(user.id)}
               >
-                X
-              </button>
+                <span>X</span>
+              </div>
               <Chat friend={user}></Chat>
             </div>
           ))}

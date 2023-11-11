@@ -93,15 +93,18 @@ const Chat = ({ friend }) => {
   };
   if (loading) fetchMessages();
   return (
-    <div>
-      <h1>{friend.name}</h1>
+    <>
+      <div className="top-box">
+        <img src={"/upload/" + friend.profilePic} alt="" />
+        <div className="name">{friend.name}</div>
+      </div>
       <div className="messages">
         {messages &&
           messages.map((message) => (
             <Message key={message.id} messageShow={message}></Message>
           ))}
         {loading && <p>Loading...</p>}
-        {!loading && <button onClick={handleShowMore}>Show More</button>}
+        {/* {!loading && <button onClick={handleShowMore}>Show More</button>} */}
       </div>
       <div className="new-message">
         <input
@@ -109,9 +112,11 @@ const Chat = ({ friend }) => {
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
         />
-        <button onClick={sendMessage}>Send</button>
+        <div className="send-button" onClick={sendMessage}>
+          Send
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
