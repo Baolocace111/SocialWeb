@@ -290,17 +290,6 @@ const Post = ({ post }) => {
                     }}
                   />
                 )}
-                {/* <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    setFile(e.target.files[0]);
-                    handleImageChange(e);
-                  }}
-                />
-                {selectedImage && (
-                  <img src={selectedImage} alt="" style={{ marginTop: '8px', maxWidth: '300px' }} />
-                )} */}
               </DialogContent>
               <Divider />
               <DialogActions>

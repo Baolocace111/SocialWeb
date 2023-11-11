@@ -94,7 +94,7 @@ const Chat = ({ friend }) => {
   };
   if (loading) fetchMessages();
   return (
-    <>
+    <div className="parent-container">
       <div className="top-box">
         <img src={"/upload/" + friend.profilePic} alt="" />
         <div className="name">{friend.name}</div>
@@ -121,7 +121,7 @@ const Chat = ({ friend }) => {
           S
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
