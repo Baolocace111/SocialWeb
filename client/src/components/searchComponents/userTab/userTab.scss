@@ -1,5 +1,5 @@
 .userContainer {
-  width: 100%;
+  width: calc(50% - 5px);
   height: 75px;
   position: relative;
   background: #565656;
@@ -29,7 +29,7 @@
     word-wrap: break-word;
   }
   .buttonBox {
-    left: 477px;
+    right: 10px;
     top: 24px;
     position: absolute;
     justify-content: center;

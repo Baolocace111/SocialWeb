@@ -31,6 +31,10 @@
     background: white;
     border-radius: 10px;
     border: 1px #5b5b5b solid;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-evenly;
+    cursor: pointer;
   }
   .chose-box {
     width: 38px;
@@ -39,5 +43,8 @@
     background: #5b5b5b;
     border-radius: 10px;
     border: 1px #5b5b5b solid;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-evenly;
   }
 }
