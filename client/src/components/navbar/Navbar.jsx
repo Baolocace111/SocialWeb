@@ -27,6 +27,7 @@ import {
   faCaretDown,
 } from "@fortawesome/free-solid-svg-icons";
 import ListFriendRequest from "./ListFriendRequest";
+import { makeRequest } from "../../axios";
 
 const Navbar = () => {
   const { toggle, darkMode } = useContext(DarkModeContext);
@@ -34,6 +35,37 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const [content, setContent] = useState("");
+  const [request_number, setRequestNumber] = useState(0);
+  const [ws, setWS] = useState(null);
+
+  const update_request_number = async () => {
+    try {
+      const response = await makeRequest.get("/friendship/count");
+      //console.log(response);
+      setRequestNumber(response.data); // Hoặc request_number = response.data nếu đây là biến ngoài hàm
+    } catch (error) {
+      //console.error("Error fetching request count:", error);
+      setRequestNumber(-1); // Xử lý lỗi và gán giá trị mặc định
+    }
+  };
+
+  if (!ws) {
+    const socket = new WebSocket(`ws://localhost:3030/index`);
+    socket.onopen = () => {
+      console.log("Connected");
+    };
+    socket.onmessage = (event) => {
+      if (event.data === "A Request has sent or cancelled") {
+        update_request_number();
+      }
+    };
+    socket.onclose = () => {
+      console.log("Closed");
+    };
+    setWS(socket);
+  }
+
+  update_request_number();
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -124,21 +156,33 @@ const Navbar = () => {
         </div>
       </div>
       <div className="right">
-        <PersonOutlinedIcon
-          onClick={handlePopover}
-          style={{ cursor: "pointer", fontSize: "28px" }}
-          id="friend-icon"
-        />
-        <EmailOutlinedIcon
-          onClick={handlePopover}
-          style={{ cursor: "pointer", fontSize: "28px" }}
-          id="chat-icon"
-        />
-        <NotificationsOutlinedIcon
-          onClick={handlePopover}
-          style={{ cursor: "pointer", fontSize: "28px" }}
-          id="noti-icon"
-        />
+        <div className="icon-container">
+          <div className={request_number !== 0 ? "number" : "non-number"}>
+            {request_number > 9 ? "9+" : request_number}
+          </div>
+          <PersonOutlinedIcon
+            className="icon"
+            onClick={handlePopover}
+            style={{ cursor: "pointer", fontSize: "28px" }}
+            id="friend-icon"
+          />
+        </div>
+        <div className="icon-container">
+          <EmailOutlinedIcon
+            className="icon"
+            onClick={handlePopover}
+            style={{ cursor: "pointer", fontSize: "28px" }}
+            id="chat-icon"
+          />
+        </div>
+        <div className="icon-container">
+          <NotificationsOutlinedIcon
+            className="icon"
+            onClick={handlePopover}
+            style={{ cursor: "pointer", fontSize: "28px" }}
+            id="noti-icon"
+          />
+        </div>
         <div
           className="user"
           onClick={handlePopover}
@@ -167,7 +211,9 @@ const Navbar = () => {
           {content === "profile" && (
             <List>
               <ListItemButton>
-                <ListItemIcon style={{ fontSize: "20px", marginRight: "-25px" }}>
+                <ListItemIcon
+                  style={{ fontSize: "20px", marginRight: "-25px" }}
+                >
                   <FontAwesomeIcon icon={faGear} />
                 </ListItemIcon>
                 <ListItemText
@@ -176,7 +222,9 @@ const Navbar = () => {
                 />
               </ListItemButton>
               <ListItemButton>
-                <ListItemIcon style={{ fontSize: "20px", marginRight: "-25px" }}>
+                <ListItemIcon
+                  style={{ fontSize: "20px", marginRight: "-25px" }}
+                >
                   <FontAwesomeIcon icon={faCircleExclamation} />
                 </ListItemIcon>
                 <ListItemText
@@ -185,7 +233,9 @@ const Navbar = () => {
                 />
               </ListItemButton>
               <ListItemButton onClick={handleLogout}>
-                <ListItemIcon style={{ fontSize: "20px", marginRight: "-25px" }}>
+                <ListItemIcon
+                  style={{ fontSize: "20px", marginRight: "-25px" }}
+                >
                   <FontAwesomeIcon icon={faArrowRightFromBracket} />
                 </ListItemIcon>
                 <ListItemText
@@ -195,9 +245,7 @@ const Navbar = () => {
               </ListItemButton>
             </List>
           )}
-          {content === "friend" &&
-            <ListFriendRequest></ListFriendRequest>
-          }
+          {content === "friend" && <ListFriendRequest></ListFriendRequest>}
         </Popover>
       </div>
     </div>

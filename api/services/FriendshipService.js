@@ -7,6 +7,7 @@ import {
   deleteFriendship,
   deleteFriendshipByStatus,
   getRequestFriend,
+  getCountRequest,
 } from "../models/FriendShipModel.js";
 
 export const getUserFriend = (userId, offset, callback) => {
@@ -146,6 +147,12 @@ export const rejectFriendRequest = async (user_id1, user_id2) => {
 };
 export const getRequestService = (user_id, offset, callback) => {
   getRequestFriend(user_id, 10, offset, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data);
+  });
+};
+export const getCountRequestService = (user_id, callback) => {
+  getCountRequest(user_id, (err, data) => {
     if (err) return callback(err, null);
     return callback(null, data);
   });

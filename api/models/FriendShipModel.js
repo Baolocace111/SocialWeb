@@ -1,22 +1,49 @@
 import { db } from "../connect.js";
-export const getRequestFriend = (userId, pageSize, offset, callback) => {
-  const query = `SELECT u.* FROM users u INNER JOIN friendships f ON u.id=f.user_id where f.friend_id = ? AND status = 0 LIMIT ? OFFSET ?`;
-  db.query(query, [userId, pageSize, offset], (err, res) => {
+export const getCountRequest = (userId, callback) => {
+  const countQuery = `SELECT COUNT(*) AS total FROM friendships f WHERE f.friend_id = ? AND status = 0`;
+  //const selectQuery = `SELECT u.* FROM users u INNER JOIN friendships f ON u.id=f.user_id WHERE f.friend_id = ? AND status = 0`;
+
+  db.query(countQuery, [userId], (err, data) => {
     if (err) {
       return callback(err, null);
     }
-    // Xử lý kết quả truy vấn ở đây
-    return callback(
-      null,
-      res.map((result) => ({
-        id: result.id,
-        username: result.username,
-        name: result.name,
-        profilePic: result.profilePic,
-      }))
+
+    return callback(null, data[0].total);
+  });
+};
+export const getRequestFriend = (userId, pageSize, offset, callback) => {
+  const countQuery = `SELECT COUNT(*) AS total FROM friendships f WHERE f.friend_id = ? AND status = 0`;
+  db.query(countQuery, [userId], (countErr, countRes) => {
+    if (countErr) {
+      return callback(countErr, null);
+    }
+
+    const totalCount = countRes[0].total;
+
+    const selectQuery = `SELECT u.* FROM users u INNER JOIN friendships f ON u.id=f.user_id WHERE f.friend_id = ? AND status = 0 LIMIT ? OFFSET ?`;
+    db.query(
+      selectQuery,
+      [userId, pageSize, offset],
+      (selectErr, selectRes) => {
+        if (selectErr) {
+          return callback(selectErr, null);
+        }
+
+        // Xử lý kết quả truy vấn ở đây
+        return callback(null, {
+          number: totalCount,
+          list: selectRes.map((result) => ({
+            id: result.id,
+            username: result.username,
+            name: result.name,
+            profilePic: result.profilePic,
+          })),
+        });
+      }
     );
   });
 };
+
 export const getFriend = (userId, pageSize, offset, callback) => {
   const query = `
   SELECT u.*
