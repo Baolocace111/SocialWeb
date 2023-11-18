@@ -9,11 +9,19 @@ export const AuthContextProvider = ({ children }) => {
   );
 
   const login = async (inputs) => {
-    const res = await axios.post("http://localhost:8800/api/auth/login", inputs, {
-      withCredentials: true,
-    });
+    const res = await axios.post(
+      "http://localhost:8800/api/auth/login",
+      inputs,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*", // Thay đổi domain tương ứng của ứng dụng React của bạn
+        },
+      }
+    );
 
-    setCurrentUser(res.data)
+    setCurrentUser(res.data);
   };
 
   const logout = () => {

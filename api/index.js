@@ -16,12 +16,15 @@ import cookieParser from "cookie-parser";
 //middlewares
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Credentials", true);
+
   next();
 });
 app.use(express.json());
 app.use(
   cors({
     origin: "http://localhost:3000",
+    exposeHeaders:
+      "access-control-allow-origin,access-control-allow-methods,access-control-allow-headers",
   })
 );
 app.use(cookieParser());
@@ -70,7 +73,7 @@ const clients = new Map();
 wss.on("connection", async (ws, req) => {
   const header = await req.rawHeaders;
 
-  const friendId = await req.url.split("/")[1];
+  const type = await req.url.split("/")[1];
   const accessTokenIndex = await header.findIndex(
     (element) => element === "Cookie"
   );
@@ -86,16 +89,22 @@ wss.on("connection", async (ws, req) => {
       ws.close();
       return;
     }
-    clients.set(userId + " chatwith " + friendId, ws);
+    if (type === "chat") {
+      const friendId = await req.url.split("/")[2];
+      clients.set(userId + " chatwith " + friendId, ws);
 
-    // Gửi dữ liệu cho client khi kết nối thành công
-    ws.send("Welcome to the WebSocket server");
+      // Gửi dữ liệu cho client khi kết nối thành công
+      ws.send("Welcome to the WebSocket server");
 
-    // Xử lý tin nhắn từ client
-    ws.on("message", (message) => {});
+      // Xử lý tin nhắn từ client
+      ws.on("message", (message) => {});
 
-    // Xử lý sự kiện khi client đóng kết nối
-    ws.on("close", () => {});
+      // Xử lý sự kiện khi client đóng kết nối
+      ws.on("close", () => {});
+    } else if (type === "index") {
+      clients.set("index" + userId, ws);
+      console.log("user '" + userId + "' is Online");
+    }
   } catch (error) {
     console.error("close user");
     ws.close();
@@ -109,6 +118,7 @@ export const sendMessageToUser = (userId, message) => {
   const userSocket = clients.get(userId);
 
   if (userSocket) {
+    console.log(userId + " : " + message);
     userSocket.send(message);
   } else {
   }

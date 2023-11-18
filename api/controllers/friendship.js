@@ -13,7 +13,9 @@ import {
   rejectFriendRequest,
   getUserFriend,
   getRequestService,
+  getCountRequestService,
 } from "../services/FriendshipService.js";
+import { sendMessageToUser } from "../index.js";
 
 export const getFriendshipStatus = async (req, res) => {
   try {
@@ -34,10 +36,15 @@ export const sendFriendRequestTo = async (req, res) => {
     const friendId = await req.params.friendId;
 
     const value = await sendFriendRequest(userId, friendId);
-    addRelationshipService(userId, friendId, (error, data) => {});
+    await addRelationshipService(userId, friendId, (error, data) => {});
     const response = {
       value: value,
     };
+
+    await sendMessageToUser(
+      "index" + friendId,
+      "A Request has sent or cancelled"
+    );
     return res.status(200).json(response);
   } catch (error) {
     return res.status(500).json({ error: error.message });
@@ -80,10 +87,14 @@ export const cancelRequest = async (req, res) => {
     const friendId = await req.params.friendId;
 
     const value = await cancelFriendRequest(userId, friendId);
-    deleteRelationshipService(userId, friendId, (error, data) => {});
+    await deleteRelationshipService(userId, friendId, (error, data) => {});
     const response = {
       value: value,
     };
+    await sendMessageToUser(
+      "index" + friendId,
+      "A Request has sent or cancelled"
+    );
     return res.status(200).json(response);
   } catch (error) {
     return res.status(500).json({ error: error.message });
@@ -118,6 +129,7 @@ export const listFriendUser = async (req, res) => {
 export const RequestFriendController = async (req, res) => {
   try {
     const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+
     getRequestService(userId, req.body.offset, (err, data) => {
       if (err) return res.status(500).json({ error: err });
       return res.status(200).json(data);
@@ -125,4 +137,12 @@ export const RequestFriendController = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
+};
+export const getCountRequestController = async (req, res) => {
+  const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+  //await console.log("hell");
+  getCountRequestService(userId, (err, data) => {
+    if (err) return res.status(500).json({ error: err });
+    return res.status(200).json(data);
+  });
 };
