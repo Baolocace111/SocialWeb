@@ -103,7 +103,7 @@ const Navbar = () => {
       default:
         break;
     }
-    setAnchorEl(event.currentTarget.parentElement);
+    setAnchorEl(event.currentTarget.parentElement.parentElement);
     setContent(contentType);
   };
 
@@ -183,15 +183,17 @@ const Navbar = () => {
             id="noti-icon"
           />
         </div>
-        <div
-          className="user"
-          onClick={handlePopover}
-          style={{ cursor: "pointer" }}
-          id="profile"
-        >
-          <img src={"/upload/" + currentUser.profilePic} alt="" />
-          <span>{currentUser.name}</span>
-          <FontAwesomeIcon icon={faCaretDown} />
+        <div className="user-container">
+          <div
+            className="user"
+            onClick={handlePopover}
+            style={{ cursor: "pointer" }}
+            id="profile"
+          >
+            <img src={"/upload/" + currentUser.profilePic} alt="" />
+            <span>{currentUser.name}</span>
+            <FontAwesomeIcon icon={faCaretDown} />
+          </div>
         </div>
         <Popover
           id={id}
