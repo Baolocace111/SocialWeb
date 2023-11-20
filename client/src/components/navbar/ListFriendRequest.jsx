@@ -15,7 +15,7 @@ const ListFriendRequest = () => {
       //   console.log(offset);
       //   console.log(res.data);
       setRequests(removeDuplicateUnits([...requests, ...res.data.list]));
-      if (res.data.length !== 0) setOffset(offset + 10);
+      if (res.data.list.length !== 0) setOffset(offset + 10);
       setLoading(false);
     } catch (error) {
       console.error("Failed to fetch friends:", error);

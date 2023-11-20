@@ -9,6 +9,7 @@ import likeRoutes from "./routes/likes.js";
 import friendshipRoutes from "./routes/friendship.js";
 import relationshipRoutes from "./routes/relationships.js";
 import messageRoutes from "./routes/message.js";
+import notificationRoutes from "./routes/notifications.js";
 import cors from "cors";
 import multer from "multer";
 import cookieParser from "cookie-parser";
@@ -54,6 +55,7 @@ app.use("/api/likes", likeRoutes);
 app.use("/api/relationships", relationshipRoutes);
 app.use("/api/friendship", friendshipRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 app.listen(8800, () => {
   console.log("API working!");
