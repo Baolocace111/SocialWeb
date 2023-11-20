@@ -8,6 +8,7 @@ import {
   Outlet,
   Navigate,
   Link,
+  useParams,
 } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar";
 import LeftBar from "./components/leftBar/LeftBar";
@@ -27,6 +28,7 @@ import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from "./context/authContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import SearchPost from "./pages/searchPost/SearchPost";
+import PostPage from "./pages/postPage/PostPage";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -103,7 +105,7 @@ function App() {
           element: <Home />,
         },
         {
-          path: "/profile/:id",
+          path: "/profile/:userId",
           element: <Profile />,
         },
         {
@@ -117,6 +119,10 @@ function App() {
         {
           path: "/hashtag/:searchText",
           element: <SearchPost isHashtag={true} />,
+        },
+        {
+          path: "/seepost/:postId",
+          element: <PostPage />,
         },
       ],
     },
@@ -132,10 +138,10 @@ function App() {
       path: "/stories/:userId",
       element: <StoryLayout />,
     },
-    {
-      path: "/chat/:friendid",
-      element: <Chat />,
-    },
+    // {
+    //   path: "/chat/:friendid",
+    //   element: <Chat />,
+    // },
   ]);
 
   return (

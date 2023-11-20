@@ -10,17 +10,20 @@ const SearchBar = ({ search }) => {
   const navigator = useNavigate();
   const handleUser = () => {
     if (search.num !== 0) {
-      navigator(`/search/${search.text}`);
+      //navigator(`/search/${search.text}`);
+      window.open(`/search/${search.text}`, "_blank");
     }
   };
   const handleText = () => {
     if (search.num !== 1) {
-      navigator(`/post/${search.text}`);
+      //navigator(`/post/${search.text}`);
+      window.open(`/post/${search.text}`, "_blank");
     }
   };
   const handleHashtag = () => {
     if (search.num !== 2) {
-      navigator(`/hashtag/${search.text}`);
+      //navigator(`/hashtag/${search.text}`);
+      window.open(`/hashtag/${search.text}`, "_blank");
     }
   };
   return (

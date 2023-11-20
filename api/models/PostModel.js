@@ -1,7 +1,18 @@
 import { query } from "express";
 import { db } from "../connect.js";
 import moment from "moment";
-
+export const getPostById = (userId, postId, callback) => {
+  const q = `SELECT DISTINCT p.*, u.id AS userid, u.name, u.profilePic, f.user_id
+    FROM posts p
+    LEFT JOIN friendships f ON (p.userId=f.friend_id AND f.user_id = ? AND f.status = 1)
+    LEFT JOIN users u ON (p.userId = u.id)
+    LEFT JOIN relationships r ON (p.userId = r.followedUserId)
+    WHERE (p.id=?) AND (p.status = 0 OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?)))) ORDER BY p.createdAt DESC`;
+  db.query(q, [userId, postId, userId, userId, userId], (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data);
+  });
+};
 export const getPosts = (userId, userInfo, callback) => {
   const q =
     userId !== "undefined"
@@ -109,4 +120,3 @@ export const updatePost = (postId, updatedPost, callback) => {
     return callback(null, "Post has been updated.");
   });
 };
-

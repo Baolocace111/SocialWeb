@@ -45,6 +45,7 @@ const FriendList = ({ user_id }) => {
                 <Link
                   to={`/profile/${friend.id}`}
                   style={{ textDecoration: "none", color: "inherit" }}
+                  target="_blank"
                 >
                   <span className="name">{friend.name}</span>
                 </Link>
