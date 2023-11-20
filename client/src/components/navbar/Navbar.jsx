@@ -28,6 +28,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import ListFriendRequest from "./ListFriendRequest";
 import { makeRequest } from "../../axios";
+import ListNotification from "./ListNotification";
 
 const Navbar = () => {
   const { toggle, darkMode } = useContext(DarkModeContext);
@@ -248,6 +249,7 @@ const Navbar = () => {
             </List>
           )}
           {content === "friend" && <ListFriendRequest></ListFriendRequest>}
+          {content === "noti" && <ListNotification></ListNotification>}
         </Popover>
       </div>
     </div>

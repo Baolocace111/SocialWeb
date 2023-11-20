@@ -112,11 +112,18 @@ export const searchPostsbyHashtag = (hashtag, userId, callback) => {
 };
 
 export const updatePost = (postId, updatedPost, callback) => {
-  const q = "UPDATE posts SET `desc` = ?, `img` = ? WHERE id = ?";
-  const values = [updatedPost.desc, updatedPost.img, postId];
+  const q =
+    "UPDATE posts SET `desc` = ?, `img` = ? WHERE id = ? AND userId = ?";
+  const values = [
+    updatedPost.desc,
+    updatedPost.img,
+    postId,
+    updatedPost.userId,
+  ];
 
   db.query(q, values, (err, data) => {
     if (err) return callback(err, null);
+    if (data.affectedRows === 0) return callback("Post cant update", null);
     return callback(null, "Post has been updated.");
   });
 };
