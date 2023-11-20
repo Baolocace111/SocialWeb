@@ -26,13 +26,17 @@ const ListNotification = () => {
   };
   if (loading) fetchNotifications();
   return (
-    <div className="notification-container">
+    <div style={{ width: "300px", height: "500px" }}>
       {notifications.map((notification) => (
-        <div className="notification" key={notification.id}>
-          <div className="img-notification">
+        <div style={{ display: "flex", margin: "15px 10px" }} key={notification.id}>
+          <div style={{ display: "flex", alignItems: "center", marginRight: "15px", flex: "0 0 auto" }}>
             <img
+              style={{ borderRadius: "50%", width: "50px", height: "50px" }}
               src={"/notificationtype/" + notification.image}
-              onError="this.onerror=null;this.src = '/notificationtype/null.jpg';"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "/notificationtype/null.jpg";
+              }}
               alt={""}
             />
           </div>
