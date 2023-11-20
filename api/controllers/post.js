@@ -6,7 +6,22 @@ import {
   getPostbyContentService,
   getPostbyHashtagService,
   updatePostService,
+  getPostByIdService,
 } from "../services/PostService.js";
+export const getPostByIdController = (req, res) => {
+  const postId = req.params.postId;
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json("Not logged in!");
+
+  jwt.verify(token, "secretkey", (err, userInfo) => {
+    if (err) return res.status(403).json("Token is not valid!");
+    const userId = userInfo.id;
+    getPostByIdService(userId, postId, (err, data) => {
+      if (err) return res.status(500).json(err);
+      return res.status(200).json(data);
+    });
+  });
+};
 
 export const getPosts = (req, res) => {
   const userId = req.query.userId;
@@ -95,6 +110,7 @@ export const updatePost = (req, res) => {
 
     const postId = req.params.postId; // Lấy ID của bài viết cần sửa từ tham số URL.
     const updatedPost = {
+      userId: userInfo.id,
       desc: req.body.desc,
       img: req.body.img,
     };
@@ -105,4 +121,3 @@ export const updatePost = (req, res) => {
     });
   });
 };
-

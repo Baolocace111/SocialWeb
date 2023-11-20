@@ -103,7 +103,7 @@ wss.on("connection", async (ws, req) => {
       ws.on("close", () => {});
     } else if (type === "index") {
       clients.set("index" + userId, ws);
-      console.log("user '" + userId + "' is Online");
+      //console.log("user '" + userId + "' is Online");
     }
   } catch (error) {
     console.error("close user");

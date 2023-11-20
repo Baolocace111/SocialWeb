@@ -6,6 +6,7 @@ import {
   getPostsWithPrivateByUser,
   getPostsWithPrivate,
   updatePost,
+  getPostById,
 } from "../models/PostModel.js";
 
 export const getPostsService = (userId, userInfo, callback) => {
@@ -58,4 +59,9 @@ export const updatePostService = (postId, updatedPost, callback) => {
     return callback(null, data);
   });
 };
-
+export const getPostByIdService = (userId, postId, callback) => {
+  getPostById(userId, postId, (err, data) => {
+    if (err) return callback(err);
+    return callback(null, data);
+  });
+};

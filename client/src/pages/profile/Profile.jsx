@@ -11,18 +11,21 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Posts from "../../components/posts/Posts";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/authContext";
 import Update from "../../components/update/Update";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import FriendList from "../../components/profileComponents/friendList/FriendList";
+import { useLocation } from "react-router-dom";
 const Profile = () => {
+  //const [loading, setLoading] = useState(newloading);
   const [openUpdate, setOpenUpdate] = useState(false);
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
-  const userId = parseInt(useLocation().pathname.split("/")[2]);
+
+  const [userId, setUserId] = useState(useParams().userId);
 
   const { isLoading, error, data } = useQuery(["user"], () =>
     makeRequest.get("/users/find/" + userId).then((res) => {
@@ -57,10 +60,13 @@ const Profile = () => {
   const handleFollow = () => {
     mutation.mutate(relationshipData.includes(currentUser.id));
   };
-  const handleChat=()=>{
+  const handleChat = () => {
     navigate(`/chat/${userId}`);
-  }
-
+  };
+  // if (loading) {
+  //   setLoading(false);
+  //   console.log("Load successfully");
+  // }
   return (
     <div className="profile">
       {isLoading ? (
@@ -68,8 +74,12 @@ const Profile = () => {
       ) : (
         <>
           <div className="images">
-            <img src={"/upload/"+data.coverPic} alt="" className="cover" />
-            <img src={"/upload/"+data.profilePic} alt="" className="profilePic" />
+            <img src={"/upload/" + data.coverPic} alt="" className="cover" />
+            <img
+              src={"/upload/" + data.profilePic}
+              alt=""
+              className="profilePic"
+            />
           </div>
           <div className="profileContainer">
             <div className="uInfo">
@@ -106,15 +116,14 @@ const Profile = () => {
                   "loading"
                 ) : userId === currentUser.id ? (
                   <button onClick={() => setOpenUpdate(true)}>update</button>
-                ) : (<div>
-                  <button onClick={handleFollow}>
-                    {relationshipData.includes(currentUser.id)
-                      ? "Following"
-                      : "Follow"}
-                  </button>
-                  <button onClick={handleChat}>
-                    Chat
-                  </button>
+                ) : (
+                  <div>
+                    <button onClick={handleFollow}>
+                      {relationshipData.includes(currentUser.id)
+                        ? "Following"
+                        : "Follow"}
+                    </button>
+                    <button onClick={handleChat}>Chat</button>
                   </div>
                 )}
               </div>
@@ -123,7 +132,7 @@ const Profile = () => {
                 <MoreVertIcon />
               </div>
             </div>
-            <FriendList user_id={userId}/>
+            <FriendList user_id={userId} />
             <Posts userId={userId} />
           </div>
         </>

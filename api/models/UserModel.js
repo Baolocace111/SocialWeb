@@ -5,9 +5,12 @@ export const getUserById = (userId, callback) => {
 
   db.query(q, [userId], (err, data) => {
     if (err) return callback(err);
-    
-    const { password, ...info } = data[0];
-    return callback(null, info);
+    if (data.length === 0) return callback("Cant find user", null);
+    if (data[0].password) {
+      const { password, ...info } = data[0];
+      return callback(null, info);
+    }
+    return callback(null, data[0]);
   });
 };
 export const findUserByName = (name, callback) => {
@@ -16,7 +19,7 @@ export const findUserByName = (name, callback) => {
   db.query(q, (err, data) => {
     if (err) return callback(err);
 
-    let users = data.map(user => {
+    let users = data.map((user) => {
       const { password, ...info } = user;
       return info;
     });
@@ -29,7 +32,7 @@ export const getUsers = (callback) => {
   db.query(q, (err, data) => {
     if (err) return callback(err);
 
-    let users = data.map(user => {
+    let users = data.map((user) => {
       const { password, ...info } = user;
       return info;
     });
@@ -71,5 +74,4 @@ export const updateUser = (userInfo, callback) => {
       return callback("You can update only your post!");
     }
   );
-  
 };
