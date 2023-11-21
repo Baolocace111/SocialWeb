@@ -5,7 +5,7 @@ import {
   getAndMarkPaginatedNotifications,
   updateNotificationById,
 } from "../models/NotificationModel.js";
-
+import { sendMessageToUser } from "../index.js";
 export const addNotificationService = (
   userId,
   message,
@@ -15,6 +15,9 @@ export const addNotificationService = (
 ) => {
   createNotification(userId, message, link, image, (err, data) => {
     if (err) return callback(err, null);
+
+    sendMessageToUser("index" + userId, "New notification");
+
     return callback(null, data);
   });
 };

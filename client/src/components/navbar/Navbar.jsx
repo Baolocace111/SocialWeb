@@ -37,6 +37,7 @@ const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [content, setContent] = useState("");
   const [request_number, setRequestNumber] = useState(0);
+  const [notification_number, setNotificationNumber] = useState(0);
   const [ws, setWS] = useState(null);
 
   const update_request_number = async () => {
@@ -49,6 +50,14 @@ const Navbar = () => {
       setRequestNumber(-1); // Xử lý lỗi và gán giá trị mặc định
     }
   };
+  const update_notification_number = async () => {
+    try {
+      const res = await makeRequest.get("/notifications/count");
+      setNotificationNumber(res.data);
+    } catch (error) {
+      setNotificationNumber(-1);
+    }
+  };
 
   if (!ws) {
     const socket = new WebSocket(`ws://localhost:3030/index`);
@@ -56,8 +65,12 @@ const Navbar = () => {
       console.log("Connected");
     };
     socket.onmessage = (event) => {
+      //console.log(event.data);
       if (event.data === "A Request has sent or cancelled") {
         update_request_number();
+      } else if (event.data === "New notification") {
+        //console.log("OK");
+        update_notification_number();
       }
     };
     socket.onclose = () => {
@@ -67,6 +80,7 @@ const Navbar = () => {
   }
 
   update_request_number();
+  update_notification_number();
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -177,6 +191,9 @@ const Navbar = () => {
           />
         </div>
         <div className="icon-container">
+          <div className={notification_number !== 0 ? "number" : "non-number"}>
+            {notification_number > 9 ? "9+" : notification_number}
+          </div>
           <NotificationsOutlinedIcon
             className="icon"
             onClick={handlePopover}
