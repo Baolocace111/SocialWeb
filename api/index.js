@@ -120,7 +120,7 @@ export const sendMessageToUser = (userId, message) => {
   const userSocket = clients.get(userId);
 
   if (userSocket) {
-    console.log(userId + " : " + message);
+    //console.log(userId + " : " + message);
     userSocket.send(message);
   } else {
   }

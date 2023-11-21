@@ -1,11 +1,15 @@
 import { makeRequest } from "../../axios";
 import "./navbar.scss";
 import { useCallback, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
+import { Link } from "react-router-dom";
 const ListNotification = () => {
   const [notifications, setNotifications] = useState([]);
   const [offset, setOffset] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [ws, setWS] = useState(null);
   const fetchNotifications = useCallback(async () => {
     try {
       const res = await makeRequest.get(`/notifications/see/${offset}`);
@@ -24,22 +28,75 @@ const ListNotification = () => {
       notifications.filter((notification) => notification.id !== idToRemove)
     );
   };
+  const handleDelete = (id) => {
+    makeRequest
+      .delete("/notifications/" + id)
+      .then((res) => {
+        removeItemById(id);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   if (loading) fetchNotifications();
+  if (!ws) {
+    const socket = new WebSocket(`ws://localhost:3030/index`);
+    socket.onopen = () => {
+      console.log("Connected");
+    };
+    socket.onmessage = async (event) => {
+      if (event.data === "New notification") {
+        try {
+          const res = await makeRequest.get(`/notifications/see/1`);
+          setNotifications(
+            removeDuplicateUnits([...notifications, ...res.data])
+          );
+        } catch (error) {
+          console.error("Failed to fetch friends:", error);
+        }
+      }
+    };
+    socket.onclose = () => {
+      console.log("Closed");
+    };
+    setWS(socket);
+  }
   return (
     <div style={{ width: "300px", height: "500px" }}>
       {notifications.map((notification) => (
-        <div style={{ display: "flex", margin: "15px 10px" }} key={notification.id}>
-          <div style={{ display: "flex", alignItems: "center", marginRight: "15px", flex: "0 0 auto" }}>
-            <img
-              style={{ borderRadius: "50%", width: "50px", height: "50px" }}
-              src={"/notificationtype/" + notification.image}
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = "/notificationtype/null.jpg";
+        <div
+          style={{
+            display: "flex",
+            margin: "15px 10px",
+            padding: "10px",
+            // background: notification.read === 1 ? "white" : "grey",
+          }}
+          key={notification.id}
+        >
+          <Link
+            to={notification.link}
+            style={{ cursor: "pointer", display: "flex" }}
+            target="_blank"
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginRight: "15px",
+                flex: "0 0 auto",
               }}
-              alt={""}
-            />
-          </div>
+            >
+              <img
+                style={{ borderRadius: "50%", width: "50px", height: "50px" }}
+                src={notification.image}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "/notificationtype/null.jpg";
+                }}
+                alt={""}
+              />
+            </div>
+          </Link>
           <div className="content">
             <div
               className="message"
@@ -49,7 +106,26 @@ const ListNotification = () => {
               {moment(notification.createdAt).fromNow()}
             </div>
           </div>
-          <div></div>
+
+          <div
+            style={{
+              position: "absolute",
+              right: "0px",
+              width: "50px",
+            }}
+          >
+            <button
+              onClick={() => handleDelete(notification.id)}
+              style={{
+                borderRadius: "50%",
+                width: "30px",
+                height: "30px",
+                cursor: "pointer",
+              }}
+            >
+              <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
+            </button>
+          </div>
         </div>
       ))}
       {loading && <p>Loading...</p>}

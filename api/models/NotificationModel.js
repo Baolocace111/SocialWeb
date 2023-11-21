@@ -4,7 +4,7 @@ import { db } from "../connect.js";
 // Function to create a new notification
 export const createNotification = (userId, message, link, image, callback) => {
   const q =
-    "INSERT INTO notifications (userId, message, createAt, `read`, link, image) VALUES (?, ?, NOW(), ?, ?,?)";
+    "INSERT INTO notifications (userId, message, createdAt, `read`, link, image) VALUES (?, ?, NOW(), ?, ?,?)";
   const values = [userId, message, false, link, image];
 
   db.query(q, values, (err, data) => {
@@ -27,7 +27,7 @@ export const getAndMarkPaginatedNotifications = (
 
   db.query(qSelect, valuesSelect, (err, notifications) => {
     if (err) return callback(err, null);
-
+    if (notifications.length === 0) return callback(null, []);
     // Extracting IDs of fetched notifications to update 'read' status
     const notificationIds = notifications.map(
       (notification) => notification.id

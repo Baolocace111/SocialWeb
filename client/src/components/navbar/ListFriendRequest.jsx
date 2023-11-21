@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { makeRequest } from "../../axios";
+import { Link } from "react-router-dom";
 
 const ListFriendRequest = () => {
   const [requests, setRequests] = useState([]);
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [ws, setWS] = useState(null);
   //const [clickable, setClickable] = useState(true);
 
   const fetchRequests = useCallback(async () => {
@@ -21,6 +23,31 @@ const ListFriendRequest = () => {
       console.error("Failed to fetch friends:", error);
     }
   }, [offset, requests]);
+
+  if (!ws) {
+    const socket = new WebSocket(`ws://localhost:3030/index`);
+    socket.onopen = () => {
+      console.log("Connected");
+    };
+    socket.onmessage = async (event) => {
+      if (event.data === "A Request has sent or cancelled") {
+        try {
+          const res = await makeRequest.post("/friendship/get_request_friend", {
+            offset: 0,
+          });
+          //   console.log(offset);
+          //console.log(res);
+          setRequests(removeDuplicateUnits([...requests, ...res.data.list]));
+        } catch (error) {
+          console.error("Failed to fetch friends:", error);
+        }
+      }
+    };
+    socket.onclose = () => {
+      console.log("Closed");
+    };
+    setWS(socket);
+  }
 
   const handleShowMore = () => {
     fetchRequests();
@@ -69,11 +96,17 @@ const ListFriendRequest = () => {
               flex: "0 0 auto",
             }}
           >
-            <img
-              src={"/upload/" + request.profilePic}
-              style={{ borderRadius: "50%", width: "50px", height: "50px" }}
-              alt="User 1"
-            />
+            <Link
+              to={`/profile/${request.id}`}
+              style={{ cursor: "pointer" }}
+              target="_blank"
+            >
+              <img
+                src={"/upload/" + request.profilePic}
+                style={{ borderRadius: "50%", width: "50px", height: "50px" }}
+                alt="User 1"
+              />
+            </Link>
           </div>
           <div
             style={{
@@ -82,7 +115,15 @@ const ListFriendRequest = () => {
               justifyContent: "space-between",
             }}
           >
-            <div style={{ marginBottom: "10px" }}>{request.name}</div>
+            <div style={{ marginBottom: "10px" }}>
+              <Link
+                to={`/profile/${request.id}`}
+                style={{ cursor: "pointer" }}
+                target="_blank"
+              >
+                {request.name}
+              </Link>
+            </div>
             <div
               style={{
                 display: "grid",
