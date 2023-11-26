@@ -7,7 +7,6 @@ import {
   faQuoteLeft,
 } from "@fortawesome/free-solid-svg-icons";
 const SearchBar = ({ search }) => {
-  const navigator = useNavigate();
   const handleUser = () => {
     if (search.num !== 0) {
       //navigator(`/search/${search.text}`);

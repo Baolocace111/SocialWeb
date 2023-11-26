@@ -5,16 +5,17 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
 import axios from "axios";
 
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import Button from '@mui/material/Button';
-import MovieIcon from '@mui/icons-material/Movie';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import Box from '@mui/material/Box';
-import { Link } from 'react-router-dom';
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
+import MovieIcon from "@mui/icons-material/Movie";
+import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+import Box from "@mui/material/Box";
+import { Link } from "react-router-dom";
+import FlipCube from "../loadingComponent/flipCube/FlipCube";
 
 import Slider from "react-slick";
 
@@ -32,7 +33,9 @@ const Stories = () => {
   useEffect(() => {
     const fetchUser = async (userId) => {
       try {
-        const response = await axios.get(`http://localhost:8800/api/users/find/${userId}`);
+        const response = await axios.get(
+          `http://localhost:8800/api/users/find/${userId}`
+        );
         const user = response.data;
         setUsers((prevUsers) => ({
           ...prevUsers,
@@ -120,16 +123,35 @@ const Stories = () => {
       <button onClick={handleDialogOpen}>+</button>
 
       <Dialog open={openAdd} onClose={handleDialogClose}>
-        <DialogTitle sx={{ m: 0, p: 2, display: 'flex', alignItems: 'center', mt: '-5px', mb: '-10px' }}>
-          <MovieIcon sx={{ marginRight: '8px' }} />
+        <DialogTitle
+          sx={{
+            m: 0,
+            p: 2,
+            display: "flex",
+            alignItems: "center",
+            mt: "-5px",
+            mb: "-10px",
+          }}
+        >
+          <MovieIcon sx={{ marginRight: "8px" }} />
           <Typography variant="title1" sx={{ flexGrow: 1 }}>
             Create a story
           </Typography>
         </DialogTitle>
         <Divider />
         <DialogContent>
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '8px' }}>
-            <Typography variant="body1" sx={{ alignSelf: 'flex-start', mb: '25px', textAlign: 'left' }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              marginBottom: "8px",
+            }}
+          >
+            <Typography
+              variant="body1"
+              sx={{ alignSelf: "flex-start", mb: "25px", textAlign: "left" }}
+            >
               Câu chuyện là hình ảnh được đăng lên và sẽ biến mất sau 24 giờ
             </Typography>
             <input
@@ -141,7 +163,11 @@ const Stories = () => {
               }}
             />
             {selectedImage && (
-              <img src={selectedImage} alt="" style={{ marginTop: '8px', maxWidth: '300px' }} />
+              <img
+                src={selectedImage}
+                alt=""
+                style={{ marginTop: "8px", maxWidth: "300px" }}
+              />
             )}
           </Box>
         </DialogContent>
@@ -155,19 +181,22 @@ const Stories = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </div>,
   ];
 
   if (error) {
     return "Something went wrong";
   } else if (isLoading) {
-    return "loading";
+    return <FlipCube />;
   } else {
     const userLatestStories = {};
     data.forEach((story) => {
       const user = users[story.userId];
       if (user) {
-        if (!userLatestStories[user.id] || story.id > userLatestStories[user.id].id) {
+        if (
+          !userLatestStories[user.id] ||
+          story.id > userLatestStories[user.id].id
+        ) {
           userLatestStories[user.id] = story;
         }
       }
@@ -205,4 +234,3 @@ const Stories = () => {
 };
 
 export default Stories;
-

@@ -4,6 +4,7 @@ import { makeRequest } from "../../axios";
 import { useParams } from "react-router-dom";
 import SearchBar from "../../components/searchComponents/searchBar/SearchBar";
 import "./search.scss";
+import NineCube from "../../components/loadingComponent/nineCube/NineCube";
 const Search = () => {
   const { searchText } = useParams();
   const search = { num: 0, text: searchText };
@@ -19,11 +20,13 @@ const Search = () => {
       <div className="search-container">
         <div className="search-text">Mọi người: {searchText}</div>
         <div className="cards">
-          {error
-            ? "Error!!!"
-            : isLoading
-            ? "loading"
-            : data.map((user) => <UserTab user={user} key={user.id}></UserTab>)}
+          {error ? (
+            "Error!!!"
+          ) : isLoading ? (
+            <NineCube />
+          ) : (
+            data.map((user) => <UserTab user={user} key={user.id}></UserTab>)
+          )}
         </div>
       </div>
     </div>
