@@ -132,7 +132,7 @@ const Navbar = () => {
 
   const handleSearch = () => {
     if (searchText.trim() !== "") {
-      navigate(`/search/${searchText}`);
+      window.open(`/search/${searchText}`, "_blank");
     }
   };
 

@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import SearchBar from "../../components/searchComponents/searchBar/SearchBar";
 import "./searchPost.scss";
+import NineCube from "../../components/loadingComponent/nineCube/NineCube";
 const SearchPost = ({ isHashtag }) => {
   const { searchText } = useParams();
   const query = isHashtag ? "posts/hashtag" : "/posts/content";
@@ -25,11 +26,13 @@ const SearchPost = ({ isHashtag }) => {
             {searchText}
           </span>
         </div>
-        {error
-          ? "Error!!!"
-          : isLoading
-          ? "loading"
-          : data.map((post) => <Post post={post} key={post.id} />)}
+        {error ? (
+          "Error!!!"
+        ) : isLoading ? (
+          <NineCube />
+        ) : (
+          data.map((post) => <Post post={post} key={post.id} />)
+        )}
       </div>
     </div>
   );
