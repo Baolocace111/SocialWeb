@@ -19,13 +19,14 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import FriendList from "../../components/profileComponents/friendList/FriendList";
 import { useLocation } from "react-router-dom";
+import FlipCube from "../../components/loadingComponent/flipCube/FlipCube";
 const Profile = () => {
   //const [loading, setLoading] = useState(newloading);
   const [openUpdate, setOpenUpdate] = useState(false);
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const [userId, setUserId] = useState(useParams().userId);
+  const [userId, setUserId] = useState(Number(useParams().userId));
 
   const { isLoading, error, data } = useQuery(["user"], () =>
     makeRequest.get("/users/find/" + userId).then((res) => {
@@ -70,7 +71,7 @@ const Profile = () => {
   return (
     <div className="profile">
       {isLoading ? (
-        "loading"
+        <FlipCube />
       ) : (
         <>
           <div className="images">

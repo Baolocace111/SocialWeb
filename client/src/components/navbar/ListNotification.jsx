@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import { Link } from "react-router-dom";
+import NineCube from "../loadingComponent/nineCube/NineCube";
 const ListNotification = () => {
   const [notifications, setNotifications] = useState([]);
   const [offset, setOffset] = useState(1);
@@ -128,7 +129,7 @@ const ListNotification = () => {
           </div>
         </div>
       ))}
-      {loading && <p>Loading...</p>}
+      {loading && <NineCube />}
       {!loading && <button onClick={handleShowMore}>Show More</button>}
     </div>
   );
