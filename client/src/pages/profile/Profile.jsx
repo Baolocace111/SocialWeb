@@ -25,7 +25,7 @@ const Profile = () => {
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const userId = useState(Number(useParams().userId));
+  const [userId] = useState(Number(useParams().userId));
 
   const { isLoading, error, data } = useQuery(["user"], () =>
     makeRequest.get("/users/find/" + userId).then((res) => {
