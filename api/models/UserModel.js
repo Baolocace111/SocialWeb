@@ -64,8 +64,8 @@ export const updateUser = (userInfo, callback) => {
       userInfo.name,
       userInfo.city,
       userInfo.website,
-      userInfo.coverPic,
       userInfo.profilePic,
+      userInfo.coverPic,
       userInfo.id,
     ],
     (err, data) => {
