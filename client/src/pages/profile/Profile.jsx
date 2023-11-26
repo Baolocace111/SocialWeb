@@ -15,10 +15,9 @@ import { useParams } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/authContext";
 import Update from "../../components/update/Update";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FriendList from "../../components/profileComponents/friendList/FriendList";
-import { useLocation } from "react-router-dom";
 import FlipCube from "../../components/loadingComponent/flipCube/FlipCube";
 const Profile = () => {
   //const [loading, setLoading] = useState(newloading);
@@ -26,7 +25,7 @@ const Profile = () => {
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const [userId, setUserId] = useState(Number(useParams().userId));
+  const [userId] = useState(Number(useParams().userId));
 
   const { isLoading, error, data } = useQuery(["user"], () =>
     makeRequest.get("/users/find/" + userId).then((res) => {
