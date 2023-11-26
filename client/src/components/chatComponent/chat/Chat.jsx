@@ -3,6 +3,7 @@ import { makeRequest } from "../../../axios";
 import Message from "../message/Message";
 import "./chat.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import NineCube from "../../loadingComponent/nineCube/NineCube";
 import {
   faPhone,
   faVideo,
@@ -137,7 +138,7 @@ const Chat = ({ friend, onRemoveChatBox }) => {
               friendProfilePic={friend.profilePic}
             ></Message>
           ))}
-        {loading && <p>Loading...</p>}
+        {loading && <NineCube></NineCube>}
       </div>
       <div className="new-message">
         <input

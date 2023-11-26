@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { makeRequest } from "../../axios";
 import { Link } from "react-router-dom";
+import NineCube from "../loadingComponent/nineCube/NineCube";
 
 const ListFriendRequest = () => {
   const [requests, setRequests] = useState([]);
@@ -141,7 +142,7 @@ const ListFriendRequest = () => {
           </div>
         </div>
       ))}
-      {loading && <p>Loading...</p>}
+      {loading && <NineCube />}
       {!loading && <button onClick={handleShowMore}>Show More</button>}
     </div>
   );
