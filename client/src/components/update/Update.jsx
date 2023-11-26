@@ -8,11 +8,11 @@ const Update = ({ setOpenUpdate, user }) => {
   const [cover, setCover] = useState(null);
   const [profile, setProfile] = useState(null);
   const [texts, setTexts] = useState({
-    email: user.email,
-    password: user.password,
-    name: user.name,
-    city: user.city,
-    website: user.website,
+    email: user.email || "",
+    password: user.password || "",
+    name: user.name || "",
+    city: user.city || "",
+    website: user.website || "",
   });
 
   const upload = async (file) => {
@@ -49,12 +49,12 @@ const Update = ({ setOpenUpdate, user }) => {
     e.preventDefault();
 
     //TODO: find a better way to get image URL
-    
+
     let coverUrl;
     let profileUrl;
     coverUrl = cover ? await upload(cover) : user.coverPic;
     profileUrl = profile ? await upload(profile) : user.profilePic;
-    
+
     mutation.mutate({ ...texts, coverPic: coverUrl, profilePic: profileUrl });
     setOpenUpdate(false);
     setCover(null);
@@ -67,7 +67,7 @@ const Update = ({ setOpenUpdate, user }) => {
         <h1>Update Your Profile</h1>
         <form>
           <div className="files">
-            <label htmlFor="cover">
+            <label htmlFor="coverPic">
               <span>Cover Picture</span>
               <div className="imgContainer">
                 <img
@@ -83,11 +83,11 @@ const Update = ({ setOpenUpdate, user }) => {
             </label>
             <input
               type="file"
-              id="cover"
+              id="coverPic"
               style={{ display: "none" }}
               onChange={(e) => setCover(e.target.files[0])}
             />
-            <label htmlFor="profile">
+            <label htmlFor="profilePic">
               <span>Profile Picture</span>
               <div className="imgContainer">
                 <img
@@ -103,7 +103,7 @@ const Update = ({ setOpenUpdate, user }) => {
             </label>
             <input
               type="file"
-              id="profile"
+              id="profilePic"
               style={{ display: "none" }}
               onChange={(e) => setProfile(e.target.files[0])}
             />
