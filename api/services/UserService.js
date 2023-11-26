@@ -25,13 +25,13 @@ export const getFollowedUsers = (req, res) => {
     return res.json(data);
   });
 };
-export const findUsersByName =(userId,name,callback)=>{
-  userModel.findUserByName(name,async (err,data)=>{
-    if (err) return callback("error",null);
+export const findUsersByName = (userId, name, callback) => {
+  userModel.findUserByName(name, async (err, data) => {
+    if (err) return callback("error", null);
     const odata = await Promise.all(
       data.map(async (user) => {
         const friendStatus = await checkFriendshipStatus(userId, user.id);
-    
+
         return {
           id: user.id,
           username: user.username,
@@ -42,20 +42,13 @@ export const findUsersByName =(userId,name,callback)=>{
         };
       })
     );
-    return callback(null,odata);
-  })
-}
+    return callback(null, odata);
+  });
+};
 
-export const updateUser = (req, res) => {
-  const token = req.cookies.accessToken;
-  if (!token) return res.status(401).json("Not authenticated!");
-
-  jwt.verify(token, "secretkey", (err, userInfo) => {
-    if (err) return res.status(403).json("Token is not valid!");
-
-    userModel.updateUser({...req.body, id: userInfo.id }, (err, data) => {
-      if (err) res.status(500).json(err);
-      return res.json(data);
-    });
+export const updateUser = (userid, req, res) => {
+  userModel.updateUser({ ...req.body, id: userid }, (err, data) => {
+    if (err) res.status(500).json(err);
+    return res.json(data);
   });
 };
