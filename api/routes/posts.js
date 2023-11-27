@@ -19,6 +19,6 @@ router.post("/post", addPost);
 router.delete("/:postId", deletePost);
 router.post("/content", searchPostsbyContentController);
 router.post("/hashtag", searchPostsbyHashtagController);
-router.put("update/:postId", updatePost);
+router.put("/update/:postId", updatePost);
 router.get("/post/:postId", getPostByIdController);
 export default router;

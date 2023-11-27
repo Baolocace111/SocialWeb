@@ -132,7 +132,7 @@ const Post = ({ post }) => {
   );
   const updateMutation = useMutation(
     (data) => {
-      return makeRequest.put(`/posts/${data.postId}`, data);
+      return makeRequest.put(`/posts/update/${data.postId}`, data);
     },
     {
       onSuccess: () => {
