@@ -9,6 +9,8 @@ import {
   getPostByIdService,
   sharePostService,
   updateSharePostService,
+  updatePrivatePostService,
+  addlistPostPrivateService,
 } from "../services/PostService.js";
 import { AuthService } from "../services/AuthService.js";
 export const getPostByIdController = (req, res) => {
@@ -157,4 +159,36 @@ export const updatePost = (req, res) => {
       return res.status(200).json(data);
     });
   });
+};
+export const updatePrivatePostController = async (req, res) => {
+  try {
+    const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+    updatePrivatePostService(
+      req.params.postId,
+      userId,
+      req.body.status,
+      (error, data) => {
+        if (error) return res.status(500).json(error);
+        return res.status(200).json(data);
+      }
+    );
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+export const addListPostPrivateController = async (req, res) => {
+  try {
+    const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+    addlistPostPrivateService(
+      req.body.list,
+      req.params.postId,
+      userId,
+      (error, data) => {
+        if (error) return res.status(500).json(error);
+        return res.status(200).json(data);
+      }
+    );
+  } catch (error) {
+    return res.status(500).json(error);
+  }
 };

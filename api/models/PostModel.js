@@ -158,7 +158,54 @@ export const updateSharePost = (postId, updatePost, callback) => {
   const values = [updatePost.desc, postId, updatePost.userId];
   db.query(q, values, (err, data) => {
     if (err) return callback(err, null);
-    if (data.affectedRows === 0) return callback("Post cant update", null);
+    if (data.affectedRows === 0) return callback("Post can`t update", null);
     return callback(null, "Post has been updated.");
+  });
+};
+export const updatePrivatePost = (postId, userId, private_state, callback) => {
+  if (![0, 1, 2].includes(private_state))
+    return callback("Status invalid", null);
+  const q = "Update posts set `status`=? Where id =? AND userId =?";
+  const values = [private_state, postId, userId];
+
+  db.query(q, values, (err, data) => {
+    if (err) return callback(err, null);
+    if (data.affectedRows === 0) return callback("Post can`t update", null);
+    return callback(null, "Updated Successfully");
+  });
+};
+export const addListPostPrivate = (userIDs, postID, userID, callback) => {
+  const checkOwnershipQuery = `
+    
+    SELECT COUNT(*) AS count FROM posts WHERE id = ? AND userId = ?;
+    
+  `;
+
+  db.query(checkOwnershipQuery, [Number(postID), userID], (error, results) => {
+    if (error) {
+      return callback(error, null);
+    }
+
+    const postBelongsToUser = results[0].count > 0;
+
+    if (!postBelongsToUser) {
+      return callback("Người dùng không có quyền thực hiện thay đổi này", null);
+    }
+
+    const deleteAndInsertQuery =
+      userIDs.length > 0
+        ? "" +
+          "DELETE FROM post_private WHERE postid = ?;" +
+          "INSERT INTO post_private(`postid`, `userid`) VALUES" +
+          userIDs.map((id) => `(${postID}, ${id})`).join(", ") +
+          `;`
+        : `DELETE FROM post_private WHERE postid = ?`;
+
+    db.query(deleteAndInsertQuery, Number(postID), (error, results) => {
+      if (error) {
+        return callback(error, null);
+      }
+      return callback(null, results);
+    });
   });
 };
