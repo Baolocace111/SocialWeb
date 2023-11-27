@@ -7,6 +7,7 @@ import {
   ListItemIcon,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import PopupWindow from "../PopupComponent/PopupWindow";
 import { faTrashCan, faPen, faX } from "@fortawesome/free-solid-svg-icons";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
@@ -32,18 +33,20 @@ import { makeRequest } from "../../axios";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/authContext";
 import Description from "./desc";
+import MiniPost from "./MiniPost";
 
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [deleteImage, setDeleteImage] = useState(false);
-
+  const [shareDesc, setShareDesc] = useState("");
   //Handle openMenu
   const handleMenuClick = (event) => {
     if (post.userId === currentUser.id) {
       setMenuAnchor(event.currentTarget);
     }
   };
+  const [showSharePopup, setShowSharePopup] = useState(false);
 
   const handleMenuClose = () => {
     setMenuAnchor(null);
@@ -86,13 +89,16 @@ const Post = ({ post }) => {
       return res.data;
     })
   );
-  const handleShare = () => {};
+  const handleShare = () => {
+    setShareDesc("");
+    setShowSharePopup(!showSharePopup);
+  };
   const queryClient = useQueryClient();
 
   //Use Mutation
   const Sharemtation = useMutation(
-    (post) => {
-      return makeRequest().post("/posts/share", post);
+    (data) => {
+      return makeRequest.post("/posts/share", { post: data });
     },
     {
       onSuccess: () => {
@@ -135,6 +141,13 @@ const Post = ({ post }) => {
       },
     }
   );
+  const handleShareApi = () => {
+    Sharemtation.mutate({
+      desc: shareDesc,
+      shareId: post.id,
+    });
+    handleShare();
+  };
   //End use Mutation
 
   const handleUpdate = async (e) => {
@@ -369,6 +382,90 @@ const Post = ({ post }) => {
             <ShareOutlinedIcon />
             Share
           </div>
+          <PopupWindow show={showSharePopup} handleClose={handleShare}>
+            <div>
+              <EditIcon sx={{ marginRight: "8px", fontSize: "20px" }} />
+              <span style={{ fontSize: "22px", fontWeight: "700" }}>
+                Share this post
+              </span>
+            </div>
+            <hr />
+            <div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  margin: "10px 0 15px 10px",
+                }}
+              >
+                <div
+                  style={{
+                    paddingRight: "15px",
+                    display: "flex",
+                    flex: "0 0 auto",
+                    gap: "10px",
+                  }}
+                >
+                  <img
+                    src={"/upload/" + currentUser.profilePic}
+                    style={{
+                      borderRadius: "50%",
+                      width: "45px",
+                      height: "45px",
+                    }}
+                    alt="User"
+                  />
+                  <div
+                    style={{
+                      fontWeight: "700",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    {currentUser.name}
+                  </div>
+                </div>
+              </div>
+              <TextareaAutosize
+                minRows={2}
+                placeholder="Nhập nội mô tả của bạn"
+                defaultValue={shareDesc}
+                onChange={(e) => setShareDesc(e.target.value)}
+                style={{
+                  width: "100%",
+                  border: "none",
+                  resize: "none",
+                  outline: "none",
+                  fontSize: "20px",
+                }}
+              />
+              <div style={{ pointerEvents: "none" }}>
+                <MiniPost post={post}></MiniPost>
+              </div>
+            </div>
+            <hr />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "10px",
+              }}
+            >
+              <button
+                onClick={handleShareApi}
+                style={{ color: "blue", backgroundColor: "#FFFFFF" }}
+              >
+                SHARE
+              </button>
+              <button
+                onClick={handleShare}
+                style={{ color: "red", backgroundColor: "#FFFFFF" }}
+              >
+                CANCEL
+              </button>
+            </div>
+          </PopupWindow>
         </div>
         {commentOpen && <Comments postId={post.id} />}
       </div>
