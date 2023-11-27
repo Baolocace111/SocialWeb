@@ -22,9 +22,9 @@ export const addLikeWithTokenService = (token, postId, callback) => {
 
       getPostByIdService(userInfo.id, postId, (err, data) => {
         if (err) return;
-        if (data.length !== 0) {
-          const post = data[0];
-          if (post.userid !== userInfo.id)
+        if (data) {
+          const post = data;
+          if (post.userid !== userInfo.id) {
             getUserById(userInfo.id, (err, data) => {
               if (err) console.log(err);
               else
@@ -35,10 +35,10 @@ export const addLikeWithTokenService = (token, postId, callback) => {
                   `/upload/${post.img}`,
                   (err, data) => {
                     if (err) console.log(err);
-                    //else console.log(data);
                   }
                 );
             });
+          }
         }
       });
       return callback(null, data);
