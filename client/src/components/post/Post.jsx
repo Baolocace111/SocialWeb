@@ -41,20 +41,21 @@ const Post = ({ post }) => {
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [deleteImage, setDeleteImage] = useState(false);
   const [shareDesc, setShareDesc] = useState("");
+  const [showSharePopup, setShowSharePopup] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [openSeeEdit, setOpenSeeEdit] = useState(false);
+  const [selectedValue, setSelectedValue] = useState(0); // State để lưu giá trị của Radio được chọn
+
   //Handle openMenu
   const handleMenuClick = (event) => {
     if (post.userId === currentUser.id) {
       setMenuAnchor(event.currentTarget);
     }
   };
-  const [showSharePopup, setShowSharePopup] = useState(false);
-
   const handleMenuClose = () => {
     setMenuAnchor(null);
   };
 
-  const [openEdit, setOpenEdit] = useState(false);
-  const [openSeeEdit, setOpenSeeEdit] = useState(false);
   const handleDialogOpen = () => {
     setOpenEdit(true);
   };
@@ -62,12 +63,12 @@ const Post = ({ post }) => {
     setOpenEdit(false);
   };
 
-  const [selectedValue, setSelectedValue] = useState(''); // State để lưu giá trị của Radio được chọn
   const handleRadioChange = (value) => {
     setSelectedValue(value);
   };
   const handleSeeDialogOpen = () => {
     setOpenSeeEdit(true);
+    setSelectedValue((post.status));
   };
   const handleSeeDialogClose = () => {
     setOpenSeeEdit(false);
@@ -92,23 +93,18 @@ const Post = ({ post }) => {
       console.log(err);
     }
   };
-  //
+  //End handleOpenMenu
 
   const { currentUser } = useContext(AuthContext);
-
   const { isLoading, error, data } = useQuery(["likes", post.id], () =>
     makeRequest.get("/likes?postId=" + post.id).then((res) => {
       return res.data;
     })
   );
-  const handleShare = () => {
-    setShareDesc("");
-    setShowSharePopup(!showSharePopup);
-  };
-  const queryClient = useQueryClient();
 
+  const queryClient = useQueryClient();
   //Use Mutation
-  const Sharemtation = useMutation(
+  const shareMutation = useMutation(
     (data) => {
       return makeRequest.post("/posts/share", { post: data });
     },
@@ -153,14 +149,31 @@ const Post = ({ post }) => {
       },
     }
   );
+  const updateSeeMutation = useMutation(
+    (data) => {
+      return makeRequest.put(`/posts/private/${data.postId}`, data);
+    },
+    {
+      onSuccess: () => {
+        // Invalidate and refetch
+        queryClient.invalidateQueries(["posts"]);
+      },
+    }
+  )
+  //End Use Mutation
+
+  const handleShare = () => {
+    setShareDesc("");
+    setShowSharePopup(!showSharePopup);
+    setMenuAnchor(null);
+  };
   const handleShareApi = () => {
-    Sharemtation.mutate({
+    shareMutation.mutate({
       desc: shareDesc,
       shareId: post.id,
     });
     handleShare();
   };
-  //End use Mutation
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -169,6 +182,12 @@ const Post = ({ post }) => {
     updateMutation.mutate({ postId: post.id, desc, img: imgUrl });
     setFile(null);
     setOpenEdit(false);
+    setMenuAnchor(null);
+  };
+
+  const handleSave = () => {
+    updateSeeMutation.mutate({ postId: post.id, status: selectedValue });
+    setOpenSeeEdit(false);
     setMenuAnchor(null);
   };
 
@@ -403,7 +422,7 @@ const Post = ({ post }) => {
                     margin: "-10px 0 0 0",
                   }}>
                   <List>
-                    <ListItemButton onClick={() => handleRadioChange('public')}>
+                    <ListItemButton selected={selectedValue === 0} onClick={() => handleRadioChange(0)}>
                       <ListItemIcon style={{ fontSize: "23px", marginLeft: "-10px" }}>
                         <div
                           style={{
@@ -422,12 +441,12 @@ const Post = ({ post }) => {
                       </ListItemText>
                       <ListItemIcon>
                         <Radio
-                          checked={selectedValue === 'public'}
-                          onChange={() => handleRadioChange('public')}
+                          checked={selectedValue === 0}
+                          onChange={() => handleRadioChange(0)}
                           name="abc" />
                       </ListItemIcon>
                     </ListItemButton>
-                    <ListItemButton onClick={() => handleRadioChange('friends')}>
+                    <ListItemButton selected={selectedValue === 1} onClick={() => handleRadioChange(1)}>
                       <ListItemIcon style={{ fontSize: "20px", marginLeft: "-10px" }}>
                         <div
                           style={{
@@ -446,12 +465,12 @@ const Post = ({ post }) => {
                       </ListItemText>
                       <ListItemIcon>
                         <Radio
-                          checked={selectedValue === 'friends'}
-                          onChange={() => handleRadioChange('friends')}
+                          checked={selectedValue === 1}
+                          onChange={() => handleRadioChange(1)}
                           name="abc" />
                       </ListItemIcon>
                     </ListItemButton>
-                    <ListItemButton onClick={() => handleRadioChange('only-me')}>
+                    <ListItemButton selected={selectedValue === 2} onClick={() => handleRadioChange(2)}>
                       <ListItemIcon style={{ fontSize: "20px", marginLeft: "-10px" }}>
                         <div
                           style={{
@@ -467,8 +486,8 @@ const Post = ({ post }) => {
                       </ListItemText>
                       <ListItemIcon>
                         <Radio
-                          checked={selectedValue === 'only-me'}
-                          onChange={() => handleRadioChange('only-me')}
+                          checked={selectedValue === 2}
+                          onChange={() => handleRadioChange(2)}
                           name="abc" />
                       </ListItemIcon>
                     </ListItemButton>
@@ -477,7 +496,7 @@ const Post = ({ post }) => {
               </DialogContent>
               <Divider />
               <DialogActions>
-                <Button color="primary">
+                <Button onClick={handleSave} color="primary">
                   Save
                 </Button>
                 <Button onClick={handleSeeDialogClose} color="secondary">

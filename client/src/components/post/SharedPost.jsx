@@ -15,7 +15,7 @@ import {
 import Description from "./desc";
 import FlipCube from "../loadingComponent/flipCube/FlipCube";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashCan, faPen } from "@fortawesome/free-solid-svg-icons";
+import { faTrashCan, faPen, faLock, faEarthAmericas, faUserGroup } from "@fortawesome/free-solid-svg-icons";
 import ThreePointLoading from "../loadingComponent/threepointLoading/ThreePointLoading";
 import { TextareaAutosize } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
@@ -26,42 +26,63 @@ import Button from "@mui/material/Button";
 import EditIcon from "@mui/icons-material/Edit";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
+import Radio from '@mui/material/Radio';
+
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-
 import { makeRequest } from "../../axios";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/authContext";
 import MiniPost from "./MiniPost";
 
 const SharedPost = ({ post }) => {
-  //console.log(dataPost);
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
-  const { currentUser } = useContext(AuthContext);
   const [openEdit, setOpenEdit] = useState(false);
+  const [openSeeEdit, setOpenSeeEdit] = useState(false);
+  const [selectedValue, setSelectedValue] = useState(''); // State để lưu giá trị của Radio được chọn
   const [desc, setDesc] = useState(post.desc);
+
+  const { currentUser } = useContext(AuthContext);
   const queryClient = useQueryClient();
+
+  const { isLoading, error, data } = useQuery(["likes", post.id], () =>
+    makeRequest.get("/likes?postId=" + post.id).then((res) => {
+      return res.data;
+    })
+  );
+  const { isLoading: isLoadingPost, error: errorPost, data: dataPost } = useQuery(["post"], () =>
+    makeRequest.get("/posts/post/" + post.img).then((res) => {
+      return res.data;
+    })
+  );
+
+  const handleMenuClose = () => {
+    setMenuAnchor(null);
+  };
+  const handleMenuClick = (event) => {
+    if (post.userId === currentUser.id) {
+      setMenuAnchor(event.currentTarget);
+    }
+  };
   const handleDialogOpen = () => {
     setOpenEdit(true);
   };
   const handleDialogClose = () => {
     setOpenEdit(false);
   };
-  const handleLike = () => {
-    mutation.mutate(data.includes(currentUser.id));
+  const handleRadioChange = (value) => {
+    setSelectedValue(value);
   };
-  const handleDelete = () => {
-    deleteMutation.mutate(post.id);
+  const handleSeeDialogOpen = () => {
+    setOpenSeeEdit(true);
+    setSelectedValue(post.status);
   };
-  const handleUpdate = async (e) => {
-    e.preventDefault();
+  const handleSeeDialogClose = () => {
+    setOpenSeeEdit(false);
+  };
 
-    updateMutation.mutate({ postId: post.id, desc: desc });
-
-    setOpenEdit(false);
-    setMenuAnchor(null);
-  };
+  //Use Mutation
   const updateMutation = useMutation(
     (data) => {
       return makeRequest.put(`/posts/share`, data);
@@ -73,25 +94,17 @@ const SharedPost = ({ post }) => {
       },
     }
   );
-  const {
-    isLoading: isLoading,
-    error: error,
-    data: data,
-  } = useQuery(["likes", post.id], () =>
-    makeRequest.get("/likes?postId=" + post.id).then((res) => {
-      return res.data;
-    })
-  );
-  const {
-    isLoading: isLoadingPost,
-    error: errorPost,
-    data: dataPost,
-  } = useQuery(["post"], () =>
-    makeRequest.get("/posts/post/" + post.img).then((res) => {
-      return res.data;
-    })
-  );
-  //Use Mutation
+  const updateSeeMutation = useMutation(
+    (data) => {
+      return makeRequest.put(`/posts/private/${data.postId}`, data);
+    },
+    {
+      onSuccess: () => {
+        // Invalidate and refetch
+        queryClient.invalidateQueries(["posts"]);
+      },
+    }
+  )
   const mutation = useMutation(
     (liked) => {
       if (liked) return makeRequest.delete("/likes?postId=" + post.id);
@@ -115,14 +128,28 @@ const SharedPost = ({ post }) => {
       },
     }
   );
-  const handleMenuClose = () => {
+  //End Use Mutation
+
+  const handleLike = () => {
+    mutation.mutate(data.includes(currentUser.id));
+  };
+  const handleDelete = () => {
+    deleteMutation.mutate(post.id);
+  };
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+
+    updateMutation.mutate({ postId: post.id, desc: desc });
+
+    setOpenEdit(false);
     setMenuAnchor(null);
   };
-  const handleMenuClick = (event) => {
-    if (post.userId === currentUser.id) {
-      setMenuAnchor(event.currentTarget);
-    }
+  const handleSave = () => {
+    updateSeeMutation.mutate({ postId: post.id, status: selectedValue });
+    setOpenSeeEdit(false);
+    setMenuAnchor(null);
   };
+
   return (
     <div className="post">
       <div className="container">
@@ -172,7 +199,19 @@ const SharedPost = ({ post }) => {
                   <FontAwesomeIcon icon={faPen} />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Chỉnh sửa"
+                  primary="Chỉnh sửa bài viết"
+                  style={{ fontSize: "14px", marginRight: "50px" }}
+                />
+              </ListItemButton>
+              <Divider />
+              <ListItemButton onClick={handleSeeDialogOpen}>
+                <ListItemIcon
+                  style={{ fontSize: "18px", marginRight: "-25px" }}
+                >
+                  <FontAwesomeIcon icon={faLock} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Chỉnh sửa đối tượng"
                   style={{ fontSize: "14px", marginRight: "50px" }}
                 />
               </ListItemButton>
@@ -266,6 +305,114 @@ const SharedPost = ({ post }) => {
                 </Button>
               </DialogActions>
             </Dialog>
+
+            <Dialog open={openSeeEdit} onClose={handleSeeDialogClose}>
+              <DialogTitle
+                sx={{ m: 0, p: 2, display: "flex", mt: "-5px", mb: "-10px" }}
+              >
+                <Typography
+                  variant="title1"
+                  style={{ flexGrow: 1, textAlign: "center" }}
+                >
+                  <FontAwesomeIcon style={{ marginRight: "8px", fontSize: "20px" }} icon={faLock} />
+                  <span style={{ fontSize: "22px", fontWeight: "700" }}>
+                    Chỉnh sửa đối tượng
+                  </span>
+                </Typography>
+              </DialogTitle>
+              <Divider />
+              <DialogContent>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    margin: "-10px 0 0 0",
+                  }}>
+                  <List>
+                    <ListItemButton selected={selectedValue === 0} onClick={() => handleRadioChange(0)}>
+                      <ListItemIcon style={{ fontSize: "23px", marginLeft: "-10px" }}>
+                        <div
+                          style={{
+                            alignItems: "center", borderRadius: "50%",
+                            backgroundColor: "#DADDE1", width: "52px", height: "52px",
+                            justifyContent: "center", display: "flex"
+                          }}>
+                          <FontAwesomeIcon icon={faEarthAmericas} />
+                        </div>
+                      </ListItemIcon>
+                      <ListItemText style={{ marginLeft: "20px", marginRight: "80px" }}>
+                        <Typography variant="h6">Công khai</Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          Ai trên TinySocial cũng sẽ nhìn thấy bài viết này
+                        </Typography>
+                      </ListItemText>
+                      <ListItemIcon>
+                        <Radio
+                          checked={selectedValue === 0}
+                          onChange={() => handleRadioChange(0)}
+                          name="abc" />
+                      </ListItemIcon>
+                    </ListItemButton>
+                    <ListItemButton selected={selectedValue === 1} onClick={() => handleRadioChange(1)}>
+                      <ListItemIcon style={{ fontSize: "20px", marginLeft: "-10px" }}>
+                        <div
+                          style={{
+                            alignItems: "center", borderRadius: "50%",
+                            backgroundColor: "#DADDE1", width: "52px", height: "52px",
+                            justifyContent: "center", display: "flex"
+                          }}>
+                          <FontAwesomeIcon icon={faUserGroup} />
+                        </div>
+                      </ListItemIcon>
+                      <ListItemText style={{ marginLeft: "20px", marginRight: "80px" }}>
+                        <Typography variant="h6">Bạn bè</Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          Bạn bè của bạn trên TinySocial
+                        </Typography>
+                      </ListItemText>
+                      <ListItemIcon>
+                        <Radio
+                          checked={selectedValue === 1}
+                          onChange={() => handleRadioChange(1)}
+                          name="abc" />
+                      </ListItemIcon>
+                    </ListItemButton>
+                    <ListItemButton selected={selectedValue === 2} onClick={() => handleRadioChange(2)}>
+                      <ListItemIcon style={{ fontSize: "20px", marginLeft: "-10px" }}>
+                        <div
+                          style={{
+                            alignItems: "center", borderRadius: "50%",
+                            backgroundColor: "#DADDE1", width: "52px", height: "52px",
+                            justifyContent: "center", display: "flex"
+                          }}>
+                          <FontAwesomeIcon icon={faLock} />
+                        </div>
+                      </ListItemIcon>
+                      <ListItemText style={{ marginLeft: "20px", marginRight: "80px" }}>
+                        <Typography variant="h6">Chỉ mình tôi</Typography>
+                      </ListItemText>
+                      <ListItemIcon>
+                        <Radio
+                          checked={selectedValue === 2}
+                          onChange={() => handleRadioChange(2)}
+                          name="abc" />
+                      </ListItemIcon>
+                    </ListItemButton>
+                  </List>
+                </div>
+              </DialogContent>
+              <Divider />
+              <DialogActions>
+                <Button onClick={handleSave} color="primary">
+                  Save
+                </Button>
+                <Button onClick={handleSeeDialogClose} color="secondary">
+                  Cancel
+                </Button>
+              </DialogActions>
+            </Dialog>
+
           </Popover>
         </div>
         <div className="content">
