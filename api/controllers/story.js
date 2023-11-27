@@ -1,5 +1,9 @@
 import jwt from "jsonwebtoken";
-import { getStoriesService, addStoryService, deleteStoryService } from "../services/StoryService.js";
+import {
+  getStoriesService,
+  addStoryService,
+  deleteStoryService,
+} from "../services/StoryService.js";
 
 export const getStories = (req, res) => {
   const token = req.cookies.accessToken;

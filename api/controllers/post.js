@@ -67,10 +67,14 @@ export const sharePostController = async (req, res) => {
 
     sharePostService(userId, req.body.post, (err, data) => {
       //post bao gồm desc,shareId
-      if (err) return res.status(500).json(err);
+      if (err) {
+        console.log(err);
+        return res.status(500).json(err);
+      }
       return res.status(200).json(data);
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json(error);
   }
 };
