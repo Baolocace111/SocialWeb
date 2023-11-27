@@ -1,15 +1,15 @@
 import React from "react";
 import "./popup.scss";
-import { useRef } from "react";
-import { useEffect } from "react";
+import { useRef, useEffect, useCallback } from "react";
+
 const PopupWindow = ({ handleClose, show, children }) => {
   const modalRef = useRef(null);
 
-  const handleOutsideClick = (e) => {
+  const handleOutsideClick = useCallback((e) => {
     if (modalRef.current && !modalRef.current.contains(e.target)) {
       handleClose();
     }
-  };
+  }, [handleClose]);
 
   useEffect(() => {
     if (show) {
@@ -20,7 +20,8 @@ const PopupWindow = ({ handleClose, show, children }) => {
     return () => {
       document.removeEventListener("mousedown", handleOutsideClick);
     };
-  }, [show]);
+  }, [show, handleOutsideClick]);
+
   const showHideClassName = show ? "modal display-block" : "modal display-none";
 
   return (

@@ -382,7 +382,7 @@ const Post = ({ post }) => {
             <ShareOutlinedIcon />
             Share
           </div>
-          <PopupWindow show={showSharePopup} handleClose={handleShare}>
+          <PopupWindow handleClose={handleShare} show={showSharePopup}>
             <div>
               <EditIcon sx={{ marginRight: "8px", fontSize: "20px" }} />
               <span style={{ fontSize: "22px", fontWeight: "700" }}>
@@ -449,18 +449,18 @@ const Post = ({ post }) => {
               style={{
                 display: "flex",
                 justifyContent: "flex-end",
-                gap: "10px",
+                gap: "20px",
               }}
             >
               <button
+                className="share"
                 onClick={handleShareApi}
-                style={{ color: "blue", backgroundColor: "#FFFFFF" }}
               >
                 SHARE
               </button>
               <button
+                className="cancel"
                 onClick={handleShare}
-                style={{ color: "red", backgroundColor: "#FFFFFF" }}
               >
                 CANCEL
               </button>
