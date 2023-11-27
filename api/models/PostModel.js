@@ -10,7 +10,9 @@ export const getPostById = (userId, postId, callback) => {
     WHERE (p.id=?) AND (p.status = 0 OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?)))) ORDER BY p.createdAt DESC`;
   db.query(q, [userId, postId, userId, userId, userId], (err, data) => {
     if (err) return callback(err, null);
-    return callback(null, data);
+    if (data.length === 0) return callback("Không tìm thấy bài viết", null);
+
+    return callback(null, data[0]);
   });
 };
 export const getPosts = (userId, userInfo, callback) => {
@@ -70,6 +72,28 @@ export const addPost = (post, callback) => {
     return callback(null, "Post has been created.");
   });
 };
+export const sharePost = (post, callback) => {
+  const checkQuery = "SELECT * FROM posts WHERE id = ? AND type = ?";
+  db.query(checkQuery, [post.shareId, 1], (checkErr, checkData) => {
+    if (checkErr) {
+      return callback(checkErr, null);
+    }
+
+    if (checkData.length > 0) {
+      return callback("Cannot share a Share post", null);
+    }
+
+    const insertQuery =
+      "INSERT INTO posts(`desc`, `img`, `userId`,`type`) VALUES (?)";
+    const values = [post.desc, Number(post.shareId), post.userId, 1];
+    db.query(insertQuery, [values], (insertErr, insertData) => {
+      if (insertErr) {
+        return callback(insertErr, null);
+      }
+      return callback(null, "Post has been created.");
+    });
+  });
+};
 
 export const deletePost = (postId, userId, callback) => {
   const q = "DELETE FROM posts WHERE `id` = ? AND `userId` = ?";
@@ -113,7 +137,7 @@ export const searchPostsbyHashtag = (hashtag, userId, callback) => {
 
 export const updatePost = (postId, updatedPost, callback) => {
   const q =
-    "UPDATE posts SET `desc` = ?, `img` = ? WHERE id = ? AND userId = ?";
+    "UPDATE posts SET `desc` = ?, `img` = ? WHERE id = ? AND userId = ? AND type = 0";
   const values = [
     updatedPost.desc,
     updatedPost.img,
@@ -121,6 +145,17 @@ export const updatePost = (postId, updatedPost, callback) => {
     updatedPost.userId,
   ];
 
+  db.query(q, values, (err, data) => {
+    if (err) return callback(err, null);
+    //console.log(values);
+    if (data.affectedRows === 0) return callback("Post cant update", null);
+    return callback(null, "Post has been updated.");
+  });
+};
+export const updateSharePost = (postId, updatePost, callback) => {
+  const q =
+    "UPDATE posts SET `desc` = ? WHERE id = ? AND userId = ? AND type = 1";
+  const values = [updatePost.desc, postId, updatePost.userId];
   db.query(q, values, (err, data) => {
     if (err) return callback(err, null);
     if (data.affectedRows === 0) return callback("Post cant update", null);

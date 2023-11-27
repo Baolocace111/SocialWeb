@@ -11,13 +11,15 @@ const PostPage = () => {
   );
   return (
     <div>
-      {error
-        ? "Something went wrong!"
-        : isLoading
-        ? "loading"
-        : data.length === 0
-        ? "not found"
-        : data.map((post) => <Post post={post} key={post.id} />)}
+      {error ? (
+        "Something went wrong!"
+      ) : isLoading ? (
+        "loading"
+      ) : data.length === 0 ? (
+        "not found"
+      ) : (
+        <Post post={data} />
+      )}
     </div>
   );
 };

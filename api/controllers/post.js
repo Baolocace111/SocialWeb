@@ -7,7 +7,10 @@ import {
   getPostbyHashtagService,
   updatePostService,
   getPostByIdService,
+  sharePostService,
+  updateSharePostService,
 } from "../services/PostService.js";
+import { AuthService } from "../services/AuthService.js";
 export const getPostByIdController = (req, res) => {
   const postId = req.params.postId;
   const token = req.cookies.accessToken;
@@ -57,7 +60,37 @@ export const addPost = (req, res) => {
     });
   });
 };
+export const sharePostController = async (req, res) => {
+  try {
+    //await console.log("đã chạy qua");
+    const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
 
+    sharePostService(userId, req.body.post, (err, data) => {
+      //post bao gồm desc,shareId
+      if (err) return res.status(500).json(err);
+      return res.status(200).json(data);
+    });
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+export const updateSharedPostController = async (req, res) => {
+  try {
+    const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+    //console.log(req.body.postId, req.body.desc);
+    updateSharePostService(
+      userId,
+      req.body.postId,
+      req.body.desc,
+      (err, data) => {
+        if (err) return res.status(500).json(err);
+        return res.status(200).json(data);
+      }
+    );
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
 export const deletePost = (req, res) => {
   const postId = req.params.postId;
   const token = req.cookies.accessToken;
