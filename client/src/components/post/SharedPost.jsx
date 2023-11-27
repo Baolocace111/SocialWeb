@@ -1,4 +1,10 @@
 import "./post.scss";
+import moment from "moment";
+import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
+import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import Comments from "../comments/Comments";
 import {
   Popover,
   List,
@@ -6,14 +12,11 @@ import {
   ListItemText,
   ListItemIcon,
 } from "@mui/material";
+import Description from "./desc";
+import FlipCube from "../loadingComponent/flipCube/FlipCube";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashCan, faPen, faX } from "@fortawesome/free-solid-svg-icons";
-import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
-import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
-import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
-import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-
+import { faTrashCan, faPen } from "@fortawesome/free-solid-svg-icons";
+import ThreePointLoading from "../loadingComponent/threepointLoading/ThreePointLoading";
 import { TextareaAutosize } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -23,76 +26,45 @@ import Button from "@mui/material/Button";
 import EditIcon from "@mui/icons-material/Edit";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
-
-import { Link } from "react-router-dom";
-import Comments from "../comments/Comments";
-import moment from "moment";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
+
 import { makeRequest } from "../../axios";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/authContext";
-import Description from "./desc";
+import MiniPost from "./MiniPost";
 
-const Post = ({ post }) => {
+const SharedPost = ({ post }) => {
+  //console.log(dataPost);
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
-  const [deleteImage, setDeleteImage] = useState(false);
-
-  //Handle openMenu
-  const handleMenuClick = (event) => {
-    if (post.userId === currentUser.id) {
-      setMenuAnchor(event.currentTarget);
-    }
-  };
-
-  const handleMenuClose = () => {
-    setMenuAnchor(null);
-  };
-
+  const { currentUser } = useContext(AuthContext);
   const [openEdit, setOpenEdit] = useState(false);
+  const [desc, setDesc] = useState(post.desc);
+  const queryClient = useQueryClient();
   const handleDialogOpen = () => {
     setOpenEdit(true);
   };
-
   const handleDialogClose = () => {
     setOpenEdit(false);
   };
-
-  const [file, setFile] = useState(null);
-  const [selectedImage, setSelectedImage] = useState("/upload/" + post.img);
-  const [desc, setDesc] = useState(post.desc);
-  const handleImageChange = (e) => {
-    if (deleteImage) {
-      const file = e.target.files[0];
-      setSelectedImage(URL.createObjectURL(file));
-    }
+  const handleLike = () => {
+    mutation.mutate(data.includes(currentUser.id));
   };
-  const upload = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await makeRequest.post("/upload", formData);
-      return res.data;
-    } catch (err) {
-      console.log(err);
-    }
+  const handleDelete = () => {
+    deleteMutation.mutate(post.id);
   };
-  //
+  const handleUpdate = async (e) => {
+    e.preventDefault();
 
-  const { currentUser } = useContext(AuthContext);
+    updateMutation.mutate({ postId: post.id, desc: desc });
 
-  const { isLoading, error, data } = useQuery(["likes", post.id], () =>
-    makeRequest.get("/likes?postId=" + post.id).then((res) => {
-      return res.data;
-    })
-  );
-  const handleShare = () => {};
-  const queryClient = useQueryClient();
-
-  //Use Mutation
-  const Sharemtation = useMutation(
-    (post) => {
-      return makeRequest().post("/posts/share", post);
+    setOpenEdit(false);
+    setMenuAnchor(null);
+  };
+  const updateMutation = useMutation(
+    (data) => {
+      return makeRequest.put(`/posts/share`, data);
     },
     {
       onSuccess: () => {
@@ -101,6 +73,25 @@ const Post = ({ post }) => {
       },
     }
   );
+  const {
+    isLoading: isLoading,
+    error: error,
+    data: data,
+  } = useQuery(["likes", post.id], () =>
+    makeRequest.get("/likes?postId=" + post.id).then((res) => {
+      return res.data;
+    })
+  );
+  const {
+    isLoading: isLoadingPost,
+    error: errorPost,
+    data: dataPost,
+  } = useQuery(["post"], () =>
+    makeRequest.get("/posts/post/" + post.img).then((res) => {
+      return res.data;
+    })
+  );
+  //Use Mutation
   const mutation = useMutation(
     (liked) => {
       if (liked) return makeRequest.delete("/likes?postId=" + post.id);
@@ -124,37 +115,14 @@ const Post = ({ post }) => {
       },
     }
   );
-  const updateMutation = useMutation(
-    (data) => {
-      return makeRequest.put(`/posts/${data.postId}`, data);
-    },
-    {
-      onSuccess: () => {
-        // Invalidate and refetch
-        queryClient.invalidateQueries(["posts"]);
-      },
-    }
-  );
-  //End use Mutation
-
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    let imgUrl = post.img;
-    if (file) imgUrl = await upload();
-    updateMutation.mutate({ postId: post.id, desc, img: imgUrl });
-    setFile(null);
-    setOpenEdit(false);
+  const handleMenuClose = () => {
     setMenuAnchor(null);
   };
-
-  const handleLike = () => {
-    mutation.mutate(data.includes(currentUser.id));
+  const handleMenuClick = (event) => {
+    if (post.userId === currentUser.id) {
+      setMenuAnchor(event.currentTarget);
+    }
   };
-
-  const handleDelete = () => {
-    deleteMutation.mutate(post.id);
-  };
-
   return (
     <div className="post">
       <div className="container">
@@ -287,49 +255,6 @@ const Post = ({ post }) => {
                     fontSize: "20px",
                   }}
                 />
-
-                {selectedImage && (
-                  <div style={{ display: "flex", justifyContent: "center" }}>
-                    <div
-                      style={{ position: "relative", display: "inline-flex" }}
-                    >
-                      <img
-                        src={selectedImage}
-                        alt=""
-                        style={{ maxWidth: "400px" }}
-                      />
-                      <button
-                        style={{
-                          position: "absolute",
-                          top: "5px",
-                          right: "5px",
-                          borderRadius: "50%",
-                          width: "30px",
-                          height: "30px",
-                          cursor: "pointer",
-                          zIndex: "1",
-                        }}
-                        onClick={() => {
-                          setSelectedImage(null);
-                          setDeleteImage(true);
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faX} />
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {deleteImage && (
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      setFile(e.target.files[0]);
-                      handleImageChange(e);
-                    }}
-                  />
-                )}
               </DialogContent>
               <Divider />
               <DialogActions>
@@ -345,12 +270,18 @@ const Post = ({ post }) => {
         </div>
         <div className="content">
           <Description text={post.desc}></Description>
-          <img src={"/upload/" + post.img} alt="" />
+          {errorPost ? (
+            "Something went wrong!!!"
+          ) : isLoadingPost ? (
+            <FlipCube />
+          ) : (
+            <MiniPost post={dataPost} />
+          )}
         </div>
         <div className="info">
           <div className="item">
             {isLoading ? (
-              "loading"
+              <ThreePointLoading></ThreePointLoading>
             ) : data.includes(currentUser.id) ? (
               <FavoriteOutlinedIcon
                 style={{ color: "red" }}
@@ -365,15 +296,10 @@ const Post = ({ post }) => {
             <TextsmsOutlinedIcon />
             See Comments
           </div>
-          <div className="item" onClick={() => handleShare()}>
-            <ShareOutlinedIcon />
-            Share
-          </div>
         </div>
         {commentOpen && <Comments postId={post.id} />}
       </div>
     </div>
   );
 };
-
-export default Post;
+export default SharedPost;
