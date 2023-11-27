@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PopupWindow from "../PopupComponent/PopupWindow";
-import { faTrashCan, faPen, faX } from "@fortawesome/free-solid-svg-icons";
+import { faTrashCan, faPen, faX, faLock, faEarthAmericas, faUserGroup } from "@fortawesome/free-solid-svg-icons";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
@@ -24,6 +24,7 @@ import Button from "@mui/material/Button";
 import EditIcon from "@mui/icons-material/Edit";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
+import Radio from '@mui/material/Radio';
 
 import { Link } from "react-router-dom";
 import Comments from "../comments/Comments";
@@ -53,12 +54,23 @@ const Post = ({ post }) => {
   };
 
   const [openEdit, setOpenEdit] = useState(false);
+  const [openSeeEdit, setOpenSeeEdit] = useState(false);
   const handleDialogOpen = () => {
     setOpenEdit(true);
   };
-
   const handleDialogClose = () => {
     setOpenEdit(false);
+  };
+
+  const [selectedValue, setSelectedValue] = useState(''); // State để lưu giá trị của Radio được chọn
+  const handleRadioChange = (value) => {
+    setSelectedValue(value);
+  };
+  const handleSeeDialogOpen = () => {
+    setOpenSeeEdit(true);
+  };
+  const handleSeeDialogClose = () => {
+    setOpenSeeEdit(false);
   };
 
   const [file, setFile] = useState(null);
@@ -217,7 +229,19 @@ const Post = ({ post }) => {
                   <FontAwesomeIcon icon={faPen} />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Chỉnh sửa"
+                  primary="Chỉnh sửa bài viết"
+                  style={{ fontSize: "14px", marginRight: "50px" }}
+                />
+              </ListItemButton>
+              <Divider />
+              <ListItemButton onClick={handleSeeDialogOpen}>
+                <ListItemIcon
+                  style={{ fontSize: "18px", marginRight: "-25px" }}
+                >
+                  <FontAwesomeIcon icon={faLock} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Chỉnh sửa đối tượng"
                   style={{ fontSize: "14px", marginRight: "50px" }}
                 />
               </ListItemButton>
@@ -354,6 +378,93 @@ const Post = ({ post }) => {
                 </Button>
               </DialogActions>
             </Dialog>
+
+            <Dialog open={openSeeEdit} onClose={handleSeeDialogClose}>
+              <DialogTitle
+                sx={{ m: 0, p: 2, display: "flex", mt: "-5px", mb: "-10px" }}
+              >
+                <Typography
+                  variant="title1"
+                  style={{ flexGrow: 1, textAlign: "center" }}
+                >
+                  <FontAwesomeIcon style={{ marginRight: "8px", fontSize: "20px" }} icon={faLock} />
+                  <span style={{ fontSize: "22px", fontWeight: "700" }}>
+                    Chỉnh sửa đối tượng
+                  </span>
+                </Typography>
+              </DialogTitle>
+              <Divider />
+              <DialogContent>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    margin: "-10px 0 0 0",
+                  }}>
+                  <List>
+                    <ListItemButton onClick={() => handleRadioChange('public')}>
+                      <ListItemIcon style={{ fontSize: "23px" }}>
+                        <FontAwesomeIcon icon={faEarthAmericas} />
+                      </ListItemIcon>
+                      <ListItemText style={{ marginRight: "80px" }}>
+                        <Typography variant="h6">Công khai</Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          Ai trên TinySocial cũng sẽ nhìn thấy bài viết này
+                        </Typography>
+                      </ListItemText>
+                      <ListItemIcon>
+                        <Radio
+                          checked={selectedValue === 'public'}
+                          onChange={() => handleRadioChange('public')}
+                          name="abc" />
+                      </ListItemIcon>
+                    </ListItemButton>
+                    <ListItemButton onClick={() => handleRadioChange('friends')}>
+                      <ListItemIcon style={{ fontSize: "20px" }}>
+                        <FontAwesomeIcon icon={faUserGroup} />
+                      </ListItemIcon>
+                      <ListItemText style={{ marginRight: "80px" }}>
+                        <Typography variant="h6">Bạn bè</Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          Bạn bè của bạn trên TinySocial
+                        </Typography>
+                      </ListItemText>
+                      <ListItemIcon>
+                        <Radio
+                          checked={selectedValue === 'friends'}
+                          onChange={() => handleRadioChange('friends')}
+                          name="abc" />
+                      </ListItemIcon>
+                    </ListItemButton>
+                    <ListItemButton onClick={() => handleRadioChange('only-me')}>
+                      <ListItemIcon style={{ fontSize: "23px" }}>
+                        <FontAwesomeIcon icon={faLock} />
+                      </ListItemIcon>
+                      <ListItemText style={{ marginRight: "80px" }}>
+                        <Typography variant="h6">Chỉ mình tôi</Typography>
+                      </ListItemText>
+                      <ListItemIcon>
+                        <Radio
+                          checked={selectedValue === 'only-me'}
+                          onChange={() => handleRadioChange('only-me')}
+                          name="abc" />
+                      </ListItemIcon>
+                    </ListItemButton>
+                  </List>
+                </div>
+              </DialogContent>
+              <Divider />
+              <DialogActions>
+                <Button color="primary">
+                  Save
+                </Button>
+                <Button onClick={handleSeeDialogClose} color="secondary">
+                  Cancel
+                </Button>
+              </DialogActions>
+            </Dialog>
+
           </Popover>
         </div>
         <div className="content">
@@ -469,7 +580,7 @@ const Post = ({ post }) => {
         </div>
         {commentOpen && <Comments postId={post.id} />}
       </div>
-    </div>
+    </div >
   );
 };
 
