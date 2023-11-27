@@ -195,11 +195,11 @@ export const addListPostPrivate = (userIDs, postID, userID, callback) => {
     const deleteAndInsertQuery =
       userIDs.length > 0
         ? "" +
-          "DELETE FROM post_private WHERE postid = ?;" +
-          "INSERT INTO post_private(`postid`, `userid`) VALUES" +
-          userIDs.map((id) => `(${postID}, ${id})`).join(", ") +
-          `;`
-        : `DELETE FROM post_private WHERE postid = ?`;
+        "DELETE FROM post_private WHERE post_id = ?;" +
+        "INSERT INTO post_private(`post_id`, `user_id`) VALUES" +
+        userIDs.map((id) => `(${postID}, ${id})`).join(", ") +
+        `;`
+        : `DELETE FROM post_private WHERE post_id = ?`;
 
     db.query(deleteAndInsertQuery, Number(postID), (error, results) => {
       if (error) {
