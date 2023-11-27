@@ -404,10 +404,17 @@ const Post = ({ post }) => {
                   }}>
                   <List>
                     <ListItemButton onClick={() => handleRadioChange('public')}>
-                      <ListItemIcon style={{ fontSize: "23px" }}>
-                        <FontAwesomeIcon icon={faEarthAmericas} />
+                      <ListItemIcon style={{ fontSize: "23px", marginLeft: "-10px" }}>
+                        <div
+                          style={{
+                            alignItems: "center", borderRadius: "50%",
+                            backgroundColor: "#DADDE1", width: "52px", height: "52px",
+                            justifyContent: "center", display: "flex"
+                          }}>
+                          <FontAwesomeIcon icon={faEarthAmericas} />
+                        </div>
                       </ListItemIcon>
-                      <ListItemText style={{ marginRight: "80px" }}>
+                      <ListItemText style={{ marginLeft: "20px", marginRight: "80px" }}>
                         <Typography variant="h6">Công khai</Typography>
                         <Typography variant="body2" color="textSecondary">
                           Ai trên TinySocial cũng sẽ nhìn thấy bài viết này
@@ -421,10 +428,17 @@ const Post = ({ post }) => {
                       </ListItemIcon>
                     </ListItemButton>
                     <ListItemButton onClick={() => handleRadioChange('friends')}>
-                      <ListItemIcon style={{ fontSize: "20px" }}>
-                        <FontAwesomeIcon icon={faUserGroup} />
+                      <ListItemIcon style={{ fontSize: "20px", marginLeft: "-10px" }}>
+                        <div
+                          style={{
+                            alignItems: "center", borderRadius: "50%",
+                            backgroundColor: "#DADDE1", width: "52px", height: "52px",
+                            justifyContent: "center", display: "flex"
+                          }}>
+                          <FontAwesomeIcon icon={faUserGroup} />
+                        </div>
                       </ListItemIcon>
-                      <ListItemText style={{ marginRight: "80px" }}>
+                      <ListItemText style={{ marginLeft: "20px", marginRight: "80px" }}>
                         <Typography variant="h6">Bạn bè</Typography>
                         <Typography variant="body2" color="textSecondary">
                           Bạn bè của bạn trên TinySocial
@@ -438,10 +452,17 @@ const Post = ({ post }) => {
                       </ListItemIcon>
                     </ListItemButton>
                     <ListItemButton onClick={() => handleRadioChange('only-me')}>
-                      <ListItemIcon style={{ fontSize: "23px" }}>
-                        <FontAwesomeIcon icon={faLock} />
+                      <ListItemIcon style={{ fontSize: "20px", marginLeft: "-10px" }}>
+                        <div
+                          style={{
+                            alignItems: "center", borderRadius: "50%",
+                            backgroundColor: "#DADDE1", width: "52px", height: "52px",
+                            justifyContent: "center", display: "flex"
+                          }}>
+                          <FontAwesomeIcon icon={faLock} />
+                        </div>
                       </ListItemIcon>
-                      <ListItemText style={{ marginRight: "80px" }}>
+                      <ListItemText style={{ marginLeft: "20px", marginRight: "80px" }}>
                         <Typography variant="h6">Chỉ mình tôi</Typography>
                       </ListItemText>
                       <ListItemIcon>
