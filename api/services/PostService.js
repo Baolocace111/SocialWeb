@@ -9,6 +9,8 @@ import {
   getPostById,
   sharePost,
   updateSharePost,
+  addListPostPrivate,
+  updatePrivatePost,
 } from "../models/PostModel.js";
 
 export const getPostsService = (userId, userInfo, callback) => {
@@ -79,6 +81,23 @@ export const updatePostService = (postId, updatedPost, callback) => {
 export const getPostByIdService = (userId, postId, callback) => {
   getPostById(userId, postId, (err, data) => {
     if (err) return callback(err);
+    return callback(null, data);
+  });
+};
+export const updatePrivatePostService = (postId, userId, state, callback) => {
+  updatePrivatePost(postId, userId, state, (error, data) => {
+    if (error) return callback(error, null);
+    return callback(null, data);
+  });
+};
+export const addlistPostPrivateService = (
+  listUser,
+  postId,
+  userId,
+  callback
+) => {
+  addListPostPrivate(listUser, postId, userId, (error, data) => {
+    if (error) return callback(error, null);
     return callback(null, data);
   });
 };
