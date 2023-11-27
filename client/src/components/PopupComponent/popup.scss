@@ -1,6 +1,7 @@
 /* Modal Styles */
 .modal {
-  display: block; /* Ẩn ban đầu */
+  display: block;
+  /* Ẩn ban đầu */
   visibility: hidden;
   opacity: 0;
   position: fixed;
@@ -8,9 +9,58 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Màu nền với độ trong suốt */
-  z-index: 1000; /* Chắc chắn hiển thị trên các phần khác */
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Màu nền với độ trong suốt */
+  z-index: 1000;
+  /* Chắc chắn hiển thị trên các phần khác */
   transition: opacity 0.3s ease-in-out;
+
+  /* Phần cửa sổ popup */
+  .modal-main {
+    position: fixed;
+    background-color: #fff;
+    width: 60%;
+    max-width: 400px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+    z-index: 1001;
+
+    hr {
+      margin: 15px 0 15px 0;
+    }
+
+    button.share {
+      padding: 8px 16px;
+      border: none;
+      color: white;
+      background-color: lightskyblue;
+      cursor: pointer;
+      border-radius: 4px;
+      margin: 0;
+    }
+
+    button.share:hover {
+      background-color: blue;
+    }
+
+    button.cancel {
+      padding: 8px 16px;
+      border: none;
+      color: white;
+      background-color: lightcoral;
+      cursor: pointer;
+      border-radius: 4px;
+      margin: 0
+    }
+
+    button.cancel:hover {
+      background-color: red;
+    }
+  }
 }
 
 /* Hiển thị cửa sổ popup */
@@ -23,33 +73,4 @@
 .display-none {
   visibility: hidden;
   opacity: 0;
-}
-
-/* Phần cửa sổ popup */
-.modal-main {
-  position: fixed;
-  background-color: #fff;
-  width: 60%;
-  max-width: 400px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
-  z-index: 1001;
-}
-
-/* Nút đóng */
-.modal-main button {
-  padding: 8px 16px;
-  border: none;
-  background-color: #ddd;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-/* Khi hover lên nút đóng */
-.modal-main button:hover {
-  background-color: #ccc;
 }

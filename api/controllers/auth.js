@@ -34,6 +34,7 @@ export const login = async (req, res) => {
       req.body.username,
       req.body.password
     );
+    res.clearCookie();
     res
       .cookie("accessToken", result.token, {
         secure: true,
