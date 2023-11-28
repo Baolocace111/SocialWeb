@@ -14,7 +14,7 @@ export const getUserById = (userId, callback) => {
   });
 };
 export const findUserByName = (name, callback) => {
-  const q = `SELECT * FROM users WHERE username LIKE '%${name}%'`;
+  const q = `SELECT * FROM users WHERE username LIKE '%${name}%' OR name LIKE '%${name}%'`;
 
   db.query(q, (err, data) => {
     if (err) return callback(err);

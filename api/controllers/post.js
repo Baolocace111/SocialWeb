@@ -11,6 +11,7 @@ import {
   updateSharePostService,
   updatePrivatePostService,
   addlistPostPrivateService,
+  getlistPostPrivateService,
 } from "../services/PostService.js";
 import { AuthService } from "../services/AuthService.js";
 export const getPostByIdController = (req, res) => {
@@ -188,6 +189,17 @@ export const addListPostPrivateController = async (req, res) => {
         return res.status(200).json(data);
       }
     );
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+export const getListPrivatePostController = async (req, res) => {
+  try {
+    const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+    getlistPostPrivateService(req.params.postId, userId, (error, data) => {
+      if (error) return res.status(500).json(error);
+      return res.status(200).json(data);
+    });
   } catch (error) {
     return res.status(500).json(error);
   }

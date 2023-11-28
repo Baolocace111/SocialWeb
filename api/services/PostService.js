@@ -11,6 +11,7 @@ import {
   updateSharePost,
   addListPostPrivate,
   updatePrivatePost,
+  getAllPrivateUserOfPost,
 } from "../models/PostModel.js";
 
 export const getPostsService = (userId, userInfo, callback) => {
@@ -97,6 +98,12 @@ export const addlistPostPrivateService = (
   callback
 ) => {
   addListPostPrivate(listUser, postId, userId, (error, data) => {
+    if (error) return callback(error, null);
+    return callback(null, data);
+  });
+};
+export const getlistPostPrivateService = (post_id, user_id, callback) => {
+  getAllPrivateUserOfPost(post_id, user_id, (error, data) => {
     if (error) return callback(error, null);
     return callback(null, data);
   });
