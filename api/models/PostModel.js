@@ -10,7 +10,12 @@ export const getPostById = (userId, postId, callback) => {
     WHERE (p.id=?) AND (p.status = 0 OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?)))) ORDER BY p.createdAt DESC`;
   db.query(q, [userId, postId, userId, userId, userId], (err, data) => {
     if (err) return callback(err, null);
-    if (data.length === 0) return callback("Không tìm thấy bài viết", null);
+    if (data.length === 0)
+      return callback(null, {
+        desc: "Bài viết không còn nữa",
+        profilePic: "deadskull.png",
+        createAt: 0,
+      });
 
     return callback(null, data[0]);
   });
@@ -195,10 +200,10 @@ export const addListPostPrivate = (userIDs, postID, userID, callback) => {
     const deleteAndInsertQuery =
       userIDs.length > 0
         ? "" +
-        "DELETE FROM post_private WHERE post_id = ?;" +
-        "INSERT INTO post_private(`post_id`, `user_id`) VALUES" +
-        userIDs.map((id) => `(${postID}, ${id})`).join(", ") +
-        `;`
+          "DELETE FROM post_private WHERE post_id = ?;" +
+          "INSERT INTO post_private(`post_id`, `user_id`) VALUES" +
+          userIDs.map((id) => `(${postID}, ${id})`).join(", ") +
+          `;`
         : `DELETE FROM post_private WHERE post_id = ?`;
 
     db.query(deleteAndInsertQuery, Number(postID), (error, results) => {
@@ -207,5 +212,18 @@ export const addListPostPrivate = (userIDs, postID, userID, callback) => {
       }
       return callback(null, results);
     });
+  });
+};
+export const getAllPrivateUserOfPost = (postId, userId, callback) => {
+  const query = `
+    SELECT users.username, users.id, users.name, users.profilePic
+    FROM post_private
+    INNER JOIN posts ON post_private.post_id = posts.id
+    INNER JOIN users ON post_private.user_id = users.id
+    WHERE posts.id = ? AND posts.userId =?
+  `;
+  db.query(query, [postId, userId], (error, data) => {
+    if (error) return callback(error, null);
+    return callback(null, data);
   });
 };

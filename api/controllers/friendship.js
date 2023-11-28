@@ -14,6 +14,7 @@ import {
   getUserFriend,
   getRequestService,
   getCountRequestService,
+  getAllFriendsService,
 } from "../services/FriendshipService.js";
 import { sendMessageToUser } from "../index.js";
 
@@ -145,4 +146,15 @@ export const getCountRequestController = async (req, res) => {
     if (err) return res.status(500).json({ error: err });
     return res.status(200).json(data);
   });
+};
+export const getAllFriendsController = async (req, res) => {
+  try {
+    const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+    getAllFriendsService(userId, (err, data) => {
+      if (err) return res.status(500).json({ error: err });
+      return res.status(200).json(data);
+    });
+  } catch (error) {
+    return res.status(500).json(error);
+  }
 };

@@ -206,3 +206,15 @@ export const deleteFriendshipByStatus = async (userId, friendId, status) => {
     return error;
   }
 };
+export const getAllFriends = (user_id, callback) => {
+  const query = `SELECT u.username, u.id, u.name, u.profilePic
+FROM users u
+INNER JOIN friendships f ON u.id = f.friend_id
+WHERE f.user_id = ?
+  AND f.status = 1
+ORDER BY f.intimacy DESC`;
+  db.query(query, [user_id], (error, data) => {
+    if (error) return callback(error, null);
+    return callback(null, data);
+  });
+};
