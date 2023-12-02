@@ -15,6 +15,7 @@ import {
   faLock,
   faEarthAmericas,
   faUserGroup,
+  faUserNinja,
 } from "@fortawesome/free-solid-svg-icons";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
@@ -198,7 +199,8 @@ const Post = ({ post }) => {
     if (privateRef.current && privateRef.current.savePrivate) {
       privateRef.current.savePrivate();
     }
-    updateSeeMutation.mutate({ postId: post.id, status: selectedValue });
+    const updatedSelectedValue = selectedValue === 3 ? 2 : selectedValue;
+    updateSeeMutation.mutate({ postId: post.id, status: updatedSelectedValue });
     setOpenSeeEdit(false);
     setMenuAnchor(null);
   };
@@ -444,7 +446,7 @@ const Post = ({ post }) => {
                       onClick={() => handleRadioChange(0)}
                     >
                       <ListItemIcon
-                        style={{ fontSize: "23px", marginLeft: "-10px" }}
+                        style={{ fontSize: "21px", marginLeft: "-10px" }}
                       >
                         <div
                           style={{
@@ -481,7 +483,7 @@ const Post = ({ post }) => {
                       onClick={() => handleRadioChange(1)}
                     >
                       <ListItemIcon
-                        style={{ fontSize: "20px", marginLeft: "-10px" }}
+                        style={{ fontSize: "18px", marginLeft: "-10px" }}
                       >
                         <div
                           style={{
@@ -531,6 +533,43 @@ const Post = ({ post }) => {
                             display: "flex",
                           }}
                         >
+                          <FontAwesomeIcon icon={faUserNinja} />
+                        </div>
+                      </ListItemIcon>
+                      <ListItemText
+                        style={{ marginLeft: "20px", marginRight: "80px" }}
+                      >
+                        <Typography variant="h6">Bạn bè cụ thể</Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          Chỉ định riêng những người bạn muốn
+                        </Typography>
+                      </ListItemText>
+                      <ListItemIcon>
+                        <Radio
+                          checked={selectedValue === 2}
+                          onChange={() => handleRadioChange(2)}
+                          name="abc"
+                        />
+                      </ListItemIcon>
+                    </ListItemButton>
+                    <ListItemButton
+                      selected={selectedValue === 3}
+                      onClick={() => handleRadioChange(3)}
+                    >
+                      <ListItemIcon
+                        style={{ fontSize: "18px", marginLeft: "-10px" }}
+                      >
+                        <div
+                          style={{
+                            alignItems: "center",
+                            borderRadius: "50%",
+                            backgroundColor: "#DADDE1",
+                            width: "52px",
+                            height: "52px",
+                            justifyContent: "center",
+                            display: "flex",
+                          }}
+                        >
                           <FontAwesomeIcon icon={faLock} />
                         </div>
                       </ListItemIcon>
@@ -541,8 +580,8 @@ const Post = ({ post }) => {
                       </ListItemText>
                       <ListItemIcon>
                         <Radio
-                          checked={selectedValue === 2}
-                          onChange={() => handleRadioChange(2)}
+                          checked={selectedValue === 3}
+                          onChange={() => handleRadioChange(3)}
                           name="abc"
                         />
                       </ListItemIcon>
