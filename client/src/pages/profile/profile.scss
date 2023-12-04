@@ -6,119 +6,112 @@
 
     .images {
       width: 100%;
-      height: 300px;
+      height: 460px;
       position: relative;
+      display: flex;
+      justify-content: center;
+      background-color: themed("bg");
 
       .cover {
-        width: 100%;
+        width: 70%;
         height: 100%;
         object-fit: cover;
+        border-radius: 0 0 30px 30px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
 
-      .profilePic {
+      .profilePicContainer {
+        border-radius: 50%;
         width: 200px;
         height: 200px;
-        border-radius: 50%;
-        object-fit: cover;
+        background: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         position: absolute;
-        left: 0;
-        right: 0;
-        margin: auto;
-        top: 200px;
+        top: 86%;
+        left: 18%;
+
+        .profilePic {
+          border-radius: 50%;
+          width: 190px;
+          height: 190px;
+          object-fit: cover;
+        }
       }
     }
-    .profileContainer {
-      padding: 20px 70px;
 
-      @include mobile{
+    .uInfo {
+      height: 150px;
+      width: 100%;
+      -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+      -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+      box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+      background-color: themed("bg");
+      color: themed("textColor");
+      display: flex;
+      align-items: center;
+      gap: 400px;
+
+      @include mobile {
+        flex-direction: column;
+        height: 30vh;
+        padding: 20px;
+        margin-top: 100px;
+      }
+
+      .center {
+        display: flex;
+        flex-direction: column;
+        margin-left: 33%;
+        gap: 5px;
+
+        .uName {
+          font-size: 30px;
+          font-weight: 700;
+        }
+
+        .uFriends {
+          font-size: 17px;
+          color: #606770;
+          margin: 0;
+        }
+      }
+
+      button {
+        border: none;
+        background-color: #5271ff;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 5px;
+        height: fit-content;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+    }
+
+    .menu {
+      width: 100%;
+      height: fit-content;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: themed("bg");
+    }
+
+    .profileContainer {
+      padding: 30px 300px;
+
+      @include mobile {
         padding: 10px;
       }
 
-      @include tablet{
+      @include tablet {
         padding: 20px;
-      }
-
-      .uInfo {
-        height: 180px;
-        -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
-        -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
-        box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
-        border-radius: 20px;
-        background-color: themed("bg");
-        color: themed("textColor");
-        padding: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 20px;
-
-        @include mobile{
-          flex-direction: column;
-          height: 30vh;
-          padding: 20px;
-          margin-top: 100px;
-        }
-
-        .left {
-          flex: 1;
-          display: flex;
-          gap: 10px;
-
-          @include tablet{
-            flex-wrap: wrap;
-          }
-
-          a{
-            color: themed("textColorSoft");
-          }
-        }
-
-        .center {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 10px;
-
-          span {
-            font-size: 30px;
-            font-weight: 500;
-          }
-
-          .info {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-
-            .item {
-              display: flex;
-              align-items: center;
-              gap: 5px;
-              color: themed("textColorSoft");
-
-              span {
-                font-size: 12px;
-              }
-            }
-          }
-          button {
-            border: none;
-            background-color: #5271ff;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-          }
-        }
-
-        .right {
-          flex: 1;
-          display: flex;
-          align-items: center;
-          justify-content: flex-end;
-          gap: 10px;
-        }
       }
     }
   }
