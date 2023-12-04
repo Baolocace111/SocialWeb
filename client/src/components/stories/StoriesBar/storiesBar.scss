@@ -1,0 +1,74 @@
+@import "../../../style.scss";
+
+.storiesBar {
+    @include themify($themes) {
+        min-height: 100vh;
+        flex: 2;
+        position: sticky;
+        top: 70px;
+        height: calc(100vh - 70px);
+        overflow: scroll;
+        background-color: themed("bg");
+        color: themed("textColor");
+
+        @include mobile {
+            display: none;
+        }
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+
+            .title {
+                font-size: 16px;
+                font-weight: 500;
+                margin: 20px 0 20px 0;
+                text-align: center;
+            }
+
+            .user {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+                padding: 10px;
+
+                img {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                    margin: 0;
+                }
+
+                .details {
+                    display: flex;
+                    flex-direction: column;
+
+                    .name {
+                        font-size: 15px;
+                        font-weight: 500;
+                    }
+
+                    .date {
+                        font-size: 13px;
+                    }
+
+                    .count {
+                        font-size: 13px;
+                        color: #1877F2;
+                        font-weight: 500;
+                    }
+                }
+            }
+
+            .user:hover {
+                background-color: rgba(255, 255, 255, 0.264);
+                cursor: pointer;
+            }
+        }
+    }
+}
