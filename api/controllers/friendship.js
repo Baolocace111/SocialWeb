@@ -38,7 +38,7 @@ export const sendFriendRequestTo = async (req, res) => {
     const friendId = await req.params.friendId;
 
     const value = await sendFriendRequest(userId, friendId);
-    await addRelationshipService(userId, friendId, (error, data) => {});
+    await addRelationshipService(userId, friendId, (error, data) => { });
     const response = {
       value: value,
     };
@@ -58,7 +58,7 @@ export const acceptFriendRequestFrom = async (req, res) => {
     const friendId = await req.params.friendId;
 
     const value = await acceptFriendRequest(userId, friendId);
-    addRelationshipService(userId, friendId, (error, data) => {});
+    addRelationshipService(userId, friendId, (error, data) => { });
     const response = {
       value: value,
     };
@@ -73,8 +73,8 @@ export const unfriendUser = async (req, res) => {
     const friendId = await req.params.friendId;
 
     const value = await unfriend(userId, friendId);
-    deleteRelationshipService(userId, friendId, (error, data) => {});
-    deleteRelationshipService(friendId, userId, (error, data) => {});
+    deleteRelationshipService(userId, friendId, (error, data) => { });
+    deleteRelationshipService(friendId, userId, (error, data) => { });
     const response = {
       value: value,
     };
@@ -89,7 +89,7 @@ export const cancelRequest = async (req, res) => {
     const friendId = await req.params.friendId;
 
     const value = await cancelFriendRequest(userId, friendId);
-    await deleteRelationshipService(userId, friendId, (error, data) => {});
+    await deleteRelationshipService(userId, friendId, (error, data) => { });
     const response = {
       value: value,
     };
@@ -108,7 +108,7 @@ export const denyRequest = async (req, res) => {
     const friendId = await req.params.friendId;
 
     const value = await rejectFriendRequest(userId, friendId);
-    deleteRelationshipService(friendId, userId, (error, data) => {});
+    deleteRelationshipService(friendId, userId, (error, data) => { });
     const response = {
       value: value,
     };
@@ -162,8 +162,8 @@ export const getAllFriendsController = async (req, res) => {
 export const getCountFriendController = async (req, res) => {
   try {
     const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
-    if (!req.query.user_id) return res.status(500).json("Lost information!!!");
-    getCountFriendService(req.query.user_id, (err, data) => {
+    if (!userId) return res.status(500).json("Lost information!!!");
+    getCountFriendService(userId, (err, data) => {
       if (err) return res.status(500).json({ error: err });
       return res.status(200).json(data);
     });

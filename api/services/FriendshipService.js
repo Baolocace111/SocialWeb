@@ -5,7 +5,6 @@ import {
   getFriend,
   getFriendByName,
   deleteFriendship,
-  deleteFriendshipByStatus,
   getRequestFriend,
   getCountRequest,
   getAllFriends,
