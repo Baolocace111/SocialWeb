@@ -1,6 +1,7 @@
 import "./profile.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare, faUserMinus, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { faFacebookMessenger } from '@fortawesome/free-brands-svg-icons';
 import Posts from "../../components/posts/Posts";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
@@ -9,7 +10,6 @@ import { useContext } from "react";
 import { AuthContext } from "../../context/authContext";
 import Update from "../../components/update/Update";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import FriendList from "../../components/profileComponents/friendList/FriendList";
 import FlipCube from "../../components/loadingComponent/flipCube/FlipCube";
 
@@ -17,6 +17,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+
+import Chat from "../../components/chatComponent/chat/Chat";
 
 const useStyles = makeStyles({
   root: {
@@ -27,8 +29,7 @@ const useStyles = makeStyles({
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
   const { currentUser } = useContext(AuthContext);
-  const navigate = useNavigate();
-
+  const [chattingUser, setChattingUser] = useState([]);
   const [userId] = useState(Number(useParams().userId));
 
   const { isLoading, data } = useQuery(["user"], () =>
@@ -43,6 +44,12 @@ const Profile = () => {
       makeRequest.get("/relationships?followedUserId=" + userId).then((res) => {
         return res.data;
       })
+  );
+
+  const { isLoading: countLoading, data: countData } = useQuery(["friendCount"], () =>
+    makeRequest.get("/friendship/friend/count").then((res) => {
+      return res.data;
+    })
   );
 
   const queryClient = useQueryClient();
@@ -64,10 +71,19 @@ const Profile = () => {
   const handleFollow = () => {
     mutation.mutate(relationshipData.includes(currentUser.id));
   };
-  const handleChat = () => {
-    navigate(`/chat/${userId}`);
-  };
 
+  const handleAddChatBox = (user) => {
+    setChattingUser(removeDuplicateUnits([...chattingUser, ...[user]]));
+  };
+  const handleRemoveChatBoxById = (userIdToRemove) => {
+    // Lọc ra các user có id khác userIdToRemove
+    const updatedChattingUsers = chattingUser.filter(
+      (user) => user.id !== userIdToRemove
+    );
+
+    // Cập nhật state với mảng đã được lọc
+    setChattingUser(updatedChattingUsers);
+  };
 
   const classes = useStyles();
   const [value, setValue] = useState(0);
@@ -91,29 +107,44 @@ const Profile = () => {
           <div className="uInfo">
             <div className="center">
               <span className="uName">{data.name}</span>
-              <span className="uFriends">44 bạn bè</span>
+              {countLoading ? (
+                <FlipCube />
+              ) : (
+                <span className="uFriends">{countData} bạn bè</span>
+              )}
             </div>
             {rIsLoading ? (
-              "loading"
+              <FlipCube />
             ) : userId === currentUser.id ? (
-              <button onClick={() => setOpenUpdate(true)}>
+              <button className="edit" onClick={() => setOpenUpdate(true)}>
                 <FontAwesomeIcon icon={faPenToSquare} />
                 Chỉnh sửa trang cá nhân
               </button>
             ) : (
-              <div>
-                <button onClick={handleFollow}>
-                  {relationshipData.includes(currentUser.id)
-                    ? "Following"
-                    : "Follow"}
+              <div className="action">
+                <button className="follow" onClick={handleFollow}>
+                  {relationshipData.includes(currentUser.id) ? (
+                    <>
+                      <FontAwesomeIcon icon={faUserMinus} />
+                      <span>Unfollow</span>
+                    </>
+                  ) : (
+                    <>
+                      <FontAwesomeIcon icon={faUserPlus} />
+                      <span>Follow</span>
+                    </>
+                  )}
                 </button>
-                <button onClick={handleChat}>Chat</button>
+                <button className="chat" onClick={() => handleAddChatBox(data)}>
+                  <FontAwesomeIcon icon={faFacebookMessenger} size="xl" />
+                  <span>Chat</span>
+                </button>
               </div>
             )}
           </div>
 
           <div className="menu">
-            <Paper className={classes.root}>
+            <Paper style={{ color: "inherit", backgroundColor: "inherit", borderRadius: "inherit" }} className={classes.root}>
               <Tabs
                 value={value}
                 onChange={handleChange}
@@ -121,11 +152,41 @@ const Profile = () => {
                 textColor="secondary"
                 centered
               >
-                <Tab style={{ fontWeight: "700" }} label="Bài viết" />
-                <Tab style={{ fontWeight: "700" }} label="Giới thiệu" />
-                <Tab style={{ fontWeight: "700" }} label="Bạn bè" />
-                <Tab style={{ fontWeight: "700" }} label="Hình ảnh" />
-                <Tab style={{ fontWeight: "700" }} label="Xem thêm" />
+                <Tab
+                  style={{
+                    fontWeight: "700",
+                    color: value === 0 ? "#f50057" : "inherit"
+                  }}
+                  label="Bài viết"
+                />
+                <Tab
+                  style={{
+                    fontWeight: "700",
+                    color: value === 1 ? "#f50057" : "inherit"
+                  }}
+                  label="Giới thiệu"
+                />
+                <Tab
+                  style={{
+                    fontWeight: "700",
+                    color: value === 2 ? "#f50057" : "inherit"
+                  }}
+                  label="Bạn bè"
+                />
+                <Tab
+                  style={{
+                    fontWeight: "700",
+                    color: value === 3 ? "#f50057" : "inherit"
+                  }}
+                  label="Hình ảnh"
+                />
+                <Tab
+                  style={{
+                    fontWeight: "700",
+                    color: value === 4 ? "#f50057" : "inherit"
+                  }}
+                  label="Xem thêm"
+                />
               </Tabs>
             </Paper>
           </div>
@@ -158,8 +219,31 @@ const Profile = () => {
         </>
       )}
       {openUpdate && <Update setOpenUpdate={setOpenUpdate} user={data} />}
+
+      {chattingUser.length === 0 ? (
+        <div className="chat-boxes"></div>
+      ) : (
+        <div className="chat-boxes">
+          {chattingUser.map((user) => (
+            <div className="chat-box" key={user.id}>
+              <Chat friend={user} onRemoveChatBox={() => handleRemoveChatBoxById(user.id)}></Chat>
+            </div>
+          ))}
+        </div>
+      )}
+
     </div>
   );
 };
 
 export default Profile;
+
+function removeDuplicateUnits(arr) {
+  const uniqueUnits = new Map();
+
+  for (const unit of arr) {
+    uniqueUnits.set(unit.id, unit);
+  }
+
+  return Array.from(uniqueUnits.values());
+}

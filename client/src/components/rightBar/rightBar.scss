@@ -26,7 +26,8 @@
       display: inline-flex;
       bottom: 0;
       z-index: 1;
-      right: 50px;
+      right: 60px;
+      gap: 15px;
 
       .chat-box {
         width: 290px;
@@ -37,6 +38,7 @@
         border-radius: 10px 10px 0 0;
         overflow: hidden;
         flex-direction: column;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
       }
     }
 
