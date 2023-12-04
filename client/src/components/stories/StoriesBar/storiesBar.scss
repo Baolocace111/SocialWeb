@@ -6,7 +6,6 @@
         flex: 2;
         position: sticky;
         top: 70px;
-        height: calc(100vh - 70px);
         overflow: scroll;
         background-color: themed("bg");
         color: themed("textColor");
@@ -66,7 +65,7 @@
             }
 
             .user:hover {
-                background-color: rgba(255, 255, 255, 0.264);
+                background-color: themed("bgSoft");
                 cursor: pointer;
             }
         }
