@@ -1,43 +1,47 @@
-import "./story.scss";
+import React from "react";
 import { makeRequest } from "../../axios";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
 import moment from "moment";
 import Stories from "react-insta-stories";
+import FlipCube from "../../components/loadingComponent/flipCube/FlipCube";
 
 const UserStoryPage = () => {
-
   const userId = parseInt(useLocation().pathname.split("/")[2]);
-  //Get Stories of All Users
-  const { data } = useQuery(["stories"], () =>
-    makeRequest.get("/stories").then((res) => {
-      return res.data;
-    })
+
+  // Lấy thông tin người dùng
+  const { data: userData, isLoading: isUserDataLoading } = useQuery(["users", userId], () =>
+    makeRequest.get(`users/find/${userId}`).then((res) => res.data)
   );
-  //Get UserInfo
-  const data_user = useQuery(["users", userId], () =>
-    makeRequest.get(`users/find/${userId}`).then((res) => {
-      return res.data;
-    })
+
+  // Lấy danh sách stories của người dùng
+  const { data: storiesData, isLoading: isStoriesLoading } = useQuery(["stories"], () =>
+    makeRequest.get("/stories").then((res) => res.data)
   );
-  const name = data_user.data ? data_user.data.name : "is loading"
-  const profilePic = data_user.data ? data_user.data.profilePic : "is loading"
+
+  // Xử lý khi dữ liệu về người dùng và stories đã sẵn sàng
+  if (isUserDataLoading || isStoriesLoading) {
+    return <FlipCube />;
+  }
+
+  const name = userData ? userData.name : "Unknown";
+  const profilePic = userData ? userData.profilePic : "";
 
   // Lọc các story có userId trùng với userId đã nhận được
-  const userStories = data ? data.filter((story) => story.userId === userId) : [];
+  const userStories = storiesData.filter((story) => story.userId === userId);
 
   const stories = userStories.map((story) => ({
     header: {
       heading: name,
       subheading: moment(story.createdAt).fromNow(),
-      profileImage: '/upload/' + profilePic,
+      profileImage: `/upload/${profilePic}`,
     },
-    url: "/upload/" + story.img,
+    url: `/upload/${story.img}`,
   }));
 
   return (
     <Stories
-      storyContainerStyles={{  borderRadius: '10px' }}
+      storyContainerStyles={{ borderRadius: "10px" }}
       stories={stories}
       height={680}
       width={380}
