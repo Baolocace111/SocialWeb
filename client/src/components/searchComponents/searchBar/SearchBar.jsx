@@ -1,11 +1,11 @@
 import "./searchBar.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useNavigate } from "react-router-dom";
 import {
   faUser,
   faHashtag,
   faQuoteLeft,
 } from "@fortawesome/free-solid-svg-icons";
+
 const SearchBar = ({ search }) => {
   const handleUser = () => {
     if (search.num !== 0) {

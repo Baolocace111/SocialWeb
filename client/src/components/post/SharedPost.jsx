@@ -29,7 +29,6 @@ import Divider from "@mui/material/Divider";
 import Radio from '@mui/material/Radio';
 
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
 import { makeRequest } from "../../axios";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/authContext";
@@ -46,7 +45,7 @@ const SharedPost = ({ post }) => {
   const { currentUser } = useContext(AuthContext);
   const queryClient = useQueryClient();
 
-  const { isLoading, error, data } = useQuery(["likes", post.id], () =>
+  const { isLoading, data } = useQuery(["likes", post.id], () =>
     makeRequest.get("/likes?postId=" + post.id).then((res) => {
       return res.data;
     })
@@ -157,12 +156,12 @@ const SharedPost = ({ post }) => {
           <div className="userInfo">
             <img src={"/upload/" + post.profilePic} alt="" />
             <div className="details">
-              <Link
-                to={`/profile/${post.userId}`}
-                style={{ textDecoration: "none", color: "inherit" }}
-              >
-                <span className="name">{post.name}</span>
-              </Link>
+              <span className="name"
+                onClick={() => {
+                  window.location.href = `/profile/${post.userId}`;
+                }}>
+                {post.name}
+              </span>
               <span className="date">{moment(post.createdAt).fromNow()}</span>
             </div>
           </div>
