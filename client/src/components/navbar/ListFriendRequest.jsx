@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { makeRequest } from "../../axios";
 import { Link } from "react-router-dom";
 import NineCube from "../loadingComponent/nineCube/NineCube";

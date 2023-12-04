@@ -1,5 +1,4 @@
 import "./profile.scss";
-import "../../components/post/post.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import Posts from "../../components/posts/Posts";
@@ -32,7 +31,7 @@ const Profile = () => {
 
   const [userId] = useState(Number(useParams().userId));
 
-  const { isLoading, error, data } = useQuery(["user"], () =>
+  const { isLoading, data } = useQuery(["user"], () =>
     makeRequest.get("/users/find/" + userId).then((res) => {
       return res.data;
     })
