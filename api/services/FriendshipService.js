@@ -9,6 +9,7 @@ import {
   getRequestFriend,
   getCountRequest,
   getAllFriends,
+  getCountFriend,
 } from "../models/FriendShipModel.js";
 import { getUserById } from "../models/UserModel.js";
 import { addNotificationService } from "./NotificationService.js";
@@ -175,6 +176,12 @@ export const getCountRequestService = (user_id, callback) => {
 };
 export const getAllFriendsService = (userId, callback) => {
   getAllFriends(userId, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data);
+  });
+};
+export const getCountFriendService = (userId, callback) => {
+  getCountFriend(userId, (err, data) => {
     if (err) return callback(err, null);
     return callback(null, data);
   });

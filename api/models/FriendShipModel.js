@@ -218,3 +218,14 @@ ORDER BY f.intimacy DESC`;
     return callback(null, data);
   });
 };
+export const getCountFriend = (user_id, callback) => {
+  const query = `Select COUNT(*) AS total FROM users u
+  INNER JOIN friendships f ON u.id = f.friend_id
+  WHERE f.user_id = ?
+    AND f.status = 1`;
+  db.query(query, [user_id], (err, data) => {
+    if (err) return callback(err, null);
+    if (!data[0].total) return callback(null, 0);
+    return callback(null, data[0].total);
+  });
+};
