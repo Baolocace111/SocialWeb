@@ -1,5 +1,4 @@
 import "./profile.scss";
-import "../../components/post/post.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import Posts from "../../components/posts/Posts";
