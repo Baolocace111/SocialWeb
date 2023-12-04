@@ -27,6 +27,7 @@
             height: 40px;
             border-radius: 50%;
             object-fit: cover;
+            cursor: pointer;
           }
 
           .details {
@@ -35,6 +36,7 @@
 
             .name {
               font-weight: 500;
+              cursor: pointer;
             }
 
             .date {
@@ -42,6 +44,7 @@
             }
           }
         }
+
         button {
           position: absolute;
           top: 30px;

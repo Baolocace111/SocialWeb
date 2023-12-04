@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { makeRequest } from "../../../axios";
-import { Link } from "react-router-dom";
 import "./friendList.scss";
 
 const FriendList = ({ user_id }) => {
@@ -23,10 +22,6 @@ const FriendList = ({ user_id }) => {
     }
   }, [user_id, offset, friends]);
 
-  useEffect(() => {
-    //loadFriends();
-  }, [loadFriends]);
-
   const handleShowMore = () => {
     loadFriends();
   };
@@ -42,13 +37,12 @@ const FriendList = ({ user_id }) => {
             <div className="userInfo">
               <img src={"/upload/" + friend.profilePic} alt="" />
               <div className="details">
-                <Link
-                  to={`/profile/${friend.id}`}
-                  style={{ textDecoration: "none", color: "inherit" }}
-                  target="_blank"
-                >
-                  <span className="name">{friend.name}</span>
-                </Link>
+                <span className="name"
+                  onClick={() => {
+                    window.location.href = `/profile/${friend.id}`;
+                  }}>
+                  {friend.name}
+                </span>
               </div>
             </div>
           </div>
