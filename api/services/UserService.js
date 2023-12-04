@@ -1,6 +1,7 @@
 import * as userModel from "../models/UserModel.js";
 import { checkFriendshipStatus } from "./FriendshipService.js";
-
+import { AuthModel } from "../models/AuthModel.js";
+import bcrypt from "bcryptjs";
 export const getUser = (req, res) => {
   const userId = req.params.userId;
 
@@ -51,4 +52,23 @@ export const updateUser = (userid, req, res) => {
     if (err) res.status(500).json(err);
     return res.json(data);
   });
+};
+export const changePasswordService = async (userid, newps, oldps, callback) => {
+  try {
+    const user = await AuthModel.getUserByid(userid);
+    if (!user) return callback("user not found", null);
+
+    const checkPassword = await bcrypt.compareSync(oldps, user.password);
+    if (!checkPassword) return callback("Wrong password", null);
+
+    const salt = await bcrypt.genSaltSync(10);
+    const hashednewPassword = await bcrypt.hashSync(newps, salt);
+    userModel.updatePasswordUser(userid, hashednewPassword, (err, data) => {
+      if (err) return callback(err, null);
+      return callback(null, data);
+    });
+  } catch (error) {
+    console.log(error);
+    return callback(error, null);
+  }
 };
