@@ -1,18 +1,17 @@
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import Story from "./pages/story/Story";
-import Chat from "./pages/chat/Chat";
 import {
   createBrowserRouter,
   RouterProvider,
   Outlet,
   Navigate,
   Link,
-  useParams,
 } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar";
 import LeftBar from "./components/leftBar/LeftBar";
 import RightBar from "./components/rightBar/RightBar";
+import StoriesBar from "./components/stories/StoriesBar/storiesBar";
 import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
 import Search from "./pages/search/Search";
@@ -59,11 +58,11 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <div className={`theme-${darkMode ? "dark" : "light"}`}>
           <div style={{ display: "flex" }}>
-            <LeftBar />
+            <StoriesBar />
             <div
               className="story-page"
               style={{
-                flex: 6,
+                flex: 8,
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
