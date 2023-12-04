@@ -5,6 +5,7 @@ import {
   cancelRequest,
   denyRequest,
   getAllFriendsController,
+  getCountFriendController,
   getCountRequestController,
   getFriendshipStatus,
   listFriendUser,
@@ -23,5 +24,6 @@ router.post("/get_friends", listFriendUser);
 router.post("/get_request_friend", RequestFriendController);
 router.get("/count", getCountRequestController);
 router.get("/allfriend", getAllFriendsController);
+router.get("/friend/count", getCountFriendController);
 
 export default router;
