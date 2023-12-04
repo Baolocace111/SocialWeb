@@ -35,3 +35,25 @@ export const findUserByName = async (req, res) => {
     return res.status(500).json({ error: error });
   }
 };
+export const changePasswordController = async (req, res) => {
+  try {
+    const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+    if (req.body.password !== req.body.repassword)
+      return res.status(500).json("Password and Re-Password aren't match");
+    else if (req.body.password === req.body.oldpassword)
+      return res.status(500).json("You aren't changing your password");
+    else
+      userService.changePasswordService(
+        userId,
+        req.body.password,
+        req.body.oldpassword,
+        (err, data) => {
+          if (err) return res.status(500).json(err);
+          else return res.status(200).json(data);
+        }
+      );
+  } catch (error) {
+    //console.log(error);
+    return res.status(500).json(error.body);
+  }
+};
