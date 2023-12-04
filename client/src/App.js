@@ -53,6 +53,17 @@ function App() {
     );
   };
 
+  const ProfileLayout = () => {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <div className={`theme-${darkMode ? "dark" : "light"}`}>
+          <Navbar />
+          <Profile />
+        </div>
+      </QueryClientProvider>
+    );
+  };
+
   const StoryLayout = () => {
     return (
       <QueryClientProvider client={queryClient}>
@@ -104,10 +115,6 @@ function App() {
           element: <Home />,
         },
         {
-          path: "/profile/:userId",
-          element: <Profile />,
-        },
-        {
           path: "/search/:searchText",
           element: <Search />,
         },
@@ -132,6 +139,10 @@ function App() {
     {
       path: "/register",
       element: <Register />,
+    },
+    {
+      path: "/profile/:userId",
+      element: <ProfileLayout />,
     },
     {
       path: "/stories/:userId",

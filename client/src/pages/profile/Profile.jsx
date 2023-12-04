@@ -1,13 +1,7 @@
 import "./profile.scss";
-import FacebookTwoToneIcon from "@mui/icons-material/FacebookTwoTone";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import PinterestIcon from "@mui/icons-material/Pinterest";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import PlaceIcon from "@mui/icons-material/Place";
-import LanguageIcon from "@mui/icons-material/Language";
-import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import "../../components/post/post.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import Posts from "../../components/posts/Posts";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
@@ -19,8 +13,19 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FriendList from "../../components/profileComponents/friendList/FriendList";
 import FlipCube from "../../components/loadingComponent/flipCube/FlipCube";
+
+import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+
+const useStyles = makeStyles({
+  root: {
+    flexGrow: 1,
+  },
+});
+
 const Profile = () => {
-  //const [loading, setLoading] = useState(newloading);
   const [openUpdate, setOpenUpdate] = useState(false);
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -63,10 +68,14 @@ const Profile = () => {
   const handleChat = () => {
     navigate(`/chat/${userId}`);
   };
-  // if (loading) {
-  //   setLoading(false);
-  //   console.log("Load successfully");
-  // }
+
+
+  const classes = useStyles();
+  const [value, setValue] = useState(0);
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   return (
     <div className="profile">
       {isLoading ? (
@@ -75,66 +84,78 @@ const Profile = () => {
         <>
           <div className="images">
             <img src={"/upload/" + data.coverPic} alt="" className="cover" />
-            <img
-              src={"/upload/" + data.profilePic}
-              alt=""
-              className="profilePic"
-            />
-          </div>
-          <div className="profileContainer">
-            <div className="uInfo">
-              <div className="left">
-                <a href="http://facebook.com">
-                  <FacebookTwoToneIcon fontSize="large" />
-                </a>
-                <a href="http://facebook.com">
-                  <InstagramIcon fontSize="large" />
-                </a>
-                <a href="http://facebook.com">
-                  <TwitterIcon fontSize="large" />
-                </a>
-                <a href="http://facebook.com">
-                  <LinkedInIcon fontSize="large" />
-                </a>
-                <a href="http://facebook.com">
-                  <PinterestIcon fontSize="large" />
-                </a>
-              </div>
-              <div className="center">
-                <span>{data.name}</span>
-                <div className="info">
-                  <div className="item">
-                    <PlaceIcon />
-                    <span>{data.city}</span>
-                  </div>
-                  <div className="item">
-                    <LanguageIcon />
-                    <span>{data.website}</span>
-                  </div>
-                </div>
-                {rIsLoading ? (
-                  "loading"
-                ) : userId === currentUser.id ? (
-                  <button onClick={() => setOpenUpdate(true)}>update</button>
-                ) : (
-                  <div>
-                    <button onClick={handleFollow}>
-                      {relationshipData.includes(currentUser.id)
-                        ? "Following"
-                        : "Follow"}
-                    </button>
-                    <button onClick={handleChat}>Chat</button>
-                  </div>
-                )}
-              </div>
-              <div className="right">
-                <EmailOutlinedIcon />
-                <MoreVertIcon />
-              </div>
+            <div className="profilePicContainer">
+              <img src={"/upload/" + data.profilePic} alt="" className="profilePic" />
             </div>
-            <FriendList user_id={userId} />
-            <Posts userId={userId} />
           </div>
+
+          <div className="uInfo">
+            <div className="center">
+              <span className="uName">{data.name}</span>
+              <span className="uFriends">44 bạn bè</span>
+            </div>
+            {rIsLoading ? (
+              "loading"
+            ) : userId === currentUser.id ? (
+              <button onClick={() => setOpenUpdate(true)}>
+                <FontAwesomeIcon icon={faPenToSquare} />
+                Chỉnh sửa trang cá nhân
+              </button>
+            ) : (
+              <div>
+                <button onClick={handleFollow}>
+                  {relationshipData.includes(currentUser.id)
+                    ? "Following"
+                    : "Follow"}
+                </button>
+                <button onClick={handleChat}>Chat</button>
+              </div>
+            )}
+          </div>
+
+          <div className="menu">
+            <Paper className={classes.root}>
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                indicatorColor="secondary"
+                textColor="secondary"
+                centered
+              >
+                <Tab style={{ fontWeight: "700" }} label="Bài viết" />
+                <Tab style={{ fontWeight: "700" }} label="Giới thiệu" />
+                <Tab style={{ fontWeight: "700" }} label="Bạn bè" />
+                <Tab style={{ fontWeight: "700" }} label="Hình ảnh" />
+                <Tab style={{ fontWeight: "700" }} label="Xem thêm" />
+              </Tabs>
+            </Paper>
+          </div>
+
+          {value === 0 && (
+            <div className="profileContainer">
+              <Posts userId={userId} />
+            </div>
+          )}
+          {value === 1 && (
+            <div className="profileContainer">
+              <span>Đang xây dựng</span>
+            </div>
+          )}
+          {value === 2 && (
+            <div className="profileContainer">
+              <FriendList user_id={userId} />
+            </div>
+          )}
+          {value === 3 && (
+            <div className="profileContainer">
+              <span>Đang xây dựng</span>
+            </div>
+          )}
+          {value === 4 && (
+            <div className="profileContainer">
+              <span>Đang xây dựng</span>
+            </div>
+          )}
         </>
       )}
       {openUpdate && <Update setOpenUpdate={setOpenUpdate} user={data} />}
