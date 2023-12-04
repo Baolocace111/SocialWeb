@@ -75,3 +75,11 @@ export const updateUser = (userInfo, callback) => {
     }
   );
 };
+export const updatePasswordUser = (userid, newpassword, callback) => {
+  const q = "Update users SET `password`=? Where id=?";
+  db.query(q, [newpassword, userid], (err, data) => {
+    if (err) return callback(err, null);
+    if (data.affectedRows > 0) return callback(null, "Updated!");
+    return callback("Wrong password", null);
+  });
+};

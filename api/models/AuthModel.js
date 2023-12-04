@@ -36,4 +36,14 @@ export const AuthModel = {
       });
     });
   },
+  getUserByid(userid) {
+    return new Promise((resolve, reject) => {
+      const q = "SELECT * FROM users WHERE id = ?";
+
+      db.query(q, [userid], (err, data) => {
+        if (err) reject(err);
+        resolve(data[0]);
+      });
+    });
+  },
 };
