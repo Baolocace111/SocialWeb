@@ -10,6 +10,8 @@ import {
   getCountRequest,
   getAllFriends,
 } from "../models/FriendShipModel.js";
+import { getUserById } from "../models/UserModel.js";
+import { addNotificationService } from "./NotificationService.js";
 
 export const getUserFriend = (userId, offset, callback) => {
   getFriend(userId, 10, offset, (err, data) => {
@@ -99,6 +101,19 @@ export const acceptFriendRequest = async (user_id1, user_id2) => {
       1
     );
     await createFriendship(user_id1, user_id2, 1);
+    getUserById(user_id1, (err, data) => {
+      if (err) console.log(err);
+      else
+        addNotificationService(
+          user_id2,
+          `<a target="_blank" href="/profile/${user_id1}">${data.name}</a> đã chấp nhận lời mời kết bạn của bạn`,
+          `/profile/${user_id1}`,
+          `/upload/${data.profilePic}`,
+          (err, data) => {
+            if (err) console.log(err);
+          }
+        );
+    });
     return true;
   } catch (Err) {
     return false;
