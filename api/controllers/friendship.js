@@ -161,9 +161,9 @@ export const getAllFriendsController = async (req, res) => {
 };
 export const getCountFriendController = async (req, res) => {
   try {
-    const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
-    if (!userId) return res.status(500).json("Lost information!!!");
-    getCountFriendService(userId, (err, data) => {
+    await AuthService.verifyUserToken(req.cookies.accessToken);
+    if (!req.query.user_id) return res.status(500).json("Lost information!!!");
+    getCountFriendService(req.query.user_id, (err, data) => {
       if (err) return res.status(500).json({ error: err });
       return res.status(200).json(data);
     });

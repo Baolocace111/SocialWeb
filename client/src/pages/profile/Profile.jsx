@@ -47,7 +47,7 @@ const Profile = () => {
   );
 
   const { isLoading: countLoading, data: countData } = useQuery(["friendCount"], () =>
-    makeRequest.get("/friendship/friend/count").then((res) => {
+    makeRequest.get(`/friendship/friend/count?user_id=${userId}`).then((res) => {
       return res.data;
     })
   );

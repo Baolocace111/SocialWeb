@@ -2,7 +2,22 @@ import { useState } from "react";
 import { makeRequest } from "../../axios";
 import "./update.scss";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import { FormThemeProvider } from 'react-form-component';
+import Form, { Input } from 'react-form-component'
+
+const useStyles = makeStyles({
+  root: {
+    flexGrow: 1,
+  },
+});
 
 const Update = ({ setOpenUpdate, user }) => {
   const [cover, setCover] = useState(null);
@@ -14,6 +29,11 @@ const Update = ({ setOpenUpdate, user }) => {
     city: user.city || "",
     website: user.website || "",
   });
+  const classes = useStyles();
+  const [value, setValue] = useState(0);
+  const handleChangeValue = (event, newValue) => {
+    setValue(newValue);
+  };
 
   const upload = async (file) => {
     console.log(file)
@@ -64,89 +84,133 @@ const Update = ({ setOpenUpdate, user }) => {
   return (
     <div className="update">
       <div className="wrapper">
-        <h1>Update Your Profile</h1>
-        <form>
-          <div className="files">
-            <label htmlFor="coverPic">
-              <span>Cover Picture</span>
-              <div className="imgContainer">
-                <img
-                  src={
-                    cover
-                      ? URL.createObjectURL(cover)
-                      : "/upload/" + user.coverPic
-                  }
-                  alt=""
+        <div className="menu">
+          <Paper className={classes.root}>
+            <Tabs
+              value={value}
+              onChange={handleChangeValue}
+              indicatorColor="primary"
+              textColor="primary"
+              centered
+            >
+              <Tab
+                label="Thông tin"
+              />
+              <Tab
+                label="Ảnh hồ sơ"
+              />
+              <Tab
+                label="Tài khoản"
+              />
+            </Tabs>
+          </Paper>
+        </div>
+
+        {value === 0 && (
+          <>
+            <span className="title-update">Update Your Profile</span>
+            {/* <div className="files">
+              <label htmlFor="coverPic">
+                <span>Cover Picture</span>
+                <div className="imgContainer">
+                  <img
+                    src={
+                      cover
+                        ? URL.createObjectURL(cover)
+                        : "/upload/" + user.coverPic
+                    }
+                    alt=""
+                  />
+                  <CloudUploadIcon className="icon" />
+                </div>
+              </label>
+              <input
+                type="file"
+                id="coverPic"
+                style={{ display: "none" }}
+                onChange={(e) => setCover(e.target.files[0])}
+              />
+              <label htmlFor="profilePic">
+                <span>Profile Picture</span>
+                <div className="imgContainer">
+                  <img
+                    src={
+                      profile
+                        ? URL.createObjectURL(profile)
+                        : "/upload/" + user.profilePic
+                    }
+                    alt=""
+                  />
+                  <CloudUploadIcon className="icon" />
+                </div>
+              </label>
+              <input
+                type="file"
+                id="profilePic"
+                style={{ display: "none" }}
+                onChange={(e) => setProfile(e.target.files[0])}
+              />
+            </div> */}
+            {/* <form>
+              <label>Email</label>
+              <input
+                type="text"
+                value={texts.email}
+                name="email"
+                onChange={handleChange}
+              />
+              <label>Name</label>
+              <input
+                type="text"
+                value={texts.name}
+                name="name"
+                onChange={handleChange}
+              />
+              <label>Country / City</label>
+              <input
+                type="text"
+                name="city"
+                value={texts.city}
+                onChange={handleChange}
+              />
+              <label>Website</label>
+              <input
+                type="text"
+                name="website"
+                value={texts.website}
+                onChange={handleChange}
+              />
+              <button onClick={handleClick}>Update</button>
+            </form> */}
+            <FormThemeProvider>
+              <Form className="form-update" fields={['email', 'name', 'city', 'website']}>
+                <Input
+                  name='email'
+                  type='text'
+                  label='E-mail'
+                  initialValue={texts.email || ''}
+                  onChange={handleChange}
                 />
-                <CloudUploadIcon className="icon" />
-              </div>
-            </label>
-            <input
-              type="file"
-              id="coverPic"
-              style={{ display: "none" }}
-              onChange={(e) => setCover(e.target.files[0])}
-            />
-            <label htmlFor="profilePic">
-              <span>Profile Picture</span>
-              <div className="imgContainer">
-                <img
-                  src={
-                    profile
-                      ? URL.createObjectURL(profile)
-                      : "/upload/" + user.profilePic
-                  }
-                  alt=""
+                <Input
+                  name='name'
+                  label='Username'
                 />
-                <CloudUploadIcon className="icon" />
-              </div>
-            </label>
-            <input
-              type="file"
-              id="profilePic"
-              style={{ display: "none" }}
-              onChange={(e) => setProfile(e.target.files[0])}
-            />
-          </div>
-          <label>Email</label>
-          <input
-            type="text"
-            value={texts.email}
-            name="email"
-            onChange={handleChange}
-          />
-          <label>Password</label>
-          <input
-            type="text"
-            value={texts.password}
-            name="password"
-            onChange={handleChange}
-          />
-          <label>Name</label>
-          <input
-            type="text"
-            value={texts.name}
-            name="name"
-            onChange={handleChange}
-          />
-          <label>Country / City</label>
-          <input
-            type="text"
-            name="city"
-            value={texts.city}
-            onChange={handleChange}
-          />
-          <label>Website</label>
-          <input
-            type="text"
-            name="website"
-            value={texts.website}
-            onChange={handleChange}
-          />
-          <button onClick={handleClick}>Update</button>
-        </form>
+                <Input
+                  name='city'
+                  label='Country / City'
+                />
+                <Input
+                  name='website'
+                  label='Website'
+                />
+                <button className="btn-save" onClick={handleClick}>Save</button>
+              </Form>
+            </FormThemeProvider>
+          </>
+        )}
+
         <button className="close" onClick={() => setOpenUpdate(false)}>
-          close
+          <FontAwesomeIcon icon={faXmark} />
         </button>
       </div>
     </div>
