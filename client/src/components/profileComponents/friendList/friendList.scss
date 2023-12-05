@@ -5,80 +5,137 @@
     -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
     -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
     box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
-    border-radius: 20px;
     background-color: themed("bg");
     color: themed("textColor");
+    border-radius: 10px;
 
-    .container {
-      padding: 20px;
+    .menu {
+      padding: 15px 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      border-radius: 10px;
+      gap: 30px;
 
-      .user {
+      .title {
+        font-size: 22px;
+        color: themed(textColor);
+        font-weight: 700;
+        margin-left: 20px;
+      }
+
+      .input-container {
+        position: relative;
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        position: relative;
+        margin-left: auto;
 
-        .userInfo {
+        .input-field {
+          padding: 10px 0 10px 40px;
+          border: none;
+          outline: none;
+          background-color: themed(bgSoft);
+          color: themed(textColorSoft);
+          border-radius: 15px;
+          font-size: 16px;
+        }
+
+        .icon-container {
+          position: absolute;
+          left: 10px;
+          font-size: 20px;
+        }
+      }
+
+      .find-friend {
+        display: flex;
+        gap: 20px;
+
+        span {
+          font-size: 17px;
+          font-weight: 600;
+          color: #3578E5;
+          cursor: pointer;
+          padding: 10px;
+          border-radius: 10px;
+        }
+
+        span:hover {
+          background-color: aliceblue;
+        }
+      }
+
+      .more {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        width: 50px;
+        height: 40px;
+        margin-right: 15px;
+        border-radius: 5px;
+        background-color: themed(bgSoft);
+        cursor: pointer;
+        border: none;
+        outline: none;
+      }
+    }
+
+    .container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding-bottom: 20px;
+      gap: 10px;
+
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        width: 97%;
+        gap: 20px;
+
+        .user {
+          width: 45%;
           display: flex;
+          align-items: center;
+          padding: 15px;
+          border: solid;
+          border-width: 1px;
+          border-color: #EBEDF0;
+          border-radius: 10px;
           gap: 20px;
 
           img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            cursor: pointer;
+            width: 80px;
+            height: 80px;
           }
 
           .details {
             display: flex;
-            flex-direction: column;
+            align-items: center;
 
             .name {
-              font-weight: 500;
+              font-weight: 600;
+              font-size: 17px;
               cursor: pointer;
             }
+          }
 
-            .date {
-              font-size: 12px;
-            }
+          .moreIcon {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
           }
         }
 
-        button {
-          position: absolute;
-          top: 30px;
-          right: 0;
-          border: none;
-          background-color: #f0544f;
-          padding: 5px;
-          cursor: pointer;
-          color: white;
-        }
-      }
-
-      .content {
-        margin: 20px 0px;
-
-        img {
-          width: 100%;
-          max-height: 500px;
-          object-fit: cover;
-          margin-top: 20px;
-        }
-      }
-
-      .info {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-
-        .item {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          cursor: pointer;
-          font-size: 14px;
+        @media (max-width: 768px) {
+          .user {
+            width: 100%;
+          }
         }
       }
     }

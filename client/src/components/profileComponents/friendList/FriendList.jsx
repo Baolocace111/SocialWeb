@@ -1,6 +1,10 @@
 import React, { useState, useCallback } from "react";
 import { makeRequest } from "../../../axios";
 import "./friendList.scss";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import FlipCube from "../../loadingComponent/flipCube/FlipCube";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 const FriendList = ({ user_id }) => {
   const [friends, setFriends] = useState([]);
@@ -29,27 +33,47 @@ const FriendList = ({ user_id }) => {
 
   return (
     <div className="friend-list">
-      <h1>Friends List</h1>
+      <div className="menu">
+        <span className="title">Bạn bè</span>
+        <div className="input-container">
+          <input type="text" placeholder="Tìm bạn..." className="input-field" />
+          <span className="icon-container">
+            <FontAwesomeIcon icon={faMagnifyingGlass} />
+          </span>
+        </div>
+        <div className="find-friend">
+          <span>Lời mời kết bạn</span>
+          <span>Tìm bạn bè</span>
+        </div>
+        <button className="more">
+          <MoreHorizIcon />
+        </button>
+      </div>
 
       <div className="container">
-        {friends.map((friend) => (
-          <div className="user" key={friend.id}>
-            <div className="userInfo">
+        <div className="row">
+          {friends.map((friend) => (
+            <div className="user" key={friend.id}>
               <img src={"/upload/" + friend.profilePic} alt="" />
               <div className="details">
-                <span className="name"
+                <span
+                  className="name"
                   onClick={() => {
                     window.location.href = `/profile/${friend.id}`;
-                  }}>
+                  }}
+                >
                   {friend.name}
                 </span>
               </div>
+              <div className="moreIcon">
+                <MoreHorizIcon />
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-      {loading && <p>Loading...</p>}
-      {!loading && <button onClick={handleShowMore}>Show More</button>}
+      {loading && <FlipCube />}
+      {!loading && friends.length < 2 && <button onClick={handleShowMore}>Show More</button>}
     </div>
   );
 };
