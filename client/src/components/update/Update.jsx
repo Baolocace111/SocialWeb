@@ -3,7 +3,6 @@ import { makeRequest } from "../../axios";
 import "./update.scss";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { makeStyles } from '@material-ui/core/styles';
@@ -11,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { FormThemeProvider } from 'react-form-component';
-import Form, { Input } from 'react-form-component'
+import Form, { Input } from 'react-form-component';
 
 const useStyles = makeStyles({
   root: {
@@ -20,11 +19,8 @@ const useStyles = makeStyles({
 });
 
 const Update = ({ setOpenUpdate, user }) => {
-  const [cover, setCover] = useState(null);
-  const [profile, setProfile] = useState(null);
   const [texts, setTexts] = useState({
     email: user.email || "",
-    password: user.password || "",
     name: user.name || "",
     city: user.city || "",
     website: user.website || "",
@@ -47,8 +43,11 @@ const Update = ({ setOpenUpdate, user }) => {
     }
   };
 
-  const handleChange = (e) => {
-    setTexts((prev) => ({ ...prev, [e.target.name]: [e.target.value] }));
+  const handleChange = (value, name) => {
+    setTexts((prevTexts) => ({
+      ...prevTexts,
+      [name]: value,
+    }));
   };
 
   const queryClient = useQueryClient();
@@ -66,19 +65,8 @@ const Update = ({ setOpenUpdate, user }) => {
   );
 
   const handleClick = async (e) => {
-    e.preventDefault();
-
-    //TODO: find a better way to get image URL
-
-    let coverUrl;
-    let profileUrl;
-    coverUrl = cover ? await upload(cover) : user.coverPic;
-    profileUrl = profile ? await upload(profile) : user.profilePic;
-
-    mutation.mutate({ ...texts, coverPic: coverUrl, profilePic: profileUrl });
+    mutation.mutate({ ...texts });
     setOpenUpdate(false);
-    setCover(null);
-    setProfile(null);
   };
 
   return (
@@ -109,99 +97,39 @@ const Update = ({ setOpenUpdate, user }) => {
         {value === 0 && (
           <>
             <span className="title-update">Update Your Profile</span>
-            {/* <div className="files">
-              <label htmlFor="coverPic">
-                <span>Cover Picture</span>
-                <div className="imgContainer">
-                  <img
-                    src={
-                      cover
-                        ? URL.createObjectURL(cover)
-                        : "/upload/" + user.coverPic
-                    }
-                    alt=""
-                  />
-                  <CloudUploadIcon className="icon" />
-                </div>
-              </label>
-              <input
-                type="file"
-                id="coverPic"
-                style={{ display: "none" }}
-                onChange={(e) => setCover(e.target.files[0])}
-              />
-              <label htmlFor="profilePic">
-                <span>Profile Picture</span>
-                <div className="imgContainer">
-                  <img
-                    src={
-                      profile
-                        ? URL.createObjectURL(profile)
-                        : "/upload/" + user.profilePic
-                    }
-                    alt=""
-                  />
-                  <CloudUploadIcon className="icon" />
-                </div>
-              </label>
-              <input
-                type="file"
-                id="profilePic"
-                style={{ display: "none" }}
-                onChange={(e) => setProfile(e.target.files[0])}
-              />
-            </div> */}
-            {/* <form>
-              <label>Email</label>
-              <input
-                type="text"
-                value={texts.email}
-                name="email"
-                onChange={handleChange}
-              />
-              <label>Name</label>
-              <input
-                type="text"
-                value={texts.name}
-                name="name"
-                onChange={handleChange}
-              />
-              <label>Country / City</label>
-              <input
-                type="text"
-                name="city"
-                value={texts.city}
-                onChange={handleChange}
-              />
-              <label>Website</label>
-              <input
-                type="text"
-                name="website"
-                value={texts.website}
-                onChange={handleChange}
-              />
-              <button onClick={handleClick}>Update</button>
-            </form> */}
             <FormThemeProvider>
-              <Form className="form-update" fields={['email', 'name', 'city', 'website']}>
+              <Form className="form-update" fields={['name', 'city', 'website']}>
                 <Input
                   name='email'
-                  type='text'
+                  type='email'
                   label='E-mail'
+                  id='email'
                   initialValue={texts.email || ''}
-                  onChange={handleChange}
+                  onChange={(value) => handleChange(value, 'email')}
                 />
                 <Input
                   name='name'
-                  label='Username'
+                  type='text'
+                  label='Name'
+                  id='name'
+                  initialValue={texts.name || ''}
+                  onChange={(value) => handleChange(value, 'name')}
                 />
                 <Input
                   name='city'
+                  type='text'
                   label='Country / City'
+                  id='city'
+                  initialValue={texts.city || ''}
+                  onChange={(value) => handleChange(value, 'city')}
                 />
                 <Input
                   name='website'
+                  type='url'
                   label='Website'
+                  id='website'
+                  initialValue={texts.website || ''}
+                  onChange={(value) => handleChange(value, 'website')}
                 />
                 <button className="btn-save" onClick={handleClick}>Save</button>
               </Form>

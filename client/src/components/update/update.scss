@@ -16,8 +16,9 @@
     .wrapper {
       margin: auto;
       width: 40%;
-      height: 75%;
+      height: 78%;
       background-color: themed("bg");
+      border-radius: 10px;
       padding-top: 50px;
       z-index: 999;
       display: flex;
@@ -37,6 +38,7 @@
         margin: 0 auto;
         font-weight: 700;
         font-size: 20px;
+        color: themed("textColor");
 
         @include mobile {
           font-size: 20px;
@@ -46,13 +48,25 @@
       .menu {
         width: fit-content;
         margin: 0 auto;
-        background-color: themed("bgSoft");
-        color: themed("textColor");
       }
 
       .form-update {
         width: 60%;
         margin: 0 auto;
+        color: themed("textColor");
+
+        Input {
+          border-radius: 5px;
+        }
+
+        label {
+          font-size: 16px;
+          font-weight: 600;
+        }
+
+        Input:focus {
+          border-width: 3px;
+        }
 
         .btn-save {
           display: flex;
@@ -65,14 +79,14 @@
           border-radius: 15px;
           border: none;
           outline: none;
-          background-color: blue;
+          background-color: rgb(75, 75, 233);
           color: white;
           margin: 0 auto;
           cursor: pointer;
         }
 
         .btn-save:hover {
-          background-color: red;
+          background-color: blue;
         }
       }
 
@@ -81,13 +95,17 @@
         top: 10px;
         right: 10px;
         border: none;
-        background-color: #f0544f;
+        background-color: #e24843c6;
         width: 40px;
         height: 40px;
         font-size: 20px;
         border-radius: 50%;
         cursor: pointer;
         color: white;
+      }
+
+      .close:hover {
+        background-color: red;
       }
     }
   }
