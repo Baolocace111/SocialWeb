@@ -11,6 +11,11 @@ const FriendList = ({ user_id }) => {
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  const [searchText, setSearchText] = useState('');
+  const filteredFriends = friends.filter((friend) =>
+    friend.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+
   const loadFriends = useCallback(async () => {
     try {
       const response = await makeRequest.post("/friendship/get_friends", {
@@ -36,7 +41,13 @@ const FriendList = ({ user_id }) => {
       <div className="menu">
         <span className="title">Bạn bè</span>
         <div className="input-container">
-          <input type="text" placeholder="Tìm bạn..." className="input-field" />
+          <input
+            type="text"
+            placeholder="Tìm bạn..."
+            className="input-field"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
           <span className="icon-container">
             <FontAwesomeIcon icon={faMagnifyingGlass} />
           </span>
@@ -52,7 +63,7 @@ const FriendList = ({ user_id }) => {
 
       <div className="container">
         <div className="row">
-          {friends.map((friend) => (
+          {filteredFriends.map((friend) => (
             <div className="user" key={friend.id}>
               <img src={"/upload/" + friend.profilePic} alt="" />
               <div className="details">

@@ -35,7 +35,7 @@
           border: none;
           outline: none;
           background-color: themed(bgSoft);
-          color: themed(textColorSoft);
+          color: themed(textColor);
           border-radius: 15px;
           font-size: 16px;
         }
@@ -87,18 +87,17 @@
       justify-content: center;
       flex-wrap: wrap;
       padding-bottom: 20px;
-      gap: 10px;
+      gap: 15px;
 
       .row {
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between;
         flex-wrap: wrap;
         width: 97%;
-        gap: 20px;
 
         .user {
-          width: 45%;
+          width: 46%;
           display: flex;
           align-items: center;
           padding: 15px;
@@ -109,8 +108,9 @@
           gap: 20px;
 
           img {
-            width: 80px;
-            height: 80px;
+            width: 85px;
+            height: 85px;
+            border-radius: 5px;
           }
 
           .details {
