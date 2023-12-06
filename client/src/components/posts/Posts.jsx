@@ -16,25 +16,6 @@ const Posts = ({ userId }) => {
       <ShowPost isLoading={isLoading} error={error} posts={data}></ShowPost>
     </>
   );
-  // <div className="posts">
-  //   {error ? (
-  //     "Something went wrong!"
-  //   ) : isLoading ? (
-  //     <ThreePointLoading></ThreePointLoading>
-  //   ) : Array.isArray(data) ? (
-  //     data.map((post) => (
-  //       <div key={post.id}>
-  //         {post.type === 0 ? (
-  //           <Post post={post} />
-  //         ) : (
-  //           <SharedPost post={post}></SharedPost>
-  //         )}
-  //       </div>
-  //     ))
-  //   ) : (
-  //     "No data available"
-  //   )}
-  // </div>
 };
 
 export default Posts;
