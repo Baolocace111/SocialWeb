@@ -609,107 +609,109 @@ const Post = ({ post }) => {
           <Description text={post.desc}></Description>
           <img src={"/upload/" + post.img} alt="" />
         </div>
-        <div className="info">
-          <div className="item">
-            {isLoading ? (
-              "loading"
-            ) : data.includes(currentUser.id) ? (
-              <FavoriteOutlinedIcon
-                style={{ color: "red" }}
-                onClick={handleLike}
-              />
-            ) : (
-              <FavoriteBorderOutlinedIcon onClick={handleLike} />
-            )}
-            {data?.length} Likes
-          </div>
-          <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
-            <TextsmsOutlinedIcon />
-            See Comments
-          </div>
-          <div className="item" onClick={() => handleShare()}>
-            <ShareOutlinedIcon />
-            Share
-          </div>
-          <PopupWindow handleClose={handleShare} show={showSharePopup}>
-            <div>
-              <EditIcon sx={{ marginRight: "8px", fontSize: "20px" }} />
-              <span style={{ fontSize: "22px", fontWeight: "700" }}>
-                Share this post
-              </span>
+        {!post.error &&
+          <div className="info">
+            <div className="item">
+              {isLoading ? (
+                "loading"
+              ) : data.includes(currentUser.id) ? (
+                <FavoriteOutlinedIcon
+                  style={{ color: "red" }}
+                  onClick={handleLike}
+                />
+              ) : (
+                <FavoriteBorderOutlinedIcon onClick={handleLike} />
+              )}
+              {data?.length} Likes
             </div>
-            <hr />
-            <div>
+            <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
+              <TextsmsOutlinedIcon />
+              See Comments
+            </div>
+            <div className="item" onClick={() => handleShare()}>
+              <ShareOutlinedIcon />
+              Share
+            </div>
+            <PopupWindow handleClose={handleShare} show={showSharePopup}>
+              <div>
+                <EditIcon sx={{ marginRight: "8px", fontSize: "20px" }} />
+                <span style={{ fontSize: "22px", fontWeight: "700" }}>
+                  Share this post
+                </span>
+              </div>
+              <hr />
+              <div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    margin: "10px 0 15px 10px",
+                  }}
+                >
+                  <div
+                    style={{
+                      paddingRight: "15px",
+                      display: "flex",
+                      flex: "0 0 auto",
+                      gap: "10px",
+                    }}
+                  >
+                    <img
+                      src={"/upload/" + currentUser.profilePic}
+                      style={{
+                        borderRadius: "50%",
+                        width: "45px",
+                        height: "45px",
+                      }}
+                      alt="User"
+                    />
+                    <div
+                      style={{
+                        fontWeight: "700",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      {currentUser.name}
+                    </div>
+                  </div>
+                </div>
+                <TextareaAutosize
+                  minRows={2}
+                  placeholder="Nhập nội mô tả của bạn"
+                  defaultValue={shareDesc}
+                  onChange={(e) => setShareDesc(e.target.value)}
+                  style={{
+                    width: "100%",
+                    border: "none",
+                    resize: "none",
+                    outline: "none",
+                    fontSize: "20px",
+                  }}
+                />
+                <div style={{ pointerEvents: "none" }}>
+                  <MiniPost post={post}></MiniPost>
+                </div>
+              </div>
+              <hr />
               <div
                 style={{
                   display: "flex",
-                  justifyContent: "flex-start",
-                  alignItems: "center",
-                  margin: "10px 0 15px 10px",
+                  justifyContent: "flex-end",
+                  gap: "20px",
                 }}
               >
-                <div
-                  style={{
-                    paddingRight: "15px",
-                    display: "flex",
-                    flex: "0 0 auto",
-                    gap: "10px",
-                  }}
-                >
-                  <img
-                    src={"/upload/" + currentUser.profilePic}
-                    style={{
-                      borderRadius: "50%",
-                      width: "45px",
-                      height: "45px",
-                    }}
-                    alt="User"
-                  />
-                  <div
-                    style={{
-                      fontWeight: "700",
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    {currentUser.name}
-                  </div>
-                </div>
+                <button className="share" onClick={handleShareApi}>
+                  SHARE
+                </button>
+                <button className="cancel" onClick={handleShare}>
+                  CANCEL
+                </button>
               </div>
-              <TextareaAutosize
-                minRows={2}
-                placeholder="Nhập nội mô tả của bạn"
-                defaultValue={shareDesc}
-                onChange={(e) => setShareDesc(e.target.value)}
-                style={{
-                  width: "100%",
-                  border: "none",
-                  resize: "none",
-                  outline: "none",
-                  fontSize: "20px",
-                }}
-              />
-              <div style={{ pointerEvents: "none" }}>
-                <MiniPost post={post}></MiniPost>
-              </div>
-            </div>
-            <hr />
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                gap: "20px",
-              }}
-            >
-              <button className="share" onClick={handleShareApi}>
-                SHARE
-              </button>
-              <button className="cancel" onClick={handleShare}>
-                CANCEL
-              </button>
-            </div>
-          </PopupWindow>
-        </div>
+            </PopupWindow>
+          </div>
+        }
         {commentOpen && <Comments postId={post.id} />}
       </div>
     </div>

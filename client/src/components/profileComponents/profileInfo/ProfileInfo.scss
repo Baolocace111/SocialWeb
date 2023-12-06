@@ -1,0 +1,102 @@
+@import "../../../style.scss";
+
+.info-list {
+    @include themify($themes) {
+        background-color: themed("bgSoft");
+        color: themed("textColor");
+
+        .friend-container {
+            -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+            -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+            box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+            border-radius: 20px;
+            background-color: themed("bg");
+            padding: 5px 15px 10px 15px;
+            gap: 15px;
+
+            .title {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                padding: 10px;
+
+                .friend-title {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    gap: 3px;
+
+                    span {
+                        font-size: 20px;
+                        font-weight: 700;
+                        color: theme("textColor");
+                    }
+
+                    .count {
+                        font-size: 16px;
+                        color: themed("textColorSoft");
+                    }
+                }
+
+                .option {
+                    font-size: 16px;
+                    color: #3578E5;
+                    font-weight: 600;
+                    margin-left: auto;
+                    border: none;
+                    outline: none;
+                    background-color: themed("bg");
+                    padding: 10px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                }
+
+                .option:hover {
+                    background-color: lightblue;
+                }
+            }
+
+            .content {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                .row {
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+
+                    .user {
+                        display: flex;
+                        flex-direction: column;
+                        padding: 10px 5px;
+                        gap: 5px;
+
+                        img {
+                            width: 120px;
+                            height: 120px;
+                            border-radius: 10px;
+                        }
+
+                        .name {
+                            font-weight: 600;
+                            font-size: 13px;
+                            cursor: pointer;
+                        }
+
+                        .name:hover {
+                            text-decoration: underline;
+                        }
+                    }
+
+                    @media (max-width: 768px) {
+                        grid-template-columns: repeat(2, 1fr);
+                    }
+
+                    @media (max-width: 480px) {
+                        grid-template-columns: repeat(1, 1fr);
+                    }
+                }
+            }
+        }
+    }
+}
