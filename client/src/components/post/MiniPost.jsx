@@ -15,10 +15,7 @@ import Description from "./desc";
 const MiniPost = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
 
-  //Handle openMenu
-
-  //
-
+  // console.log(post.id);
   const { currentUser } = useContext(AuthContext);
 
   const { isLoading, data } = useQuery(["likes", post.id], () =>
@@ -72,25 +69,28 @@ const MiniPost = ({ post }) => {
             <img src={"/upload/" + post.img} alt="" />
           </Link>
         </div>
-        <div className="info">
-          <div className="item">
-            {isLoading ? (
-              "loading"
-            ) : data.includes(currentUser.id) ? (
-              <FavoriteOutlinedIcon
-                style={{ color: "red" }}
-                onClick={handleLike}
-              />
-            ) : (
-              <FavoriteBorderOutlinedIcon onClick={handleLike} />
-            )}
-            {data?.length} Likes
+        {!post.error &&
+          <div className="info">
+            <div className="item">
+              {isLoading ? (
+                "loading"
+              ) : data.includes(currentUser.id) ? (
+                <FavoriteOutlinedIcon
+                  style={{ color: "red" }}
+                  onClick={handleLike}
+                />
+              ) : (
+                <FavoriteBorderOutlinedIcon onClick={handleLike} />
+              )}
+              {data?.length} Likes
+            </div>
+            <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
+              <TextsmsOutlinedIcon />
+              See Comments
+            </div>
           </div>
-          <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
-            <TextsmsOutlinedIcon />
-            See Comments
-          </div>
-        </div>
+        }
+
         {commentOpen && <Comments postId={post.id} />}
       </div>
     </div>

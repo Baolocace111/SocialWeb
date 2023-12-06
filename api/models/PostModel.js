@@ -12,6 +12,7 @@ export const getPostById = (userId, postId, callback) => {
     if (err) return callback(err, null);
     if (data.length === 0)
       return callback(null, {
+        error: true,
         desc: "Bài viết không còn nữa",
         profilePic: "deadskull.png",
         createAt: 0,
@@ -200,10 +201,10 @@ export const addListPostPrivate = (userIDs, postID, userID, callback) => {
     const deleteAndInsertQuery =
       userIDs.length > 0
         ? "" +
-          "DELETE FROM post_private WHERE post_id = ?;" +
-          "INSERT INTO post_private(`post_id`, `user_id`) VALUES" +
-          userIDs.map((id) => `(${postID}, ${id})`).join(", ") +
-          `;`
+        "DELETE FROM post_private WHERE post_id = ?;" +
+        "INSERT INTO post_private(`post_id`, `user_id`) VALUES" +
+        userIDs.map((id) => `(${postID}, ${id})`).join(", ") +
+        `;`
         : `DELETE FROM post_private WHERE post_id = ?`;
 
     db.query(deleteAndInsertQuery, Number(postID), (error, results) => {
