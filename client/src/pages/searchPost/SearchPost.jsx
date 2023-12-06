@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import SearchBar from "../../components/searchComponents/searchBar/SearchBar";
 import "./searchPost.scss";
 import NineCube from "../../components/loadingComponent/nineCube/NineCube";
+import ShowPosts from "../../components/posts/ShowPosts";
 const SearchPost = ({ isHashtag }) => {
   const { searchText } = useParams();
   const query = isHashtag ? "posts/hashtag" : "/posts/content";
@@ -26,13 +27,7 @@ const SearchPost = ({ isHashtag }) => {
             {searchText}
           </span>
         </div>
-        {error ? (
-          "Error!!!"
-        ) : isLoading ? (
-          <NineCube />
-        ) : (
-          data.map((post) => <Post post={post} key={post.id} />)
-        )}
+        <ShowPosts error={error} isLoading={isLoading} posts={data}></ShowPosts>
       </div>
     </div>
   );
