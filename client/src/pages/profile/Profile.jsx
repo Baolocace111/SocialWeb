@@ -7,6 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faFacebookMessenger } from "@fortawesome/free-brands-svg-icons";
 import Posts from "../../components/posts/Posts";
+import ProfileInfo from "../../components/profileComponents/profileInfo/ProfileInfo";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
 import { useParams } from "react-router-dom";
@@ -23,6 +24,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
 import Chat from "../../components/chatComponent/chat/Chat";
+import Share from "../../components/share/Share"
 
 const useStyles = makeStyles({
   root: {
@@ -213,7 +215,17 @@ const Profile = () => {
 
           {value === 0 && (
             <div className="profileContainer">
-              <Posts userId={userId} />
+              <div className="profile-post">
+                <div className="column1">
+                  <ProfileInfo user_id={userId} />
+                </div>
+                <div className="column2">
+                  <div className="sharePostsContainer">
+                    <Share />
+                    <Posts userId={userId} />
+                  </div>
+                </div>
+              </div>
             </div>
           )}
           {value === 1 && (

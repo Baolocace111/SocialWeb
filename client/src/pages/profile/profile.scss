@@ -141,7 +141,25 @@
     }
 
     .profileContainer {
-      padding: 30px 300px;
+      padding: 30px 270px;
+
+      .profile-post {
+        display: flex;
+        gap: 20px;
+
+        .column1 {
+          flex-basis: 35%;
+        }
+
+        .column2 {
+          flex-basis: 65%;
+
+          .sharePostsContainer {
+            display: flex;
+            flex-direction: column;
+          }
+        }
+      }
 
       @include mobile {
         padding: 10px;

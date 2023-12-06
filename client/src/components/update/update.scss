@@ -53,6 +53,7 @@
       .form-update {
         width: 60%;
         margin: 0 auto;
+        margin-bottom: -20px;
         color: themed("textColor");
 
         Input {
@@ -67,27 +68,27 @@
         Input:focus {
           border-width: 3px;
         }
+      }
 
-        .btn-save {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 80px;
-          height: 40px;
-          font-size: 15px;
-          font-weight: 600;
-          border-radius: 15px;
-          border: none;
-          outline: none;
-          background-color: rgb(75, 75, 233);
-          color: white;
-          margin: 0 auto;
-          cursor: pointer;
-        }
+      .btn-save {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 80px;
+        height: 40px;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: 15px;
+        border: none;
+        outline: none;
+        background-color: rgb(75, 75, 233);
+        color: white;
+        margin: 0 auto;
+        cursor: pointer;
+      }
 
-        .btn-save:hover {
-          background-color: blue;
-        }
+      .btn-save:hover {
+        background-color: blue;
       }
 
       .close {

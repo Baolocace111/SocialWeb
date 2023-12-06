@@ -1,0 +1,64 @@
+import React, { useState, useCallback } from "react";
+import { makeRequest } from "../../../axios";
+import "./ProfileInfo.scss";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import FlipCube from "../../loadingComponent/flipCube/FlipCube";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+
+const ProfileInfo = ({ user_id }) => {
+    const [friends, setFriends] = useState([]);
+    const [offset, setOffset] = useState(0);
+    const [loading, setLoading] = useState(true);
+
+    const [searchText, setSearchText] = useState('');
+    const filteredFriends = friends.filter((friend) =>
+        friend.name.toLowerCase().includes(searchText.toLowerCase())
+    );
+
+    const loadFriends = useCallback(async () => {
+        try {
+            const response = await makeRequest.post("/friendship/get_friends", {
+                user_id: user_id,
+                offset: offset,
+            });
+            //console.log(offset);
+            setFriends([...friends, ...response.data]);
+            if (response.data.length !== 0) setOffset(offset + 10);
+            setLoading(false);
+        } catch (error) {
+            console.error("Failed to fetch friends:", error);
+        }
+    }, [user_id, offset, friends]);
+
+    const handleShowMore = () => {
+        loadFriends();
+    };
+    if (loading) loadFriends();
+
+    return (
+        <div className="info-list">
+            <div className="container">
+                <div className="row">
+                    {filteredFriends.map((friend) => (
+                        <div className="user" key={friend.id}>
+                            <img src={"/upload/" + friend.profilePic} alt="" />
+                            <span
+                                className="name"
+                                onClick={() => {
+                                    window.location.href = `/profile/${friend.id}`;
+                                }}
+                            >
+                                {friend.name}
+                            </span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+            {loading && <FlipCube />}
+            {!loading && friends.length < 2 && <button onClick={handleShowMore}>Show More</button>}
+        </div>
+    );
+};
+
+export default ProfileInfo;
