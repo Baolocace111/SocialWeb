@@ -22,13 +22,22 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 
 import { useCookies } from "react-cookie";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from "./context/authContext";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
 import SearchPost from "./pages/searchPost/SearchPost";
 import PostPage from "./pages/postPage/PostPage";
 import Error from "./pages/Error/Error";
+import AdminOnly from "./pages/Error/AdminOnly";
+import AdminHome from "./pages/admin/adminHome/AdminHome";
+import { makeRequest } from "./axios";
+import NineCube from "./components/loadingComponent/nineCube/NineCube";
+import AdminLogin from "./pages/admin/adminLogin/AdminLogin";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -39,58 +48,84 @@ function App() {
 
   const Layout = () => {
     return (
-      <QueryClientProvider client={queryClient}>
-        <div className={`theme-${darkMode ? "dark" : "light"}`}>
-          <Navbar />
-          <div style={{ display: "flex" }}>
-            <LeftBar />
-            <div style={{ flex: 6 }}>
-              <Outlet />
-            </div>
-            <RightBar />
+      <div className={`theme-${darkMode ? "dark" : "light"}`}>
+        <Navbar />
+        <div style={{ display: "flex" }}>
+          <LeftBar />
+          <div style={{ flex: 6 }}>
+            <Outlet />
           </div>
+          <RightBar />
         </div>
-      </QueryClientProvider>
+      </div>
+    );
+  };
+  const AdminLayout = () => {
+    // const { data, isLoading, error } = useQuery(["check"], () => {
+    //   makeRequest.get("/auth/admin/check").then((res) => {
+    //     return res.data;
+    //   });
+    // });
+    const [isLoading, setisLoading] = useState(true);
+    const [error, setError] = useState(null);
+    if (isLoading)
+      makeRequest
+        .get("/auth/admin/check")
+        .then((res) => {
+          setisLoading(false);
+        })
+        .catch((e) => {
+          setError(true);
+          setisLoading(false);
+          console.log(error);
+          //console.log(e);
+        });
+    return (
+      <div className={`theme-${darkMode ? "dark" : "light"}`}>
+        {error ? (
+          <AdminOnly />
+        ) : isLoading ? (
+          <NineCube></NineCube>
+        ) : (
+          <Outlet></Outlet>
+        )}
+      </div>
     );
   };
 
   const ProfileLayout = () => {
     return (
-      <QueryClientProvider client={queryClient}>
-        <div className={`theme-${darkMode ? "dark" : "light"}`}>
-          <Navbar />
-          <Profile />
-        </div>
-      </QueryClientProvider>
+      <div className={`theme-${darkMode ? "dark" : "light"}`}>
+        <Navbar />
+        <Profile />
+      </div>
     );
   };
 
   const StoryLayout = () => {
     return (
-      <QueryClientProvider client={queryClient}>
-        <div className={`theme-${darkMode ? "dark" : "light"}`}>
-          <div style={{ display: "flex" }}>
-            <StoriesBar />
-            <div
-              className="story-page"
-              style={{
-                flex: 8,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                position: "relative",
-              }}
-            >
-              <Story />
-              <Link to="/">
-                <button className="close-button">
-                  <FontAwesomeIcon icon={faX} />
-                </button>
-              </Link>
-            </div>
+      <div className={`theme-${darkMode ? "dark" : "light"}`}>
+        <div style={{ display: "flex" }}>
+          <StoriesBar />
+          <div
+            className="story-page"
+            style={{
+              flex: 8,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
+            }}
+          >
+            <Story />
+            <Link to="/">
+              <button className="close-button">
+                <FontAwesomeIcon icon={faX} />
+              </button>
+            </Link>
           </div>
         </div>
-      </QueryClientProvider>
+      </div>
     );
   };
 
@@ -153,12 +188,20 @@ function App() {
       path: "/error",
       element: <Error />,
     },
+    { path: "/adminlogin", element: <AdminLogin></AdminLogin> },
+    {
+      path: "/admin",
+      element: <AdminLayout />,
+      children: [{ path: "/admin/home", element: <AdminHome></AdminHome> }],
+    },
   ]);
 
   return (
-    <div>
-      <RouterProvider router={router} />
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <div>
+        <RouterProvider router={router} />
+      </div>
+    </QueryClientProvider>
   );
 }
 

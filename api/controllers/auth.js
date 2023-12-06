@@ -46,6 +46,26 @@ export const login = async (req, res) => {
     res.status(500).json(err.message);
   }
 };
+export const adminLogin = async (req, res) => {
+  try {
+    const result = await AuthService.login(
+      req.body.username,
+      req.body.password
+    );
+    if (result.user.role !== 1)
+      res.status(500).json("You are not an administrator");
+    res.clearCookie();
+    res
+      .cookie("accessToken", result.token, {
+        secure: true,
+        sameSite: "none",
+      })
+      .status(200)
+      .json(result.user);
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+};
 
 export const logout = (req, res) => {
   res
@@ -55,4 +75,12 @@ export const logout = (req, res) => {
     })
     .status(200)
     .json("User has been logged out.");
+};
+export const checkAdmin = async (req, res) => {
+  try {
+    const id = await AuthService.verifyAdminToken(req.cookies.accessToken);
+    return res.status(200).json(id);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
 };
