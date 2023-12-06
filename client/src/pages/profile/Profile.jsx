@@ -1,7 +1,11 @@
 import "./profile.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faUserMinus, faUserPlus } from "@fortawesome/free-solid-svg-icons";
-import { faFacebookMessenger } from '@fortawesome/free-brands-svg-icons';
+import {
+  faPenToSquare,
+  faUserMinus,
+  faUserPlus,
+} from "@fortawesome/free-solid-svg-icons";
+import { faFacebookMessenger } from "@fortawesome/free-brands-svg-icons";
 import Posts from "../../components/posts/Posts";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
@@ -13,10 +17,10 @@ import { useState } from "react";
 import FriendList from "../../components/profileComponents/friendList/FriendList";
 import FlipCube from "../../components/loadingComponent/flipCube/FlipCube";
 
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import { makeStyles } from "@material-ui/core/styles";
+import Paper from "@material-ui/core/Paper";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 
 import Chat from "../../components/chatComponent/chat/Chat";
 
@@ -32,11 +36,12 @@ const Profile = () => {
   const [chattingUser, setChattingUser] = useState([]);
   const [userId] = useState(Number(useParams().userId));
 
-  const { isLoading, data } = useQuery(["user"], () =>
+  const { isLoading, data, error } = useQuery(["user"], () =>
     makeRequest.get("/users/find/" + userId).then((res) => {
       return res.data;
     })
   );
+  if (error) window.location.href = "/error";
 
   const { isLoading: rIsLoading, data: relationshipData } = useQuery(
     ["relationship"],
@@ -46,10 +51,14 @@ const Profile = () => {
       })
   );
 
-  const { isLoading: countLoading, data: countData } = useQuery(["friendCount"], () =>
-    makeRequest.get(`/friendship/friend/count?user_id=${userId}`).then((res) => {
-      return res.data;
-    })
+  const { isLoading: countLoading, data: countData } = useQuery(
+    ["friendCount"],
+    () =>
+      makeRequest
+        .get(`/friendship/friend/count?user_id=${userId}`)
+        .then((res) => {
+          return res.data;
+        })
   );
 
   const queryClient = useQueryClient();
@@ -100,7 +109,11 @@ const Profile = () => {
           <div className="images">
             <img src={"/upload/" + data.coverPic} alt="" className="cover" />
             <div className="profilePicContainer">
-              <img src={"/upload/" + data.profilePic} alt="" className="profilePic" />
+              <img
+                src={"/upload/" + data.profilePic}
+                alt=""
+                className="profilePic"
+              />
             </div>
           </div>
 
@@ -144,7 +157,14 @@ const Profile = () => {
           </div>
 
           <div className="menu">
-            <Paper style={{ color: "inherit", backgroundColor: "inherit", borderRadius: "inherit" }} className={classes.root}>
+            <Paper
+              style={{
+                color: "inherit",
+                backgroundColor: "inherit",
+                borderRadius: "inherit",
+              }}
+              className={classes.root}
+            >
               <Tabs
                 value={value}
                 onChange={handleChange}
@@ -155,35 +175,35 @@ const Profile = () => {
                 <Tab
                   style={{
                     fontWeight: "700",
-                    color: value === 0 ? "#f50057" : "inherit"
+                    color: value === 0 ? "#f50057" : "inherit",
                   }}
                   label="Bài viết"
                 />
                 <Tab
                   style={{
                     fontWeight: "700",
-                    color: value === 1 ? "#f50057" : "inherit"
+                    color: value === 1 ? "#f50057" : "inherit",
                   }}
                   label="Giới thiệu"
                 />
                 <Tab
                   style={{
                     fontWeight: "700",
-                    color: value === 2 ? "#f50057" : "inherit"
+                    color: value === 2 ? "#f50057" : "inherit",
                   }}
                   label="Bạn bè"
                 />
                 <Tab
                   style={{
                     fontWeight: "700",
-                    color: value === 3 ? "#f50057" : "inherit"
+                    color: value === 3 ? "#f50057" : "inherit",
                   }}
                   label="Hình ảnh"
                 />
                 <Tab
                   style={{
                     fontWeight: "700",
-                    color: value === 4 ? "#f50057" : "inherit"
+                    color: value === 4 ? "#f50057" : "inherit",
                   }}
                   label="Xem thêm"
                 />
@@ -226,12 +246,14 @@ const Profile = () => {
         <div className="chat-boxes">
           {chattingUser.map((user) => (
             <div className="chat-box" key={user.id}>
-              <Chat friend={user} onRemoveChatBox={() => handleRemoveChatBoxById(user.id)}></Chat>
+              <Chat
+                friend={user}
+                onRemoveChatBox={() => handleRemoveChatBoxById(user.id)}
+              ></Chat>
             </div>
           ))}
         </div>
       )}
-
     </div>
   );
 };

@@ -28,6 +28,7 @@ import { AuthContext } from "./context/authContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import SearchPost from "./pages/searchPost/SearchPost";
 import PostPage from "./pages/postPage/PostPage";
+import Error from "./pages/Error/Error";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -148,10 +149,10 @@ function App() {
       path: "/stories/:userId",
       element: <StoryLayout />,
     },
-    // {
-    //   path: "/chat/:friendid",
-    //   element: <Chat />,
-    // },
+    {
+      path: "/error",
+      element: <Error />,
+    },
   ]);
 
   return (
