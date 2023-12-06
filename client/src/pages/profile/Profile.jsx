@@ -6,14 +6,12 @@ import {
   faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { faFacebookMessenger } from "@fortawesome/free-brands-svg-icons";
-import Posts from "../../components/posts/Posts";
-import ProfileInfo from "../../components/profileComponents/profileInfo/ProfileInfo";
+
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
 import { useParams } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/authContext";
-import Update from "../../components/update/Update";
 import { useState } from "react";
 import FriendList from "../../components/profileComponents/friendList/FriendList";
 import FlipCube from "../../components/loadingComponent/flipCube/FlipCube";
@@ -23,6 +21,9 @@ import Paper from "@material-ui/core/Paper";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
+import Update from "../../components/update/Update";
+import Posts from "../../components/posts/Posts";
+import ProfileInfo from "../../components/profileComponents/profileInfo/ProfileInfo";
 import Chat from "../../components/chatComponent/chat/Chat";
 import Share from "../../components/share/Share"
 
@@ -217,11 +218,11 @@ const Profile = () => {
             <div className="profileContainer">
               <div className="profile-post">
                 <div className="column1">
-                  <ProfileInfo user_id={userId} />
+                  <ProfileInfo user_id={userId} countData={countData} onChangeValue={handleChange} />
                 </div>
                 <div className="column2">
                   <div className="sharePostsContainer">
-                    <Share />
+                    {userId === currentUser.id && <Share />}
                     <Posts userId={userId} />
                   </div>
                 </div>
