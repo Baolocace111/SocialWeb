@@ -51,7 +51,7 @@
       color: themed("textColor");
       display: flex;
       align-items: center;
-      gap: 400px;
+      gap: 200px;
 
       @include mobile {
         flex-direction: column;
@@ -66,9 +66,15 @@
         margin-left: 33%;
         gap: 5px;
 
-        .uName {
-          font-size: 30px;
-          font-weight: 700;
+        .uNameContainer {
+          width: 320px;
+          word-break: break-all;
+
+          .uName {
+            font-size: 30px;
+            font-weight: 700;
+            width: 100%;
+          }
         }
 
         .uFriends {
@@ -141,7 +147,7 @@
     }
 
     .profileContainer {
-      padding: 30px 250px;
+      padding: 30px 220px;
 
       .profile-post {
         display: flex;
