@@ -52,6 +52,7 @@ const SharedPost = ({ post }) => {
   );
   const { isLoading: isLoadingPost, error: errorPost, data: dataPost } = useQuery(["shared-post" + post.id], () =>
     makeRequest.get("/posts/post/" + post.img).then((res) => {
+      console.log(res.data);
       return res.data;
     })
   );
