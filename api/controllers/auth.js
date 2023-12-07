@@ -1,5 +1,5 @@
 import { AuthService } from "../services/AuthService.js";
-
+import { clients } from "../index.js";
 export const register = async (req, res) => {
   const user = await req.body.username;
   const email = await req.body.email;
@@ -67,14 +67,22 @@ export const adminLogin = async (req, res) => {
   }
 };
 
-export const logout = (req, res) => {
-  res
-    .clearCookie("accessToken", {
-      secure: true,
-      sameSite: "none",
-    })
-    .status(200)
-    .json("User has been logged out.");
+export const logout = async (req, res) => {
+  try {
+    //const id = await AuthService.verifyUserToken(req.cookies.accessToken);
+    //const ws = clients.get("index" + id);
+    //if (ws) ws.close();
+    return res
+      .clearCookie("accessToken", {
+        secure: true,
+        sameSite: "none",
+      })
+      .status(200)
+      .json("User has been logged out.");
+  } catch (error) {
+    //console.log(error);
+    return res.status(500).json(error);
+  }
 };
 export const checkAdmin = async (req, res) => {
   try {

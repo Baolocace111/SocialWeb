@@ -8,6 +8,7 @@ import {
   getCountFriendController,
   getCountRequestController,
   getFriendshipStatus,
+  getOnlineFriendController,
   listFriendUser,
   sendFriendRequestTo,
   unfriendUser,
@@ -25,5 +26,6 @@ router.post("/get_request_friend", RequestFriendController);
 router.get("/count", getCountRequestController);
 router.get("/allfriend", getAllFriendsController);
 router.get("/friend/count", getCountFriendController);
+router.get("/online", getOnlineFriendController);
 
 export default router;

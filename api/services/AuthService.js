@@ -43,6 +43,7 @@ export const AuthService = {
     return new Promise((resolve, reject) => {
       jwt.verify(token, key, (err, userInfo) => {
         if (err) {
+          //console.log(err);
           reject(-1);
         } else {
           resolve(userInfo.id);
