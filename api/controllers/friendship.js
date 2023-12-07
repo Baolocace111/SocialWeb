@@ -3,6 +3,7 @@ import {
   addRelationshipService,
   deleteRelationshipService,
 } from "../services/RelationshipService.js";
+import { clients } from "../index.js";
 import { AuthService } from "../services/AuthService.js";
 import {
   checkFriendshipStatus,
@@ -172,6 +173,26 @@ export const getCountFriendController = async (req, res) => {
     getCountFriendService(req.query.user_id, (err, data) => {
       if (err) return res.status(500).json({ error: err });
       return res.status(200).json(data);
+    });
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+export const getOnlineFriendController = async (req, res) => {
+  try {
+    const userid = await AuthService.verifyUserToken(req.cookies.accessToken);
+    getAllFriendsService(userid, (error, data) => {
+      if (error) res.status(500).json(error);
+      const resultArray = [];
+
+      for (const item of data) {
+        if (clients.has("index" + item.id)) {
+          //console.log(clients);
+          resultArray.push(item);
+        }
+      }
+      //console.log(clients);
+      return res.status(200).json(resultArray);
     });
   } catch (error) {
     return res.status(500).json(error);

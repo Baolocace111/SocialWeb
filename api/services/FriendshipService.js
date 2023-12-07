@@ -1,3 +1,5 @@
+import { sendMessageToUser } from "../index.js";
+import { clients } from "../index.js";
 import {
   findFriendshipByUserAndFriendAndStatus,
   changeStatusFriendshipByUserAndFriendAndStatus,
