@@ -15,6 +15,7 @@ import StoriesBar from "./components/stories/StoriesBar/storiesBar";
 import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
 import Search from "./pages/search/Search";
+import SearchBar from "./components/searchComponents/searchBar/SearchBar";
 
 import "./style.scss";
 import "./pages/story/story.scss";
@@ -28,7 +29,6 @@ import { AuthContext } from "./context/authContext";
 import {
   QueryClient,
   QueryClientProvider,
-  useQuery,
 } from "@tanstack/react-query";
 import SearchPost from "./pages/searchPost/SearchPost";
 import PostPage from "./pages/postPage/PostPage";
@@ -61,11 +61,6 @@ function App() {
     );
   };
   const AdminLayout = () => {
-    // const { data, isLoading, error } = useQuery(["check"], () => {
-    //   makeRequest.get("/auth/admin/check").then((res) => {
-    //     return res.data;
-    //   });
-    // });
     const [isLoading, setisLoading] = useState(true);
     const [error, setError] = useState(null);
     if (isLoading)
@@ -78,16 +73,15 @@ function App() {
           setError(true);
           setisLoading(false);
           console.log(error);
-          //console.log(e);
         });
     return (
       <div className={`theme-${darkMode ? "dark" : "light"}`}>
         {error ? (
           <AdminOnly />
         ) : isLoading ? (
-          <NineCube></NineCube>
+          <NineCube />
         ) : (
-          <Outlet></Outlet>
+          <Outlet />
         )}
       </div>
     );
@@ -98,6 +92,22 @@ function App() {
       <div className={`theme-${darkMode ? "dark" : "light"}`}>
         <Navbar />
         <Profile />
+      </div>
+    );
+  };
+
+  const SearchLayout = () => {
+    return (
+      <div className={`theme-${darkMode ? "dark" : "light"}`}>
+        <Navbar />
+        <div style={{ display: "flex" }}>
+          <div style={{ flex: "25%" }}>
+            <SearchBar />
+          </div>
+          <div style={{ flex: "75%", backgroundColor: "#f6f3f3" }}>
+            <Outlet />
+          </div>
+        </div>
       </div>
     );
   };
@@ -150,22 +160,6 @@ function App() {
           path: "/",
           element: <Home />,
         },
-        {
-          path: "/search/:searchText",
-          element: <Search />,
-        },
-        {
-          path: "/post/:searchText",
-          element: <SearchPost isHashtag={false} />,
-        },
-        {
-          path: "/hashtag/:searchText",
-          element: <SearchPost isHashtag={true} />,
-        },
-        {
-          path: "/seepost/:postId",
-          element: <PostPage />,
-        },
       ],
     },
     {
@@ -185,14 +179,43 @@ function App() {
       element: <StoryLayout />,
     },
     {
+      path: "/search/:searchText",
+      element: <SearchLayout />,
+      children: [
+        {
+          path: "/search/:searchText/",
+          element: <Search />,
+        },
+        {
+          path: "/search/:searchText/post",
+          element: <SearchPost isHashtag={false} />,
+        },
+        {
+          path: "/search/:searchText/hashtag",
+          element: <SearchPost isHashtag={true} />,
+        },
+      ],
+    },
+    {
+      path: "/seepost/:postId",
+      element: <PostPage />,
+    },
+    {
       path: "/error",
       element: <Error />,
     },
-    { path: "/adminlogin", element: <AdminLogin></AdminLogin> },
+    {
+      path: "/adminlogin",
+      element: <AdminLogin />
+    },
     {
       path: "/admin",
       element: <AdminLayout />,
-      children: [{ path: "/admin/home", element: <AdminHome></AdminHome> }],
+      children: [
+        {
+          path: "/admin/home",
+          element: <AdminHome />
+        }],
     },
   ]);
 

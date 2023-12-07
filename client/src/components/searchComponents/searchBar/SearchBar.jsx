@@ -1,55 +1,45 @@
 import "./searchBar.scss";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUser,
-  faHashtag,
-  faQuoteLeft,
-} from "@fortawesome/free-solid-svg-icons";
+import { faUserGroup, faAddressCard, faTags } from "@fortawesome/free-solid-svg-icons";
 
-const SearchBar = ({ search }) => {
-  const handleUser = () => {
-    if (search.num !== 0) {
-      //navigator(`/search/${search.text}`);
-      window.open(`/search/${search.text}`, "_blank");
-    }
+const SearchBar = () => {
+  const [selectedItem, setSelectedItem] = useState(null);
+  const handleItemClick = (item) => {
+    setSelectedItem(item);
   };
-  const handleText = () => {
-    if (search.num !== 1) {
-      //navigator(`/post/${search.text}`);
-      window.open(`/post/${search.text}`, "_blank");
-    }
+  const isItemSelected = (item) => {
+    return item === selectedItem;
   };
-  const handleHashtag = () => {
-    if (search.num !== 2) {
-      //navigator(`/hashtag/${search.text}`);
-      window.open(`/hashtag/${search.text}`, "_blank");
-    }
-  };
+
   return (
-    <>
-      <div className="searchbar">
-        <div className="c-text">Chọn</div>
-        <div className="line"></div>
-        <div
-          className={search.num === 0 ? "chose-box" : "normal-box"}
-          onClick={handleUser}
-        >
-          <FontAwesomeIcon icon={faUser} />
-        </div>
-        <div
-          className={search.num === 1 ? "chose-box" : "normal-box"}
-          onClick={handleText}
-        >
-          <FontAwesomeIcon icon={faQuoteLeft} />
-        </div>
-        <div
-          className={search.num === 2 ? "chose-box" : "normal-box"}
-          onClick={handleHashtag}
-        >
-          <FontAwesomeIcon icon={faHashtag} />
+    <div className="search-bar">
+      <div className="container">
+        <span className="search-title">Kết quả tìm kiếm</span>
+        <hr />
+        <div className="menu">
+          <span className="menu-title">Bộ lọc</span>
+          <div className={`item ${isItemSelected('people') ? 'selected' : ''}`} onClick={() => handleItemClick('people')}>
+            <div className={`icon-button ${isItemSelected('people') ? 'selected' : ''}`}>
+              <FontAwesomeIcon className="icon" icon={faUserGroup} />
+            </div>
+            <span>Mọi người</span>
+          </div>
+          <div className={`item ${isItemSelected('post') ? 'selected' : ''}`} onClick={() => handleItemClick('post')}>
+            <div className={`icon-button ${isItemSelected('post') ? 'selected' : ''}`}>
+              <FontAwesomeIcon className="icon" icon={faAddressCard} />
+            </div>
+            <span>Bài viết</span>
+          </div>
+          <div className={`item ${isItemSelected('hashtag') ? 'selected' : ''}`} onClick={() => handleItemClick('hashtag')}>
+            <div className={`icon-button ${isItemSelected('hashtag') ? 'selected' : ''}`}>
+              <FontAwesomeIcon className="icon" icon={faTags} />
+            </div>
+            <span>Hashtag</span>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 export default SearchBar;

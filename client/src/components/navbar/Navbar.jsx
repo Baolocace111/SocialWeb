@@ -8,7 +8,6 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useContext, useState } from "react";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { AuthContext } from "../../context/authContext";
@@ -85,13 +84,8 @@ const Navbar = () => {
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
-      // Gửi yêu cầu API logout
-      await axios.post("http://localhost:8800/api/auth/logout");
-
-      // Đăng xuất người dùng
+      await makeRequest.post("/auth/logout");
       logout();
-
-      // Chuyển hướng về trang đăng nhập
       navigate("/login");
     } catch (err) {
       console.log(err);
@@ -132,7 +126,7 @@ const Navbar = () => {
 
   const handleSearch = () => {
     if (searchText.trim() !== "") {
-      window.open(`/search/${searchText}`, "_blank");
+      window.location.href = `/search/${searchText}`;
     }
   };
 
