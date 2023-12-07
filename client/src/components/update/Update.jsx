@@ -31,7 +31,19 @@ const Update = ({ setOpenUpdate, user }) => {
     repassword: "",
     oldpassword: "",
   });
-  const [profile, setProfile] = useState(user.profilePic);
+
+  const [selectedProfile, setSelectedProfile] = useState({
+    profilePic: null,
+    coverPic: null,
+  });
+  const [updatedProfile, setUpdatedProfile] = useState({
+    profilePic: null,
+    coverPic: null,
+  });
+  const [profile] = useState({
+    profilePic: user.profilePic || null,
+    coverPic: user.coverPic || null,
+  });
 
   const classes = useStyles();
   const [value, setValue] = useState(0);
@@ -40,9 +52,35 @@ const Update = ({ setOpenUpdate, user }) => {
   };
   const queryClient = useQueryClient();
 
-  const handleFileSelect = (event) => {
+  const handleProfileSelect = (event) => {
     const file = event.target.files[0];
-    setProfile(file);
+    const allowedExtensions = ["jpg", "jpeg", "png", "gif"];
+    const fileExtension = file.name.split(".").pop().toLowerCase();
+    const isValidExtension = allowedExtensions.includes(fileExtension);
+
+    if (isValidExtension) {
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedProfile({ ...selectedProfile, profilePic: imageUrl });
+      setUpdatedProfile({ ...updatedProfile, profilePic: file });
+    } else {
+      alert("Vui lòng chỉ chọn tệp ảnh (jpg, jpeg, png, gif).");
+      event.target.value = null;
+    }
+  };
+  const handleCoverSelect = (event) => {
+    const file = event.target.files[0];
+    const allowedExtensions = ["jpg", "jpeg", "png", "gif"];
+    const fileExtension = file.name.split(".").pop().toLowerCase();
+    const isValidExtension = allowedExtensions.includes(fileExtension);
+
+    if (isValidExtension) {
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedProfile({ ...selectedProfile, coverPic: imageUrl });
+      setUpdatedProfile({ ...updatedProfile, coverPic: file });
+    } else {
+      alert("Vui lòng chỉ chọn tệp ảnh (jpg, jpeg, png, gif).");
+      event.target.value = null;
+    }
   };
   const uploadImage = async (file) => {
     try {
@@ -56,12 +94,18 @@ const Update = ({ setOpenUpdate, user }) => {
     }
   };
   const handleUpdate = async () => {
-    if (profile) {
-      const profileUrl = await uploadImage(profile);
+    if (updatedProfile.profilePic) {
+      const profileUrl = await uploadImage(updatedProfile.profilePic);
       imageMutation.mutate({ ...user, profilePic: profileUrl });
-    } else {
-      // Handle update without image
-      imageMutation.mutate(user);
+    }
+    if (updatedProfile.coverPic) {
+      const coverUrl = await uploadImage(updatedProfile.coverPic);
+      imageMutation.mutate({ ...user, coverPic: coverUrl });
+    }
+    if (!updatedProfile.profilePic && !updatedProfile.coverPic) {
+      if (profile.profilePic !== user.profilePic || profile.coverPic !== user.coverPic) {
+        imageMutation.mutate({ ...user });
+      }
     }
     setOpenUpdate(false);
   };
@@ -196,17 +240,47 @@ const Update = ({ setOpenUpdate, user }) => {
 
         {value === 1 && (
           <>
-            <h2>Update User</h2>
-            <div>
-              <label htmlFor="fileInput">Select Image:</label>
-              <input
-                type="file"
-                id="fileInput"
-                onChange={handleFileSelect}
-              />
+            <div className="form-image">
+              <div className="update-profile">
+                <span className="avatar">Ảnh đại diện</span>
+                <input
+                  style={{ display: "none" }}
+                  type="file"
+                  id="profileInput"
+                  onChange={handleProfileSelect}
+                  accept="image/*"
+                />
+                <label className="edit-avatar" htmlFor="profileInput">Chỉnh sửa</label>
+              </div>
+              <div className="image-profile">
+                {selectedProfile.profilePic && (
+                  <img className="img-profile" src={selectedProfile.profilePic} alt="Selected" />
+                )}
+                {!selectedProfile.profilePic && profile.profilePic && (
+                  <img className="img-profile" src={"/upload/" + profile.profilePic} alt="Profile Pic" />
+                )}
+              </div>
+              <div className="update-profile">
+                <span className="avatar">Ảnh bìa</span>
+                <input
+                  style={{ display: "none" }}
+                  type="file"
+                  id="coverInput"
+                  onChange={handleCoverSelect}
+                  accept="image/*"
+                />
+                <label className="edit-avatar" htmlFor="coverInput">Chỉnh sửa</label>
+              </div>
+              <div className="image-profile">
+                {selectedProfile.coverPic && (
+                  <img className="img-cover" src={selectedProfile.coverPic} alt="Selected" />
+                )}
+                {!selectedProfile.coverPic && profile.coverPic && (
+                  <img className="img-cover" src={"/upload/" + profile.coverPic} alt="Cover Pic" />
+                )}
+              </div>
             </div>
-            <button onClick={handleUpdate}>Update</button>
-            <button onClick={() => setOpenUpdate(false)}>Cancel</button>
+            <button className="btn-save" onClick={handleUpdate}>Save</button>
           </>
         )}
 
