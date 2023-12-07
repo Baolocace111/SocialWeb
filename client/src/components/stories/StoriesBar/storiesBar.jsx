@@ -2,7 +2,6 @@ import "./storiesBar.scss";
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { makeRequest } from "../../../axios";
-import axios from "axios";
 import moment from "moment";
 import FlipCube from "../../loadingComponent/flipCube/FlipCube";
 
@@ -17,9 +16,7 @@ const StoriesBar = () => {
     useEffect(() => {
         const fetchUser = async (userId) => {
             try {
-                const response = await axios.get(
-                    `http://localhost:8800/api/users/find/${userId}`
-                );
+                const response = await makeRequest.get(`users/find/${userId}`);
                 const user = response.data;
                 setUsers((prevUsers) => ({
                     ...prevUsers,
@@ -70,7 +67,6 @@ const StoriesBar = () => {
 
                     if (user) {
                         return (
-                            // <Link to={`/stories/${userId}`} key={userId}>
                             <div className="user" key={userId} onClick={() => {
                                 window.location.href = `/stories/${userId}`;
                             }}>

@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { makeRequest } from "../../../axios";
 import { Button } from "@mui/material";
 import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserPlus, faUserMinus, faHeartCircleCheck, faBan, faUserSlash } from "@fortawesome/free-solid-svg-icons";
 import "./userTab.scss";
 
 const UserTab = ({ user }) => {
@@ -72,29 +74,6 @@ const UserTab = ({ user }) => {
   return (
     <>
       <div className="userContainer">
-        <div className="buttonBox">
-          {status === 0 ? (
-            <Button onClick={SendRequest}>Kết bạn</Button>
-          ) : (
-            <></>
-          )}
-          {status === 1 ? (
-            <Button onClick={CancelRequest}>Hủy lời mời</Button>
-          ) : (
-            <></>
-          )}
-          {status === 2 ? (
-            <>
-              <Button onClick={AcceptRequest}>Đồng ý</Button>
-              <Button onClick={DenyRequest}>Từ chối</Button>
-            </>
-          ) : (
-            <></>
-          )}
-          {status === 3 ? <Button onClick={Unfriend}>Unfriend</Button> : <></>}
-          {status === -2 ? "Có lỗi xảy ra..." : <></>}
-          {status === -3 ? "Đang tải..." : <></>}
-        </div>
         <img
           onClick={handleClicktoProfile}
           src={"/upload/" + user.profilePic}
@@ -102,6 +81,48 @@ const UserTab = ({ user }) => {
         />
         <div onClick={handleClicktoProfile} className="username">
           {user.name}
+        </div>
+        <div className="buttonBox">
+          {status === 0 ? (
+            <Button onClick={SendRequest}>
+              <FontAwesomeIcon icon={faUserPlus} />
+              <span>Kết bạn</span>
+            </Button>
+          ) : (
+            <></>
+          )}
+          {status === 1 ? (
+            <Button onClick={CancelRequest}>
+              <FontAwesomeIcon icon={faUserMinus} />
+              <span>Hủy lời mời</span>
+            </Button>
+          ) : (
+            <></>
+          )}
+          {status === 2 ? (
+            <>
+              <Button onClick={AcceptRequest}>
+                <FontAwesomeIcon icon={faHeartCircleCheck} />
+                <span>Đồng ý</span>
+              </Button>
+              <Button className="deny-friend" onClick={DenyRequest}>
+                <FontAwesomeIcon icon={faBan} />
+                <span>Từ chối</span>
+              </Button>
+            </>
+          ) : (
+            <></>
+          )}
+          {status === 3 ?
+            <Button className="delete-friend" onClick={Unfriend}>
+              <FontAwesomeIcon icon={faUserSlash} />
+              <span>Xóa bạn</span>
+            </Button>
+            :
+            <></>
+          }
+          {status === -2 ? "Có lỗi xảy ra..." : <></>}
+          {status === -3 ? "Đang tải..." : <></>}
         </div>
       </div>
     </>

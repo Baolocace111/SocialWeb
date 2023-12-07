@@ -1,38 +1,25 @@
-.search-container {
-  width: 100%;
+@import "../../style.scss";
 
-  padding-bottom: 20px;
-  background: #3f3f3f;
-  border-radius: 10px;
-  overflow: hidden;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  display: inline-flex;
-  margin-left: 65px;
-  margin-right: 5px;
-  .search-text {
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    color: white;
-    font-size: 24px;
-    font-family: Inter;
-    font-weight: 400;
-    word-wrap: break-word;
-    display: inline-flex;
-    padding: 10px;
-  }
-  .cards {
-    width: 97%;
-    height: 100%;
-    padding-left: 10px;
-    padding-right: 10px;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 10px;
-    display: flex;
-    flex-wrap: wrap;
+.search-container {
+  @include themify($themes) {
+    background-color: themed("bg");
+    color: themed("textColor");
+    border-radius: 10px;
+    width: 90%;
+    margin: 40px auto;
+    padding-bottom: 20px;
+
+    .search-text {
+      font-size: 24px;
+      padding: 15px 30px;
+      font-weight: 700;
+    }
+
+    .cards {
+      padding: 0 30px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 30px;
+    }
   }
 }
