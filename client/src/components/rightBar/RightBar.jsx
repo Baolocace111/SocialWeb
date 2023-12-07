@@ -3,13 +3,36 @@ import { AuthContext } from "../../context/authContext";
 import axios from "axios";
 import "./rightBar.scss";
 import Chat from "../chatComponent/chat/Chat";
+import { makeRequest } from "../../axios";
+import NineCube from "../loadingComponent/nineCube/NineCube";
 
 const RightBar = () => {
   const [users, setUsers] = useState([]);
+  const [needReload, setNeedReload] = useState(true);
+  const [error, setError] = useState(false);
   const [followedUsers, setFollowedUsers] = useState([]);
   const [chattingUser, setChattingUser] = useState([]);
+  const [ws, setWS] = useState(null);
   const { currentUser } = useContext(AuthContext);
-
+  if (!ws) {
+    const socket = new WebSocket(`ws://localhost:3030/index`);
+    socket.onopen = () => {
+      console.log("Connected");
+    };
+    socket.onmessage = (event) => {
+      //console.log(event.data);
+      if (
+        event.data === "A user is offline" ||
+        event.data === "A user is online"
+      ) {
+        setNeedReload(true);
+      }
+    };
+    socket.onclose = () => {
+      console.log("Closed");
+    };
+    setWS(socket);
+  }
   useEffect(() => {
     axios
       .get("http://localhost:8800/api/users/getUsers")
@@ -25,20 +48,17 @@ const RightBar = () => {
         console.error("Error fetching users:", error);
       });
   }, [currentUser.id]);
-
-  useEffect(() => {
-    // Gọi API để lấy danh sách người dùng đã theo dõi
-    const userId = currentUser.id;
-
-    axios
-      .get(`http://localhost:8800/api/users/followed-users/${userId}`)
-      .then((response) => {
-        setFollowedUsers(response.data);
+  if (needReload && !error) {
+    makeRequest
+      .get("/friendship/online")
+      .then((res) => {
+        setFollowedUsers(res.data);
+        setNeedReload(false);
       })
       .catch((error) => {
-        console.log(error);
+        setError(true);
       });
-  }, [currentUser.id]);
+  }
   const handleAddChatBox = (user) => {
     setChattingUser(removeDuplicateUnits([...chattingUser, ...[user]]));
   };
@@ -72,19 +92,25 @@ const RightBar = () => {
         </div>
         <div className="item">
           <span>Online Friends</span>
-          {followedUsers.map((user) => (
-            <div
-              className="user"
-              key={user.id}
-              onClick={() => handleAddChatBox(user)}
-            >
-              <div className="userInfo">
-                <img src={`/upload/${user.profilePic}`} alt={user.name} />
-                <div className="online" />
-                <span>{user.name}</span>
+          {needReload ? (
+            <NineCube></NineCube>
+          ) : error ? (
+            "Something went wrong!!!"
+          ) : (
+            followedUsers.map((user) => (
+              <div
+                className="user"
+                key={user.id}
+                onClick={() => handleAddChatBox(user)}
+              >
+                <div className="userInfo">
+                  <img src={`/upload/${user.profilePic}`} alt={user.name} />
+                  <div className="online" />
+                  <span>{user.name}</span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
       {chattingUser.length === 0 ? (
@@ -93,7 +119,10 @@ const RightBar = () => {
         <div className="chat-boxes">
           {chattingUser.map((user) => (
             <div className="chat-box" key={user.id}>
-              <Chat friend={user} onRemoveChatBox={() => handleRemoveChatBoxById(user.id)}></Chat>
+              <Chat
+                friend={user}
+                onRemoveChatBox={() => handleRemoveChatBoxById(user.id)}
+              ></Chat>
             </div>
           ))}
         </div>

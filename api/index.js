@@ -67,12 +67,13 @@ app.listen(8800, () => {
 import http from "http";
 import { WebSocketServer } from "ws";
 import { AuthService } from "./services/AuthService.js";
+import { getAllFriendsService } from "./services/FriendshipService.js";
 
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
 // Đối tượng để lưu trữ các kết nối và thông tin người dùng
-const clients = new Map();
+export const clients = new Map();
 
 wss.on("connection", async (ws, req) => {
   const header = await req.rawHeaders;
@@ -93,10 +94,10 @@ wss.on("connection", async (ws, req) => {
       ws.close();
       return;
     }
+    let key = "";
     if (type === "chat") {
       const friendId = await req.url.split("/")[2];
-      clients.set(userId + " chatwith " + friendId, ws);
-
+      key = userId + " chatwith " + friendId;
       // Gửi dữ liệu cho client khi kết nối thành công
       ws.send("Welcome to the WebSocket server");
 
@@ -104,13 +105,26 @@ wss.on("connection", async (ws, req) => {
       ws.on("message", (message) => {});
 
       // Xử lý sự kiện khi client đóng kết nối
-      ws.on("close", () => {});
+      ws.on("close", () => {
+        // console.log("user is offline");
+        clients.delete(key);
+      });
+
+      clients.set(key, ws);
     } else if (type === "index") {
-      clients.set("index" + userId, ws);
+      sendAMessageWhenUserOnlineService(userId, "A user is online");
+      key = "index" + userId;
+      ws.on("close", () => {
+        // console.log("user is offline");
+
+        clients.delete(key);
+        sendAMessageWhenUserOnlineService(userId, "A user is offline");
+      });
+      clients.set(key, ws);
       //console.log("user '" + userId + "' is Online");
     }
   } catch (error) {
-    console.error("close user");
+    console.error(error);
     ws.close();
   }
 });
@@ -126,4 +140,18 @@ export const sendMessageToUser = (userId, message) => {
     userSocket.send(message);
   } else {
   }
+};
+const sendAMessageWhenUserOnlineService = (user_id, message) => {
+  getAllFriendsService(user_id, (error, data) => {
+    if (error) console.log(error);
+
+    for (const item of data) {
+      if (clients.has("index" + item.id)) {
+        //console.log(clients);
+        sendMessageToUser("index" + item.id, message);
+      }
+    }
+    //console.log(clients);
+    //return res.status(200).json(resultArray);
+  });
 };
