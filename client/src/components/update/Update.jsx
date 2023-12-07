@@ -31,22 +31,83 @@ const Update = ({ setOpenUpdate, user }) => {
     repassword: "",
     oldpassword: "",
   });
+
+  const [selectedProfile, setSelectedProfile] = useState({
+    profilePic: null,
+    coverPic: null,
+  });
+  const [updatedProfile, setUpdatedProfile] = useState({
+    profilePic: null,
+    coverPic: null,
+  });
+  const [profile] = useState({
+    profilePic: user.profilePic || null,
+    coverPic: user.coverPic || null,
+  });
+
   const classes = useStyles();
   const [value, setValue] = useState(0);
   const handleChangeValue = (event, newValue) => {
     setValue(newValue);
   };
+  const queryClient = useQueryClient();
 
-  const upload = async (file) => {
-    console.log(file);
+  const handleProfileSelect = (event) => {
+    const file = event.target.files[0];
+    const allowedExtensions = ["jpg", "jpeg", "png", "gif"];
+    const fileExtension = file.name.split(".").pop().toLowerCase();
+    const isValidExtension = allowedExtensions.includes(fileExtension);
+
+    if (isValidExtension) {
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedProfile({ ...selectedProfile, profilePic: imageUrl });
+      setUpdatedProfile({ ...updatedProfile, profilePic: file });
+    } else {
+      alert("Vui lòng chỉ chọn tệp ảnh (jpg, jpeg, png, gif).");
+      event.target.value = null;
+    }
+  };
+  const handleCoverSelect = (event) => {
+    const file = event.target.files[0];
+    const allowedExtensions = ["jpg", "jpeg", "png", "gif"];
+    const fileExtension = file.name.split(".").pop().toLowerCase();
+    const isValidExtension = allowedExtensions.includes(fileExtension);
+
+    if (isValidExtension) {
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedProfile({ ...selectedProfile, coverPic: imageUrl });
+      setUpdatedProfile({ ...updatedProfile, coverPic: file });
+    } else {
+      alert("Vui lòng chỉ chọn tệp ảnh (jpg, jpeg, png, gif).");
+      event.target.value = null;
+    }
+  };
+  const uploadImage = async (file) => {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const res = await makeRequest.post("/upload", formData);
-      return res.data;
-    } catch (err) {
-      console.log(err);
+
+      const response = await makeRequest.post("/upload", formData);
+      return response.data;
+    } catch (error) {
+      console.error("Error uploading image:", error);
     }
+  };
+  const handleUpdate = async () => {
+    if (updatedProfile.profilePic) {
+      const profileUrl = await uploadImage(updatedProfile.profilePic);
+      imageMutation.mutate({ ...user, profilePic: profileUrl });
+    }
+    if (updatedProfile.coverPic) {
+      const coverUrl = await uploadImage(updatedProfile.coverPic);
+      imageMutation.mutate({ ...user, coverPic: coverUrl });
+    }
+    if (!updatedProfile.profilePic && !updatedProfile.coverPic) {
+      if (profile.profilePic !== user.profilePic || profile.coverPic !== user.coverPic) {
+        imageMutation.mutate({ ...user });
+      }
+    }
+    setOpenUpdate(false);
   };
 
   const handleChange = (value, name) => {
@@ -59,7 +120,17 @@ const Update = ({ setOpenUpdate, user }) => {
     setChangePassword((prevPassword) => ({ ...prevPassword, [name]: value }));
   };
 
-  const queryClient = useQueryClient();
+  const imageMutation = useMutation(
+    (updatedUser) => {
+      return makeRequest.put("/users", updatedUser);
+    },
+    {
+      onSuccess: () => {
+        // Invalidate and refetch
+        queryClient.invalidateQueries(["user"]);
+      },
+    }
+  );
 
   const mutation = useMutation(
     (user) => {
@@ -79,9 +150,7 @@ const Update = ({ setOpenUpdate, user }) => {
     {
       onSuccess: () => {
         try {
-          // Gửi yêu cầu API logout
           makeRequest.post("/auth/logout");
-          // Chuyển hướng về trang đăng nhập
           window.location.href = "/login";
         } catch (err) {
           console.log(err);
@@ -100,12 +169,6 @@ const Update = ({ setOpenUpdate, user }) => {
   };
   const handleClickCP = async (e) => {
     ChangePasswordmutation.mutate({ ...changePassword });
-    // try {
-    //   makeRequest.post("/users/changepassword", changePassword);
-    // } catch (error) {
-    //   console.log(error);
-    //   setCPError(error);
-    // }
   };
 
   return (
@@ -129,7 +192,7 @@ const Update = ({ setOpenUpdate, user }) => {
 
         {value === 0 && (
           <>
-            <span className="title-update">Update Your Profile</span>
+            <span className="title-update">Update Your Infor</span>
             <FormThemeProvider>
               <Form
                 className="form-update"
@@ -174,6 +237,53 @@ const Update = ({ setOpenUpdate, user }) => {
             </FormThemeProvider>
           </>
         )}
+
+        {value === 1 && (
+          <>
+            <div className="form-image">
+              <div className="update-profile">
+                <span className="avatar">Ảnh đại diện</span>
+                <input
+                  style={{ display: "none" }}
+                  type="file"
+                  id="profileInput"
+                  onChange={handleProfileSelect}
+                  accept="image/*"
+                />
+                <label className="edit-avatar" htmlFor="profileInput">Chỉnh sửa</label>
+              </div>
+              <div className="image-profile">
+                {selectedProfile.profilePic && (
+                  <img className="img-profile" src={selectedProfile.profilePic} alt="Selected" />
+                )}
+                {!selectedProfile.profilePic && profile.profilePic && (
+                  <img className="img-profile" src={"/upload/" + profile.profilePic} alt="Profile Pic" />
+                )}
+              </div>
+              <div className="update-profile">
+                <span className="avatar">Ảnh bìa</span>
+                <input
+                  style={{ display: "none" }}
+                  type="file"
+                  id="coverInput"
+                  onChange={handleCoverSelect}
+                  accept="image/*"
+                />
+                <label className="edit-avatar" htmlFor="coverInput">Chỉnh sửa</label>
+              </div>
+              <div className="image-profile">
+                {selectedProfile.coverPic && (
+                  <img className="img-cover" src={selectedProfile.coverPic} alt="Selected" />
+                )}
+                {!selectedProfile.coverPic && profile.coverPic && (
+                  <img className="img-cover" src={"/upload/" + profile.coverPic} alt="Cover Pic" />
+                )}
+              </div>
+            </div>
+            <button className="btn-save" onClick={handleUpdate}>Save</button>
+          </>
+        )}
+
         {value === 2 && (
           <>
             <span className="title-update">Change Your Password</span>
@@ -188,23 +298,23 @@ const Update = ({ setOpenUpdate, user }) => {
                   label="New password"
                   id="password"
                   onChange={(value) => handleChangeCP(value, "password")}
-                ></Input>
+                />
                 <Input
                   name="repassword"
                   type="password"
                   label="Re-enter password"
                   id="repassword"
                   onChange={(value) => handleChangeCP(value, "repassword")}
-                ></Input>
+                />
                 <Input
                   name="oldpassword"
                   type="password"
                   label="Current password"
                   id="oldpassword"
                   onChange={(value) => handleChangeCP(value, "oldpassword")}
-                ></Input>
-                {CPerror && <span style={{ color: "red" }}>{CPerror}</span>}
+                />
               </Form>
+              {CPerror && <span className="error">{CPerror}</span>}
               <button className="btn-save" onClick={handleClickCP}>
                 Save
               </button>

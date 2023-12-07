@@ -122,7 +122,9 @@ const Profile = () => {
 
           <div className="uInfo">
             <div className="center">
-              <span className="uName">{data.name}</span>
+              <div className="uNameContainer">
+                <span className="uName">{data.name}</span>
+              </div>
               {countLoading ? (
                 <FlipCube />
               ) : (

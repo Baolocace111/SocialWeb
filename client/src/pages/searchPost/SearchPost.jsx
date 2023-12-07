@@ -1,10 +1,8 @@
 import { makeRequest } from "../../axios";
-import Post from "../../components/post/Post";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import SearchBar from "../../components/searchComponents/searchBar/SearchBar";
 import "./searchPost.scss";
-import NineCube from "../../components/loadingComponent/nineCube/NineCube";
 import ShowPosts from "../../components/posts/ShowPosts";
 const SearchPost = ({ isHashtag }) => {
   const { searchText } = useParams();

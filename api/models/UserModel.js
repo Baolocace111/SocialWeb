@@ -56,7 +56,7 @@ export const getFollowedUsers = (userId, callback) => {
 
 export const updateUser = (userInfo, callback) => {
   const q =
-    "UPDATE users SET `email`=?, `name`=?, `city`=?, `website`=? WHERE id=? ";
+    "UPDATE users SET `email`=?, `name`=?, `city`=?, `website`=?, `profilePic`=?, `coverPic`=? WHERE id=? ";
 
   db.query(
     q,
@@ -65,6 +65,8 @@ export const updateUser = (userInfo, callback) => {
       userInfo.name,
       userInfo.city,
       userInfo.website,
+      userInfo.profilePic,
+      userInfo.coverPic,
       userInfo.id,
     ],
     (err, data) => {
