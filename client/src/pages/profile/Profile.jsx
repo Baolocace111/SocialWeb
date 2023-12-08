@@ -24,8 +24,9 @@ import Tab from "@material-ui/core/Tab";
 import Update from "../../components/update/Update";
 import Posts from "../../components/posts/Posts";
 import ProfileInfo from "../../components/profileComponents/profileInfo/ProfileInfo";
-import Chat from "../../components/chatComponent/chat/Chat";
-import Share from "../../components/share/Share"
+
+import Share from "../../components/share/Share";
+import { ChatContext } from "../../components/navbar/ChatContext";
 
 const useStyles = makeStyles({
   root: {
@@ -36,7 +37,7 @@ const useStyles = makeStyles({
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
   const { currentUser } = useContext(AuthContext);
-  const [chattingUser, setChattingUser] = useState([]);
+  const { chattingUser, setChattingUser } = useContext(ChatContext);
   const [userId] = useState(Number(useParams().userId));
 
   const { isLoading, data, error } = useQuery(["user"], () =>
@@ -86,15 +87,6 @@ const Profile = () => {
 
   const handleAddChatBox = (user) => {
     setChattingUser(removeDuplicateUnits([...chattingUser, ...[user]]));
-  };
-  const handleRemoveChatBoxById = (userIdToRemove) => {
-    // Lọc ra các user có id khác userIdToRemove
-    const updatedChattingUsers = chattingUser.filter(
-      (user) => user.id !== userIdToRemove
-    );
-
-    // Cập nhật state với mảng đã được lọc
-    setChattingUser(updatedChattingUsers);
   };
 
   const classes = useStyles();
@@ -220,7 +212,11 @@ const Profile = () => {
             <div className="profileContainer">
               <div className="profile-post">
                 <div className="column1">
-                  <ProfileInfo user_id={userId} countData={countData} onChangeValue={handleChange} />
+                  <ProfileInfo
+                    user_id={userId}
+                    countData={countData}
+                    onChangeValue={handleChange}
+                  />
                 </div>
                 <div className="column2">
                   <div className="sharePostsContainer">
@@ -254,21 +250,6 @@ const Profile = () => {
         </>
       )}
       {openUpdate && <Update setOpenUpdate={setOpenUpdate} user={data} />}
-
-      {chattingUser.length === 0 ? (
-        <div className="chat-boxes"></div>
-      ) : (
-        <div className="chat-boxes">
-          {chattingUser.map((user) => (
-            <div className="chat-box" key={user.id}>
-              <Chat
-                friend={user}
-                onRemoveChatBox={() => handleRemoveChatBoxById(user.id)}
-              ></Chat>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 };

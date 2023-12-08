@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../../context/authContext";
-import axios from "axios";
+
 import "./rightBar.scss";
-import Chat from "../chatComponent/chat/Chat";
+
 import { makeRequest } from "../../axios";
 import NineCube from "../loadingComponent/nineCube/NineCube";
-
+import { ChatContext } from "../navbar/ChatContext";
 const RightBar = () => {
   const [users, setUsers] = useState([]);
   const [needReload, setNeedReload] = useState(true);
   const [error, setError] = useState(false);
   const [followedUsers, setFollowedUsers] = useState([]);
-  const [chattingUser, setChattingUser] = useState([]);
+  const { chattingUser, setChattingUser } = useContext(ChatContext);
   const [ws, setWS] = useState(null);
   const { currentUser } = useContext(AuthContext);
   if (!ws) {
@@ -34,8 +34,8 @@ const RightBar = () => {
     setWS(socket);
   }
   useEffect(() => {
-    axios
-      .get("http://localhost:8800/api/users/getUsers")
+    makeRequest
+      .get("/users/getUsers")
       .then((response) => {
         // Lọc danh sách người dùng để loại bỏ người dùng hiện tại
         const filteredUsers = response.data.filter(
@@ -60,16 +60,8 @@ const RightBar = () => {
       });
   }
   const handleAddChatBox = (user) => {
+    //console.log(user);
     setChattingUser(removeDuplicateUnits([...chattingUser, ...[user]]));
-  };
-  const handleRemoveChatBoxById = (userIdToRemove) => {
-    // Lọc ra các user có id khác userIdToRemove
-    const updatedChattingUsers = chattingUser.filter(
-      (user) => user.id !== userIdToRemove
-    );
-
-    // Cập nhật state với mảng đã được lọc
-    setChattingUser(updatedChattingUsers);
   };
 
   return (
@@ -113,20 +105,6 @@ const RightBar = () => {
           )}
         </div>
       </div>
-      {chattingUser.length === 0 ? (
-        <div className="chat-boxes"></div>
-      ) : (
-        <div className="chat-boxes">
-          {chattingUser.map((user) => (
-            <div className="chat-box" key={user.id}>
-              <Chat
-                friend={user}
-                onRemoveChatBox={() => handleRemoveChatBoxById(user.id)}
-              ></Chat>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 };

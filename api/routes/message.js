@@ -1,9 +1,14 @@
-import express  from "express";
-import { seeMessageController, sendMessageController } from "../controllers/message.js";
+import express from "express";
+import {
+  getLastestMessageController,
+  seeMessageController,
+  sendMessageController,
+} from "../controllers/message.js";
 
-const router=express.Router();
+const router = express.Router();
 
-router.post("/send",sendMessageController);
-router.post("/",seeMessageController);
+router.post("/send", sendMessageController);
+router.post("/", seeMessageController);
+router.get("/lastest", getLastestMessageController);
 
 export default router;
