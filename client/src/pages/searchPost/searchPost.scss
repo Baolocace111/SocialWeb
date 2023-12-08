@@ -1,14 +1,11 @@
-.search-post {
-    width: 90%;
+@import "../../style.scss";
 
-    padding-bottom: 20px;
-    background: #3f3f3f;
-    border-radius: 10px;
-    overflow: hidden;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    display: inline-flex;
-    margin-left: 65px;
-    margin-right: 5px;
+.search-post {
+    @include themify($themes) {
+        background-color: themed("bgSoft");
+        color: themed("textColor");
+        border-radius: 10px;
+        width: 65%;
+        margin: 40px auto;
+    }
 }

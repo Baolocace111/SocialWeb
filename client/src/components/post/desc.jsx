@@ -11,9 +11,9 @@ const Description = ({ text }) => {
       if (word.startsWith("#")) {
         const hashtag = word.substring(1); // Remove the '#' symbol
         return (
-          <a key={index} href={`/hashtag/${hashtag}`}>
+          <span key={index} onClick={() => window.location.href = `/search/${hashtag}/hashtag`}>
             {word}
-          </a>
+          </span>
         );
       } else {
         return word;
