@@ -1,4 +1,8 @@
-import { createMessage, getMessages } from "../models/MessageModel.js";
+import {
+  createMessage,
+  getLatestMessagesWithUsers,
+  getMessages,
+} from "../models/MessageModel.js";
 
 export const sendMessageService = (content, userId1, userId2, callback) => {
   createMessage(content, userId1, userId2, (err, data) => {
@@ -8,12 +12,11 @@ export const sendMessageService = (content, userId1, userId2, callback) => {
   });
 };
 export const seeMessageService = (getpage, callback) => {
-  const page= getpage;
+  const page = getpage;
   getMessages(page.user_id, page.friend_id, page.offset, 10, (e, data) => {
-    
     //console.log(page.user_id+" "+ page.friend_id+" "+ page.offset);
     if (e) return callback(e, null);
-    
+
     return callback(
       null,
       data.map((message) => {
@@ -28,5 +31,11 @@ export const seeMessageService = (getpage, callback) => {
         };
       })
     );
+  });
+};
+export const getLastestMessageofMyFriendService = (userId, callback) => {
+  getLatestMessagesWithUsers(userId, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data);
   });
 };

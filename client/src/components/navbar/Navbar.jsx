@@ -8,9 +8,10 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { Link, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { AuthContext } from "../../context/authContext";
+import NineCube from "../loadingComponent/nineCube/NineCube";
 import {
   Popover,
   List,
@@ -19,6 +20,7 @@ import {
   ListItemIcon,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ListBoxChat from "./ListBoxChat";
 import {
   faArrowRightFromBracket,
   faCircleExclamation,
@@ -28,6 +30,7 @@ import {
 import ListFriendRequest from "./ListFriendRequest";
 import { makeRequest } from "../../axios";
 import ListNotification from "./ListNotification";
+import ListMessages from "./ListMessages";
 
 const Navbar = () => {
   const { toggle, darkMode } = useContext(DarkModeContext);
@@ -42,10 +45,9 @@ const Navbar = () => {
   const update_request_number = async () => {
     try {
       const response = await makeRequest.get("/friendship/count");
-      //console.log(response);
+
       setRequestNumber(response.data); // Hoặc request_number = response.data nếu đây là biến ngoài hàm
     } catch (error) {
-      //console.error("Error fetching request count:", error);
       setRequestNumber(-1); // Xử lý lỗi và gán giá trị mặc định
     }
   };
@@ -113,6 +115,7 @@ const Navbar = () => {
         break;
     }
     setAnchorEl(event.currentTarget.parentElement.parentElement);
+
     setContent(contentType);
   };
 
@@ -139,9 +142,31 @@ const Navbar = () => {
   const PopoverStyle = {
     top: "10px",
   };
+  ///Show messages in navbar
+  const [mess, setMess] = useState(null);
+  let [messLoading, setMessLoading] = useState(true);
+  const [messError, setMessError] = useState(null);
+  useEffect(() => {
+    if (messLoading) {
+      //console.log("call");
+      makeRequest
+        .get("/messages/lastest")
+        .then((res) => {
+          setMess(res.data);
+        })
+        .catch((err) => {
+          setMessError(err);
+        })
+        .finally(() => {
+          //console.log("call");
+          setMessLoading(false);
+        });
+    }
+  });
 
   return (
     <div className="navbar">
+      <ListBoxChat></ListBoxChat>
       <div className="left">
         <Link to="/" style={{ textDecoration: "none" }}>
           <span>TinySocial</span>
@@ -177,6 +202,15 @@ const Navbar = () => {
           />
         </div>
         <div className="icon-container">
+          {messError ? (
+            <div className="number">X</div>
+          ) : messLoading ? (
+            <div className="number">...</div>
+          ) : (
+            <div className={mess.number !== 0 ? "number" : "non-number"}>
+              {mess.number > 9 ? "9+" : mess.number}
+            </div>
+          )}
           <EmailOutlinedIcon
             className="icon"
             onClick={handlePopover}
@@ -260,7 +294,12 @@ const Navbar = () => {
             </List>
           )}
           {content === "friend" && <ListFriendRequest></ListFriendRequest>}
+
           {content === "noti" && <ListNotification></ListNotification>}
+
+          {content === "chat" && mess && (
+            <ListMessages ListMessages={mess.list}></ListMessages>
+          )}
         </Popover>
       </div>
     </div>

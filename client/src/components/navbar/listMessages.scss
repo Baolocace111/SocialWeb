@@ -1,0 +1,38 @@
+.userContainer {
+  display: flex;
+  width: 300px;
+  align-items: center;
+  gap: 20px;
+  padding: 15px 10px;
+  border: solid;
+  border-width: 1px;
+  border-color: #ebedf0;
+  border-radius: 10px;
+  cursor: pointer;
+  img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+  }
+
+  .username {
+    .name:hover {
+      text-decoration: underline;
+    }
+    .name {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .mess {
+      font-size: 14px;
+      font-weight: 300;
+      overflow: hidden;
+      text-decoration: none;
+    }
+    .time {
+      font-size: 18px;
+      font-weight: 100;
+      text-decoration: none;
+    }
+  }
+}
