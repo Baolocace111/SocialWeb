@@ -17,6 +17,7 @@ import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
 import Search from "./pages/search/Search";
 import SearchBar from "./components/searchComponents/searchBar/SearchBar";
+import FriendsBar from "./components/friends/FriendsBar";
 
 import "./style.scss";
 import "./pages/story/story.scss";
@@ -39,6 +40,8 @@ import AdminHome from "./pages/admin/adminHome/AdminHome";
 import { makeRequest } from "./axios";
 import NineCube from "./components/loadingComponent/nineCube/NineCube";
 import AdminLogin from "./pages/admin/adminLogin/AdminLogin";
+import FriendInvite from "./pages/friend/friendinvite/FriendInvite";
+
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -96,6 +99,22 @@ function App() {
       </div>
     );
   };
+
+  const FriendsLayout = () => {
+    return (
+      <div className={`theme-${darkMode ? "dark" : "light"}`}>
+        <Navbar />
+        <div style={{ display: "flex" }}>
+          <div style={{ flex: "25%" }}>
+            <FriendsBar />
+          </div>
+          <div style={{ flex: "75%", backgroundColor: "#f6f3f3" }}>
+            <Outlet />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const SearchLayout = () => {
     const location = useLocation();
@@ -186,6 +205,20 @@ function App() {
     {
       path: "/stories/:userId",
       element: <StoryLayout />,
+    },
+    {
+      path: "/friends",
+      element: <FriendsLayout />,
+      children: [
+        {
+          path: "/friends/requests",
+          element: <FriendInvite />,
+        },
+        {
+          path: "/friends/suggestions",
+          element: <Error />,
+        },
+      ]
     },
     {
       path: "/search/:searchText",
