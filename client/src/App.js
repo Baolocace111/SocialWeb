@@ -7,6 +7,7 @@ import {
   Outlet,
   Navigate,
   Link,
+  useLocation
 } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar";
 import LeftBar from "./components/leftBar/LeftBar";
@@ -97,6 +98,14 @@ function App() {
   };
 
   const SearchLayout = () => {
+    const location = useLocation();
+    const pathSegments = location.pathname.split('/');
+    const searchText = pathSegments[2];
+    const isSearchUrl = pathSegments.length === 3 && pathSegments[1] === "search";
+    if (isSearchUrl) {
+      return <Navigate to={`/search/${searchText}/people`} />;
+    }
+
     return (
       <div className={`theme-${darkMode ? "dark" : "light"}`}>
         <Navbar />
@@ -183,7 +192,11 @@ function App() {
       element: <SearchLayout />,
       children: [
         {
-          path: "/search/:searchText/",
+          path: "/search/:searchText",
+          element: <Error />,
+        },
+        {
+          path: "/search/:searchText/people",
           element: <Search />,
         },
         {

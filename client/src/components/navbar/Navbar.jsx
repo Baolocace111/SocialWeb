@@ -129,7 +129,7 @@ const Navbar = () => {
 
   const handleSearch = () => {
     if (searchText.trim() !== "") {
-      window.location.href = `/search/${searchText}`;
+      window.location.href = `/search/${searchText}/people`;
     }
   };
 
