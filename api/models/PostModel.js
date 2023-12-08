@@ -113,7 +113,7 @@ export const deletePost = (postId, userId, callback) => {
 export const searchPostsbyContent = (content, userId, callback) => {
   const tuTimKiem = content;
   const sqlQuery = `
-  SELECT DISTINCT p.*, u.id, u.name, u.profilePic
+  SELECT DISTINCT p.*, u.id as userId, u.name, u.profilePic
     FROM posts p
     LEFT JOIN friendships f ON (p.userId=f.friend_id AND f.user_id = ? AND f.status = 1)
     LEFT JOIN users u ON (p.userId = u.id)
@@ -129,7 +129,7 @@ export const searchPostsbyHashtag = (hashtag, userId, callback) => {
   const hashtagh = hashtag;
   //console.log(hashtagh);
   const sqlQuery = `
-  SELECT DISTINCT p.*, u.id, u.name, u.profilePic
+  SELECT DISTINCT p.*, u.id AS userId, u.name, u.profilePic
   FROM posts p
   LEFT JOIN friendships f ON (p.userId=f.friend_id AND f.user_id = ? AND f.status = 1)
   LEFT JOIN users u ON (p.userId = u.id)
