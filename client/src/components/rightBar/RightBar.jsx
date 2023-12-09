@@ -1,19 +1,16 @@
-import React, { useState, useEffect, useContext } from "react";
-import { AuthContext } from "../../context/authContext";
-
 import "./rightBar.scss";
 
+import React, { useState, useContext } from "react";
 import { makeRequest } from "../../axios";
 import NineCube from "../loadingComponent/nineCube/NineCube";
 import { ChatContext } from "../navbar/ChatContext";
 const RightBar = () => {
-  const [users, setUsers] = useState([]);
   const [needReload, setNeedReload] = useState(true);
   const [error, setError] = useState(false);
   const [followedUsers, setFollowedUsers] = useState([]);
   const { chattingUser, setChattingUser } = useContext(ChatContext);
   const [ws, setWS] = useState(null);
-  const { currentUser } = useContext(AuthContext);
+
   if (!ws) {
     const socket = new WebSocket(`ws://localhost:3030/index`);
     socket.onopen = () => {
@@ -33,21 +30,6 @@ const RightBar = () => {
     };
     setWS(socket);
   }
-  useEffect(() => {
-    makeRequest
-      .get("/users/getUsers")
-      .then((response) => {
-        // Lọc danh sách người dùng để loại bỏ người dùng hiện tại
-        const filteredUsers = response.data.filter(
-          (user) => user.id !== currentUser.id
-        );
-
-        setUsers(filteredUsers); // Lưu danh sách người dùng đã lọc vào state
-      })
-      .catch((error) => {
-        console.error("Error fetching users:", error);
-      });
-  }, [currentUser.id]);
   if (needReload && !error) {
     makeRequest
       .get("/friendship/online")
@@ -67,21 +49,6 @@ const RightBar = () => {
   return (
     <div className="rightBar">
       <div className="container">
-        <div className="item">
-          <span>Suggestions For You</span>
-          {users.map((user) => (
-            <div className="user" key={user.id}>
-              <div className="userInfo">
-                <img src={`/upload/${user.profilePic}`} alt={user.name} />
-                <span>{user.name}</span>
-              </div>
-              <div className="buttons">
-                <button>Follow</button>
-                <button>Dismiss</button>
-              </div>
-            </div>
-          ))}
-        </div>
         <div className="item">
           <span>Online Friends</span>
           {needReload ? (

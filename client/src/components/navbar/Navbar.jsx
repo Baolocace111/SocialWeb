@@ -165,7 +165,7 @@ const Navbar = () => {
     if (messLoading) {
       updateMessage();
     }
-  }, []);
+  }, [messLoading]);
 
   return (
     <div className="navbar">
