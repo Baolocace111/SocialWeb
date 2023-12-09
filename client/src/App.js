@@ -32,6 +32,8 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
+import FriendInvite from "./pages/friend/friendinvite/FriendInvite";
+import FriendSuggest from "./pages/friend/friendSuggest/FriendSuggest";
 import SearchPost from "./pages/searchPost/SearchPost";
 import PostPage from "./pages/postPage/PostPage";
 import Error from "./pages/Error/Error";
@@ -40,8 +42,6 @@ import AdminHome from "./pages/admin/adminHome/AdminHome";
 import { makeRequest } from "./axios";
 import NineCube from "./components/loadingComponent/nineCube/NineCube";
 import AdminLogin from "./pages/admin/adminLogin/AdminLogin";
-import FriendInvite from "./pages/friend/friendinvite/FriendInvite";
-
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -216,7 +216,7 @@ function App() {
         },
         {
           path: "/friends/suggestions",
-          element: <Error />,
+          element: <FriendSuggest />,
         },
       ]
     },

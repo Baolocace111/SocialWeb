@@ -1,7 +1,7 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import "./listBoxChat.scss";
 import Chat from "../chatComponent/chat/Chat";
-import ChatContextProvider, { ChatContext } from "./ChatContext";
+import { ChatContext } from "./ChatContext";
 const ListBoxChat = () => {
   const { chattingUser, setChattingUser } = useContext(ChatContext);
 

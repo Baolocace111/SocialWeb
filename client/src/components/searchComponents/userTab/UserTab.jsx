@@ -73,7 +73,7 @@ const UserTab = ({ user }) => {
 
   return (
     <>
-      <div className="userContainer">
+      <div className="userTab">
         <img
           onClick={handleClicktoProfile}
           src={"/upload/" + user.profilePic}

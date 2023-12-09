@@ -1,10 +1,21 @@
 import "./friendsBar.scss";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserPlus, faLightbulb, faGear } from "@fortawesome/free-solid-svg-icons";
+import { Link } from 'react-router-dom';
 
 const FriendsBar = () => {
+
+    const location = useLocation();
     const [selectedItem, setSelectedItem] = useState('');
+
+    useEffect(() => {
+        const path = location.pathname;
+        const pathSegments = path.split('/');
+        const lastSegment = pathSegments[pathSegments.length - 1];
+        setSelectedItem(lastSegment);
+    }, [location.pathname]);
 
     const handleItemClick = (item) => {
         setSelectedItem(item);
@@ -22,18 +33,22 @@ const FriendsBar = () => {
                     </button>
                 </div>
                 <div className="menu">
-                    <div className={`item ${isItemSelected('invite') ? 'selected' : ''}`} onClick={() => handleItemClick('invite')}>
-                        <div className={`icon-button ${isItemSelected('invite') ? 'selected' : ''}`}>
-                            <FontAwesomeIcon icon={faUserPlus} size="lg" />
+                    <Link to={`/friends/requests`} style={{ textDecoration: "none", color: "inherit" }}>
+                        <div className={`item ${isItemSelected('requests') ? 'selected' : ''}`} onClick={() => handleItemClick('requests')}>
+                            <div className={`icon-button ${isItemSelected('requests') ? 'selected' : ''}`}>
+                                <FontAwesomeIcon icon={faUserPlus} size="lg" />
+                            </div>
+                            <span>Lời mời kết bạn</span>
                         </div>
-                        <span>Lời mời kết bạn</span>
-                    </div>
-                    <div className={`item ${isItemSelected('suggest') ? 'selected' : ''}`} onClick={() => handleItemClick('suggest')}>
-                        <div className={`icon-button ${isItemSelected('suggest') ? 'selected' : ''}`}>
-                            <FontAwesomeIcon icon={faLightbulb} size="lg" />
+                    </Link>
+                    <Link to={`/friends/suggestions`} style={{ textDecoration: "none", color: "inherit" }}>
+                        <div className={`item ${isItemSelected('suggestions') ? 'selected' : ''}`} onClick={() => handleItemClick('suggestions')}>
+                            <div className={`icon-button ${isItemSelected('suggestions') ? 'selected' : ''}`}>
+                                <FontAwesomeIcon icon={faLightbulb} size="lg" />
+                            </div>
+                            <span>Gợi ý</span>
                         </div>
-                        <span>Gợi ý</span>
-                    </div>
+                    </Link>
                 </div>
             </div>
         </div>
