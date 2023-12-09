@@ -53,8 +53,8 @@ const FriendList = ({ user_id }) => {
           </span>
         </div>
         <div className="find-friend">
-          <span>Lời mời kết bạn</span>
-          <span>Tìm bạn bè</span>
+          <span onClick={() => { window.location.href = `/friends/requests`; }}>Lời mời kết bạn</span>
+          <span onClick={() => { window.location.href = `/friends/suggestions`; }}>Tìm bạn bè</span>
         </div>
         <button className="more">
           <MoreHorizIcon />
@@ -85,7 +85,7 @@ const FriendList = ({ user_id }) => {
       </div>
       {loading && <FlipCube />}
       {!loading && friends.length < 2 && <button onClick={handleShowMore}>Show More</button>}
-    </div>
+    </div >
   );
 };
 

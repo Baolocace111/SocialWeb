@@ -17,6 +17,7 @@ import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
 import Search from "./pages/search/Search";
 import SearchBar from "./components/searchComponents/searchBar/SearchBar";
+import FriendsBar from "./components/friends/FriendsBar";
 
 import "./style.scss";
 import "./pages/story/story.scss";
@@ -31,6 +32,8 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
+import FriendInvite from "./pages/friend/friendinvite/FriendInvite";
+import FriendSuggest from "./pages/friend/friendSuggest/FriendSuggest";
 import SearchPost from "./pages/searchPost/SearchPost";
 import PostPage from "./pages/postPage/PostPage";
 import Error from "./pages/Error/Error";
@@ -96,6 +99,22 @@ function App() {
       </div>
     );
   };
+
+  const FriendsLayout = () => {
+    return (
+      <div className={`theme-${darkMode ? "dark" : "light"}`}>
+        <Navbar />
+        <div style={{ display: "flex" }}>
+          <div style={{ flex: "25%" }}>
+            <FriendsBar />
+          </div>
+          <div style={{ flex: "75%", backgroundColor: "#f6f3f3" }}>
+            <Outlet />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const SearchLayout = () => {
     const location = useLocation();
@@ -186,6 +205,20 @@ function App() {
     {
       path: "/stories/:userId",
       element: <StoryLayout />,
+    },
+    {
+      path: "/friends",
+      element: <FriendsLayout />,
+      children: [
+        {
+          path: "/friends/requests",
+          element: <FriendInvite />,
+        },
+        {
+          path: "/friends/suggestions",
+          element: <FriendSuggest />,
+        },
+      ]
     },
     {
       path: "/search/:searchText",
