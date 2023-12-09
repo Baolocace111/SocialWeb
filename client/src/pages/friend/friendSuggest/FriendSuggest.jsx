@@ -1,51 +1,51 @@
 import "./friendSuggest.scss";
 import NineCube from "../../../components/loadingComponent/nineCube/NineCube";
 import { makeRequest } from "../../../axios";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
+import FriendSuggestion from "../../../components/friends/FriendSuggestion/FriendSuggestion";
 
 const FriendSuggest = () => {
     const [suggests, setSuggests] = useState([]);
     const [offset, setOffset] = useState(0);
     const [loading, setLoading] = useState(true);
 
-    const fetchSuggests = useCallback(() => {
-        makeRequest.get("/users/getUsers?offset=" + offset)
-            .then((res) => {
-                setSuggests((suggests) => removeDuplicateUnits([...suggests, ...res.data]));
-                setOffset((prevOffset) => prevOffset + 8);
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    }, [offset]);
+    const fetchSuggests = (fetchOffset) => {
+        makeRequest.get("/users/getUsers?offset=" + fetchOffset).then((res) => {
+            setSuggests((suggests) => removeDuplicateUnits([...suggests, ...res.data]));
+            setOffset(fetchOffset);
+        }).catch((error) => {
+            console.log(error);
+        }).finally(() => {
+            setLoading(false);
+        });
+    };
 
     useEffect(() => {
-        fetchSuggests();
-    }, [fetchSuggests]);
+        fetchSuggests(offset);
+    }, [offset]);
 
     const handleShowMore = () => {
-        fetchSuggests();
+        const newOffset = offset + 8;
+        fetchSuggests(newOffset);
     };
 
     return (
         <div className="friend-suggest">
             <div className="row">
                 {suggests?.map((suggest) => (
-                    <div className="card-invite" key={suggest.id}>
-                        <img src={"/upload/" + suggest.profilePic} alt="User" />
-                        <span>{suggest.name}</span>
-                        <button className="accept">
-                            Thêm bạn bè
-                        </button>
-                        <button className="deny">Xóa, gỡ</button>
-                    </div>
+                    // <div className="card-invite" key={suggest.id}>
+                    //     <img src={"/upload/" + suggest.profilePic} alt="User" />
+                    //     <span>{suggest.name}</span>
+                    //     <button className="accept" onClick={() => SendRequest(suggest.id)}>
+                    //         Thêm bạn bè
+                    //     </button>
+                    //     <button className="deny">Xóa, gỡ</button>
+                    // </div>
+                    <FriendSuggestion suggest={suggest} key={suggest.id} />
                 ))}
             </div>
             {loading && <NineCube />}
-            {!loading && <button onClick={handleShowMore}>Show More</button>}
+            {!loading && suggests.length !== 0 && <button onClick={handleShowMore}>Show More</button>}
         </div>
     );
 }

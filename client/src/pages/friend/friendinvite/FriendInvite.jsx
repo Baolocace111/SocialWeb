@@ -20,9 +20,9 @@ const FriendInvite = () => {
         }
     }, [offset, requests]);
 
-    // const handleShowMore = () => {
-    //     fetchRequests();
-    // };
+    const handleShowMore = () => {
+        fetchRequests();
+    };
     const removeItemById = (idToRemove) => {
         setRequests((requests) =>
             requests.filter((request) => request.id !== idToRemove)
@@ -66,7 +66,7 @@ const FriendInvite = () => {
                 ))}
             </div>
             {loading && <NineCube />}
-            {/* {!loading && <button onClick={handleShowMore}>Show More</button>} */}
+            {!loading && requests.length !== 0 && <button onClick={handleShowMore}>Show More</button>}
         </div>
     );
 }

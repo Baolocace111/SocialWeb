@@ -27,51 +27,69 @@ export const findUserByName = (name, callback) => {
   });
 };
 export const getUsers = (user_id, offset, callback) => {
-  const q = `SELECT u.id, u.name ,u.username,u.profilePic
+  const q = `
+  SELECT u.id, u.name, u.username, u.profilePic
   FROM users u
   INNER JOIN friendships f ON u.id = f.friend_id
   WHERE f.user_id IN (
-      SELECT friend_id
-      FROM friendships
-      WHERE user_id = ?
-      AND status = 1
+    SELECT friend_id
+    FROM friendships
+    WHERE user_id = ?
+    AND status = 1
   )
   AND u.id NOT IN (
-      SELECT friend_id
-      FROM friendships
-      WHERE user_id = ?
+    SELECT friend_id
+    FROM friendships
+    WHERE user_id = ?
   )
-  AND u.id != ? LIMIT 8
-  OFFSET ?`;
+  AND u.id != ?
+  AND NOT EXISTS (
+    SELECT 1
+    FROM friendships
+    WHERE (user_id = ? AND friend_id = u.id) OR (user_id = u.id AND friend_id = ?)
+  )
+  LIMIT 8
+  OFFSET ?
+`;
 
-  db.query(q, [user_id, user_id, user_id, offset], (err, data) => {
+  db.query(q, [user_id, user_id, user_id, user_id, user_id, offset], (err, data) => {
     if (err) return callback(err);
-    if (data.length < 4 && offset === 0)
+
+    if (data.length < 4) {
       db.query(
-        `SELECT id, name,username,profilePic FROM users 
-WHERE id NOT IN (
-  SELECT DISTINCT friend_id 
-  FROM friendships 
-  WHERE user_id = ? AND status = 1
-) AND id NOT IN (?) LIMIT ? offset 0`,
+        `SELECT id, name, username, profilePic
+      FROM users 
+      WHERE id NOT IN (
+        SELECT DISTINCT friend_id 
+        FROM friendships 
+        WHERE user_id = ? AND status = 1
+      ) AND id NOT IN (?) 
+      AND NOT EXISTS (
+        SELECT *
+        FROM friendships
+        WHERE (user_id = ? AND friend_id = users.id) OR (user_id = users.id AND friend_id = ?)
+      )
+      LIMIT ? OFFSET 0`,
         [
           user_id,
           data.length === 0
             ? [user_id]
             : [
-                ...data.map((user) => {
-                  return user.id;
-                }),
-                ...[user_id],
-              ],
+              ...data.map((user) => user.id),
+              user_id,
+            ],
+          user_id,
+          user_id,
           4 - data.length,
         ],
         (err, res) => {
-          if (err) return callback(null, data);
+          if (err) return callback(err);
           return callback(null, [...data, ...res]);
         }
       );
-    else return callback(null, data);
+    } else {
+      return callback(null, data);
+    }
   });
 };
 
