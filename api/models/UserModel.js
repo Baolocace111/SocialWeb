@@ -26,17 +26,52 @@ export const findUserByName = (name, callback) => {
     return callback(null, users);
   });
 };
-export const getUsers = (callback) => {
-  const q = "SELECT * FROM users ORDER BY id DESC LIMIT 5";
+export const getUsers = (user_id, offset, callback) => {
+  const q = `SELECT u.id, u.name ,u.username,u.profilePic
+  FROM users u
+  INNER JOIN friendships f ON u.id = f.friend_id
+  WHERE f.user_id IN (
+      SELECT friend_id
+      FROM friendships
+      WHERE user_id = ?
+      AND status = 1
+  )
+  AND u.id NOT IN (
+      SELECT friend_id
+      FROM friendships
+      WHERE user_id = ?
+  )
+  AND u.id != ? LIMIT 8
+  OFFSET ?`;
 
-  db.query(q, (err, data) => {
+  db.query(q, [user_id, user_id, user_id, offset], (err, data) => {
     if (err) return callback(err);
-
-    let users = data.map((user) => {
-      const { password, ...info } = user;
-      return info;
-    });
-    return callback(null, users);
+    if (data.length < 4 && offset === 0)
+      db.query(
+        `SELECT id, name,username,profilePic FROM users 
+WHERE id NOT IN (
+  SELECT DISTINCT friend_id 
+  FROM friendships 
+  WHERE user_id = ? AND status = 1
+) AND id NOT IN (?) LIMIT ? offset 0`,
+        [
+          user_id,
+          data.length === 0
+            ? [user_id]
+            : [
+                ...data.map((user) => {
+                  return user.id;
+                }),
+                ...[user_id],
+              ],
+          4 - data.length,
+        ],
+        (err, res) => {
+          if (err) return callback(null, data);
+          return callback(null, [...data, ...res]);
+        }
+      );
+    else return callback(null, data);
   });
 };
 

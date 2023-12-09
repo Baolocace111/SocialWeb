@@ -107,24 +107,42 @@ wss.on("connection", async (ws, req) => {
       // Xử lý sự kiện khi client đóng kết nối
       ws.on("close", () => {
         // console.log("user is offline");
-        clients.delete(key);
+        const userConnections = clients.get(key);
+        const index = userConnections.indexOf(ws);
+        if (index !== -1) {
+          userConnections.splice(index, 1);
+          if (userConnections.length === 0) {
+            clients.delete(key); // Xóa userId nếu không còn kết nối nào
+          }
+        }
       });
-
-      clients.set(key, ws);
     } else if (type === "index") {
       sendAMessageWhenUserOnlineService(userId, "A user is online");
       key = "index" + userId;
       ws.on("close", () => {
         // console.log("user is offline");
-
-        clients.delete(key);
+        const userConnections = clients.get(key);
+        const index = userConnections.indexOf(ws);
+        if (index !== -1) {
+          userConnections.splice(index, 1);
+          if (userConnections.length === 0) {
+            clients.delete(key); // Xóa userId nếu không còn kết nối nào
+          }
+        }
         sendAMessageWhenUserOnlineService(userId, "A user is offline");
       });
-      clients.set(key, ws);
+
       //console.log("user '" + userId + "' is Online");
     }
+
+    if (!clients.has(key)) {
+      clients.set(key, []);
+    }
+
+    // Lưu kết nối vào danh sách các kết nối của userId
+    clients.get(key).push(ws);
   } catch (error) {
-    console.error(error);
+    //console.error(error);
     ws.close();
   }
 });
@@ -136,8 +154,10 @@ export const sendMessageToUser = (userId, message) => {
   const userSocket = clients.get(userId);
 
   if (userSocket) {
-    //console.log(userId + " : " + message);
-    userSocket.send(message);
+    console.log(userId + " : " + message);
+    userSocket.map((ws) => {
+      ws.send(message);
+    });
   } else {
   }
 };
@@ -147,7 +167,6 @@ const sendAMessageWhenUserOnlineService = (user_id, message) => {
 
     for (const item of data) {
       if (clients.has("index" + item.id)) {
-        //console.log(clients);
         sendMessageToUser("index" + item.id, message);
       }
     }

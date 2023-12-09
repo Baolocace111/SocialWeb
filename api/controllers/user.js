@@ -5,8 +5,17 @@ export const getUser = (req, res) => {
   userService.getUser(req, res);
 };
 
-export const getUsers = (req, res) => {
-  userService.getUsers(req, res);
+export const getUsers = async (req, res) => {
+  try {
+    const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+
+    userService.getUsers(userId, Number(req.query.offset), (err, data) => {
+      if (err) return res.status(500).json(err);
+      return res.status(200).json(data);
+    });
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
 };
 
 export const getFollowedUsers = (req, res) => {
