@@ -65,12 +65,13 @@ const Navbar = () => {
       console.log("Connected");
     };
     socket.onmessage = (event) => {
-      //console.log(event.data);
       if (event.data === "A Request has sent or cancelled") {
         update_request_number();
       } else if (event.data === "New notification") {
         //console.log("OK");
         update_notification_number();
+      } else if (event.data === "New message or seen") {
+        updateMessage();
       }
     };
     socket.onclose = () => {
@@ -145,23 +146,26 @@ const Navbar = () => {
   const [mess, setMess] = useState(null);
   let [messLoading, setMessLoading] = useState(true);
   const [messError, setMessError] = useState(null);
+  const updateMessage = () => {
+    //console.log("call");
+    makeRequest
+      .get("/messages/lastest")
+      .then((res) => {
+        setMess(res.data);
+      })
+      .catch((err) => {
+        setMessError(err);
+      })
+      .finally(() => {
+        //console.log("call");
+        setMessLoading(false);
+      });
+  };
   useEffect(() => {
     if (messLoading) {
-      //console.log("call");
-      makeRequest
-        .get("/messages/lastest")
-        .then((res) => {
-          setMess(res.data);
-        })
-        .catch((err) => {
-          setMessError(err);
-        })
-        .finally(() => {
-          //console.log("call");
-          setMessLoading(false);
-        });
+      updateMessage();
     }
-  });
+  }, []);
 
   return (
     <div className="navbar">

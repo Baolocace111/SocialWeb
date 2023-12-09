@@ -11,10 +11,10 @@ export const getUser = (req, res) => {
   });
 };
 
-export const getUsers = (req, res) => {
-  userModel.getUsers((err, data) => {
-    if (err) return res.status(500).json(err);
-    return res.json(data);
+export const getUsers = (userId, offset, callback) => {
+  userModel.getUsers(userId, offset, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data);
   });
 };
 
