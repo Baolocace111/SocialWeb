@@ -1,28 +1,42 @@
 import "./friendSuggest.scss";
 import NineCube from "../../../components/loadingComponent/nineCube/NineCube";
 import { makeRequest } from "../../../axios";
-import { AuthContext } from "../../../context/authContext";
-import React, { useContext } from "react";
-import { useQuery } from "@tanstack/react-query";
+import React, { useEffect, useState, useCallback } from "react";
 
 const FriendSuggest = () => {
-    const { currentUser } = useContext(AuthContext);
+    const [suggests, setSuggests] = useState([]);
+    const [offset, setOffset] = useState(0);
+    const [loading, setLoading] = useState(true);
 
-    const { isLoading, data } = useQuery(["suggestions"], () =>
-        makeRequest.get("/users/getUsers").then((res) => {
-            return res.data;
-        })
-    );
+    const fetchSuggests = useCallback(() => {
+        makeRequest.get("/users/getUsers?offset=" + offset)
+            .then((res) => {
+                setSuggests((suggests) => removeDuplicateUnits([...suggests, ...res.data]));
+                setOffset((prevOffset) => prevOffset + 8);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }, [offset]);
 
-    const filteredData = data?.filter((user) => user.id !== currentUser.id);
+    useEffect(() => {
+        fetchSuggests();
+    }, [fetchSuggests]);
+
+    const handleShowMore = () => {
+        fetchSuggests();
+    };
 
     return (
         <div className="friend-suggest">
             <div className="row">
-                {filteredData?.map((request) => (
-                    <div className="card-invite" key={request.id}>
-                        <img src={"/upload/" + request.profilePic} alt="User" />
-                        <span>{request.name}</span>
+                {suggests?.map((suggest) => (
+                    <div className="card-invite" key={suggest.id}>
+                        <img src={"/upload/" + suggest.profilePic} alt="User" />
+                        <span>{suggest.name}</span>
                         <button className="accept">
                             Thêm bạn bè
                         </button>
@@ -30,9 +44,20 @@ const FriendSuggest = () => {
                     </div>
                 ))}
             </div>
-            {isLoading && <NineCube />}
-            {/* {!loading && <button onClick={handleShowMore}>Show More</button>} */}
+            {loading && <NineCube />}
+            {!loading && <button onClick={handleShowMore}>Show More</button>}
         </div>
     );
 }
 export default FriendSuggest;
+
+function removeDuplicateUnits(arr) {
+    const uniqueUnits = new Map();
+
+    for (const unit of arr) {
+        uniqueUnits.set(unit.id, unit);
+    }
+
+    return Array.from(uniqueUnits.values());
+}
+

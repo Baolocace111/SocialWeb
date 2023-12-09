@@ -102,7 +102,7 @@ wss.on("connection", async (ws, req) => {
       ws.send("Welcome to the WebSocket server");
 
       // Xử lý tin nhắn từ client
-      ws.on("message", (message) => {});
+      ws.on("message", (message) => { });
 
       // Xử lý sự kiện khi client đóng kết nối
       ws.on("close", () => {
@@ -154,7 +154,7 @@ export const sendMessageToUser = (userId, message) => {
   const userSocket = clients.get(userId);
 
   if (userSocket) {
-    console.log(userId + " : " + message);
+    // console.log(userId + " : " + message);
     userSocket.map((ws) => {
       ws.send(message);
     });
