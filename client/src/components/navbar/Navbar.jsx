@@ -114,8 +114,8 @@ const Navbar = () => {
       default:
         break;
     }
-    setAnchorEl(event.currentTarget.parentElement.parentElement);
-
+    iconId === "profile" ? setAnchorEl(event.currentTarget.parentElement.parentElement)
+      : setAnchorEl(event.currentTarget.parentElement.parentElement.parentElement);
     setContent(contentType);
   };
 
@@ -139,9 +139,6 @@ const Navbar = () => {
     }
   };
 
-  const PopoverStyle = {
-    top: "10px",
-  };
   ///Show messages in navbar
   const [mess, setMess] = useState(null);
   let [messLoading, setMessLoading] = useState(true);
@@ -232,17 +229,10 @@ const Navbar = () => {
             id="noti-icon"
           />
         </div>
-        <div className="user-container">
-          <div
-            className="user"
-            onClick={handlePopover}
-            style={{ cursor: "pointer" }}
-            id="profile"
-          >
-            <img src={"/upload/" + currentUser.profilePic} alt="" />
-            <span>{currentUser.name}</span>
-            <FontAwesomeIcon icon={faCaretDown} />
-          </div>
+        <div className="user-container" onClick={handlePopover} style={{ cursor: "pointer" }} id="profile">
+          <img src={"/upload/" + currentUser.profilePic} alt="" />
+          <span>{currentUser.name}</span>
+          <FontAwesomeIcon icon={faCaretDown} />
         </div>
         <Popover
           id={id}
@@ -257,7 +247,6 @@ const Navbar = () => {
             vertical: "top",
             horizontal: "right",
           }}
-          style={PopoverStyle}
         >
           {content === "profile" && (
             <List>
