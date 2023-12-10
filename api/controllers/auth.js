@@ -6,6 +6,30 @@ export const register = async (req, res) => {
   const password = await req.body.password;
   const name = await req.body.name;
   const repassword = await req.body.repassword;
+  function isValidUsername(username) {
+    // Kiểm tra có khoảng trắng không
+    if (username.includes(" ")) {
+      return false;
+    }
+
+    // Kiểm tra có ký tự đặc biệt không
+    const specialChars = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+    if (specialChars.test(username)) {
+      return false;
+    }
+
+    // Kiểm tra có dấu không
+    const accents =
+      /[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễđìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄĐÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸ]/;
+    if (accents.test(username)) {
+      return false;
+    }
+
+    return true;
+  }
+  if (!isValidUsername(user)) {
+    return res.status(200).json("Username is invalid");
+  }
   try {
     if (
       user === "" ||

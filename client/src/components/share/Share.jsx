@@ -27,7 +27,9 @@ const Share = () => {
 
   const mutation = useMutation(
     (newPost) => {
-      return makeRequest.post("/posts/post", newPost);
+      return makeRequest.post("/posts/post", newPost).catch((error) => {
+        alert(error.response.data);
+      });
     },
     {
       onSuccess: () => {
@@ -71,8 +73,14 @@ const Share = () => {
             <input
               type="file"
               id="file"
+              accept="image/*"
               style={{ display: "none" }}
-              onChange={(e) => setFile(e.target.files[0])}
+              onChange={(e) => {
+                if (isImage(e.target.files[0])) setFile(e.target.files[0]);
+                else {
+                  alert("Unacceptable file");
+                }
+              }}
             />
             <label htmlFor="file">
               <div className="item">
@@ -99,3 +107,6 @@ const Share = () => {
 };
 
 export default Share;
+function isImage(file) {
+  return file && file["type"].split("/")[0] === "image";
+}

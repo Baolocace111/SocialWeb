@@ -56,7 +56,11 @@ export const addPost = (req, res) => {
       img: req.body.img,
       userId: userInfo.id,
     };
-
+    if (
+      (post.desc === "" || post.desc === undefined || post.desc === null) &&
+      (post.img === "" || post.img === undefined || post.img === null)
+    )
+      return res.status(500).json("Your post is invalid");
     addPostService(post, (err, data) => {
       if (err) return res.status(500).json(err);
       return res.status(200).json(data);

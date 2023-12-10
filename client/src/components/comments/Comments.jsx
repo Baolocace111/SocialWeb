@@ -19,7 +19,9 @@ const Comments = ({ postId }) => {
 
   const mutation = useMutation(
     (newComment) => {
-      return makeRequest.post("/comments", newComment);
+      return makeRequest.post("/comments", newComment).catch((err) => {
+        alert(err.response.data);
+      });
     },
     {
       onSuccess: () => {
@@ -52,7 +54,7 @@ const Comments = ({ postId }) => {
         : isLoading
         ? "loading"
         : data.map((comment) => (
-            <div className="comment">
+            <div className="comment" key={comment.id}>
               <img src={"/upload/" + comment.profilePic} alt="" />
               <div className="info">
                 <span>{comment.name}</span>
