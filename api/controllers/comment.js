@@ -16,8 +16,14 @@ export const addComment = (req, res) => {
   const token = req.cookies.accessToken;
   const desc = req.body.desc;
   const postId = req.body.postId;
+  if (
+    req.body.desc === "" ||
+    req.body.desc === undefined ||
+    req.body.desc === null
+  )
+    return res.status(500).json("You haven't comment");
   addCommentWithTokenService(token, desc, postId, (err, data) => {
-    if (err) return res.status(500).json(err);
+    if (err) return res.status(500).json("Comment is not valid");
     return res.status(200).json(data);
   });
 };

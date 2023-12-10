@@ -3,7 +3,6 @@ import "./stories.scss";
 import { AuthContext } from "../../context/authContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
-import axios from "axios";
 
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -16,12 +15,12 @@ import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
 import FlipCube from "../loadingComponent/flipCube/FlipCube";
-
+import { useRef } from "react";
 import Slider from "react-slick";
 
 const Stories = () => {
   const { currentUser } = useContext(AuthContext);
-
+  const inputRef = useRef(null);
   const { isLoading, error, data } = useQuery(["stories"], () =>
     makeRequest.get("/stories").then((res) => {
       return res.data;
@@ -33,9 +32,7 @@ const Stories = () => {
   useEffect(() => {
     const fetchUser = async (userId) => {
       try {
-        const response = await axios.get(
-          `http://localhost:8800/api/users/find/${userId}`
-        );
+        const response = await makeRequest.get(`/users/find/${userId}`);
         const user = response.data;
         setUsers((prevUsers) => ({
           ...prevUsers,
@@ -88,7 +85,9 @@ const Stories = () => {
   const queryClient = useQueryClient();
   const mutation = useMutation(
     (newStory) => {
-      return makeRequest.post("/stories", newStory);
+      return makeRequest.post("/stories", newStory).catch((error) => {
+        alert(error.response.data);
+      });
     },
     {
       onSuccess: () => {
@@ -157,9 +156,14 @@ const Stories = () => {
             <input
               type="file"
               accept="image/*"
+              ref={inputRef}
               onChange={(e) => {
-                setFile(e.target.files[0]);
-                handleImageChange(e);
+                if (isImage(e.target.files[0])) {
+                  setFile(e.target.files[0]);
+                  handleImageChange(e);
+                } else {
+                  inputRef.current.value = "";
+                }
               }}
             />
             {selectedImage && (
@@ -234,3 +238,6 @@ const Stories = () => {
 };
 
 export default Stories;
+function isImage(file) {
+  return file && file["type"].split("/")[0] === "image";
+}

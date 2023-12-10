@@ -29,7 +29,12 @@ export const addStory = (req, res) => {
     if (err) return res.status(403).json("Token is not valid!");
 
     const userId = userInfo.id;
-
+    if (
+      req.body.img === "" ||
+      req.body.img === undefined ||
+      req.body.img === null
+    )
+      return res.status(500).json("image not found");
     addStoryService(req.body.img, userId, (err, data) => {
       if (err) return res.status(500).json(err);
       return res.status(200).json(data);
