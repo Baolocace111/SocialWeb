@@ -38,12 +38,11 @@ import Comments from "../comments/Comments";
 import moment from "moment";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { AuthContext } from "../../context/authContext";
 import Description from "./desc";
 import MiniPost from "./MiniPost";
 import Private from "./Private";
-import { useRef } from "react";
 
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
@@ -55,6 +54,14 @@ const Post = ({ post }) => {
   const [openSeeEdit, setOpenSeeEdit] = useState(false);
   const [selectedValue, setSelectedValue] = useState(0); // State để lưu giá trị của Radio được chọn
   const privateRef = useRef(null);
+
+  useEffect(() => {
+    if (!openEdit) {
+      setDeleteImage(false);
+      setSelectedImage("/upload/" + post.img);
+    }
+  }, [openEdit, post.img]);
+
   //Handle openMenu
   const handleMenuClick = (event) => {
     if (post.userId === currentUser.id) {
@@ -149,7 +156,9 @@ const Post = ({ post }) => {
   );
   const updateMutation = useMutation(
     (data) => {
-      return makeRequest.put(`/posts/update/${data.postId}`, data);
+      return makeRequest.put(`/posts/update/${data.postId}`, data).catch((error) => {
+        alert(error.response.data);
+      });
     },
     {
       onSuccess: () => {
@@ -187,7 +196,10 @@ const Post = ({ post }) => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     let imgUrl = post.img;
-    if (file) imgUrl = await upload();
+    if (deleteImage) {
+      if (file) imgUrl = await upload();
+      else imgUrl = "";
+    }
     updateMutation.mutate({ postId: post.id, desc, img: imgUrl });
     setFile(null);
     setOpenEdit(false);

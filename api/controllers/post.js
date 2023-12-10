@@ -158,7 +158,11 @@ export const updatePost = (req, res) => {
       desc: req.body.desc,
       img: req.body.img,
     };
-
+    if (
+      (updatedPost.desc === "" || updatedPost.desc === undefined || updatedPost.desc === null) &&
+      (updatedPost.img === "" || updatedPost.img === undefined || updatedPost.img === null)
+    )
+      return res.status(500).json("Your post is invalid");
     updatePostService(postId, updatedPost, (err, data) => {
       if (err) return res.status(500).json(err);
       return res.status(200).json(data);
