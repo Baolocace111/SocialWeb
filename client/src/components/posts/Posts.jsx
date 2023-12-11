@@ -1,61 +1,59 @@
 import "./posts.scss";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
-import ThreePointLoading from "../loadingComponent/threepointLoading/ThreePointLoading";
-import ShowPost from "./ShowPosts";
+import { useState } from "react";
 import { Waypoint } from "react-waypoint";
-import { useEffect, useState } from "react";
-const Posts = ({ userId }) => {
-  // const { isLoading, error, data } = useQuery(["posts"], () =>
-  //   makeRequest.get("/posts?userId=" + userId).then((res) => {
-  //     return res.data;
-  //   })
-  // );
-  const [isLoading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [data, setData] = useState([]);
-  const [offset, setOffset] = useState(1);
-  const [isLoadingMore, setisLoadingMore] = useState(false);
-  const fetchMoreData = () => {
-    //console.log(offset);
+import ShowPosts from "./ShowPosts";
 
-    makeRequest
-      .get("/posts?userId=" + userId + "&offset=" + offset)
-      .then((res) => {
-        if (isLoading) setLoading(false);
-        setData(removeDuplicateUnits([...data, ...res.data.data]));
-        setOffset(res.data.next);
+const Posts = ({ userId }) => {
+  const [isLoadingMore, setisLoadingMore] = useState(false);
+
+  const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
+    ['posts'],
+    ({ pageParam = 1 }) => makeRequest.get(`/posts?userId=${userId}&offset=${pageParam}`).then((res) => res.data),
+    {
+      getNextPageParam: (lastPage) => (lastPage && lastPage.next !== undefined && lastPage.next !== -1) ? lastPage.next + 1 : undefined,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      onSuccess: (newData) => {
         setisLoadingMore(false);
-      })
-      .catch((error) => {
-        if (isLoading) setLoading(false);
-        setError(error.response.data);
-      })
-      .finally(() => {
-        //console.log(offset);
-      });
-  };
-  useEffect(() => {
-    fetchMoreData();
-  }, []);
+      },
+      onSettled: (data, error) => {
+        if (!error) {
+          // Cập nhật state hoặc thực hiện các bước khác sau khi query hoàn thành mà không có lỗi.
+        } else {
+          console.error("Query failed:", error);
+        }
+      },
+    }
+  );
+
   const handleWaypointEnter = () => {
-    if (offset !== -1) {
+    if (hasNextPage && !isLoadingMore) {
       setisLoadingMore(true);
-      fetchMoreData();
-    } // Khi Waypoint vào viewport, gọi hàm tải thêm dữ liệu
-  };
+      const lastPage = data?.pages[data.pages.length - 1];
+      console.log(lastPage);
+      if (lastPage && lastPage.next !== undefined && lastPage.next !== -1) {
+        fetchNextPage({
+          pageParam: lastPage.next,
+        });
+        // console.log("Going to next page");
+      }
+    }
+  }
+
   return (
     <>
-      <ShowPost isLoading={isLoading} error={error} posts={data}></ShowPost>
-      {!(error || isLoading || isLoadingMore) && (
+      <ShowPosts isLoading={isFetchingNextPage || isLoadingMore} error={error} posts={data ? removeDuplicateUnits(data.pages.flatMap((page) => page.data)) : []} />
+      {hasNextPage && (
         <Waypoint onEnter={handleWaypointEnter} />
       )}
-      {isLoadingMore && <ThreePointLoading></ThreePointLoading>}
     </>
   );
 };
 
 export default Posts;
+
 function removeDuplicateUnits(arr) {
   const uniqueUnits = new Map();
   for (const unit of arr) {
