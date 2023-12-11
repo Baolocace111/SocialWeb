@@ -1,7 +1,9 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
-import Post from "../../components/post/Post";
+import DetailedPost from "../../components/post/detailedPost/DetailedPost";
+import ThreePointLoading from "../../components/loadingComponent/threepointLoading/ThreePointLoading";
+
 const PostPage = () => {
   const { postId } = useParams();
   const { isLoading, error, data } = useQuery(["posts"], () =>
@@ -14,11 +16,13 @@ const PostPage = () => {
       {error ? (
         "Something went wrong!"
       ) : isLoading ? (
-        "loading"
+        <ThreePointLoading />
       ) : data.length === 0 ? (
         "not found"
       ) : (
-        <Post post={data} />
+        <div className="post-page">
+          <DetailedPost post={data} />
+        </div>
       )}
     </div>
   );

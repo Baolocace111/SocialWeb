@@ -43,6 +43,7 @@ import { AuthContext } from "../../context/authContext";
 import Description from "./desc";
 import MiniPost from "./MiniPost";
 import Private from "./Private";
+import { Link } from "react-router-dom";
 
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
@@ -619,7 +620,9 @@ const Post = ({ post }) => {
         </div>
         <div className="content">
           <Description text={post.desc}></Description>
-          <img src={"/upload/" + post.img} alt="" />
+          <Link to={`/seepost/${post.id}`}>
+            <img src={"/upload/" + post.img} alt="" />
+          </Link>
         </div>
         {!post.error &&
           <div className="info">

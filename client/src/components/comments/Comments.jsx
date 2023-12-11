@@ -43,7 +43,7 @@ const Comments = ({ postId }) => {
         <img src={"/upload/" + currentUser.profilePic} alt="" />
         <input
           type="text"
-          placeholder="write a comment"
+          placeholder="Write a comment"
           value={desc}
           onChange={(e) => setDesc(e.target.value)}
         />
@@ -52,8 +52,8 @@ const Comments = ({ postId }) => {
       {error
         ? "Something went wrong"
         : isLoading
-        ? "loading"
-        : data.map((comment) => (
+          ? "loading"
+          : data.map((comment) => (
             <div className="comment" key={comment.id}>
               <img src={"/upload/" + comment.profilePic} alt="" />
               <div className="info">
