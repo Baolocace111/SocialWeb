@@ -12,19 +12,41 @@ import {
   addListPostPrivate,
   updatePrivatePost,
   getAllPrivateUserOfPost,
+  getPostsWithPrivateByUserLimit,
+  getPostsWithPrivateLimit,
 } from "../models/PostModel.js";
 
-export const getPostsService = (userId, userInfo, callback) => {
+export const getPostsService = (userId, userInfo, offset, callback) => {
   if (userId !== "undefined") {
-    getPostsWithPrivateByUser(userId, userInfo, (err, data) => {
-      if (err) return callback(err, null);
-      return callback(null, data);
-    });
+    if (isNaN(offset))
+      getPostsWithPrivateByUser(userId, userInfo, (err, data) => {
+        if (err) return callback(err, null);
+        return callback(null, data);
+      });
+    else {
+      getPostsWithPrivateByUserLimit(
+        userId,
+        userInfo,
+        offset,
+        3,
+        (err, data) => {
+          if (err) return callback(err, null);
+          return callback(null, data);
+        }
+      );
+    }
   } else {
-    getPostsWithPrivate(userInfo, (e, data) => {
-      if (e) return callback(e, null);
-      return callback(null, data);
-    });
+    if (isNaN(offset))
+      getPostsWithPrivate(userInfo, (e, data) => {
+        if (e) return callback(e, null);
+        return callback(null, data);
+      });
+    else {
+      getPostsWithPrivateLimit(userInfo, offset, 3, (err, data) => {
+        if (err) return callback(err, null);
+        return callback(null, data);
+      });
+    }
   }
   // getPosts(userId, userInfo, (err, data) => {
   //   if (err) return callback(err, null);

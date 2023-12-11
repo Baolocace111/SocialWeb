@@ -36,10 +36,13 @@ export const getPosts = (req, res) => {
 
   jwt.verify(token, "secretkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
-
-    getPostsService(userId, userInfo.id, (err, data) => {
+    const offset = Number(req.query.offset);
+    //console.log(offset);
+    getPostsService(userId, userInfo.id, offset, (err, data) => {
       if (err) return res.status(500).json(err);
-      return res.status(200).json(data);
+      return res
+        .status(200)
+        .json({ data, next: data.length < 3 ? -1 : offset + 1 });
     });
   });
 };
@@ -159,8 +162,12 @@ export const updatePost = (req, res) => {
       img: req.body.img,
     };
     if (
-      (updatedPost.desc === "" || updatedPost.desc === undefined || updatedPost.desc === null) &&
-      (updatedPost.img === "" || updatedPost.img === undefined || updatedPost.img === null)
+      (updatedPost.desc === "" ||
+        updatedPost.desc === undefined ||
+        updatedPost.desc === null) &&
+      (updatedPost.img === "" ||
+        updatedPost.img === undefined ||
+        updatedPost.img === null)
     )
       return res.status(500).json("Your post is invalid");
     updatePostService(postId, updatedPost, (err, data) => {
