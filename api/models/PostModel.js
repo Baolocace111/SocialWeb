@@ -49,6 +49,56 @@ export const getPostsWithPrivateByUser = (userId, myId, callback) => {
     return callback(null, results);
   });
 };
+export const getPostsWithPrivateByUserLimit = (
+  userId,
+  myId,
+  offset,
+  limit,
+  callback
+) => {
+  const q = `
+  SELECT DISTINCT p.*, u.id AS userid, u.name, u.profilePic
+    FROM posts p
+    LEFT JOIN friendships f ON (p.userId=f.friend_id AND f.user_id = ? AND f.status = 1)
+    LEFT JOIN users u ON (p.userId = u.id)
+    WHERE p.userId = ? AND (p.status = 0 OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?)))) ORDER BY p.createdAt DESC limit ? offset ?`;
+
+  db.query(
+    q,
+    [myId, userId, myId, myId, myId, limit, (offset - 1) * limit],
+    (error, results) => {
+      if (error) return callback(error, null);
+      return callback(null, results);
+    }
+  );
+};
+
+export const getPostsWithPrivateLimit = (userId, offset, limit, callback) => {
+  const q = `SELECT DISTINCT p.*, u.id AS userid, u.name, u.profilePic, f.user_id
+    FROM posts p
+    LEFT JOIN friendships f ON (p.userId=f.friend_id AND f.user_id = ? AND f.status = 1)
+    LEFT JOIN users u ON (p.userId = u.id)
+    LEFT JOIN relationships r ON (p.userId = r.followedUserId)
+    WHERE (r.followerUserId = ? OR p.userId = ?) AND (p.status = 0 OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?)))) ORDER BY p.createdAt DESC limit ? offset ?`;
+
+  db.query(
+    q,
+    [
+      userId,
+      userId,
+      userId,
+      userId,
+      userId,
+      userId,
+      limit,
+      (offset - 1) * limit,
+    ],
+    (err, data) => {
+      if (err) return callback(err, null);
+      return callback(null, data);
+    }
+  );
+};
 export const getPostsWithPrivate = (userId, callback) => {
   const q = `SELECT DISTINCT p.*, u.id AS userid, u.name, u.profilePic, f.user_id
     FROM posts p
@@ -201,10 +251,10 @@ export const addListPostPrivate = (userIDs, postID, userID, callback) => {
     const deleteAndInsertQuery =
       userIDs.length > 0
         ? "" +
-        "DELETE FROM post_private WHERE post_id = ?;" +
-        "INSERT INTO post_private(`post_id`, `user_id`) VALUES" +
-        userIDs.map((id) => `(${postID}, ${id})`).join(", ") +
-        `;`
+          "DELETE FROM post_private WHERE post_id = ?;" +
+          "INSERT INTO post_private(`post_id`, `user_id`) VALUES" +
+          userIDs.map((id) => `(${postID}, ${id})`).join(", ") +
+          `;`
         : `DELETE FROM post_private WHERE post_id = ?`;
 
     db.query(deleteAndInsertQuery, Number(postID), (error, results) => {
