@@ -19,8 +19,8 @@ import Search from "./pages/search/Search";
 import SearchBar from "./components/searchComponents/searchBar/SearchBar";
 import FriendsBar from "./components/friends/FriendsBar";
 
-import "./style.scss";
-import "./pages/story/story.scss";
+// import "./style.scss";
+// import "./pages/story/story.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 
@@ -115,6 +115,14 @@ function App() {
       </div>
     );
   }
+
+  const PostLayout = () => {
+    return (
+      <div className={`theme-${darkMode ? "dark" : "light"}`}>
+        <PostPage />
+      </div>
+    );
+  };
 
   const SearchLayout = () => {
     const location = useLocation();
@@ -244,7 +252,7 @@ function App() {
     },
     {
       path: "/seepost/:postId",
-      element: <PostPage />,
+      element: <PostLayout />,
     },
     {
       path: "/error",
