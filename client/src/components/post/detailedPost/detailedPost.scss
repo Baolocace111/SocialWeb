@@ -19,6 +19,26 @@
                 object-fit: cover;
                 object-position: center;
             }
+
+            .action-button {
+                display: flex;
+                align-items: center;
+                position: absolute;
+                left: 0;
+                top: 0;
+                padding: 15px 0 15px 25px;
+                width: inherit;
+                font-size: 23px;
+                z-index: 999;
+                cursor: pointer;
+
+                .zoom {
+                    display: flex;
+                    gap: 25px;
+                    margin-left: auto;
+                    padding-right: 45px;
+                }
+            }
         }
 
         .content-area {

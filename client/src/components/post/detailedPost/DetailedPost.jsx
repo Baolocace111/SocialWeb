@@ -5,6 +5,8 @@ import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ThreePointLoading from "../../loadingComponent/threepointLoading/ThreePointLoading";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faX, faMagnifyingGlassPlus, faMagnifyingGlassMinus, faDownLeftAndUpRightToCenter } from "@fortawesome/free-solid-svg-icons";
 
 import Description from "../desc";
 import Comments from "../../comments/Comments";
@@ -48,6 +50,14 @@ const DetailedPost = ({ post }) => {
         <div className="detail-post">
             <div className="image-area">
                 {!imageLoaded && <ThreePointLoading />}
+                <div className="action-button">
+                    <FontAwesomeIcon onClick={() => window.location.href = `/`} icon={faX} />
+                    <div className="zoom">
+                        <FontAwesomeIcon icon={faMagnifyingGlassPlus} />
+                        <FontAwesomeIcon icon={faMagnifyingGlassMinus} />
+                        <FontAwesomeIcon icon={faDownLeftAndUpRightToCenter} />
+                    </div>
+                </div>
                 <img src={"/upload/" + post.img} alt="" onLoad={handleImageLoad} />
             </div>
             {imageLoaded && (

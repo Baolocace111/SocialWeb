@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import "./comments.scss";
+import ThreePointLoading from "../loadingComponent/threepointLoading/ThreePointLoading";
 import { AuthContext } from "../../context/authContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
@@ -52,7 +53,7 @@ const Comments = ({ postId }) => {
       {error
         ? "Something went wrong"
         : isLoading
-          ? "loading"
+          ? <ThreePointLoading />
           : data.map((comment) => (
             <div className="comment" key={comment.id}>
               <img src={"/upload/" + comment.profilePic} alt="" />
