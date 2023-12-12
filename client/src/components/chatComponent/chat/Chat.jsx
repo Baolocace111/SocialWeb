@@ -109,6 +109,11 @@ const Chat = ({ friend, onRemoveChatBox }) => {
         console.error("Failed to send message:", error);
       }
   };
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      sendMessage();
+    }
+  };
 
   if (loading) fetchMessages();
 
@@ -157,6 +162,7 @@ const Chat = ({ friend, onRemoveChatBox }) => {
           value={newMessage}
           placeholder="Aa"
           onChange={(e) => setNewMessage(e.target.value)}
+          onKeyPress={handleKeyPress}
         />
         <button className="send-button" onClick={sendMessage}>
           <span>
