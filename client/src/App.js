@@ -19,8 +19,8 @@ import Search from "./pages/search/Search";
 import SearchBar from "./components/searchComponents/searchBar/SearchBar";
 import FriendsBar from "./components/friends/FriendsBar";
 
-// import "./style.scss";
-// import "./pages/story/story.scss";
+import "./style.scss";
+import "./pages/story/story.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 
