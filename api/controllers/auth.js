@@ -77,9 +77,9 @@ export const adminLogin = async (req, res) => {
       req.body.password
     );
     if (result.user.role !== 1)
-      res.status(500).json("You are not an administrator");
+      return res.status(500).json("You are not an administrator");
     res.clearCookie();
-    res
+    return res
       .cookie("accessToken", result.token, {
         secure: true,
         sameSite: "none",
@@ -87,7 +87,7 @@ export const adminLogin = async (req, res) => {
       .status(200)
       .json(result.user);
   } catch (error) {
-    res.status(500).json(error.message);
+    return res.status(500).json(error.message);
   }
 };
 

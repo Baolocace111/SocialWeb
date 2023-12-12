@@ -1,0 +1,48 @@
+.admin-leftBar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 20%;
+  padding: 10px;
+  background-color: black;
+  gap: 10px;
+  .click-tag {
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+  }
+  .click-tag:hover {
+    color: black;
+    background-color: azure;
+  }
+  .admin-user-info {
+    color: black;
+    display: flex;
+    padding: 5px;
+    justify-content: center;
+    background-color: lightgray;
+    border-radius: 10px;
+    align-items: center;
+    font-size: 30px;
+    gap: 10px;
+    img {
+      position: absolute;
+      left: 10px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      transition: width 2s, height 2s;
+    }
+  }
+  .admin-user-info:hover {
+    color: green;
+    img {
+      width: 75px;
+      height: 75px;
+    }
+  }
+}
