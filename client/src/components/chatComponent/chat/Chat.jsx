@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { makeRequest } from "../../../axios";
 import Message from "../message/Message";
 import "./chat.scss";
@@ -18,6 +18,15 @@ const Chat = ({ friend, onRemoveChatBox }) => {
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(true);
   const friendId = friend.id;
+
+  const messageContainerRef = useRef(null);
+
+  useEffect(() => {
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   if (!ws) {
     // Lấy cookies từ document.cookie hoặc từ các nguồn khác nếu cần
     //const token = document.cookie.accessToken;
@@ -100,7 +109,9 @@ const Chat = ({ friend, onRemoveChatBox }) => {
         console.error("Failed to send message:", error);
       }
   };
+
   if (loading) fetchMessages();
+
   return (
     <div className="parent-container">
       <div className="top-box">
@@ -124,7 +135,7 @@ const Chat = ({ friend, onRemoveChatBox }) => {
           </button>
         </div>
       </div>
-      <div className="messages">
+      <div className="messages" ref={messageContainerRef}>
         {!loading && (
           <div className="showMore" onClick={handleShowMore}>
             Show More

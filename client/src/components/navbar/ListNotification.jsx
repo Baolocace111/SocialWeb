@@ -77,7 +77,7 @@ const ListNotification = () => {
           <Link
             to={notification.link}
             style={{ cursor: "pointer", display: "flex" }}
-            target="_blank"
+          // target="_blank"
           >
             <div
               style={{
