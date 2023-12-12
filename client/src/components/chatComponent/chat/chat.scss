@@ -21,10 +21,12 @@
 
     .name {
       color: white;
-      font-size: 20px;
-      font-family: Inter;
+      font-size: 18px;
       font-weight: 500;
-      word-wrap: break-word;
+      width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .actionButton {
