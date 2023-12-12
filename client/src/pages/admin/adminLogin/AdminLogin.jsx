@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { makeRequest } from "../../../axios";
+import { AuthContext } from "../../../context/authContext";
 const AdminLogin = () => {
   const [inputs, setInputs] = useState({ username: "", password: "" });
   const [err, setErr] = useState(null);
@@ -8,16 +9,21 @@ const AdminLogin = () => {
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-  //const {login}=useContext(Au)
+  const { setCurrentUser } = useContext(AuthContext);
   const handleLogin = async (e) => {
     e.preventDefault();
-    try {
-      await makeRequest.post("auth/admin/login", inputs);
-      navigate("/admin/home");
-    } catch (error) {
-      //console.log(error);
-      setErr(error.response.data);
-    }
+
+    await makeRequest
+      .post("auth/admin/login", inputs)
+      .then((res) => {
+        //console.log(res);
+        setCurrentUser(res.data);
+        navigate("/admin/home");
+      })
+      .catch((err) => {
+        console.log(err);
+        setErr(err.response.data);
+      });
   };
   return (
     <>

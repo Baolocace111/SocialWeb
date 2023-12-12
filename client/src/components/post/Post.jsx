@@ -157,9 +157,11 @@ const Post = ({ post }) => {
   );
   const updateMutation = useMutation(
     (data) => {
-      return makeRequest.put(`/posts/update/${data.postId}`, data).catch((error) => {
-        alert(error.response.data);
-      });
+      return makeRequest
+        .put(`/posts/update/${data.postId}`, data)
+        .catch((error) => {
+          alert(error.response.data);
+        });
     },
     {
       onSuccess: () => {
@@ -232,10 +234,12 @@ const Post = ({ post }) => {
           <div className="userInfo">
             <img src={"/upload/" + post.profilePic} alt="" />
             <div className="details">
-              <span className="name"
+              <span
+                className="name"
                 onClick={() => {
                   window.location.href = `/profile/${post.userId}`;
-                }}>
+                }}
+              >
                 {post.name}
               </span>
               <span className="date">{moment(post.createdAt).fromNow()}</span>
@@ -624,18 +628,22 @@ const Post = ({ post }) => {
             <img src={"/upload/" + post.img} alt="" />
           </Link>
         </div>
-        {!post.error &&
+        {!post.error && (
           <div className="info">
             <div className="item">
               {isLoading ? (
                 "loading"
               ) : data.includes(currentUser.id) ? (
                 <FavoriteOutlinedIcon
+                  className="shake-heart"
                   style={{ color: "red" }}
                   onClick={handleLike}
                 />
               ) : (
-                <FavoriteBorderOutlinedIcon onClick={handleLike} />
+                <FavoriteBorderOutlinedIcon
+                  className="white-color-heart"
+                  onClick={handleLike}
+                />
               )}
               {data?.length} Likes
             </div>
@@ -726,7 +734,7 @@ const Post = ({ post }) => {
               </div>
             </PopupWindow>
           </div>
-        }
+        )}
         {commentOpen && <Comments postId={post.id} />}
       </div>
     </div>
