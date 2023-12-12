@@ -7,7 +7,7 @@ import {
   Outlet,
   Navigate,
   Link,
-  useLocation
+  useLocation,
 } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar";
 import LeftBar from "./components/leftBar/LeftBar";
@@ -28,10 +28,7 @@ import { useCookies } from "react-cookie";
 import { useContext, useState } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from "./context/authContext";
-import {
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import FriendInvite from "./pages/friend/friendinvite/FriendInvite";
 import FriendSuggest from "./pages/friend/friendSuggest/FriendSuggest";
 import SearchPost from "./pages/searchPost/SearchPost";
@@ -42,7 +39,7 @@ import AdminHome from "./pages/admin/adminHome/AdminHome";
 import { makeRequest } from "./axios";
 import NineCube from "./components/loadingComponent/nineCube/NineCube";
 import AdminLogin from "./pages/admin/adminLogin/AdminLogin";
-
+import AdminLeftBar from "./components/adminComponent/leftBar/LeftBar";
 function App() {
   const { currentUser } = useContext(AuthContext);
 
@@ -85,7 +82,10 @@ function App() {
         ) : isLoading ? (
           <NineCube />
         ) : (
-          <Outlet />
+          <>
+            <AdminLeftBar></AdminLeftBar>
+            <Outlet />
+          </>
         )}
       </div>
     );
@@ -114,7 +114,7 @@ function App() {
         </div>
       </div>
     );
-  }
+  };
 
   const PostLayout = () => {
     return (
@@ -126,9 +126,10 @@ function App() {
 
   const SearchLayout = () => {
     const location = useLocation();
-    const pathSegments = location.pathname.split('/');
+    const pathSegments = location.pathname.split("/");
     const searchText = pathSegments[2];
-    const isSearchUrl = pathSegments.length === 3 && pathSegments[1] === "search";
+    const isSearchUrl =
+      pathSegments.length === 3 && pathSegments[1] === "search";
     if (isSearchUrl) {
       return <Navigate to={`/search/${searchText}/people`} />;
     }
@@ -226,7 +227,7 @@ function App() {
           path: "/friends/suggestions",
           element: <FriendSuggest />,
         },
-      ]
+      ],
     },
     {
       path: "/search/:searchText",
@@ -260,7 +261,7 @@ function App() {
     },
     {
       path: "/adminlogin",
-      element: <AdminLogin />
+      element: <AdminLogin />,
     },
     {
       path: "/admin",
@@ -268,8 +269,9 @@ function App() {
       children: [
         {
           path: "/admin/home",
-          element: <AdminHome />
-        }],
+          element: <AdminHome />,
+        },
+      ],
     },
   ]);
 

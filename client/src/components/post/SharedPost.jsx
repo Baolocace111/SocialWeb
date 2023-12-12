@@ -15,7 +15,13 @@ import {
 import Description from "./desc";
 import FlipCube from "../loadingComponent/flipCube/FlipCube";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashCan, faPen, faLock, faEarthAmericas, faUserGroup } from "@fortawesome/free-solid-svg-icons";
+import {
+  faTrashCan,
+  faPen,
+  faLock,
+  faEarthAmericas,
+  faUserGroup,
+} from "@fortawesome/free-solid-svg-icons";
 import ThreePointLoading from "../loadingComponent/threepointLoading/ThreePointLoading";
 import { TextareaAutosize } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
@@ -26,7 +32,7 @@ import Button from "@mui/material/Button";
 import EditIcon from "@mui/icons-material/Edit";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
-import Radio from '@mui/material/Radio';
+import Radio from "@mui/material/Radio";
 
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
@@ -39,7 +45,7 @@ const SharedPost = ({ post }) => {
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [openEdit, setOpenEdit] = useState(false);
   const [openSeeEdit, setOpenSeeEdit] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(''); // State để lưu giá trị của Radio được chọn
+  const [selectedValue, setSelectedValue] = useState(""); // State để lưu giá trị của Radio được chọn
   const [desc, setDesc] = useState(post.desc);
 
   const { currentUser } = useContext(AuthContext);
@@ -50,7 +56,11 @@ const SharedPost = ({ post }) => {
       return res.data;
     })
   );
-  const { isLoading: isLoadingPost, error: errorPost, data: dataPost } = useQuery(["shared-post" + post.id], () =>
+  const {
+    isLoading: isLoadingPost,
+    error: errorPost,
+    data: dataPost,
+  } = useQuery(["shared-post" + post.id], () =>
     makeRequest.get("/posts/post/" + post.img).then((res) => {
       return res.data;
     })
@@ -103,7 +113,7 @@ const SharedPost = ({ post }) => {
         queryClient.invalidateQueries(["posts"]);
       },
     }
-  )
+  );
   const mutation = useMutation(
     (liked) => {
       if (liked) return makeRequest.delete("/likes?postId=" + post.id);
@@ -156,10 +166,12 @@ const SharedPost = ({ post }) => {
           <div className="userInfo">
             <img src={"/upload/" + post.profilePic} alt="" />
             <div className="details">
-              <span className="name"
+              <span
+                className="name"
                 onClick={() => {
                   window.location.href = `/profile/${post.userId}`;
-                }}>
+                }}
+              >
                 {post.name}
               </span>
               <span className="date">{moment(post.createdAt).fromNow()}</span>
@@ -313,7 +325,10 @@ const SharedPost = ({ post }) => {
                   variant="title1"
                   style={{ flexGrow: 1, textAlign: "center" }}
                 >
-                  <FontAwesomeIcon style={{ marginRight: "8px", fontSize: "20px" }} icon={faLock} />
+                  <FontAwesomeIcon
+                    style={{ marginRight: "8px", fontSize: "20px" }}
+                    icon={faLock}
+                  />
                   <span style={{ fontSize: "22px", fontWeight: "700" }}>
                     Chỉnh sửa đối tượng
                   </span>
@@ -327,20 +342,33 @@ const SharedPost = ({ post }) => {
                     justifyContent: "flex-start",
                     alignItems: "center",
                     margin: "-10px 0 0 0",
-                  }}>
+                  }}
+                >
                   <List>
-                    <ListItemButton selected={selectedValue === 0} onClick={() => handleRadioChange(0)}>
-                      <ListItemIcon style={{ fontSize: "23px", marginLeft: "-10px" }}>
+                    <ListItemButton
+                      selected={selectedValue === 0}
+                      onClick={() => handleRadioChange(0)}
+                    >
+                      <ListItemIcon
+                        style={{ fontSize: "23px", marginLeft: "-10px" }}
+                      >
                         <div
                           style={{
-                            alignItems: "center", borderRadius: "50%",
-                            backgroundColor: "#DADDE1", width: "52px", height: "52px",
-                            justifyContent: "center", display: "flex"
-                          }}>
+                            alignItems: "center",
+                            borderRadius: "50%",
+                            backgroundColor: "#DADDE1",
+                            width: "52px",
+                            height: "52px",
+                            justifyContent: "center",
+                            display: "flex",
+                          }}
+                        >
                           <FontAwesomeIcon icon={faEarthAmericas} />
                         </div>
                       </ListItemIcon>
-                      <ListItemText style={{ marginLeft: "20px", marginRight: "80px" }}>
+                      <ListItemText
+                        style={{ marginLeft: "20px", marginRight: "80px" }}
+                      >
                         <Typography variant="h6">Công khai</Typography>
                         <Typography variant="body2" color="textSecondary">
                           Ai trên TinySocial cũng sẽ nhìn thấy bài viết này
@@ -350,21 +378,34 @@ const SharedPost = ({ post }) => {
                         <Radio
                           checked={selectedValue === 0}
                           onChange={() => handleRadioChange(0)}
-                          name="abc" />
+                          name="abc"
+                        />
                       </ListItemIcon>
                     </ListItemButton>
-                    <ListItemButton selected={selectedValue === 1} onClick={() => handleRadioChange(1)}>
-                      <ListItemIcon style={{ fontSize: "20px", marginLeft: "-10px" }}>
+                    <ListItemButton
+                      selected={selectedValue === 1}
+                      onClick={() => handleRadioChange(1)}
+                    >
+                      <ListItemIcon
+                        style={{ fontSize: "20px", marginLeft: "-10px" }}
+                      >
                         <div
                           style={{
-                            alignItems: "center", borderRadius: "50%",
-                            backgroundColor: "#DADDE1", width: "52px", height: "52px",
-                            justifyContent: "center", display: "flex"
-                          }}>
+                            alignItems: "center",
+                            borderRadius: "50%",
+                            backgroundColor: "#DADDE1",
+                            width: "52px",
+                            height: "52px",
+                            justifyContent: "center",
+                            display: "flex",
+                          }}
+                        >
                           <FontAwesomeIcon icon={faUserGroup} />
                         </div>
                       </ListItemIcon>
-                      <ListItemText style={{ marginLeft: "20px", marginRight: "80px" }}>
+                      <ListItemText
+                        style={{ marginLeft: "20px", marginRight: "80px" }}
+                      >
                         <Typography variant="h6">Bạn bè</Typography>
                         <Typography variant="body2" color="textSecondary">
                           Bạn bè của bạn trên TinySocial
@@ -374,28 +415,42 @@ const SharedPost = ({ post }) => {
                         <Radio
                           checked={selectedValue === 1}
                           onChange={() => handleRadioChange(1)}
-                          name="abc" />
+                          name="abc"
+                        />
                       </ListItemIcon>
                     </ListItemButton>
-                    <ListItemButton selected={selectedValue === 2} onClick={() => handleRadioChange(2)}>
-                      <ListItemIcon style={{ fontSize: "20px", marginLeft: "-10px" }}>
+                    <ListItemButton
+                      selected={selectedValue === 2}
+                      onClick={() => handleRadioChange(2)}
+                    >
+                      <ListItemIcon
+                        style={{ fontSize: "20px", marginLeft: "-10px" }}
+                      >
                         <div
                           style={{
-                            alignItems: "center", borderRadius: "50%",
-                            backgroundColor: "#DADDE1", width: "52px", height: "52px",
-                            justifyContent: "center", display: "flex"
-                          }}>
+                            alignItems: "center",
+                            borderRadius: "50%",
+                            backgroundColor: "#DADDE1",
+                            width: "52px",
+                            height: "52px",
+                            justifyContent: "center",
+                            display: "flex",
+                          }}
+                        >
                           <FontAwesomeIcon icon={faLock} />
                         </div>
                       </ListItemIcon>
-                      <ListItemText style={{ marginLeft: "20px", marginRight: "80px" }}>
+                      <ListItemText
+                        style={{ marginLeft: "20px", marginRight: "80px" }}
+                      >
                         <Typography variant="h6">Chỉ mình tôi</Typography>
                       </ListItemText>
                       <ListItemIcon>
                         <Radio
                           checked={selectedValue === 2}
                           onChange={() => handleRadioChange(2)}
-                          name="abc" />
+                          name="abc"
+                        />
                       </ListItemIcon>
                     </ListItemButton>
                   </List>
@@ -411,7 +466,6 @@ const SharedPost = ({ post }) => {
                 </Button>
               </DialogActions>
             </Dialog>
-
           </Popover>
         </div>
         <div className="content">
@@ -431,10 +485,14 @@ const SharedPost = ({ post }) => {
             ) : data.includes(currentUser.id) ? (
               <FavoriteOutlinedIcon
                 style={{ color: "red" }}
+                className="shake-heart"
                 onClick={handleLike}
               />
             ) : (
-              <FavoriteBorderOutlinedIcon onClick={handleLike} />
+              <FavoriteBorderOutlinedIcon
+                className="white-color-heart"
+                onClick={handleLike}
+              />
             )}
             {data?.length} Likes
           </div>
