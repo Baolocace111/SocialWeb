@@ -7,7 +7,7 @@ import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { AuthContext } from "../../context/authContext";
@@ -168,9 +168,7 @@ const Navbar = () => {
     <div className="navbar">
       <ListBoxChat></ListBoxChat>
       <div className="left">
-        <Link to="/" style={{ textDecoration: "none" }}>
-          <span>TinySocial</span>
-        </Link>
+        <span style={{ cursor: "pointer" }} onClick={() => window.location.href = "/"}>TinySocial</span>
         <HomeOutlinedIcon />
         {darkMode ? (
           <WbSunnyOutlinedIcon onClick={toggle} />

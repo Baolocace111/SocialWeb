@@ -164,11 +164,11 @@ const Update = ({ setOpenUpdate, user }) => {
   );
 
   const handleClick = async (e) => {
-    mutation.mutate({ ...texts });
+    mutation.mutate({ ...user, ...texts });
     setOpenUpdate(false);
   };
   const handleClickCP = async (e) => {
-    ChangePasswordmutation.mutate({ ...changePassword });
+    ChangePasswordmutation.mutate({ ...user, ...changePassword });
   };
 
   return (
