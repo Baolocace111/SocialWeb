@@ -1,57 +1,124 @@
-.userContainer {
-  display: flex;
-  width: 300px;
-  align-items: center;
-  gap: 20px;
-  padding: 15px 10px;
-  border: solid;
-  border-width: 1px;
-  border-color: #ebedf0;
-  cursor: pointer;
+.list-messages {
+  height: 600px;
 
-  img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-  }
-
-  .username {
+  .title-messages {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    margin: 15px 20px 0 20px;
 
-    .name:hover {
-      text-decoration: underline;
-    }
-
-    .name {
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    .mess {
-      font-size: 15px;
-      font-weight: 400;
-      width: 150px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-
-    .mess.not-read {
+    span {
+      font-size: 22px;
       font-weight: 700;
     }
 
-    .time {
-      font-size: 10px;
-      font-weight: 100;
+    .more {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      margin-left: auto;
+
+      .icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        cursor: pointer;
+      }
+
+      .icon:hover {
+        background-color: gainsboro;
+      }
     }
   }
 
-  .new-message {
-    width: 13px;
-    height: 13px;
-    border-radius: 50%;
-    margin-left: auto;
-    background-color: #3578E5;
+  .input-container {
+    width: 90%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 15px auto;
+    background-color: #F2F3F5;
+    border-radius: 25px;
+
+    .input-field {
+      width: 100%;
+      padding: 10px 0 10px 40px;
+      border: none;
+      outline: none;
+      border-radius: 25px;
+      font-size: 16px;
+      background-color: #F2F3F5;
+    }
+
+    .icon-container {
+      position: absolute;
+      left: 10px;
+      font-size: 20px;
+    }
+  }
+
+  .userContainer {
+    display: flex;
+    width: 320px;
+    align-items: center;
+    gap: 20px;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+
+    img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+    }
+
+    .username {
+      display: flex;
+      flex-direction: column;
+
+      .name:hover {
+        text-decoration: underline;
+      }
+
+      .name {
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      .mess {
+        font-size: 15px;
+        font-weight: 400;
+        width: 150px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .mess.not-read {
+        font-weight: 700;
+      }
+
+      .time {
+        font-size: 10px;
+        font-weight: 100;
+      }
+    }
+
+    .new-message {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      margin-left: auto;
+      background-color: #3578E5;
+    }
+  }
+
+  .userContainer:hover {
+    background-color: #F2F3F5;
   }
 }

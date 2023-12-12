@@ -86,7 +86,7 @@ const ListFriendRequest = () => {
   };
   if (loading) fetchRequests();
   return (
-    <div style={{ width: "300px" }}>
+    <div style={{ width: "360px" }}>
       {requests.map((request) => (
         <div style={{ display: "flex", margin: "15px 10px" }} key={request.id}>
           <div

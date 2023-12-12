@@ -1,15 +1,36 @@
 import "./listMessages.scss";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMaximize, faPenToSquare, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import { useContext } from "react";
 import { ChatContext } from "./ChatContext";
 
 const ListMessages = ({ ListMessages }) => {
   return (
-    <>
+    <div className="list-messages">
+      <div className="title-messages">
+        <span>Đoạn chat</span>
+        <div className="more">
+          <div className="icon"><MoreHorizIcon /></div>
+          <div className="icon"><FontAwesomeIcon icon={faMaximize} /></div>
+          <div className="icon"><FontAwesomeIcon icon={faPenToSquare} /></div>
+        </div>
+      </div>
+      <div className="input-container">
+        <input
+          type="text"
+          placeholder="Search on Tiny messages..."
+          className="input-field"
+        />
+        <span className="icon-container">
+          <FontAwesomeIcon icon={faMagnifyingGlass} />
+        </span>
+      </div>
       {ListMessages.map((mess) => {
         return <Messages key={mess.message_id} mess={mess}></Messages>;
       })}
-    </>
+    </div>
   );
 };
 const Messages = ({ mess }) => {

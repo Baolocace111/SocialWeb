@@ -1,8 +1,9 @@
 import { makeRequest } from "../../axios";
-import "./navbar.scss";
+import "./listNotification.scss";
 import { useCallback, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import NineCube from "../loadingComponent/nineCube/NineCube";
@@ -63,67 +64,33 @@ const ListNotification = () => {
     setWS(socket);
   }
   return (
-    <div style={{ width: "300px", height: "500px" }}>
+    <div className="list-notification">
+      <div className="title-notification">
+        <span>Thông báo</span>
+        <div className="more">
+          <MoreHorizIcon />
+        </div>
+      </div>
       {notifications.map((notification) => (
-        <div
-          style={{
-            display: "flex",
-            margin: "15px 10px",
-            padding: "10px",
-            // background: notification.read === 1 ? "white" : "grey",
-          }}
-          key={notification.id}
-        >
-          <Link
-            to={notification.link}
-            style={{ cursor: "pointer", display: "flex" }}
-          // target="_blank"
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginRight: "15px",
-                flex: "0 0 auto",
+        <div className="item-notification" key={notification.id}>
+          <Link to={notification.link} style={{ cursor: "pointer" }}>
+            <img
+              src={notification.image}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "/notificationtype/null.jpg";
               }}
-            >
-              <img
-                style={{ borderRadius: "50%", width: "50px", height: "50px" }}
-                src={notification.image}
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = "/notificationtype/null.jpg";
-                }}
-                alt={""}
-              />
-            </div>
+              alt={""}
+            />
           </Link>
-          <div className="content">
-            <div
-              className="message"
-              dangerouslySetInnerHTML={{ __html: notification.message }}
-            ></div>
+          <div className="content-notification">
+            <div className="message" dangerouslySetInnerHTML={{ __html: notification.message }}></div>
             <div className="date">
               {moment(notification.createdAt).fromNow()}
             </div>
           </div>
-
-          <div
-            style={{
-              position: "absolute",
-              right: "0px",
-              width: "50px",
-            }}
-          >
-            <button
-              onClick={() => handleDelete(notification.id)}
-              style={{
-                borderRadius: "50%",
-                width: "30px",
-                height: "30px",
-                cursor: "pointer",
-              }}
-            >
+          <div className="action-notification">
+            <button onClick={() => handleDelete(notification.id)}>
               <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
             </button>
           </div>

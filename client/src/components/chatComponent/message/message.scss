@@ -2,8 +2,7 @@
   width: inherit;
 
   .mess-content {
-    width: fit-content;
-    height: 24px;
+    max-width: 150px;
     background: #f6f3f3;
     border-radius: 15px;
     overflow: hidden;
