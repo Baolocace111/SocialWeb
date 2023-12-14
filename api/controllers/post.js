@@ -18,6 +18,8 @@ import {
 import { AuthService } from "../services/AuthService.js";
 import { upload } from "../Multer.js";
 import path from "path";
+import fs from 'fs';
+
 export const getPostByIdController = (req, res) => {
   const postId = req.params.postId;
   const token = req.cookies.accessToken;
@@ -256,6 +258,7 @@ export const getVideoFromPostController = async (req, res) => {
     getVideoFromPostService(req.params.postId, userId, (error, data) => {
       if (error) return res.status(500).json(error);
       if (data === "") return res.status(200).json(error);
+      if (!data || !fs.existsSync(data)) return res.status(404).json({ error: "File not found" });
       return res.sendFile(data);
     });
   } catch (error) {
