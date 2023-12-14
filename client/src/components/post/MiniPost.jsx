@@ -1,7 +1,9 @@
 import "./miniPost.scss";
+import { URL_OF_BACK_END } from "../../axios";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import Description from "./desc";
+import ReactPlayer from "react-player";
 
 const MiniPost = ({ post }) => {
 
@@ -9,7 +11,17 @@ const MiniPost = ({ post }) => {
     <div className="mini-post">
       <div className="mini-container">
         <div className="mini-content">
-          <img src={"/upload/" + post.img} onClick={() => window.location.href = `/seepost/${post.id}`} alt="" />
+          <Link to={`/seepost/${post.id}`}>
+            {post.type === 2 ?
+              <ReactPlayer
+                url={URL_OF_BACK_END + "posts/videopost/" + post.id}
+                playing={true}
+                controls={true}
+                width="100%"
+                height="auto"
+                className="react-player" />
+              : <img src={"/upload/" + post.img} alt="" />}
+          </Link>
         </div>
         <div className="userInfo">
           <img src={"/upload/" + post.profilePic} alt="" />
