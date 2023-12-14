@@ -300,3 +300,86 @@ export const getAllPrivateUserOfPost = (postId, userId, callback) => {
     return callback(null, data);
   });
 };
+
+export const getPostCountPerUserInMonth = (
+  year,
+  month,
+  limit,
+  page,
+  callback
+) => {
+  const offset = (page - 1) * limit;
+  const q = `
+    SELECT u.id, u.username, u.profilePic, u.name, COUNT(p.id) AS total_posts
+    FROM users u
+    LEFT JOIN posts p ON u.id = p.userId
+    WHERE YEAR(p.createdAt) = ? AND MONTH(p.createdAt) = ?
+    GROUP BY u.id
+    ORDER BY total_posts DESC
+    LIMIT ? OFFSET ?;
+
+    SELECT CEIL(COUNT(*) / ?) AS total_pages
+    FROM (
+      SELECT u.id
+      FROM users u
+      LEFT JOIN posts p ON u.id = p.userId
+      WHERE YEAR(p.createdAt) = ? AND MONTH(p.createdAt) = ?
+      GROUP BY u.id
+    ) AS user_post_count;
+  `;
+
+  const values = [year, month, limit, offset, limit, year, month];
+
+  db.query(q, values, (err, data) => {
+    if (err) return callback(err, null);
+
+    // Kết quả truy vấn sẽ là mảng chứa hai phần tử: data[0] là thông tin về bài viết của người dùng, data[1] là thông tin về tổng số trang.
+    const result = {
+      lists: data[0],
+      totalPages: data[1].length === 0 ? 0 : data[1][0].total_pages, // Lấy total_pages từ phần tử đầu tiên của mảng data[1]
+    };
+
+    return callback(null, result);
+  });
+};
+export const getPostsByUserWithPagination = (
+  userId,
+  limit,
+  year,
+  month,
+  page,
+  callback
+) => {
+  const offset = (page - 1) * limit;
+  const q = `
+    SELECT p.*
+    FROM posts p
+    WHERE p.userId = ? AND YEAR(p.createdAt) = ? AND MONTH(p.createdAt) = ?
+    ORDER BY p.createdAt DESC
+    LIMIT ? OFFSET ?;
+  `;
+
+  const values = [userId, year, month, limit, offset];
+
+  db.query(q, values, (err, posts) => {
+    if (err) return callback(err, null);
+
+    callback(null, { next: posts.length < limit ? -1 : page + 1, posts });
+  });
+};
+export const deletePostbyAdmin = (postId, callback) => {
+  const deleteQuery = `Select posts.* from posts where posts.id=?;
+  DELETE posts.* FROM posts WHERE posts.id = ?;`;
+
+  db.query(deleteQuery, [postId, postId], (err, deletedPost) => {
+    if (err) return callback(err, null);
+
+    if (deletedPost[1].affectedRows > 0) {
+      // Trả về thông tin của bài viết đã bị xóa
+      //console.log(deletedPost);
+      return callback(null, deletedPost[0]);
+    } else {
+      return callback("Post is undefined", null);
+    }
+  });
+};

@@ -11,6 +11,7 @@ import relationshipRoutes from "./routes/relationships.js";
 import messageRoutes from "./routes/message.js";
 import notificationRoutes from "./routes/notifications.js";
 import fileRoutes from "./routes/files.js";
+import adminRoutes from "./routes/admin.js";
 import cors from "cors";
 import multer from "multer";
 import cookieParser from "cookie-parser";
@@ -58,7 +59,7 @@ app.use("/api/friendship", friendshipRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/file/", fileRoutes);
-
+app.use("/api/admin", adminRoutes);
 app.listen(8800, () => {
   console.log("API working!");
 });
@@ -102,7 +103,7 @@ wss.on("connection", async (ws, req) => {
       ws.send("Welcome to the WebSocket server");
 
       // Xử lý tin nhắn từ client
-      ws.on("message", (message) => { });
+      ws.on("message", (message) => {});
 
       // Xử lý sự kiện khi client đóng kết nối
       ws.on("close", () => {
