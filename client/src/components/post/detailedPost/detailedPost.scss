@@ -14,6 +14,11 @@
             background: black;
             color: white;
 
+            .react-player {
+                min-width: 100%;
+                min-height: 100%;
+            }
+
             img {
                 width: 70%;
                 object-fit: cover;
