@@ -32,12 +32,10 @@ const Posts = ({ userId }) => {
     if (hasNextPage && !isLoadingMore) {
       setisLoadingMore(true);
       const lastPage = data?.pages[data.pages.length - 1];
-      console.log(lastPage);
       if (lastPage && lastPage.next !== undefined && lastPage.next !== -1) {
         fetchNextPage({
           pageParam: lastPage.next,
         });
-        // console.log("Going to next page");
       }
     }
   }

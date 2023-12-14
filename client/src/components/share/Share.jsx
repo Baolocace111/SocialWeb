@@ -26,10 +26,27 @@ const Share = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation(
-    (newPost) => {
-      return makeRequest.post("/posts/post", newPost).catch((error) => {
+    async (newPost) => {
+      try {
+        return await makeRequest.post("/posts/post", newPost);
+      } catch (error) {
         alert(error.response.data);
-      });
+      }
+    },
+    {
+      onSuccess: () => {
+        // Invalidate and refetch
+        queryClient.invalidateQueries(["posts"]);
+      },
+    }
+  );
+  const video_mutation = useMutation(
+    async (newPost) => {
+      try {
+        return await makeRequest.post("/posts/videopost", newPost);
+      } catch (error) {
+        alert(error.response.data);
+      }
     },
     {
       onSuccess: () => {
@@ -41,9 +58,17 @@ const Share = () => {
 
   const handleClick = async (e) => {
     e.preventDefault();
-    let imgUrl = "";
-    if (file) imgUrl = await upload();
-    mutation.mutate({ desc, img: imgUrl });
+    if ((file && isImage(file)) || !file) {
+      let imgUrl = "";
+      imgUrl = await upload();
+      mutation.mutate({ desc, img: imgUrl });
+    }
+    else {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("desc", desc);
+      video_mutation.mutate(formData);
+    }
     setDesc("");
     setFile(null);
   };
@@ -73,10 +98,10 @@ const Share = () => {
             <input
               type="file"
               id="file"
-              accept="image/*"
+              accept="image/*, video/*"
               style={{ display: "none" }}
               onChange={(e) => {
-                if (isImage(e.target.files[0])) setFile(e.target.files[0]);
+                if (isImageAndVideo(e.target.files[0])) setFile(e.target.files[0]);
                 else {
                   alert("Unacceptable file");
                 }
@@ -107,6 +132,9 @@ const Share = () => {
 };
 
 export default Share;
+function isImageAndVideo(file) {
+  return file && (file["type"].split("/")[0] === "image" || file["type"].split("/")[0] === "video");
+}
 function isImage(file) {
-  return file && file["type"].split("/")[0] === "image";
+  return file && (file["type"].split("/")[0] === "image");
 }

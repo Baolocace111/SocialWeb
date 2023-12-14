@@ -37,13 +37,14 @@ import Radio from "@mui/material/Radio";
 import Comments from "../comments/Comments";
 import moment from "moment";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { makeRequest } from "../../axios";
+import { makeRequest, URL_OF_BACK_END } from "../../axios";
 import { useContext, useEffect, useState, useRef } from "react";
 import { AuthContext } from "../../context/authContext";
 import Description from "./desc";
 import MiniPost from "./MiniPost";
 import Private from "./Private";
 import { Link } from "react-router-dom";
+import ReactPlayer from 'react-player';
 
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
@@ -98,6 +99,7 @@ const Post = ({ post }) => {
     if (deleteImage) {
       const file = e.target.files[0];
       setSelectedImage(URL.createObjectURL(file));
+      console.log(selectedImage);
     }
   };
   const upload = async () => {
@@ -156,12 +158,24 @@ const Post = ({ post }) => {
     }
   );
   const updateMutation = useMutation(
+    async (data) => {
+      try {
+        return await makeRequest
+          .put(`/posts/update/${data.postId}`, data);
+      } catch (error) {
+        alert(error.response.data);
+      }
+    },
+    {
+      onSuccess: () => {
+        // Invalidate and refetch
+        queryClient.invalidateQueries(["posts"]);
+      },
+    }
+  );
+  const updateVideoMutation = useMutation(
     (data) => {
-      return makeRequest
-        .put(`/posts/update/${data.postId}`, data)
-        .catch((error) => {
-          alert(error.response.data);
-        });
+      return makeRequest.put(`/posts/share`, data);
     },
     {
       onSuccess: () => {
@@ -198,12 +212,17 @@ const Post = ({ post }) => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    let imgUrl = post.img;
-    if (deleteImage) {
-      if (file) imgUrl = await upload();
-      else imgUrl = "";
+    if (post.type === 0) {
+      let imgUrl = post.img;
+      if (deleteImage) {
+        if (file) imgUrl = await upload();
+        else imgUrl = "";
+      }
+      updateMutation.mutate({ postId: post.id, desc, img: imgUrl });
     }
-    updateMutation.mutate({ postId: post.id, desc, img: imgUrl });
+    else {
+      updateVideoMutation.mutate({ postId: post.id, desc: desc });
+    }
     setFile(null);
     setOpenEdit(false);
     setMenuAnchor(null);
@@ -374,7 +393,7 @@ const Post = ({ post }) => {
                   }}
                 />
 
-                {selectedImage && (
+                {selectedImage !== "/upload/null" && selectedImage && !isVideo(selectedImage) && (
                   <div style={{ display: "flex", justifyContent: "center" }}>
                     <div
                       style={{ position: "relative", display: "inline-flex" }}
@@ -625,7 +644,14 @@ const Post = ({ post }) => {
         <div className="content">
           <Description text={post.desc}></Description>
           <Link to={`/seepost/${post.id}`}>
-            <img src={"/upload/" + post.img} alt="" />
+            {post.type === 2 ?
+              <ReactPlayer
+                url={URL_OF_BACK_END + "posts/videopost/" + post.id}
+                width="640px"
+                height="360px"
+                playing={true}
+                controls={true} />
+              : <img src={"/upload/" + post.img} alt="" />}
           </Link>
         </div>
         {!post.error && (
@@ -742,3 +768,10 @@ const Post = ({ post }) => {
 };
 
 export default Post;
+
+function isVideo(filename) {
+  const videoExtensions = [".mp4", ".avi", ".mov", ".mkv", ".wmv"]; // Các phần mở rộng tệp tin video hợp lệ
+
+  const fileExtension = filename.toLowerCase().slice(filename.lastIndexOf("."));
+  return videoExtensions.includes(fileExtension);
+}

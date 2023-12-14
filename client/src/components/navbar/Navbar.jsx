@@ -288,7 +288,7 @@ const Navbar = () => {
           {content === "noti" && <ListNotification></ListNotification>}
 
           {content === "chat" && mess && (
-            <ListMessages ListMessages={mess.list}></ListMessages>
+            <ListMessages handleClose={handleClose} ListMessages={mess.list}></ListMessages>
           )}
         </Popover>
       </div>

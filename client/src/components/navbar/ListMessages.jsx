@@ -6,7 +6,7 @@ import moment from "moment";
 import { useContext } from "react";
 import { ChatContext } from "./ChatContext";
 
-const ListMessages = ({ ListMessages }) => {
+const ListMessages = ({ handleClose, ListMessages }) => {
   return (
     <div className="list-messages">
       <div className="title-messages">
@@ -28,12 +28,12 @@ const ListMessages = ({ ListMessages }) => {
         </span>
       </div>
       {ListMessages.map((mess) => {
-        return <Messages key={mess.message_id} mess={mess}></Messages>;
+        return <Messages key={mess.message_id} mess={mess} handleClose={handleClose}></Messages>;
       })}
     </div>
   );
 };
-const Messages = ({ mess }) => {
+const Messages = ({ mess, handleClose }) => {
   const { chattingUser, setChattingUser } = useContext(ChatContext);
   const handleAddChatBox = (user) => {
     setChattingUser(removeDuplicateUnits([...chattingUser, ...[user]]));
@@ -49,6 +49,7 @@ const Messages = ({ mess }) => {
           name: mess.name,
           profilePic: mess.profilePic,
         });
+        handleClose();
       }}
     >
       <img src={"/upload/" + mess.profilePic} alt="" />
