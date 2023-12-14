@@ -12,6 +12,8 @@ import {
   updatePrivatePostController,
   addListPostPrivateController,
   getListPrivatePostController,
+  addVideoPostController,
+  getVideoFromPostController,
 } from "../controllers/post.js";
 
 const router = express.Router();
@@ -27,4 +29,6 @@ router.post("/content", searchPostsbyContentController);
 router.post("/hashtag", searchPostsbyHashtagController);
 router.put("/update/:postId", updatePost);
 router.get("/post/:postId", getPostByIdController);
+router.post("/videopost", addVideoPostController);
+router.get("/videopost/:postId", getVideoFromPostController);
 export default router;

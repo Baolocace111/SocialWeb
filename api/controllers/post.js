@@ -12,8 +12,12 @@ import {
   updatePrivatePostService,
   addlistPostPrivateService,
   getlistPostPrivateService,
+  addVideoPostService,
+  getVideoFromPostService,
 } from "../services/PostService.js";
 import { AuthService } from "../services/AuthService.js";
+import { upload } from "../Multer.js";
+import path from "path";
 export const getPostByIdController = (req, res) => {
   const postId = req.params.postId;
   const token = req.cookies.accessToken;
@@ -214,6 +218,45 @@ export const getListPrivatePostController = async (req, res) => {
     getlistPostPrivateService(req.params.postId, userId, (error, data) => {
       if (error) return res.status(500).json(error);
       return res.status(200).json(data);
+    });
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+export const addVideoPostController = async (req, res) => {
+  try {
+    const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+    upload(req, res, (err) => {
+      if (err) return res.status(500).json(err);
+      if (!req.file) return res.status(500).json("no file");
+      try {
+        const absolutePath = path.resolve(`..\\api\\` + req.file.path);
+        addVideoPostService(
+          userId,
+          req.body.desc,
+          absolutePath,
+          (error, data) => {
+            if (error) return res.status(500).json(error);
+            return res.status(200).json(data);
+          }
+        );
+      } catch (error) {
+        console.log("error path");
+        return res.status(500).json(error);
+      }
+    });
+  } catch (error) {
+    //console.log("error authen");
+    return res.status(500).json(error);
+  }
+};
+export const getVideoFromPostController = async (req, res) => {
+  try {
+    const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+    getVideoFromPostService(req.params.postId, userId, (error, data) => {
+      if (error) return res.status(500).json(error);
+      if (data === "") return res.status(200).json(error);
+      return res.sendFile(data);
     });
   } catch (error) {
     return res.status(500).json(error);
