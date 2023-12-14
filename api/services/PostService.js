@@ -14,6 +14,8 @@ import {
   getAllPrivateUserOfPost,
   getPostsWithPrivateByUserLimit,
   getPostsWithPrivateLimit,
+  addVideoPost,
+  getVideoFromPost,
 } from "../models/PostModel.js";
 
 export const getPostsService = (userId, userInfo, offset, callback) => {
@@ -63,6 +65,12 @@ export const addPostService = (post, callback) => {
 export const sharePostService = (userId, post, callback) => {
   const thispost = { desc: post.desc, shareId: post.shareId, userId: userId };
   sharePost(thispost, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data);
+  });
+};
+export const addVideoPostService = (userId, desc, url, callback) => {
+  addVideoPost(userId, desc, url, (err, data) => {
     if (err) return callback(err, null);
     return callback(null, data);
   });
@@ -126,6 +134,12 @@ export const addlistPostPrivateService = (
 };
 export const getlistPostPrivateService = (post_id, user_id, callback) => {
   getAllPrivateUserOfPost(post_id, user_id, (error, data) => {
+    if (error) return callback(error, null);
+    return callback(null, data);
+  });
+};
+export const getVideoFromPostService = (postId, userId, callback) => {
+  getVideoFromPost(userId, postId, (error, data) => {
     if (error) return callback(error, null);
     return callback(null, data);
   });

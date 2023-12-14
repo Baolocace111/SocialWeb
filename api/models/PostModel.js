@@ -128,6 +128,28 @@ export const addPost = (post, callback) => {
     return callback(null, "Post has been created.");
   });
 };
+export const addVideoPost = (userId, desc, url, callback) => {
+  const q = "INSERT INTO posts(`desc`, `img`, `type`, `userId`) VALUES (?)";
+  const values = [desc, url, 2, userId];
+  db.query(q, [values], (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, "Post has been created.");
+  });
+};
+export const getVideoFromPost = (userId, postId, callback) => {
+  const q = `SELECT DISTINCT p.*, u.id AS userid, u.name, u.profilePic, f.user_id
+    FROM posts p
+    LEFT JOIN friendships f ON (p.userId=f.friend_id AND f.user_id = ? AND f.status = 1)
+    LEFT JOIN users u ON (p.userId = u.id)
+    LEFT JOIN relationships r ON (p.userId = r.followedUserId)
+    WHERE (p.id=?) AND (p.status = 0 OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?)))) ORDER BY p.createdAt DESC`;
+  db.query(q, [userId, postId, userId, userId, userId], (err, data) => {
+    if (err) return callback(err, null);
+    if (data.length === 0) return callback(null, "");
+
+    return callback(null, data[0].img);
+  });
+};
 export const sharePost = (post, callback) => {
   const checkQuery = "SELECT * FROM posts WHERE id = ? AND type = ?";
   db.query(checkQuery, [post.shareId, 1], (checkErr, checkData) => {
@@ -210,7 +232,7 @@ export const updatePost = (postId, updatedPost, callback) => {
 };
 export const updateSharePost = (postId, updatePost, callback) => {
   const q =
-    "UPDATE posts SET `desc` = ? WHERE id = ? AND userId = ? AND type = 1";
+    "UPDATE posts SET `desc` = ? WHERE id = ? AND userId = ? AND (type = 1 OR type=2)";
   const values = [updatePost.desc, postId, updatePost.userId];
   db.query(q, values, (err, data) => {
     if (err) return callback(err, null);

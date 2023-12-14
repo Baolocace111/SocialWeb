@@ -5,6 +5,6 @@ const router = express.Router();
 
 router.get("/", getStories);
 router.post("/", addStory);
-router.delete("/:id", deleteStory);
+//router.delete("/:id", deleteStory);
 
 export default router;
