@@ -52,7 +52,7 @@ const DetailedPost = ({ post }) => {
                         <FontAwesomeIcon icon={faDownLeftAndUpRightToCenter} />
                     </div> : <></>}
                 </div>
-                {post.type === 2 ?
+                {post.type === 2 || (post.type === 1 && isVideo(post.img)) ?
                     <ReactPlayer
                         url={URL_OF_BACK_END + "posts/videopost/" + post.id}
                         playing={true}
@@ -106,3 +106,9 @@ const DetailedPost = ({ post }) => {
     )
 }
 export default DetailedPost;
+
+function isVideo(img) {
+    const videoExtensions = ['.mp4', '.avi', '.mov', '.wmv', '.mkv'];
+    const fileExtension = img.substring(img.lastIndexOf('.'));
+    return videoExtensions.includes(fileExtension.toLowerCase());
+}
