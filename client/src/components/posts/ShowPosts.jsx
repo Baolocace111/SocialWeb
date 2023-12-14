@@ -13,7 +13,7 @@ const ShowPosts = ({ isLoading, error, posts }) => {
       ) : Array.isArray(posts) ? (
         posts.map((post) => (
           <div key={post.id}>
-            {post.type === 0 ? (
+            {post.type === 2 || post.type === 0 ? (
               <Post post={post} />
             ) : (
               <SharedPost post={post}></SharedPost>
