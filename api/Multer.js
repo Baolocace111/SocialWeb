@@ -10,25 +10,12 @@ const storage = multer.diskStorage({
     if (file.mimetype.startsWith("video")) {
       uploadPath = "./uploads/videos";
     } else if (file.mimetype.startsWith("image")) {
-      const getTypeDirectory = (type) => {
-        switch (type) {
-          case "0":
-            return "./uploads/images/avatar";
-          case "1":
-            return "./uploads/images/cover";
-          case "2":
-            return "./uploads/images/post";
-          case "3":
-            return "./uploads/images/story";
-          default:
-            throw new Error("Invalid image type specified");
-        }
-      };
+      uploadPath = "./uploads/images";
+
       //console.log(req.body);
       //const type = req.body.type;
       //console.log(type);
       try {
-        uploadPath = getTypeDirectory("0");
       } catch (error) {
         return cb("Type không đúng");
       }
