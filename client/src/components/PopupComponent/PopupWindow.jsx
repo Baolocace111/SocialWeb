@@ -25,13 +25,11 @@ const PopupWindow = ({ handleClose, show, children }) => {
   const showHideClassName = show ? "modal display-block" : "modal display-none";
 
   return (
-    <>
-      <div className={showHideClassName}>
-        <div className="modal-main" ref={modalRef}>
-          {children}
-        </div>
+    <div className={showHideClassName}>
+      <div className="modal-main" ref={modalRef}>
+        {children}
       </div>
-    </>
+    </div>
   );
 };
 

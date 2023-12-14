@@ -10,10 +10,11 @@ import { faX, faMagnifyingGlassPlus, faMagnifyingGlassMinus, faDownLeftAndUpRigh
 
 import Description from "../desc";
 import Comments from "../../comments/Comments";
-import { makeRequest } from "../../../axios";
+import { makeRequest, URL_OF_BACK_END } from "../../../axios";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../../../context/authContext";
+import ReactPlayer from "react-player";
 
 const DetailedPost = ({ post }) => {
     const { currentUser } = useContext(AuthContext);
@@ -40,68 +41,67 @@ const DetailedPost = ({ post }) => {
         mutation.mutate(data.includes(currentUser.id));
     };
 
-    const [imageLoaded, setImageLoaded] = useState(false);
-    const handleImageLoad = () => {
-        setImageLoaded(true);
-    };
-
-
     return (
         <div className="detail-post">
             <div className="image-area">
-                {!imageLoaded && <ThreePointLoading />}
                 <div className="action-button">
                     <FontAwesomeIcon onClick={() => window.location.href = `/`} icon={faX} />
-                    <div className="zoom">
+                    {post.type === 0 ? <div className="zoom">
                         <FontAwesomeIcon icon={faMagnifyingGlassPlus} />
                         <FontAwesomeIcon icon={faMagnifyingGlassMinus} />
                         <FontAwesomeIcon icon={faDownLeftAndUpRightToCenter} />
-                    </div>
+                    </div> : <></>}
                 </div>
-                <img src={"/upload/" + post.img} alt="" onLoad={handleImageLoad} />
+                {post.type === 2 ?
+                    <ReactPlayer
+                        url={URL_OF_BACK_END + "posts/videopost/" + post.id}
+                        playing={true}
+                        controls={true}
+                        className="react-player"
+                    />
+                    : <img src={"/upload/" + post.img} alt="" />
+                }
             </div>
-            {imageLoaded && (
-                <div className="content-area">
-                    <div className="userInfo">
-                        <img src={"/upload/" + post.profilePic} alt="" />
-                        <div className="details">
-                            <span className="name"
-                                onClick={() => {
-                                    window.location.href = `/profile/${post.userId}`;
-                                }}>
-                                {post.name}
-                            </span>
-                            <span className="date">{moment(post.createdAt).fromNow()}</span>
-                        </div>
-                        <div className="more"><MoreHorizIcon /></div>
+            <div className="content-area">
+                <div className="userInfo">
+                    <img src={"/upload/" + post.profilePic} alt="" />
+                    <div className="details">
+                        <span className="name"
+                            onClick={() => {
+                                window.location.href = `/profile/${post.userId}`;
+                            }}>
+                            {post.name}
+                        </span>
+                        <span className="date">{moment(post.createdAt).fromNow()}</span>
                     </div>
-                    <div className="post-content">
-                        <Description text={post.desc}></Description>
+                    <div className="more"><MoreHorizIcon /></div>
+                </div>
+                <div className="post-content">
+                    <Description text={post.desc}></Description>
+                </div>
+                <div className="post-info">
+                    <div className="item">
+                        {isLoading ? (
+                            <ThreePointLoading />
+                        ) : data.includes(currentUser.id) ? (
+                            <FavoriteOutlinedIcon
+                                style={{ color: "red" }}
+                                onClick={handleLike}
+                            />
+                        ) : (
+                            <FavoriteBorderOutlinedIcon onClick={handleLike} />
+                        )}
+                        {data?.length} Likes
                     </div>
-                    <div className="post-info">
-                        <div className="item">
-                            {isLoading ? (
-                                <ThreePointLoading />
-                            ) : data.includes(currentUser.id) ? (
-                                <FavoriteOutlinedIcon
-                                    style={{ color: "red" }}
-                                    onClick={handleLike}
-                                />
-                            ) : (
-                                <FavoriteBorderOutlinedIcon onClick={handleLike} />
-                            )}
-                            {data?.length} Likes
-                        </div>
-                        <div className="item">
-                            <TextsmsOutlinedIcon />
-                            See Comments
-                        </div>
-                    </div>
-                    <div className="post-comment">
-                        <Comments postId={post.id} />
+                    <div className="item">
+                        <TextsmsOutlinedIcon />
+                        See Comments
                     </div>
                 </div>
-            )}
+                <div className="post-comment">
+                    <Comments postId={post.id} />
+                </div>
+            </div>
         </div>
     )
 }

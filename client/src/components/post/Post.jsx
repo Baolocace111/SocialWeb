@@ -647,10 +647,9 @@ const Post = ({ post }) => {
             {post.type === 2 ?
               <ReactPlayer
                 url={URL_OF_BACK_END + "posts/videopost/" + post.id}
-                width="640px"
-                height="360px"
                 playing={true}
-                controls={true} />
+                controls={true}
+                className="react-player" />
               : <img src={"/upload/" + post.img} alt="" />}
           </Link>
         </div>
@@ -689,7 +688,7 @@ const Post = ({ post }) => {
                 </span>
               </div>
               <hr />
-              <div>
+              <div className="popup-content">
                 <div
                   style={{
                     display: "flex",
@@ -737,9 +736,10 @@ const Post = ({ post }) => {
                     resize: "none",
                     outline: "none",
                     fontSize: "20px",
+                    marginBottom: "-10px"
                   }}
                 />
-                <div style={{ pointerEvents: "none" }}>
+                <div style={{ pointerEvents: "none", display: "flex", justifyContent: "center" }}>
                   <MiniPost post={post}></MiniPost>
                 </div>
               </div>
