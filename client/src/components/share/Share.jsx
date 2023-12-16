@@ -1,7 +1,7 @@
 import "./share.scss";
-import Image from "../../assets/img.png";
-import Map from "../../assets/map.png";
-import Friend from "../../assets/friend.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faImages, faLocationDot, faTags, faFaceSmileBeam, faX } from "@fortawesome/free-solid-svg-icons";
+import { TextareaAutosize } from "@mui/material";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/authContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -79,18 +79,25 @@ const Share = () => {
     <div className="share">
       <div className="container">
         <div className="top">
-          <div className="left">
+          <div className="text-container">
             <img src={"/upload/" + currentUser.profilePic} alt="" />
-            <input
-              type="text"
+            <TextareaAutosize
               placeholder={`What's on your mind ${currentUser.name}?`}
               onChange={(e) => setDesc(e.target.value)}
               value={desc}
+              className="text-input"
             />
+            <FontAwesomeIcon icon={faFaceSmileBeam} color="gray" size="xl" />
           </div>
-          <div className="right">
+          <div className="file-container">
             {file && (
-              <img className="file" alt="" src={URL.createObjectURL(file)} />
+              <div className="preview">
+                {isImage(file) ? <img className="file" alt="" src={URL.createObjectURL(file)} />
+                  : <video className="file" src={URL.createObjectURL(file)} />}
+                <button className="close-button" onClick={() => setFile(null)}>
+                  <FontAwesomeIcon icon={faX} />
+                </button>
+              </div>
             )}
           </div>
         </div>
@@ -103,24 +110,26 @@ const Share = () => {
               accept="image/*, video/*"
               style={{ display: "none" }}
               onChange={(e) => {
-                if (isImageAndVideo(e.target.files[0])) setFile(e.target.files[0]);
-                else {
+                const selectedFile = e.target.files[0];
+                if (isImageAndVideo(selectedFile)) {
+                  setFile(selectedFile);
+                } else {
                   alert("Unacceptable file");
                 }
               }}
             />
             <label htmlFor="file">
               <div className="item">
-                <img src={Image} alt="" />
-                <span>Add Image</span>
+                <FontAwesomeIcon icon={faImages} color="green" size="xl" />
+                <span>Image/Video</span>
               </div>
             </label>
             <div className="item">
-              <img src={Map} alt="" />
+              <FontAwesomeIcon icon={faLocationDot} color="red" size="xl" />
               <span>Add Place</span>
             </div>
             <div className="item">
-              <img src={Friend} alt="" />
+              <FontAwesomeIcon icon={faTags} color="orange" size="xl" />
               <span>Tag Friends</span>
             </div>
           </div>
