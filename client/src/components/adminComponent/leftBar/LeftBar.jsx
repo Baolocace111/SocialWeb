@@ -1,9 +1,13 @@
 import "./leftBar.scss";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../../context/authContext";
 import { makeRequest } from "../../../axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
+
 const AdminLeftBar = () => {
   const { currentUser, logout } = useContext(AuthContext);
+  const [showBar, setShowBar] = useState(false);
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
@@ -16,7 +20,15 @@ const AdminLeftBar = () => {
   };
   return (
     <>
-      <div className="admin-leftBar">
+      <div className={"admin-leftBar" + (showBar ? " admin-showbar" : "")}>
+        <div
+          className="show-btn"
+          onClick={() => {
+            setShowBar(!showBar);
+          }}
+        >
+          <FontAwesomeIcon icon={faRightToBracket} />
+        </div>
         <div className="admin-user-info">
           <img src={"/upload/" + currentUser.profilePic} alt="" />
           {currentUser.name}
