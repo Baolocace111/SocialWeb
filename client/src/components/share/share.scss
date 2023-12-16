@@ -9,6 +9,7 @@
     background-color: themed("bg");
     color: themed("textColor");
     margin-bottom: 20px;
+    position: relative;
 
     .container {
       padding: 20px;
@@ -44,6 +45,15 @@
             padding: 10px;
             border-radius: 20px;
             background-color: themed("bgSoft");
+          }
+
+          .emo-icon {
+            cursor: pointer;
+            color: gray;
+          }
+
+          .emo-icon:hover {
+            color: gainsboro;
           }
         }
 
@@ -158,5 +168,12 @@
         background-color: rgba(0, 0, 0, 0.6);
       }
     }
+  }
+
+  .picker-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 99;
   }
 }
