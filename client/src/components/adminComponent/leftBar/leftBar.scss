@@ -1,12 +1,28 @@
 .admin-leftBar {
   position: fixed;
-  left: 0;
+  left: -20%;
   top: 0;
   height: 100%;
   width: 20%;
   padding: 10px;
   background-color: black;
+  transition: left 0.5s;
   gap: 10px;
+  .show-btn {
+    cursor: pointer;
+    position: absolute;
+    right: -60px;
+    background-color: black;
+    font-size: larger;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.5s;
+  }
   .click-tag {
     color: white;
     cursor: pointer;
@@ -44,5 +60,11 @@
       width: 75px;
       height: 75px;
     }
+  }
+}
+.admin-showbar {
+  left: 0;
+  .show-btn {
+    transform: rotate(180deg);
   }
 }
