@@ -19,19 +19,22 @@ export const getAndMarkPaginatedNotifications = (
   pageSize,
   callback
 ) => {
-  const offset = (page - 1) * pageSize; // Calculate the offset for pagination
+  const offset = (page - 1) * pageSize;
 
   const qSelect =
-    "SELECT * FROM notifications WHERE userId = ? ORDER BY createdAt DESC LIMIT ?, ?";
+    "SELECT notifications.*, users.id AS userInteractionId, users.profilePic " +
+    "FROM notifications " +
+    "JOIN users ON users.id = SUBSTRING_INDEX(SUBSTRING_INDEX(notifications.message, '/profile/', -1), '\"', 1) " +
+    "WHERE notifications.userId = ? " +
+    "ORDER BY createdAt DESC " +
+    "LIMIT ?, ?";
   const valuesSelect = [userId, offset, pageSize];
 
   db.query(qSelect, valuesSelect, (err, notifications) => {
     if (err) return callback(err, null);
     if (notifications.length === 0) return callback(null, []);
-    // Extracting IDs of fetched notifications to update 'read' status
-    const notificationIds = notifications.map(
-      (notification) => notification.id
-    );
+
+    const notificationIds = notifications.map((notification) => notification.id);
 
     const qUpdate = "UPDATE notifications SET `read` = ? WHERE id IN (?)";
     const valuesUpdate = [true, notificationIds];
