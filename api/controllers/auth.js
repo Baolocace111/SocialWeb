@@ -61,7 +61,7 @@ export const login = async (req, res) => {
     res.clearCookie();
     res
       .cookie("accessToken", result.token, {
-        secure: true,
+        //secure: true,
         sameSite: "none",
       })
       .status(200)
@@ -81,7 +81,7 @@ export const adminLogin = async (req, res) => {
     res.clearCookie();
     return res
       .cookie("accessToken", result.token, {
-        secure: true,
+        //secure: true,
         sameSite: "none",
       })
       .status(200)
