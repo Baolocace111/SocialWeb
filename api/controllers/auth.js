@@ -61,8 +61,8 @@ export const login = async (req, res) => {
     res.clearCookie();
     res
       .cookie("accessToken", result.token, {
-        secure: false,
-        sameSite: "none",
+        secure: true,
+        sameSite: "lax",
       })
       .status(200)
       .json(result.user);
@@ -81,8 +81,8 @@ export const adminLogin = async (req, res) => {
     res.clearCookie();
     return res
       .cookie("accessToken", result.token, {
-        secure: false,
-        sameSite: "none",
+        secure: true,
+        sameSite: "lax",
       })
       .status(200)
       .json(result.user);
@@ -99,8 +99,8 @@ export const logout = async (req, res) => {
     return res
       .clearCookie("accessToken", {
         //httpOnly: true,
-        secure: false,
-        sameSite: "none",
+        secure: true,
+        sameSite: "lax",
       })
       .status(200)
       .json("User has been logged out.");
