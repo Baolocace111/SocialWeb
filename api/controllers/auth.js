@@ -58,7 +58,7 @@ export const login = async (req, res) => {
       req.body.username,
       req.body.password
     );
-    res.clearCookie();
+
     res
       .cookie("accessToken", result.token, {
         secure: true,
@@ -78,7 +78,7 @@ export const adminLogin = async (req, res) => {
     );
     if (result.user.role !== 1)
       return res.status(500).json("You are not an administrator");
-    res.clearCookie();
+
     return res
       .cookie("accessToken", result.token, {
         secure: true,
