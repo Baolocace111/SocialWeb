@@ -26,8 +26,11 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(
   cors({
-    origin: "*",
-    //credentials: true,
+    origin: [
+      "http://localhost:3000",
+      "https://cc95-115-78-232-69.ngrok-free.app/",
+    ],
+    credentials: true,
     // exposeHeaders:
     //   "access-control-allow-origin,access-control-allow-methods,access-control-allow-headers",
   })
