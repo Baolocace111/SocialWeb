@@ -17,6 +17,7 @@ import multer from "multer";
 import cookieParser from "cookie-parser";
 
 //middlewares
+app.use(cookieParser());
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Credentials", true);
 
@@ -30,7 +31,6 @@ app.use(
       "access-control-allow-origin,access-control-allow-methods,access-control-allow-headers",
   })
 );
-app.use(cookieParser());
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {

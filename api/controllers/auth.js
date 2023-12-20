@@ -98,7 +98,7 @@ export const logout = async (req, res) => {
     //if (ws) ws.close();
     return res
       .clearCookie("accessToken", {
-        httpOnly: true,
+        //httpOnly: true,
         secure: false,
         sameSite: "none",
       })
