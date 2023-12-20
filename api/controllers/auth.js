@@ -65,7 +65,7 @@ export const login = async (req, res) => {
         //sameSite: "none",
       })
       .status(200)
-      .json(result.user);
+      .json({ ...result.user, accessToken: result.token });
   } catch (err) {
     res.status(500).json(err.message);
   }
@@ -85,7 +85,7 @@ export const adminLogin = async (req, res) => {
         //sameSite: "none",
       })
       .status(200)
-      .json(result.user);
+      .json({ ...result.user, accessToken: result.token });
   } catch (error) {
     return res.status(500).json(error.message);
   }

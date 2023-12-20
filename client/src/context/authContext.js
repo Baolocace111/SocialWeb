@@ -9,15 +9,19 @@ export const AuthContextProvider = ({ children }) => {
   );
 
   const login = async (inputs) => {
-    const res = await makeRequest.post("/auth/login", inputs, {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*", // Thay đổi domain tương ứng của ứng dụng React của bạn
-      },
-    });
-
-    setCurrentUser(res.data);
+    await makeRequest
+      .post("/auth/login", inputs, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*", // Thay đổi domain tương ứng của ứng dụng React của bạn
+        },
+      })
+      .then((res) => {
+        setCurrentUser(res.data);
+        document.cookie = `accessToken=${res.data.accessToken};max-age=604800;domain=/`;
+      })
+      .catch((e) => {});
   };
 
   const logout = () => {
