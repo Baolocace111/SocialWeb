@@ -28,7 +28,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://cc95-115-78-232-69.ngrok-free.app/",
+      "https://cc95-115-78-232-69.ngrok-free.app",
     ],
     credentials: true,
     // exposeHeaders:
