@@ -27,7 +27,7 @@ app.use(express.json());
 app.use(
   cors({
     origin: "*",
-    credentials: true,
+    //credentials: true,
     // exposeHeaders:
     //   "access-control-allow-origin,access-control-allow-methods,access-control-allow-headers",
   })
