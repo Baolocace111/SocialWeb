@@ -61,11 +61,12 @@ export const login = async (req, res) => {
     res.clearCookie();
     res
       .cookie("accessToken", result.token, {
-        //secure: true,
-        //sameSite: "none",
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
       })
       .status(200)
-      .json({ ...result.user, accessToken: result.token });
+      .json(result.user);
   } catch (err) {
     res.status(500).json(err.message);
   }
@@ -81,11 +82,12 @@ export const adminLogin = async (req, res) => {
     res.clearCookie();
     return res
       .cookie("accessToken", result.token, {
-        //secure: true,
-        //sameSite: "none",
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
       })
       .status(200)
-      .json({ ...result.user, accessToken: result.token });
+      .json(result.user);
   } catch (error) {
     return res.status(500).json(error.message);
   }
@@ -98,8 +100,9 @@ export const logout = async (req, res) => {
     //if (ws) ws.close();
     return res
       .clearCookie("accessToken", {
-        //secure: true,
-        //sameSite: "none",
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
       })
       .status(200)
       .json("User has been logged out.");
