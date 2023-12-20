@@ -23,8 +23,7 @@ export const AuthContextProvider = ({ children }) => {
         //const cookies = new Cookies();
         //cookies.set("accessToken", res.data.accessToken, { path: "/" });
         //document.cookie = `accessToken=${res.data.accessToken};max-age=604800;domain=/`;
-      })
-      .catch((e) => {});
+      });
   };
 
   const logout = () => {
