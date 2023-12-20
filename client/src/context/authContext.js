@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { makeRequest } from "../axios";
+import Cookies from "universal-cookie";
 
 export const AuthContext = createContext();
 
@@ -19,7 +20,9 @@ export const AuthContextProvider = ({ children }) => {
       })
       .then((res) => {
         setCurrentUser(res.data);
-        document.cookie = `accessToken=${res.data.accessToken};max-age=604800;domain=/`;
+        //const cookies = new Cookies();
+        //cookies.set("accessToken", res.data.accessToken, { path: "/" });
+        //document.cookie = `accessToken=${res.data.accessToken};max-age=604800;domain=/`;
       })
       .catch((e) => {});
   };
