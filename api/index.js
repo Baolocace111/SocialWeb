@@ -24,13 +24,13 @@ app.use((req, res, next) => {
   next();
 });
 app.use(express.json());
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    exposeHeaders:
-      "access-control-allow-origin,access-control-allow-methods,access-control-allow-headers",
-  })
-);
+// app.use(
+//   cors({
+//     origin: "http://localhost:3000",
+//     exposeHeaders:
+//       "access-control-allow-origin,access-control-allow-methods,access-control-allow-headers",
+//   })
+// );
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
