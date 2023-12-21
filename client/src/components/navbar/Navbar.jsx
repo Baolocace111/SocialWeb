@@ -27,7 +27,7 @@ import {
   faCaretDown,
 } from "@fortawesome/free-solid-svg-icons";
 import ListFriendRequest from "./ListFriendRequest";
-import { makeRequest } from "../../axios";
+import { makeRequest, WEBSOCKET_BACK_END } from "../../axios";
 import ListNotification from "./ListNotification";
 import ListMessages from "./ListMessages";
 
@@ -60,7 +60,7 @@ const Navbar = () => {
   };
 
   if (!ws) {
-    const socket = new WebSocket(`ws://localhost:3030/index`);
+    const socket = new WebSocket(WEBSOCKET_BACK_END + `/index`);
     socket.onopen = () => {
       console.log("Connected");
     };
@@ -114,8 +114,11 @@ const Navbar = () => {
       default:
         break;
     }
-    iconId === "profile" ? setAnchorEl(event.currentTarget.parentElement.parentElement)
-      : setAnchorEl(event.currentTarget.parentElement.parentElement.parentElement);
+    iconId === "profile"
+      ? setAnchorEl(event.currentTarget.parentElement.parentElement)
+      : setAnchorEl(
+          event.currentTarget.parentElement.parentElement.parentElement
+        );
     setContent(contentType);
   };
 
@@ -168,7 +171,12 @@ const Navbar = () => {
     <div className="navbar">
       <ListBoxChat></ListBoxChat>
       <div className="left">
-        <span style={{ cursor: "pointer" }} onClick={() => window.location.href = "/"}>TinySocial</span>
+        <span
+          style={{ cursor: "pointer" }}
+          onClick={() => (window.location.href = "/")}
+        >
+          TinySocial
+        </span>
         <HomeOutlinedIcon />
         {darkMode ? (
           <WbSunnyOutlinedIcon onClick={toggle} />
@@ -227,7 +235,12 @@ const Navbar = () => {
             id="noti-icon"
           />
         </div>
-        <div className="user-container" onClick={handlePopover} style={{ cursor: "pointer" }} id="profile">
+        <div
+          className="user-container"
+          onClick={handlePopover}
+          style={{ cursor: "pointer" }}
+          id="profile"
+        >
           <img src={"/upload/" + currentUser.profilePic} alt="" />
           <span>{currentUser.name}</span>
           <FontAwesomeIcon icon={faCaretDown} />
@@ -288,7 +301,10 @@ const Navbar = () => {
           {content === "noti" && <ListNotification></ListNotification>}
 
           {content === "chat" && mess && (
-            <ListMessages handleClose={handleClose} ListMessages={mess.list}></ListMessages>
+            <ListMessages
+              handleClose={handleClose}
+              ListMessages={mess.list}
+            ></ListMessages>
           )}
         </Popover>
       </div>

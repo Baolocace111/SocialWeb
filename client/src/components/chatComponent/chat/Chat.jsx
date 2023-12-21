@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { makeRequest } from "../../../axios";
+import { WEBSOCKET_BACK_END, makeRequest } from "../../../axios";
 import Message from "../message/Message";
 import "./chat.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,7 +23,8 @@ const Chat = ({ friend, onRemoveChatBox }) => {
 
   useEffect(() => {
     if (messageContainerRef.current) {
-      messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+      messageContainerRef.current.scrollTop =
+        messageContainerRef.current.scrollHeight;
     }
   }, [messages]);
 
@@ -31,7 +32,7 @@ const Chat = ({ friend, onRemoveChatBox }) => {
     // Lấy cookies từ document.cookie hoặc từ các nguồn khác nếu cần
     //const token = document.cookie.accessToken;
     // Tạo kết nối WebSocket khi component được mount
-    const socket = new WebSocket(`ws://localhost:3030/chat/${friendId}`); // Đặt URL của WebSocket server của bạn ở đây
+    const socket = new WebSocket(WEBSOCKET_BACK_END + `/chat/${friendId}`); // Đặt URL của WebSocket server của bạn ở đây
 
     // Xử lý sự kiện khi mở kết nối
     socket.onopen = () => {
