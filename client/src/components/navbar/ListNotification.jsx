@@ -75,7 +75,7 @@ const ListNotification = () => {
         <div className="item-notification" key={notification.id}>
           <Link to={notification.link} style={{ cursor: "pointer" }}>
             <img
-              src={notification.image}
+              src={`/upload/` + notification.profilePic}
               onError={(e) => {
                 e.target.onerror = null;
                 e.target.src = "/notificationtype/null.jpg";
@@ -110,9 +110,9 @@ function removeDuplicateUnits(arr) {
     uniqueUnits.set(unit.id, unit);
   }
 
-  // Chuyển mảng set thành mảng thông thường và sắp xếp theo createdAt tăng dần
+  // Chuyển mảng set thành mảng thông thường và sắp xếp theo createdAt giảm dần
   const sortedArr = Array.from(uniqueUnits.values()).sort(
-    (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+    (a, b) => - new Date(a.createdAt) + new Date(b.createdAt)
   );
 
   // Trả về mảng đã sắp xếp và không có phần tử trùng lặp

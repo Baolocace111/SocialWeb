@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { makeRequest } from "../../axios";
 import DetailedPost from "../../components/post/detailedPost/DetailedPost";
 import ThreePointLoading from "../../components/loadingComponent/threepointLoading/ThreePointLoading";
@@ -11,6 +12,23 @@ const PostPage = () => {
       return res.data;
     })
   );
+
+  const [sharedPost, setSharedPost] = useState(null);
+
+  useEffect(() => {
+    if (data && data.type === 1) {
+      makeRequest.get("/posts/post/" + data.img).then((res) => {
+        setSharedPost(res.data);
+      });
+    }
+  }, [data]);
+
+  const sharedPostData = {
+    ...data,
+    img: sharedPost ? sharedPost.img : '',
+    id: sharedPost ? sharedPost.id : '',
+  };
+
   return (
     <div>
       {error ? (
@@ -21,7 +39,8 @@ const PostPage = () => {
         "not found"
       ) : (
         <div className="post-page">
-          <DetailedPost post={data} />
+          {(data.type === 0 || data.type === 2) && <DetailedPost post={data} />}
+          {data.type === 1 && sharedPost && <DetailedPost post={sharedPostData} />}
         </div>
       )}
     </div>
