@@ -20,14 +20,16 @@ export const AuthContextProvider = ({ children }) => {
       })
       .then((res) => {
         setCurrentUser(res.data);
-        //const cookies = new Cookies();
-        //cookies.set("accessToken", res.data.accessToken, { path: "/" });
+        const cookies = new Cookies();
+        removeAllCookies();
+        cookies.set("accessToken", res.data.token, { path: "/" });
         //document.cookie = `accessToken=${res.data.accessToken};max-age=604800;domain=/`;
       });
   };
 
   const logout = () => {
     setCurrentUser(null);
+    removeAllCookies();
     localStorage.removeItem("user");
   };
 
@@ -42,4 +44,14 @@ export const AuthContextProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
+};
+
+// Xóa tất cả cookies
+const removeAllCookies = () => {
+  // Khởi tạo đối tượng Cookies
+  const cookies = new Cookies();
+  const allCookies = cookies.getAll();
+  Object.keys(allCookies).forEach((cookieName) => {
+    cookies.remove(cookieName);
+  });
 };

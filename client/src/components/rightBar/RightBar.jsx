@@ -1,7 +1,7 @@
 import "./rightBar.scss";
 
 import React, { useState, useContext } from "react";
-import { makeRequest } from "../../axios";
+import { WEBSOCKET_BACK_END, makeRequest } from "../../axios";
 import NineCube from "../loadingComponent/nineCube/NineCube";
 import { ChatContext } from "../navbar/ChatContext";
 const RightBar = () => {
@@ -12,7 +12,7 @@ const RightBar = () => {
   const [ws, setWS] = useState(null);
 
   if (!ws) {
-    const socket = new WebSocket(`ws://localhost:3030/index`);
+    const socket = new WebSocket(WEBSOCKET_BACK_END + `/index`);
     socket.onopen = () => {
       console.log("Connected");
     };
