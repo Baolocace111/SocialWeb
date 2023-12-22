@@ -79,13 +79,8 @@ const Share = () => {
 
   const handleClick = async (e) => {
     e.preventDefault();
-    if ((file && isImage(file)) || !file) {
-      if (file) {
-        let imgUrl = await upload();
-        mutation.mutate({ desc, img: imgUrl });
-      } else {
-        mutation.mutate({ desc });
-      }
+    if (!file) {
+      mutation.mutate({ desc });
     } else {
       const formData = new FormData();
       formData.append("file", file);

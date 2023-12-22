@@ -57,10 +57,12 @@ const Post = ({ post }) => {
   const [selectedValue, setSelectedValue] = useState(0); // State để lưu giá trị của Radio được chọn
   const privateRef = useRef(null);
 
+  const isVideoContent = post.img.endsWith('.mp4') || post.img.endsWith('.avi') || post.img.endsWith('.mov');
+
   useEffect(() => {
     if (!openEdit) {
       setDeleteImage(false);
-      setSelectedImage("/upload/" + post.img);
+      setSelectedImage(URL_OF_BACK_END + `posts/videopost/` + post.id);
     }
   }, [openEdit, post.img]);
 
@@ -76,6 +78,7 @@ const Post = ({ post }) => {
 
   const handleDialogOpen = () => {
     setOpenEdit(true);
+    console.log(selectedImage);
   };
   const handleDialogClose = () => {
     setOpenEdit(false);
@@ -93,7 +96,7 @@ const Post = ({ post }) => {
   };
 
   const [file, setFile] = useState(null);
-  const [selectedImage, setSelectedImage] = useState("/upload/" + post.img);
+  const [selectedImage, setSelectedImage] = useState(URL_OF_BACK_END + `posts/videopost/` + post.id);
   const [desc, setDesc] = useState(post.desc);
   const handleImageChange = (e) => {
     if (deleteImage) {
@@ -393,7 +396,7 @@ const Post = ({ post }) => {
                   }}
                 />
 
-                {selectedImage !== "/upload/null" && selectedImage && !isVideo(selectedImage) && (
+                {selectedImage && !isVideoContent && (
                   <div style={{ display: "flex", justifyContent: "center" }}>
                     <div
                       style={{ position: "relative", display: "inline-flex" }}
@@ -644,13 +647,10 @@ const Post = ({ post }) => {
         <div className="content">
           <Description text={post.desc}></Description>
           <Link to={`/seepost/${post.id}`}>
-            {post.type === 2 ?
-              <ReactPlayer
-                url={URL_OF_BACK_END + "posts/videopost/" + post.id}
-                playing={true}
-                controls={true}
-                className="react-player" />
-              : <img src={"/upload/" + post.img} alt="" />}
+            {post.type === 2 && isVideoContent ?
+              // <Content post={post} />
+              <ReactPlayer url={URL_OF_BACK_END + `posts/videopost/` + post.id} playing={true} controls={true} className="react-player" />
+              : <img src={URL_OF_BACK_END + `posts/videopost/` + post.id} alt="" />}
           </Link>
         </div>
         {!post.error && (
@@ -768,10 +768,3 @@ const Post = ({ post }) => {
 };
 
 export default Post;
-
-function isVideo(filename) {
-  const videoExtensions = [".mp4", ".avi", ".mov", ".mkv", ".wmv"]; // Các phần mở rộng tệp tin video hợp lệ
-
-  const fileExtension = filename.toLowerCase().slice(filename.lastIndexOf("."));
-  return videoExtensions.includes(fileExtension);
-}
