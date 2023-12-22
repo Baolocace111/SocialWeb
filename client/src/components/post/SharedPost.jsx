@@ -94,7 +94,7 @@ const SharedPost = ({ post }) => {
   //Use Mutation
   const updateMutation = useMutation(
     (data) => {
-      return makeRequest.put(`/posts/share`, data);
+      return makeRequest.put(`/posts/updatedesc`, data);
     },
     {
       onSuccess: () => {

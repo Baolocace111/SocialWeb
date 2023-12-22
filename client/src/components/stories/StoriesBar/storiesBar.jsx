@@ -7,7 +7,7 @@ import FlipCube from "../../loadingComponent/flipCube/FlipCube";
 
 const StoriesBar = () => {
     const { data: stories } = useQuery(["stories"], () =>
-        makeRequest.get("/stories").then((res) => res.data)
+        makeRequest.get("/stories/story").then((res) => res.data)
     );
 
     const [users, setUsers] = useState({});

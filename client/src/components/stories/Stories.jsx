@@ -22,7 +22,7 @@ const Stories = () => {
   const { currentUser } = useContext(AuthContext);
   const inputRef = useRef(null);
   const { isLoading, error, data } = useQuery(["stories"], () =>
-    makeRequest.get("/stories").then((res) => {
+    makeRequest.get("/stories/story").then((res) => {
       return res.data;
     })
   );
