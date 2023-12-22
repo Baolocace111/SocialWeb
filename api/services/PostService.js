@@ -8,7 +8,6 @@ import {
   updatePost,
   getPostById,
   sharePost,
-  updateSharePost,
   addListPostPrivate,
   updatePrivatePost,
   getAllPrivateUserOfPost,
@@ -16,6 +15,9 @@ import {
   getPostsWithPrivateLimit,
   addVideoPost,
   getVideoFromPost,
+  updateDescPost,
+  deleteImageOfPost,
+  updateImagePost,
 } from "../models/PostModel.js";
 
 export const getPostsService = (userId, userInfo, offset, callback) => {
@@ -75,9 +77,9 @@ export const addVideoPostService = (userId, desc, url, callback) => {
     return callback(null, data);
   });
 };
-export const updateSharePostService = (userId, postId, desc, callback) => {
+export const updateDescPostService = (userId, postId, desc, callback) => {
   const thispost = { desc: desc, userId: userId };
-  updateSharePost(postId, thispost, (err, data) => {
+  updateDescPost(postId, thispost, (err, data) => {
     if (err) return callback(err, null);
     return callback(null, data);
   });
@@ -105,6 +107,12 @@ export const getPostbyHashtagService = (hashtag, userId, callback) => {
 export const updatePostService = (postId, updatedPost, callback) => {
   updatePost(postId, updatedPost, (err, data) => {
     //console.log(updatedPost);
+    if (err) return callback(err);
+    return callback(null, data);
+  });
+};
+export const updateImagePostService = (postId, userId, img, callback) => {
+  updateImagePost(postId, img, userId, (err, data) => {
     if (err) return callback(err);
     return callback(null, data);
   });
@@ -140,6 +148,12 @@ export const getlistPostPrivateService = (post_id, user_id, callback) => {
 };
 export const getVideoFromPostService = (postId, userId, callback) => {
   getVideoFromPost(userId, postId, (error, data) => {
+    if (error) return callback(error, null);
+    return callback(null, data);
+  });
+};
+export const deleteImagePostService = (postId, userId, callback) => {
+  deleteImageOfPost(postId, userId, (error, data) => {
     if (error) return callback(error, null);
     return callback(null, data);
   });

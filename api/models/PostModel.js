@@ -115,12 +115,13 @@ export const getPostsWithPrivate = (userId, callback) => {
 
 export const addPost = (post, callback) => {
   const q =
-    "INSERT INTO posts(`desc`, `img`, `createdAt`, `userId`) VALUES (?)";
+    "INSERT INTO posts(`desc`, `img`, `createdAt`, `userId`,`status`) VALUES (?)";
   const values = [
     post.desc,
     post.img,
     moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
     post.userId,
+    2,
   ];
 
   db.query(q, [values], (err, data) => {
@@ -230,9 +231,18 @@ export const updatePost = (postId, updatedPost, callback) => {
     return callback(null, "Post has been updated.");
   });
 };
-export const updateSharePost = (postId, updatePost, callback) => {
-  const q =
-    "UPDATE posts SET `desc` = ? WHERE id = ? AND userId = ? AND (type = 1 OR type=2)";
+export const updateImagePost = (postId, img, user_id, callback) => {
+  const q = "UPDATE posts SET `img` = ? WHERE id = ? AND userId = ?";
+  const values = [img, postId, user_id];
+
+  db.query(q, values, (err, data) => {
+    if (err) return callback(err, null);
+    if (data.affectedRows === 0) return callback("Post cant update", null);
+    return callback(null, "Post has been updated.");
+  });
+};
+export const updateDescPost = (postId, updatePost, callback) => {
+  const q = "UPDATE posts SET `desc` = ? WHERE id = ? AND userId = ?";
   const values = [updatePost.desc, postId, updatePost.userId];
   db.query(q, values, (err, data) => {
     if (err) return callback(err, null);
@@ -380,6 +390,21 @@ export const deletePostbyAdmin = (postId, callback) => {
       return callback(null, deletedPost[0]);
     } else {
       return callback("Post is undefined", null);
+    }
+  });
+};
+export const deleteImageOfPost = (postId, userId, callback) => {
+  const q =
+    "UPDATE posts SET image = NULL WHERE `id` = ? AND `userId`=? AND (`desc` IS NOT NULL AND `desc` <>'') ;";
+  db.query(q, [postId, userId], (err, deleted) => {
+    if (err) return callback(err, null);
+
+    if (deleted.affectedRows > 0) {
+      // Trả về thông tin của bài viết đã bị xóa
+      //console.log(deletedPost);
+      return callback(null, "successfull");
+    } else {
+      return callback("Post can't delete image", null);
     }
   });
 };
