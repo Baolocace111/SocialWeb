@@ -5,20 +5,21 @@ import {
   deletePostService,
   getPostbyContentService,
   getPostbyHashtagService,
-  updatePostService,
   getPostByIdService,
   sharePostService,
-  updateSharePostService,
+  updateDescPostService,
   updatePrivatePostService,
   addlistPostPrivateService,
   getlistPostPrivateService,
   addVideoPostService,
   getVideoFromPostService,
+  deleteImagePostService,
+  updateImagePostService,
 } from "../services/PostService.js";
 import { AuthService } from "../services/AuthService.js";
 import { upload } from "../Multer.js";
 import path from "path";
-import fs from 'fs';
+import fs from "fs";
 
 export const getPostByIdController = (req, res) => {
   const postId = req.params.postId;
@@ -94,11 +95,11 @@ export const sharePostController = async (req, res) => {
     return res.status(500).json(error);
   }
 };
-export const updateSharedPostController = async (req, res) => {
+export const updateDescPostController = async (req, res) => {
   try {
     const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
     //console.log(req.body.postId, req.body.desc);
-    updateSharePostService(
+    updateDescPostService(
       userId,
       req.body.postId,
       req.body.desc,
@@ -154,33 +155,35 @@ export const searchPostsbyHashtagController = (req, res) => {
   });
 };
 
-export const updatePost = (req, res) => {
-  const token = req.cookies.accessToken;
-  if (!token) return res.status(401).json("Not logged in!");
-
-  jwt.verify(token, "secretkey", (err, userInfo) => {
-    if (err) return res.status(403).json("Token is not valid!");
-
-    const postId = req.params.postId; // Lấy ID của bài viết cần sửa từ tham số URL.
-    const updatedPost = {
-      userId: userInfo.id,
-      desc: req.body.desc,
-      img: req.body.img,
-    };
-    if (
-      (updatedPost.desc === "" ||
-        updatedPost.desc === undefined ||
-        updatedPost.desc === null) &&
-      (updatedPost.img === "" ||
-        updatedPost.img === undefined ||
-        updatedPost.img === null)
-    )
-      return res.status(500).json("Your post is invalid");
-    updatePostService(postId, updatedPost, (err, data) => {
+export const updateImagePost = async (req, res) => {
+  try {
+    const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+    upload(req, res, (err) => {
       if (err) return res.status(500).json(err);
-      return res.status(200).json(data);
+      if (!req.file) {
+        deleteImagePostService(req.params.postId, userId, (error, data) => {
+          if (error) return res.status(500).json(error);
+          else return res.status(200).json(data);
+        });
+      }
+      try {
+        const absolutePath = path.resolve(req.file.path);
+        updateImagePostService(
+          req.params.postId,
+          userId,
+          absolutePath,
+          (error, data) => {
+            if (error) return res.status(500).json(error);
+            return res.status(200).json(data);
+          }
+        );
+      } catch (err) {
+        return res.status(500).json(err);
+      }
     });
-  });
+  } catch (error) {
+    return res.status(500).json(error);
+  }
 };
 export const updatePrivatePostController = async (req, res) => {
   try {
@@ -230,22 +233,37 @@ export const addVideoPostController = async (req, res) => {
     const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
     upload(req, res, (err) => {
       if (err) return res.status(500).json(err);
-      if (!req.file) return res.status(500).json("no file");
-      try {
-        const absolutePath = path.resolve(`..\\api\\` + req.file.path);
-        addVideoPostService(
-          userId,
-          req.body.desc,
-          absolutePath,
-          (error, data) => {
-            if (error) return res.status(500).json(error);
-            return res.status(200).json(data);
-          }
-        );
-      } catch (error) {
-        console.log("error path");
-        return res.status(500).json(error);
-      }
+      if (!req.file) {
+        const post = {
+          desc: req.body.desc,
+          img: "",
+          userId: userId,
+        };
+        if (
+          (post.desc === "" || post.desc === undefined || post.desc === null) &&
+          (post.img === "" || post.img === undefined || post.img === null)
+        )
+          return res.status(500).json("Your post is invalid");
+        addPostService(post, (err, data) => {
+          if (err) return res.status(500).json(err);
+          return res.status(200).json(data);
+        });
+      } else
+        try {
+          const absolutePath = path.resolve(req.file.path);
+          addVideoPostService(
+            userId,
+            req.body.desc,
+            absolutePath,
+            (error, data) => {
+              if (error) return res.status(500).json(error);
+              return res.status(200).json(data);
+            }
+          );
+        } catch (error) {
+          console.log("error path");
+          return res.status(500).json(error);
+        }
     });
   } catch (error) {
     //console.log("error authen");
@@ -257,8 +275,9 @@ export const getVideoFromPostController = async (req, res) => {
     const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
     getVideoFromPostService(req.params.postId, userId, (error, data) => {
       if (error) return res.status(500).json(error);
-      if (data === "") return res.status(200).json(error);
-      if (!data || !fs.existsSync(data)) return res.status(404).json({ error: "File not found" });
+      if (data === "") return res.status(200).json("");
+      if (!data || !fs.existsSync(data))
+        return res.status(404).json({ error: "File not found" });
       return res.sendFile(data);
     });
   } catch (error) {
