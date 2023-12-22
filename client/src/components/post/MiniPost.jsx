@@ -7,12 +7,14 @@ import ReactPlayer from "react-player";
 
 const MiniPost = ({ post }) => {
 
+  const isVideoContent = post.img ? post.img.endsWith('.mp4') || post.img.endsWith('.avi') || post.img.endsWith('.mov') : false;
+
   return (
     <div className="mini-post">
       <div className="mini-container">
         <div className="mini-content">
           <Link to={`/seepost/${post.id}`}>
-            {post.type === 2 ?
+            {post.type === 2 && isVideoContent ?
               <ReactPlayer
                 url={URL_OF_BACK_END + "posts/videopost/" + post.id}
                 playing={true}
@@ -20,7 +22,7 @@ const MiniPost = ({ post }) => {
                 width="100%"
                 height="auto"
                 className="react-player" />
-              : <img src={"/upload/" + post.img} alt="" />}
+              : <img src={URL_OF_BACK_END + `posts/videopost/` + post.id} alt="" />}
           </Link>
         </div>
         <div className="userInfo">

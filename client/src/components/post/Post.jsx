@@ -57,14 +57,14 @@ const Post = ({ post }) => {
   const [selectedValue, setSelectedValue] = useState(0); // State để lưu giá trị của Radio được chọn
   const privateRef = useRef(null);
 
-  const isVideoContent = post.img.endsWith('.mp4') || post.img.endsWith('.avi') || post.img.endsWith('.mov');
+  const isVideoContent = post.img ? post.img.endsWith('.mp4') || post.img.endsWith('.avi') || post.img.endsWith('.mov') : false;
 
   useEffect(() => {
     if (!openEdit) {
       setDeleteImage(false);
       setSelectedImage(URL_OF_BACK_END + `posts/videopost/` + post.id);
     }
-  }, [openEdit, post.img]);
+  }, [openEdit, post.id]);
 
   //Handle openMenu
   const handleMenuClick = (event) => {
@@ -103,16 +103,6 @@ const Post = ({ post }) => {
       const file = e.target.files[0];
       setSelectedImage(URL.createObjectURL(file));
       console.log(selectedImage);
-    }
-  };
-  const upload = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await makeRequest.post("/upload", formData);
-      return res.data;
-    } catch (err) {
-      console.log(err);
     }
   };
   //End handleOpenMenu
@@ -163,8 +153,7 @@ const Post = ({ post }) => {
   const updateMutation = useMutation(
     async (data) => {
       try {
-        return await makeRequest
-          .put(`/posts/update/${data.postId}`, data);
+        return await makeRequest.put(`/posts/updatedesc`, data);
       } catch (error) {
         alert(error.response.data);
       }
@@ -177,8 +166,8 @@ const Post = ({ post }) => {
     }
   );
   const updateVideoMutation = useMutation(
-    (data) => {
-      return makeRequest.put(`/posts/share`, data);
+    async (data) => {
+      return makeRequest.put(`/posts/updateimage/${data.postId}`, data.formData);
     },
     {
       onSuccess: () => {
@@ -215,16 +204,18 @@ const Post = ({ post }) => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    if (post.type === 0) {
-      let imgUrl = post.img;
-      if (deleteImage) {
-        if (file) imgUrl = await upload();
-        else imgUrl = "";
+    if (deleteImage) {
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        await updateVideoMutation.mutateAsync({ postId: post.id, formData });
+        window.location.reload();
+      } catch (error) {
+        console.error(error);
       }
-      updateMutation.mutate({ postId: post.id, desc, img: imgUrl });
     }
     else {
-      updateVideoMutation.mutate({ postId: post.id, desc: desc });
+      updateMutation.mutate({ postId: post.id, desc: desc });
     }
     setFile(null);
     setOpenEdit(false);
@@ -648,7 +639,6 @@ const Post = ({ post }) => {
           <Description text={post.desc}></Description>
           <Link to={`/seepost/${post.id}`}>
             {post.type === 2 && isVideoContent ?
-              // <Content post={post} />
               <ReactPlayer url={URL_OF_BACK_END + `posts/videopost/` + post.id} playing={true} controls={true} className="react-player" />
               : <img src={URL_OF_BACK_END + `posts/videopost/` + post.id} alt="" />}
           </Link>
