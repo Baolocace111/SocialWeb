@@ -1,6 +1,7 @@
 import "./message.scss";
 import React, { useState, useEffect } from "react";
 import moment from "moment";
+import { URL_OF_BACK_END } from "../../../axios";
 const Message = ({ messageShow, friendProfilePic }) => {
   const [show, setShow] = useState(false);
 
@@ -35,7 +36,7 @@ const Message = ({ messageShow, friendProfilePic }) => {
         </div>
       ) : (
         <div className="messageis_friends">
-          <img src={"/upload/" + friendProfilePic} alt="" />
+          <img src={URL_OF_BACK_END + `users/profilePic/` + friendProfilePic} alt="" />
           <div className="content-and-date">
             <div className="mess-content">{messageShow.message}</div>
             {show && (

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { makeRequest } from "../../../axios";
+import { URL_OF_BACK_END, makeRequest } from "../../../axios";
 import "./ProfileInfo.scss";
 import FlipCube from "../../loadingComponent/flipCube/FlipCube";
 
@@ -43,7 +43,7 @@ const ProfileInfo = ({ user_id, countData, onChangeValue }) => {
                     <div className="row">
                         {friends.map((friend) => (
                             <div className="user" key={friend.id}>
-                                <img src={"/upload/" + friend.profilePic} alt="" />
+                                <img src={URL_OF_BACK_END + `users/profilePic/` + friend.id} alt="" />
                                 <span
                                     className="name"
                                     onClick={() => {

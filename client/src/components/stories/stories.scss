@@ -13,7 +13,7 @@
     justify-content: space-between;
   }
 
-  @include tablet{
+  @include tablet {
     height: 150px;
     gap: 20px;
   }
@@ -21,7 +21,7 @@
   .slider-container {
     max-width: 800px;
     margin: 0 auto; // Để căn giữa slider trong khung màn hình
-  
+
     // Áp dụng responsive cho slider
     @include mobile {
       max-width: 100%; // Đảm bảo slider vẫn hiển thị đúng trên các thiết bị di động
@@ -29,7 +29,8 @@
   }
 
   .slider-container .slick-slide {
-    margin: 0 7.5px; /* Thêm khoảng cách 10px giữa các slide */
+    margin: 0 7.5px;
+    /* Thêm khoảng cách 10px giữa các slide */
     max-width: 180px;
   }
 
@@ -65,6 +66,7 @@
       left: 10px;
       color: white;
       font-weight: 500;
+
       @include mobile {
         display: none;
       }
@@ -87,11 +89,11 @@
       justify-content: center;
 
       @include mobile {
-       left: 0;
-       right: 0;
-       top: 0;
-       bottom: 0;
-       margin: auto;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
       }
     }
 
@@ -127,7 +129,18 @@
         transition: transform 0.5s ease;
         opacity: 0.8;
       }
+
       img:hover {
+        transform: scale(1.05);
+        opacity: 0.7;
+      }
+
+      video {
+        transition: transform 0.5s ease;
+        opacity: 0.8;
+      }
+
+      video:hover {
         transform: scale(1.05);
         opacity: 0.7;
       }

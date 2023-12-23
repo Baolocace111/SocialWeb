@@ -1,7 +1,7 @@
 import "./storiesBar.scss";
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { makeRequest } from "../../../axios";
+import { URL_OF_BACK_END, makeRequest } from "../../../axios";
 import moment from "moment";
 import FlipCube from "../../loadingComponent/flipCube/FlipCube";
 
@@ -70,7 +70,7 @@ const StoriesBar = () => {
                             <div className="user" key={userId} onClick={() => {
                                 window.location.href = `/stories/${userId}`;
                             }}>
-                                <img src={`/upload/${user.profilePic}`} alt="" />
+                                <img src={URL_OF_BACK_END + `users/profilePic/` + user.id} alt="" />
                                 <div className="details">
                                     <span className="name">{user.name}</span>
                                     <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>

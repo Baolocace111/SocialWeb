@@ -25,7 +25,6 @@ const UserStoryPage = () => {
   }
 
   const name = userData ? userData.name : "Unknown";
-  const profilePic = userData ? userData.profilePic : "";
 
   // Lọc các story có userId trùng với userId đã nhận được
   const userStories = storiesData.filter((story) => story.userId === userId);
@@ -36,7 +35,7 @@ const UserStoryPage = () => {
       header: {
         heading: name,
         subheading: moment(story.createdAt).fromNow(),
-        profileImage: `/upload/${profilePic}`,
+        profileImage: URL_OF_BACK_END + `users/profilePic/` + story.userId,
       },
       url: URL_OF_BACK_END + `stories/image/${story.id}`,
       type: mediaType,

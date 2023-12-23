@@ -8,7 +8,7 @@ import {
 import { faFacebookMessenger } from "@fortawesome/free-brands-svg-icons";
 
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { makeRequest } from "../../axios";
+import { URL_OF_BACK_END, makeRequest } from "../../axios";
 import { useParams } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/authContext";
@@ -102,10 +102,10 @@ const Profile = () => {
       ) : (
         <>
           <div className="images">
-            <img src={"/upload/" + data.coverPic} alt="" className="cover" />
+            <img src={URL_OF_BACK_END + `users/coverPic/` + data.id} alt="" className="cover" />
             <div className="profilePicContainer">
               <img
-                src={"/upload/" + data.profilePic}
+                src={URL_OF_BACK_END + `users/profilePic/` + data.id}
                 alt=""
                 className="profilePic"
               />

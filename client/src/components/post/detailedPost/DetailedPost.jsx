@@ -52,19 +52,19 @@ const DetailedPost = ({ post }) => {
                         <FontAwesomeIcon icon={faDownLeftAndUpRightToCenter} />
                     </div> : <></>}
                 </div>
-                {post.type === 2 || (post.type === 1 && isVideo(post.img)) ?
+                {isVideo(post.img) ?
                     <ReactPlayer
                         url={URL_OF_BACK_END + "posts/videopost/" + post.id}
                         playing={true}
                         controls={true}
                         className="react-player"
                     />
-                    : <img src={"/upload/" + post.img} alt="" />
+                    : <img src={URL_OF_BACK_END + `posts/videopost/` + post.id} alt="" />
                 }
             </div>
             <div className="content-area">
                 <div className="userInfo">
-                    <img src={"/upload/" + post.profilePic} alt="" />
+                    <img src={URL_OF_BACK_END + `users/profilePic/` + post.userId} alt="" />
                     <div className="details">
                         <span className="name"
                             onClick={() => {

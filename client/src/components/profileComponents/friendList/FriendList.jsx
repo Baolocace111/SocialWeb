@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { makeRequest } from "../../../axios";
+import { URL_OF_BACK_END, makeRequest } from "../../../axios";
 import "./friendList.scss";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import FlipCube from "../../loadingComponent/flipCube/FlipCube";
@@ -65,7 +65,7 @@ const FriendList = ({ user_id }) => {
         <div className="row">
           {filteredFriends.map((friend) => (
             <div className="user" key={friend.id}>
-              <img src={"/upload/" + friend.profilePic} alt="" />
+              <img src={URL_OF_BACK_END + `users/profilePic/` + friend.id} alt="" />
               <div className="details">
                 <span
                   className="name"

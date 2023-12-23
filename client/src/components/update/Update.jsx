@@ -82,32 +82,19 @@ const Update = ({ setOpenUpdate, user }) => {
       event.target.value = null;
     }
   };
-  const uploadImage = async (file) => {
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const response = await makeRequest.post("/upload", formData);
-      return response.data;
-    } catch (error) {
-      console.error("Error uploading image:", error);
-    }
-  };
   const handleUpdate = async () => {
     if (updatedProfile.profilePic) {
-      const profileUrl = await uploadImage(updatedProfile.profilePic);
-      imageMutation.mutate({ ...user, profilePic: profileUrl });
+      const formData = new FormData();
+      formData.append("file", updatedProfile.profilePic);
+      imageProfileMutation.mutate(formData);
     }
     if (updatedProfile.coverPic) {
-      const coverUrl = await uploadImage(updatedProfile.coverPic);
-      imageMutation.mutate({ ...user, coverPic: coverUrl });
-    }
-    if (!updatedProfile.profilePic && !updatedProfile.coverPic) {
-      if (profile.profilePic !== user.profilePic || profile.coverPic !== user.coverPic) {
-        imageMutation.mutate({ ...user });
-      }
+      const formData = new FormData();
+      formData.append("file", updatedProfile.coverPic);
+      imageCoverMutation.mutate(formData);
     }
     setOpenUpdate(false);
+    window.location.reload();
   };
 
   const handleChange = (value, name) => {
@@ -120,9 +107,20 @@ const Update = ({ setOpenUpdate, user }) => {
     setChangePassword((prevPassword) => ({ ...prevPassword, [name]: value }));
   };
 
-  const imageMutation = useMutation(
-    (updatedUser) => {
-      return makeRequest.put("/users", updatedUser);
+  const imageProfileMutation = useMutation(
+    (image) => {
+      return makeRequest.put("/users/profilePic", image);
+    },
+    {
+      onSuccess: () => {
+        // Invalidate and refetch
+        queryClient.invalidateQueries(["user"]);
+      },
+    }
+  );
+  const imageCoverMutation = useMutation(
+    (image) => {
+      return makeRequest.put("/users/coverPic", image);
     },
     {
       onSuccess: () => {
@@ -164,7 +162,7 @@ const Update = ({ setOpenUpdate, user }) => {
   );
 
   const handleClick = async (e) => {
-    mutation.mutate({ ...user, ...texts });
+    mutation.mutate({ ...texts });
     setOpenUpdate(false);
   };
   const handleClickCP = async (e) => {

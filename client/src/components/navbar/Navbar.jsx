@@ -27,7 +27,7 @@ import {
   faCaretDown,
 } from "@fortawesome/free-solid-svg-icons";
 import ListFriendRequest from "./ListFriendRequest";
-import { makeRequest, WEBSOCKET_BACK_END } from "../../axios";
+import { makeRequest, URL_OF_BACK_END, WEBSOCKET_BACK_END } from "../../axios";
 import ListNotification from "./ListNotification";
 import ListMessages from "./ListMessages";
 
@@ -117,8 +117,8 @@ const Navbar = () => {
     iconId === "profile"
       ? setAnchorEl(event.currentTarget.parentElement.parentElement)
       : setAnchorEl(
-          event.currentTarget.parentElement.parentElement.parentElement
-        );
+        event.currentTarget.parentElement.parentElement.parentElement
+      );
     setContent(contentType);
   };
 
@@ -241,7 +241,7 @@ const Navbar = () => {
           style={{ cursor: "pointer" }}
           id="profile"
         >
-          <img src={"/upload/" + currentUser.profilePic} alt="" />
+          <img src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id} alt="" />
           <span>{currentUser.name}</span>
           <FontAwesomeIcon icon={faCaretDown} />
         </div>

@@ -123,10 +123,15 @@ export const updateCoverPicController = async (req, res) => {
 };
 export const getProfilePicController = async (req, res) => {
   try {
-    const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+    await AuthService.verifyUserToken(req.cookies.accessToken);
     userService.getCoverPicOrProfilePic(req.params.id, false, (error, data) => {
       if (error) return res.status(500).json(error);
-      return res.sendFile(data.img);
+      try {
+        return res.sendFile(data);
+      }
+      catch (err) {
+        return res.status(500).json(err);
+      }
     });
   } catch (error) {
     return res.status(500).json(error);
@@ -134,10 +139,15 @@ export const getProfilePicController = async (req, res) => {
 };
 export const getCoverPicController = async (req, res) => {
   try {
-    const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+    await AuthService.verifyUserToken(req.cookies.accessToken);
     userService.getCoverPicOrProfilePic(req.params.id, true, (error, data) => {
       if (error) return res.status(500).json(error);
-      return res.sendFile(data.img);
+      try {
+        return res.sendFile(data);
+      }
+      catch (err) {
+        return res.status(500).json(err);
+      }
     });
   } catch (error) {
     return res.status(500).json(error);

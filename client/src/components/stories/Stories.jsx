@@ -121,7 +121,7 @@ const Stories = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const slides = [
     <div className="story" key={1}>
-      <img src={"/upload/" + currentUser.profilePic} alt="" />
+      <img src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id} alt="" />
       <span>{currentUser.name}</span>
       <button onClick={handleDialogOpen}>+</button>
 
@@ -155,7 +155,7 @@ const Stories = () => {
               variant="body1"
               sx={{ alignSelf: "flex-start", mb: "25px", textAlign: "left" }}
             >
-              Câu chuyện là hình ảnh được đăng lên và sẽ biến mất sau 24 giờ
+              Câu chuyện là hình ảnh/video được đăng lên và sẽ biến mất sau 24 giờ
             </Typography>
             <input
               type="file"
@@ -216,10 +216,12 @@ const Stories = () => {
         <Link to={`/stories/${userId}`} key={userId}>
           <div className="story">
             <div className="profile-pic">
-              {user && <img src={`/upload/${user.profilePic}`} alt="" />}
+              {user && <img src={URL_OF_BACK_END + `users/profilePic/` + latestStory.userId} alt="" />}
             </div>
             <div className="story-content">
-              <img src={URL_OF_BACK_END + `stories/image/` + latestStory.id} alt="" />
+              {(latestStory.img.endsWith("mp4") || latestStory.img.endsWith("avi") || latestStory.img.endsWith("mov"))
+                ? <video src={URL_OF_BACK_END + `stories/image/` + latestStory.id} preload="metadata" />
+                : <img src={URL_OF_BACK_END + `stories/image/` + latestStory.id} alt="" />}
               <span>{latestStory.name}</span>
             </div>
           </div>

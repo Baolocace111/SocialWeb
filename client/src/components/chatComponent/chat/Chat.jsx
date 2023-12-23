@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { WEBSOCKET_BACK_END, makeRequest } from "../../../axios";
+import { URL_OF_BACK_END, WEBSOCKET_BACK_END, makeRequest } from "../../../axios";
 import Message from "../message/Message";
 import "./chat.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -121,7 +121,7 @@ const Chat = ({ friend, onRemoveChatBox }) => {
   return (
     <div className="parent-container">
       <div className="top-box">
-        <img src={"/upload/" + friend.profilePic} alt="" />
+        <img src={URL_OF_BACK_END + `users/profilePic/` + friend.id} alt="" />
         <div className="name">{friend.name}</div>
         <div className="actionButton">
           <button>
@@ -152,7 +152,7 @@ const Chat = ({ friend, onRemoveChatBox }) => {
             <Message
               key={message.id}
               messageShow={message}
-              friendProfilePic={friend.profilePic}
+              friendProfilePic={friend.id}
             ></Message>
           ))}
         {loading && <NineCube></NineCube>}

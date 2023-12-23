@@ -1,7 +1,7 @@
 import "./rightBar.scss";
 
 import React, { useState, useContext } from "react";
-import { WEBSOCKET_BACK_END, makeRequest } from "../../axios";
+import { URL_OF_BACK_END, WEBSOCKET_BACK_END, makeRequest } from "../../axios";
 import NineCube from "../loadingComponent/nineCube/NineCube";
 import { ChatContext } from "../navbar/ChatContext";
 const RightBar = () => {
@@ -63,7 +63,7 @@ const RightBar = () => {
                 onClick={() => handleAddChatBox(user)}
               >
                 <div className="userInfo">
-                  <img src={`/upload/${user.profilePic}`} alt={user.name} />
+                  <img src={URL_OF_BACK_END + `users/profilePic/` + user.id} alt={user.name} />
                   <div className="online" />
                   <span>{user.name}</span>
                 </div>
