@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import "./stories.scss";
 import { AuthContext } from "../../context/authContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { makeRequest } from "../../axios";
+import { makeRequest, URL_OF_BACK_END } from "../../axios";
 
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -72,22 +72,25 @@ const Stories = () => {
   //TODO Add story using react-query mutations and use upload function.
   const [file, setFile] = useState(null);
 
-  const upload = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await makeRequest.post("/upload", formData);
-      return res.data;
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const upload = async () => {
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append("file", file);
+  //     const res = await makeRequest.post("/upload", formData);
+  //     return res.data;
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
   const queryClient = useQueryClient();
   const mutation = useMutation(
-    (newStory) => {
-      return makeRequest.post("/stories", newStory).catch((error) => {
+    async (newStory) => {
+      try {
+        return await makeRequest.post("/stories/add", newStory);
+      } catch (error) {
+        console.log(error.response.data);
         alert(error.response.data);
-      });
+      }
     },
     {
       onSuccess: () => {
@@ -98,9 +101,10 @@ const Stories = () => {
   );
   const handleAddStoryClick = async (e) => {
     e.preventDefault();
-    let imgUrl = "";
-    if (file) imgUrl = await upload();
-    mutation.mutate({ img: imgUrl });
+    const formData = new FormData();
+    formData.append("file", file);
+    console.log(file);
+    mutation.mutate(formData);
     setFile(null);
     setSelectedImage(null);
     setOpenAdd(false);
@@ -155,10 +159,10 @@ const Stories = () => {
             </Typography>
             <input
               type="file"
-              accept="image/*"
+              accept="image/*, video/*"
               ref={inputRef}
               onChange={(e) => {
-                if (isImage(e.target.files[0])) {
+                if (isImageAndVideo(e.target.files[0])) {
                   setFile(e.target.files[0]);
                   handleImageChange(e);
                 } else {
@@ -215,7 +219,7 @@ const Stories = () => {
               {user && <img src={`/upload/${user.profilePic}`} alt="" />}
             </div>
             <div className="story-content">
-              <img src={"/upload/" + latestStory.img} alt="" />
+              <img src={URL_OF_BACK_END + `stories/image/` + latestStory.id} alt="" />
               <span>{latestStory.name}</span>
             </div>
           </div>
@@ -238,6 +242,7 @@ const Stories = () => {
 };
 
 export default Stories;
-function isImage(file) {
-  return file && file["type"].split("/")[0] === "image";
+function isImageAndVideo(file) {
+  return file && (file["type"].split("/")[0] === "image" || file["type"].split("/")[0] === "video");
 }
+

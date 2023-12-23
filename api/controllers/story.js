@@ -31,9 +31,10 @@ export const addStory = (req, res) => {
 
   jwt.verify(token, "secretkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
-    if (!req.file) return res.status(500).json("image not found");
     upload(req, res, (err) => {
       if (err) return res.status(500).json(err);
+      if (!req.file) return res.status(500).json("image not found");
+      const userId = userInfo.id;
       try {
         const absolutePath = path.resolve(req.file.path);
         addStoryService(absolutePath, userId, (err, data) => {
@@ -65,10 +66,15 @@ export const deleteStory = (req, res) => {
 };
 export const getImageStoryController = async (req, res) => {
   try {
-    const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+    await AuthService.verifyUserToken(req.cookies.accessToken);
     getStory(req.params.id, (error, data) => {
       if (error) return res.status(500).json(error);
-      return res.sendFile(data.img);
+      try {
+        return res.sendFile(data.img);
+      }
+      catch (err) {
+        return res.status(500).json(err);
+      }
     });
   } catch (error) {
     return res.status(500).json(error);
