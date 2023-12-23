@@ -35,7 +35,7 @@ import Divider from "@mui/material/Divider";
 import Radio from "@mui/material/Radio";
 
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { makeRequest } from "../../axios";
+import { makeRequest, URL_OF_BACK_END } from "../../axios";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/authContext";
 import MiniPost from "./MiniPost";
@@ -164,7 +164,7 @@ const SharedPost = ({ post }) => {
       <div className="container">
         <div className="user">
           <div className="userInfo">
-            <img src={"/upload/" + post.profilePic} alt="" />
+            <img src={URL_OF_BACK_END + `users/profilePic/` + post.userId} alt="" />
             <div className="details">
               <span
                 className="name"

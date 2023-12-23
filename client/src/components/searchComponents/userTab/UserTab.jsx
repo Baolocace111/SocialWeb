@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { makeRequest } from "../../../axios";
+import { URL_OF_BACK_END, makeRequest } from "../../../axios";
 import { Button } from "@mui/material";
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -76,7 +76,7 @@ const UserTab = ({ user }) => {
       <div className="userTab">
         <img
           onClick={handleClicktoProfile}
-          src={"/upload/" + user.profilePic}
+          src={URL_OF_BACK_END + `users/profilePic/` + user.id}
           alt=""
         />
         <div onClick={handleClicktoProfile} className="username">

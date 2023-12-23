@@ -3,7 +3,7 @@ import "./comments.scss";
 import ThreePointLoading from "../loadingComponent/threepointLoading/ThreePointLoading";
 import { AuthContext } from "../../context/authContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { makeRequest } from "../../axios";
+import { URL_OF_BACK_END, makeRequest } from "../../axios";
 import moment from "moment";
 
 const Comments = ({ postId }) => {
@@ -41,7 +41,7 @@ const Comments = ({ postId }) => {
   return (
     <div className="comments">
       <div className="write">
-        <img src={"/upload/" + currentUser.profilePic} alt="" />
+        <img src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id} alt="" />
         <input
           type="text"
           placeholder="Write a comment"
@@ -56,7 +56,7 @@ const Comments = ({ postId }) => {
           ? <ThreePointLoading />
           : data.map((comment) => (
             <div className="comment" key={comment.id}>
-              <img src={"/upload/" + comment.profilePic} alt="" />
+              <img src={URL_OF_BACK_END + `users/profilePic/` + comment.userId} alt="" />
               <div className="info">
                 <span>{comment.name}</span>
                 <p>{comment.desc}</p>

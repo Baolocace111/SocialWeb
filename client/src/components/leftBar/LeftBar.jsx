@@ -14,6 +14,7 @@ import Courses from "../../assets/12.png";
 import Fund from "../../assets/13.png";
 import { AuthContext } from "../../context/authContext";
 import { useContext } from "react";
+import { URL_OF_BACK_END } from "../../axios";
 
 const LeftBar = () => {
   const { currentUser } = useContext(AuthContext);
@@ -29,7 +30,7 @@ const LeftBar = () => {
               window.location.href = `/profile/${currentUser.id}`;
             }}
           >
-            <img src={"/upload/" + currentUser.profilePic} alt="" />
+            <img src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id} alt="" />
             <span>{currentUser.name}</span>
           </div>
           <div className="item">

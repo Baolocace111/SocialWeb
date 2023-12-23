@@ -5,7 +5,7 @@ import { TextareaAutosize } from "@mui/material";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/authContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { makeRequest } from "../../axios";
+import { URL_OF_BACK_END, makeRequest } from "../../axios";
 
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
@@ -67,7 +67,7 @@ const Share = () => {
         <div className="container">
           <div className="top">
             <div className="text-container">
-              <img src={"/upload/" + currentUser.profilePic} alt="" />
+              <img src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id} alt="" />
               <TextareaAutosize
                 placeholder={`What's on your mind ${currentUser.name}?`}
                 onChange={(e) => setDesc(e.target.value)}

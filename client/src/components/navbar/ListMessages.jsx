@@ -5,6 +5,7 @@ import { faMaximize, faPenToSquare, faMagnifyingGlass } from "@fortawesome/free-
 import moment from "moment";
 import { useContext } from "react";
 import { ChatContext } from "./ChatContext";
+import { URL_OF_BACK_END } from "../../axios";
 
 const ListMessages = ({ handleClose, ListMessages }) => {
   return (
@@ -52,7 +53,7 @@ const Messages = ({ mess, handleClose }) => {
         handleClose();
       }}
     >
-      <img src={"/upload/" + mess.profilePic} alt="" />
+      <img src={URL_OF_BACK_END + `users/profilePic/` + mess.user_id} alt="" />
       <div className="username">
         <div className="name">{mess.name}</div>
         <div className={`mess ${mess.status === 0 ? 'not-read' : ''}`}>

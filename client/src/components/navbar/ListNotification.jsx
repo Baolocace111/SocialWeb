@@ -1,4 +1,4 @@
-import { makeRequest } from "../../axios";
+import { URL_OF_BACK_END, makeRequest } from "../../axios";
 import "./listNotification.scss";
 import { useCallback, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -75,7 +75,7 @@ const ListNotification = () => {
         <div className="item-notification" key={notification.id}>
           <Link to={notification.link} style={{ cursor: "pointer" }}>
             <img
-              src={`/upload/` + notification.profilePic}
+              src={URL_OF_BACK_END + `users/profilePic/` + notification.userId}
               onError={(e) => {
                 e.target.onerror = null;
                 e.target.src = "/notificationtype/null.jpg";

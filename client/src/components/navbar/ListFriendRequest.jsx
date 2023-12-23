@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { makeRequest } from "../../axios";
+import { URL_OF_BACK_END, makeRequest } from "../../axios";
 import { Link } from "react-router-dom";
 import NineCube from "../loadingComponent/nineCube/NineCube";
 
@@ -103,7 +103,7 @@ const ListFriendRequest = () => {
               target="_blank"
             >
               <img
-                src={"/upload/" + request.profilePic}
+                src={URL_OF_BACK_END + `users/profilePic/` + request.id}
                 style={{ borderRadius: "50%", width: "50px", height: "50px" }}
                 alt="User 1"
               />
