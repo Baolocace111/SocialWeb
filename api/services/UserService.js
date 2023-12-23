@@ -10,6 +10,13 @@ export const getUser = (req, res) => {
     return res.json(data);
   });
 };
+export const getCoverPicOrProfilePic = (userid, COrP, callback) => {
+  userModel.getUserById(userid, (err, data) => {
+    if (err) return callback(err, null);
+    if (COrP) return callback(null, data.coverPic);
+    else return callback(null, data.profilePic);
+  });
+};
 
 export const getUsers = (userId, offset, callback) => {
   userModel.getUsers(userId, offset, (err, data) => {
@@ -51,6 +58,18 @@ export const updateUser = (userid, req, res) => {
   userModel.updateUser({ ...req.body, id: userid }, (err, data) => {
     if (err) res.status(500).json(err);
     return res.json(data);
+  });
+};
+export const updateProfilePicService = (userid, profilePic, callback) => {
+  userModel.updateProfilePic(userid, profilePic, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data);
+  });
+};
+export const updateCoverPicService = (userid, coverPic, callback) => {
+  userModel.updateCoverPic(userid, coverPic, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data);
   });
 };
 export const changePasswordService = async (userid, newps, oldps, callback) => {
