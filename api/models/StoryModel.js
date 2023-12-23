@@ -43,7 +43,7 @@ export const deleteStory = (storyId, userId, callback) => {
   });
 };
 export const getStory = (storyId, callback) => {
-  const q = "SELECT FROM stories Where `id`=?;";
+  const q = "SELECT * FROM stories Where `id`=?;";
   db.query(q, [storyId], (err, data) => {
     if (err) return callback(err, null);
     if (data.length === 0) return callback("Not found", null);

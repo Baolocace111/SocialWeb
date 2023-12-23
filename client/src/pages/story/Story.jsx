@@ -1,5 +1,5 @@
 import React from "react";
-import { makeRequest } from "../../axios";
+import { makeRequest, URL_OF_BACK_END } from "../../axios";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
 import moment from "moment";
@@ -16,7 +16,7 @@ const UserStoryPage = () => {
 
   // Lấy danh sách stories của người dùng
   const { data: storiesData, isLoading: isStoriesLoading } = useQuery(["stories"], () =>
-    makeRequest.get("/stories").then((res) => res.data)
+    makeRequest.get("/stories/story").then((res) => res.data)
   );
 
   // Xử lý khi dữ liệu về người dùng và stories đã sẵn sàng
@@ -30,14 +30,19 @@ const UserStoryPage = () => {
   // Lọc các story có userId trùng với userId đã nhận được
   const userStories = storiesData.filter((story) => story.userId === userId);
 
-  const stories = userStories.map((story) => ({
-    header: {
-      heading: name,
-      subheading: moment(story.createdAt).fromNow(),
-      profileImage: `/upload/${profilePic}`,
-    },
-    url: `/upload/${story.img}`,
-  }));
+  const stories = userStories.map((story) => {
+    const mediaType = (story.img.endsWith("mp4") || story.img.endsWith('.avi') || story.img.endsWith('.mov')) ? 'video' : 'image';
+    return {
+      header: {
+        heading: name,
+        subheading: moment(story.createdAt).fromNow(),
+        profileImage: `/upload/${profilePic}`,
+      },
+      url: URL_OF_BACK_END + `stories/image/${story.id}`,
+      type: mediaType,
+    };
+  });
+
 
   return (
     <Stories
@@ -45,7 +50,7 @@ const UserStoryPage = () => {
       stories={stories}
       height={680}
       width={380}
-      defaultInterval={4500}
+      defaultInterval={9000}
       loop={true}
       keyboardNavigation={true}
     />
