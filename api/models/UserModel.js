@@ -52,12 +52,15 @@ export const getUsers = (user_id, offset, callback) => {
   OFFSET ?
 `;
 
-  db.query(q, [user_id, user_id, user_id, user_id, user_id, offset], (err, data) => {
-    if (err) return callback(err);
+  db.query(
+    q,
+    [user_id, user_id, user_id, user_id, user_id, offset],
+    (err, data) => {
+      if (err) return callback(err);
 
-    if (data.length < 4) {
-      db.query(
-        `SELECT id, name, username, profilePic
+      if (data.length < 4) {
+        db.query(
+          `SELECT id, name, username, profilePic
       FROM users 
       WHERE id NOT IN (
         SELECT DISTINCT friend_id 
@@ -70,27 +73,25 @@ export const getUsers = (user_id, offset, callback) => {
         WHERE (user_id = ? AND friend_id = users.id) OR (user_id = users.id AND friend_id = ?)
       )
       LIMIT ? OFFSET 0`,
-        [
-          user_id,
-          data.length === 0
-            ? [user_id]
-            : [
-              ...data.map((user) => user.id),
-              user_id,
-            ],
-          user_id,
-          user_id,
-          4 - data.length,
-        ],
-        (err, res) => {
-          if (err) return callback(err);
-          return callback(null, [...data, ...res]);
-        }
-      );
-    } else {
-      return callback(null, data);
+          [
+            user_id,
+            data.length === 0
+              ? [user_id]
+              : [...data.map((user) => user.id), user_id],
+            user_id,
+            user_id,
+            4 - data.length,
+          ],
+          (err, res) => {
+            if (err) return callback(err);
+            return callback(null, [...data, ...res]);
+          }
+        );
+      } else {
+        return callback(null, data);
+      }
     }
-  });
+  );
 };
 
 export const getFollowedUsers = (userId, callback) => {
@@ -109,7 +110,7 @@ export const getFollowedUsers = (userId, callback) => {
 
 export const updateUser = (userInfo, callback) => {
   const q =
-    "UPDATE users SET `email`=?, `name`=?, `city`=?, `website`=?, `profilePic`=?, `coverPic`=? WHERE id=? ";
+    "UPDATE users SET `email`=?, `name`=?, `city`=?, `website`=? WHERE id=? ";
 
   db.query(
     q,
@@ -118,16 +119,32 @@ export const updateUser = (userInfo, callback) => {
       userInfo.name,
       userInfo.city,
       userInfo.website,
-      userInfo.profilePic,
-      userInfo.coverPic,
       userInfo.id,
     ],
     (err, data) => {
       if (err) return callback(err);
       if (data.affectedRows > 0) return callback(null, "Updated!");
-      return callback("You can update only your post!");
+      return callback("You can update only your profile!");
     }
   );
+};
+export const updateProfilePic = (userId, profilePic, callback) => {
+  const q = "UPDATE users SET `profilePic`=? WHERE id=? ";
+
+  db.query(q, [profilePic, userId], (err, data) => {
+    if (err) return callback(err);
+    if (data.affectedRows > 0) return callback(null, "Updated!");
+    return callback("You can update only your profile!");
+  });
+};
+export const updateCoverPic = (userId, coverPic, callback) => {
+  const q = "UPDATE users SET `coverPic`=? WHERE id=? ";
+
+  db.query(q, [coverPic, userId], (err, data) => {
+    if (err) return callback(err);
+    if (data.affectedRows > 0) return callback(null, "Updated!");
+    return callback("You can update only your profile!");
+  });
 };
 export const updatePasswordUser = (userid, newpassword, callback) => {
   const q = "Update users SET `password`=? Where id=?";

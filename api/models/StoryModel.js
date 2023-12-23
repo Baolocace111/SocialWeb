@@ -42,3 +42,11 @@ export const deleteStory = (storyId, userId, callback) => {
     return callback("You can delete only your story!", null);
   });
 };
+export const getStory = (storyId, callback) => {
+  const q = "SELECT FROM stories Where `id`=?;";
+  db.query(q, [storyId], (err, data) => {
+    if (err) return callback(err, null);
+    if (data.length === 0) return callback("Not found", null);
+    return callback(err, data[0]);
+  });
+};

@@ -1,6 +1,7 @@
 import * as userService from "../services/UserService.js";
 import { AuthService } from "../services/AuthService.js";
-
+import path from "path";
+import { upload } from "../Multer.js";
 export const getUser = (req, res) => {
   userService.getUser(req, res);
 };
@@ -64,5 +65,81 @@ export const changePasswordController = async (req, res) => {
   } catch (error) {
     //console.log(error);
     return res.status(500).json(error.body);
+  }
+};
+export const updateProfilePicController = async (req, res) => {
+  try {
+    const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+    upload(req, res, (err) => {
+      if (err) return res.status(500).json(err);
+      if (!req.file) {
+        userService.updateProfilePicService(userId, "", (err, data) => {
+          if (err) return res.status(500).json(err);
+          else return res.status(200).json(data);
+        });
+      }
+      try {
+        const absolutePath = path.resolve(req.file.path);
+        userService.updateProfilePicService(
+          userId,
+          absolutePath,
+          (err, data) => {
+            if (err) return res.status(500).json(err);
+            else return res.status(200).json(data);
+          }
+        );
+      } catch (error) {
+        return res.status(500).json(error.body);
+      }
+    });
+  } catch (error) {
+    return res.status(500).json(error.body);
+  }
+};
+export const updateCoverPicController = async (req, res) => {
+  try {
+    const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+    upload(req, res, (err) => {
+      if (err) return res.status(500).json(err);
+      if (!req.file) {
+        userService.updateCoverPicService(userId, "", (err, data) => {
+          if (err) return res.status(500).json(err);
+          else return res.status(200).json(data);
+        });
+      }
+      try {
+        const absolutePath = path.resolve(req.file.path);
+        userService.updateCoverPicService(userId, absolutePath, (err, data) => {
+          if (err) return res.status(500).json(err);
+          else return res.status(200).json(data);
+        });
+      } catch (error) {
+        return res.status(500).json(error.body);
+      }
+    });
+  } catch (error) {
+    return res.status(500).json(error.body);
+  }
+};
+export const getProfilePicController = async (req, res) => {
+  try {
+    const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+    userService.getCoverPicOrProfilePic(req.params.id, false, (error, data) => {
+      if (error) return res.status(500).json(error);
+      return res.sendFile(data.img);
+    });
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+export const getCoverPicController = async (req, res) => {
+  try {
+    const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+    userService.getCoverPicOrProfilePic(req.params.id, true, (error, data) => {
+      if (error) return res.status(500).json(error);
+      return res.sendFile(data.img);
+    });
+  } catch (error) {
+    return res.status(500).json(error);
   }
 };
