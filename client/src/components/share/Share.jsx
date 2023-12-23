@@ -31,36 +31,10 @@ const Share = () => {
     setDesc((prevDesc) => prevDesc + emojiSymbol);
   };
 
-  // const upload = async () => {
-  //   try {
-  //     const formData = new FormData();
-  //     formData.append("file", file);
-  //     const res = await makeRequest.post("/upload", formData);
-  //     return res.data;
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
-
   const { currentUser } = useContext(AuthContext);
 
   const queryClient = useQueryClient();
 
-  const mutation = useMutation(
-    async (newPost) => {
-      try {
-        return await makeRequest.post("/posts/post", newPost);
-      } catch (error) {
-        alert(error.response.data);
-      }
-    },
-    {
-      onSuccess: () => {
-        // Invalidate and refetch
-        queryClient.invalidateQueries(["posts"]);
-      },
-    }
-  );
   const video_mutation = useMutation(
     async (newPost) => {
       try {
@@ -79,14 +53,10 @@ const Share = () => {
 
   const handleClick = async (e) => {
     e.preventDefault();
-    if (!file) {
-      mutation.mutate({ desc });
-    } else {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("desc", desc);
-      video_mutation.mutate(formData);
-    }
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("desc", desc);
+    video_mutation.mutate(formData);
     setDesc("");
     setFile(null);
   };

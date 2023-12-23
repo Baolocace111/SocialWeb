@@ -64,7 +64,7 @@ const Post = ({ post }) => {
       setDeleteImage(false);
       setSelectedImage(URL_OF_BACK_END + `posts/videopost/` + post.id);
     }
-  }, [openEdit, post.id]);
+  }, [openEdit, post]);
 
   //Handle openMenu
   const handleMenuClick = (event) => {
@@ -78,7 +78,6 @@ const Post = ({ post }) => {
 
   const handleDialogOpen = () => {
     setOpenEdit(true);
-    console.log(selectedImage);
   };
   const handleDialogClose = () => {
     setOpenEdit(false);
@@ -167,7 +166,7 @@ const Post = ({ post }) => {
   );
   const updateVideoMutation = useMutation(
     async (data) => {
-      return makeRequest.put(`/posts/updateimage/${data.postId}`, data.formData);
+      return await makeRequest.put(`/posts/updateimage/${data.postId}`, data.formData);
     },
     {
       onSuccess: () => {
@@ -203,20 +202,17 @@ const Post = ({ post }) => {
   };
 
   const handleUpdate = async (e) => {
-    e.preventDefault();
+    updateMutation.mutate({ postId: post.id, desc: desc });
     if (deleteImage) {
       try {
         const formData = new FormData();
         formData.append('file', file);
         await updateVideoMutation.mutateAsync({ postId: post.id, formData });
-        window.location.reload();
       } catch (error) {
         console.error(error);
       }
     }
-    else {
-      updateMutation.mutate({ postId: post.id, desc: desc });
-    }
+    window.location.reload();
     setFile(null);
     setOpenEdit(false);
     setMenuAnchor(null);
@@ -411,6 +407,7 @@ const Post = ({ post }) => {
                         onClick={() => {
                           setSelectedImage(null);
                           setDeleteImage(true);
+                          console.log(file);
                         }}
                       >
                         <FontAwesomeIcon icon={faX} />
@@ -419,7 +416,7 @@ const Post = ({ post }) => {
                   </div>
                 )}
 
-                {deleteImage && (
+                {deleteImage && !selectedImage && (
                   <input
                     type="file"
                     accept="image/*"
