@@ -63,6 +63,7 @@ const Stories = () => {
   const handleDialogClose = () => {
     setOpenAdd(false);
     setSelectedImage(null);
+    setFile(null);
   };
 
   const handleImageChange = (e) => {
@@ -170,13 +171,15 @@ const Stories = () => {
                 }
               }}
             />
-            {selectedImage && (
+            {selectedImage && isImage(file) ?
               <img
                 src={selectedImage}
                 alt=""
                 style={{ marginTop: "8px", maxWidth: "300px" }}
               />
-            )}
+              : isImageAndVideo(file) ?
+                <video src={selectedImage} preload="metadata" style={{ marginTop: "8px", maxWidth: "300px" }} /> : <></>
+            }
           </Box>
         </DialogContent>
         <Divider />
@@ -246,5 +249,8 @@ const Stories = () => {
 export default Stories;
 function isImageAndVideo(file) {
   return file && (file["type"].split("/")[0] === "image" || file["type"].split("/")[0] === "video");
+}
+function isImage(file) {
+  return file && (file["type"].split("/")[0] === "image");
 }
 
