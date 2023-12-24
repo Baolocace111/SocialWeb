@@ -351,7 +351,7 @@ const Post = ({ post }) => {
                     }}
                   >
                     <img
-                      src={"/upload/" + post.profilePic}
+                      src={URL_OF_BACK_END + `users/profilePic/` + post.userId}
                       style={{
                         borderRadius: "50%",
                         width: "45px",
@@ -693,7 +693,7 @@ const Post = ({ post }) => {
                     }}
                   >
                     <img
-                      src={"/upload/" + currentUser.profilePic}
+                      src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id}
                       style={{
                         borderRadius: "50%",
                         width: "45px",

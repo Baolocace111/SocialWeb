@@ -274,7 +274,7 @@ const SharedPost = ({ post }) => {
                     }}
                   >
                     <img
-                      src={"/upload/" + post.profilePic}
+                      src={URL_OF_BACK_END + `users/profilePic/` + post.userId}
                       style={{
                         borderRadius: "50%",
                         width: "45px",
