@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { makeRequest } from "../../axios";
+import { URL_OF_BACK_END, makeRequest } from "../../axios";
 import "./update.scss";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -255,7 +255,7 @@ const Update = ({ setOpenUpdate, user }) => {
                   <img className="img-profile" src={selectedProfile.profilePic} alt="Selected" />
                 )}
                 {!selectedProfile.profilePic && profile.profilePic && (
-                  <img className="img-profile" src={"/upload/" + profile.profilePic} alt="Profile Pic" />
+                  <img className="img-profile" src={URL_OF_BACK_END + `users/profilePic/` + user.id} alt="Profile Pic" />
                 )}
               </div>
               <div className="update-profile">
@@ -274,7 +274,7 @@ const Update = ({ setOpenUpdate, user }) => {
                   <img className="img-cover" src={selectedProfile.coverPic} alt="Selected" />
                 )}
                 {!selectedProfile.coverPic && profile.coverPic && (
-                  <img className="img-cover" src={"/upload/" + profile.coverPic} alt="Cover Pic" />
+                  <img className="img-cover" src={URL_OF_BACK_END + `users/coverPic/` + user.id} alt="Cover Pic" />
                 )}
               </div>
             </div>
