@@ -32,26 +32,29 @@ Our project focuses on the following main topics:
 > * Step 5. Import database script [Social.sql] into MySQL Workbench
 > * Step 6. Open project in Visual Studio Code. Find api/ folder, then edit connect.js (with **host**, **user**, **password** according to MySQL connection).
 > * Step 7. Open Terminal, install libraby (node modules)
-	
->	cd api 
-	
->	npm i --force
-		
->	cd client 
-		
->	npm i --force
+>
+	cd api
+>
+	npm i --force
+>
+	cd client 
+>
+	npm i --force
+>
 > * Step 8. Start project
-
-> Backend (port 8800):
-		
->		cd api
-		
->		yarn start
-> Frontend (port 3000):
-		
->		cd client
-		
->		yarn start
+>
+	a/ Backend (port 8800):
+>
+	cd api
+>
+	yarn start
+>
+	b/ Frontend (port 3000):
+>
+	cd client
+>
+	yarn start
+>
 > * Step 9. Enjoy
 
 ### 3. Authors
