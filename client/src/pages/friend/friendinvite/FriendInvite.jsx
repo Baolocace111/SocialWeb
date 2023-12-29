@@ -1,6 +1,6 @@
 import "./friendInvite.scss";
 import NineCube from "../../../components/loadingComponent/nineCube/NineCube";
-import { makeRequest } from "../../../axios";
+import { URL_OF_BACK_END, makeRequest } from "../../../axios";
 import { useState, useCallback } from "react";
 
 const FriendInvite = () => {
@@ -56,7 +56,7 @@ const FriendInvite = () => {
             <div className="row">
                 {requests.map((request) => (
                     <div className="card-invite" key={request.id}>
-                        <img src={"/upload/" + request.profilePic} alt="User" />
+                        <img src={URL_OF_BACK_END + `users/profilePic/` + request.id} alt="User" />
                         <span>{request.name}</span>
                         <button className="accept" onClick={() => handleAccept(request.id)}>
                             Chấp nhận

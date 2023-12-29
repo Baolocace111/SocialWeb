@@ -75,7 +75,7 @@ const ListNotification = () => {
         <div className="item-notification" key={notification.id}>
           <Link to={notification.link} style={{ cursor: "pointer" }}>
             <img
-              src={URL_OF_BACK_END + `users/profilePic/` + notification.userId}
+              src={URL_OF_BACK_END + `users/profilePic/` + notification.userInteractionId}
               onError={(e) => {
                 e.target.onerror = null;
                 e.target.src = "/notificationtype/null.jpg";

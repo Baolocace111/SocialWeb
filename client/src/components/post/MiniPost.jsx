@@ -26,7 +26,7 @@ const MiniPost = ({ post }) => {
           </Link>
         </div>
         <div className="userInfo">
-          <img src={URL_OF_BACK_END + `users/profilePic/` + post.userId} alt="" />
+          <img src={post.userId ? (URL_OF_BACK_END + `users/profilePic/` + post.userId) : "/upload/deadskull.png"} alt="" />
           <div className="details">
             <Link
               target="_blank"
