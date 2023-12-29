@@ -1,4 +1,4 @@
-> #Social web
+> ##Social-media Web 
 
 [![My Skills](https://skillicons.dev/icons?i=js,html,scss,nodejs,express,react,mysql,vscode,postman,github)](https://skillicons.dev)
 
