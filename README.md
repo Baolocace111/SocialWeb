@@ -33,25 +33,25 @@ Our project focuses on the following main topics:
 > * Step 6. Open project in Visual Studio Code. Find api/ folder, then edit connect.js (with **host**, **user**, **password** according to MySQL connection).
 > * Step 7. Open Terminal, install libraby (node modules)
 	
-	cd api 
+>	cd api 
 	
-	npm i --force
+>	npm i --force
 		
-	cd client 
+>	cd client 
 		
-	npm i --force
+>	npm i --force
 > * Step 8. Start project
 
-Backend (port 8800):
+> Backend (port 8800):
 		
-		cd api
+>		cd api
 		
-		yarn start
-Frontend (port 3000):
+>		yarn start
+> Frontend (port 3000):
 		
-		cd client
+>		cd client
 		
-		yarn start
+>		yarn start
 > * Step 9. Enjoy
 
 ### 3. Authors
