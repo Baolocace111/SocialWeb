@@ -1,5 +1,5 @@
 import "./friendSuggestion.scss";
-import { makeRequest } from "../../../axios";
+import { URL_OF_BACK_END, makeRequest } from "../../../axios";
 import React, { useState } from "react";
 
 const FriendSuggestion = ({ suggest }) => {
@@ -31,7 +31,7 @@ const FriendSuggestion = ({ suggest }) => {
 
     return (
         <div className="card-invite">
-            <img src={"/upload/" + suggest.profilePic} alt="User" />
+            <img src={URL_OF_BACK_END + `users/profilePic/` + suggest.id} alt="User" />
             <span>{suggest.name}</span>
             {status === 0 ? (
                 <button className="accept" onClick={() => SendRequest(suggest.id)}>
