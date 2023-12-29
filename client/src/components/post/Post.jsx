@@ -383,7 +383,7 @@ const Post = ({ post }) => {
                   }}
                 />
 
-                {selectedImage && !isVideoContent && (
+                {post.img && selectedImage && !isVideoContent && (
                   <div style={{ display: "flex", justifyContent: "center" }}>
                     <div
                       style={{ position: "relative", display: "inline-flex" }}
