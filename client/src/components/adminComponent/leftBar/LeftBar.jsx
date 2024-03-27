@@ -33,6 +33,15 @@ const AdminLeftBar = () => {
           <img src={"/upload/" + currentUser.profilePic} alt="" />
           {currentUser.name}
         </div>
+        <div
+          className="click-tag"
+          onClick={() => {
+            window.location.href = "/admin/home";
+          }}
+        >
+          {" "}
+          Post manage{" "}
+        </div>
         <div className="click-tag" onClick={handleLogout}>
           Đăng xuất
         </div>

@@ -66,6 +66,7 @@ const PostManage = () => {
           ? `${getMonthLabel(selectedMonth)} ${selectedYear}`
           : "Please select month and year"}
       </p>
+      <button>REFRESH</button>
       {selectedMonth && selectedYear && (
         <UserTable year={selectedYear} month={selectedMonth}></UserTable>
       )}
