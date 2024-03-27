@@ -4,6 +4,7 @@ import {
   getPostByUserAdminService,
   getUserPostingByAdminService,
 } from "../../services/AdminService.js";
+import { ValidateInputs } from "../../services/ValidateService.js";
 
 export const getUserPostingAdminController = async (req, res) => {
   try {
@@ -24,6 +25,12 @@ export const getUserPostingAdminController = async (req, res) => {
 export const getPostByAdminController = async (req, res) => {
   try {
     await AuthService.verifyAdminToken(req.cookies.accessToken);
+    await ValidateInputs(
+      req.body.year,
+      req.body.month,
+      req.body.page,
+      req.body.user_id
+    );
     getPostByUserAdminService(
       req.body.year,
       req.body.month,

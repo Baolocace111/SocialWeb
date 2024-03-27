@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { AuthModel } from "../models/AuthModel.js";
+import { getReputation } from "../models/UserModel.js";
 const key = "secretkey";
 export const AuthService = {
   async register(username, email, password, name) {
@@ -22,21 +23,30 @@ export const AuthService = {
   async login(username, password) {
     try {
       const user = await AuthModel.getUserByUsername(username);
-      if (!user) throw new Error("User not found!");
 
-      const checkPassword = bcrypt.compareSync(password, user.password);
-      if (!checkPassword) throw new Error("Wrong password or username!");
+      return new Promise((resolve, reject) => {
+        this.IsAccountBanned(user.id, (err, data) => {
+          if (err) return reject(err);
+          if (!user) return reject(new Error("User not found!"));
 
-      const token =
-        user.role === 1
-          ? jwt.sign({ id: user.id, isadmin: true }, "secretkey")
-          : jwt.sign({ id: user.id }, "secretkey");
+          const checkPassword = bcrypt.compareSync(password, user.password);
+          if (!checkPassword)
+            return reject(new Error("Wrong password or username!"));
 
-      const { password: _, ...others } = user;
+          const token =
+            user.role === 1
+              ? jwt.sign({ id: user.id, isadmin: true }, "secretkey")
+              : jwt.sign({ id: user.id }, "secretkey");
 
-      return { token, user: others };
+          const { password: _, ...others } = user;
+
+          return resolve({ token, user: others, isbanned: false });
+        });
+      });
     } catch (err) {
-      throw err;
+      return new Promise((resolve, reject) => {
+        return reject(new Error(err));
+      });
     }
   },
   async verifyUserToken(token) {
@@ -61,6 +71,16 @@ export const AuthService = {
           resolve(userInfo.id);
         } else reject("You are not admin");
       });
+    });
+  },
+  IsAccountBanned(user_id, callback) {
+    getReputation(user_id, (err, data) => {
+      if (err) return callback(err, null);
+
+      if (data.reputation < 1) {
+        return callback("This account is banned!!!", null);
+      }
+      return callback(null, data.reputation);
     });
   },
 };

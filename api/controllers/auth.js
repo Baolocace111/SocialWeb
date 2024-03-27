@@ -58,7 +58,8 @@ export const login = async (req, res) => {
       req.body.username,
       req.body.password
     );
-
+    //console.log(result);
+    if (result.isbanned) return res.status(500).json("This account be banned");
     res
       .cookie("accessToken", result.token, {
         secure: true,
@@ -67,6 +68,7 @@ export const login = async (req, res) => {
       .status(200)
       .json({ ...result.user, token: result.token });
   } catch (err) {
+    //console.log(err);
     res.status(500).json(err.message);
   }
 };
