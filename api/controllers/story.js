@@ -15,12 +15,17 @@ export const getStories = (req, res) => {
 
   jwt.verify(token, "secretkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
+    AuthService.IsAccountBanned(userInfo.id, async (err, data) => {
+      if (err) {
+        return res.status(500).json({ error: "This account is banned" });
+      }
 
-    const userId = userInfo.id;
+      const userId = userInfo.id;
 
-    getStoriesService(userId, (err, data) => {
-      if (err) return res.status(500).json(err);
-      return res.status(200).json(data);
+      getStoriesService(userId, (err, data) => {
+        if (err) return res.status(500).json(err);
+        return res.status(200).json(data);
+      });
     });
   });
 };
@@ -31,19 +36,24 @@ export const addStory = (req, res) => {
 
   jwt.verify(token, "secretkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
-    upload(req, res, (err) => {
-      if (err) return res.status(500).json(err);
-      if (!req.file) return res.status(500).json("image not found");
-      const userId = userInfo.id;
-      try {
-        const absolutePath = path.resolve(req.file.path);
-        addStoryService(absolutePath, userId, (err, data) => {
-          if (err) return res.status(500).json(err);
-          return res.status(200).json(data);
-        });
-      } catch (error) {
-        return res.status(500).json(error);
+    AuthService.IsAccountBanned(userInfo.id, async (err, data) => {
+      if (err) {
+        return res.status(500).json({ error: "This account is banned" });
       }
+      upload(req, res, (err) => {
+        if (err) return res.status(500).json(err);
+        if (!req.file) return res.status(500).json("image not found");
+        const userId = userInfo.id;
+        try {
+          const absolutePath = path.resolve(req.file.path);
+          addStoryService(absolutePath, userId, (err, data) => {
+            if (err) return res.status(500).json(err);
+            return res.status(200).json(data);
+          });
+        } catch (error) {
+          return res.status(500).json(error);
+        }
+      });
     });
   });
 };
@@ -54,27 +64,36 @@ export const deleteStory = (req, res) => {
 
   jwt.verify(token, "secretkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
+    AuthService.IsAccountBanned(userInfo.id, async (err, data) => {
+      if (err) {
+        return res.status(500).json({ error: "This account is banned" });
+      }
+      const userId = userInfo.id;
 
-    const userId = userInfo.id;
-
-    deleteStoryService(req.params.id, userId, (err, data) => {
-      if (err) return res.status(500).json(err);
-      if (!data) return res.status(403).json("You can delete only your story!");
-      return res.status(200).json(data);
+      deleteStoryService(req.params.id, userId, (err, data) => {
+        if (err) return res.status(500).json(err);
+        if (!data)
+          return res.status(403).json("You can delete only your story!");
+        return res.status(200).json(data);
+      });
     });
   });
 };
 export const getImageStoryController = async (req, res) => {
   try {
-    await AuthService.verifyUserToken(req.cookies.accessToken);
-    getStory(req.params.id, (error, data) => {
-      if (error) return res.status(500).json(error);
-      try {
-        return res.sendFile(data.img);
+    const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+    AuthService.IsAccountBanned(userId, async (err, data) => {
+      if (err) {
+        return res.status(500).json({ error: "This account is banned" });
       }
-      catch (err) {
-        return res.status(500).json(err);
-      }
+      getStory(req.params.id, (error, data) => {
+        if (error) return res.status(500).json(error);
+        try {
+          return res.sendFile(data.img);
+        } catch (err) {
+          return res.status(500).json(err);
+        }
+      });
     });
   } catch (error) {
     return res.status(500).json(error);
