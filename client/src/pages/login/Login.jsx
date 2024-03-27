@@ -23,7 +23,9 @@ const Login = () => {
       await login(inputs);
       navigate("/");
     } catch (err) {
-      setErr(err.response.data);
+      console.log(err.response);
+
+      setErr(err.response.data.toString());
     }
   };
 

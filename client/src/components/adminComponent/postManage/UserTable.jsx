@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { makeRequest } from "../../../axios";
-const UserTable = ({ year, month, needload, setLoading }) => {
+const UserTable = ({ year, month }) => {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  //const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
   const fetchData = () => {
     makeRequest
@@ -16,20 +16,29 @@ const UserTable = ({ year, month, needload, setLoading }) => {
       .then((res) => {
         setUsers(res.data.lists);
         setTotalPages(res.data.totalPages);
+        //console.log(res);
       })
       .catch((error) => {
         setError(error.response.data);
       })
       .finally(() => {
-        setLoading(false);
+        //setLoading(false);
+        setIsLoading(false);
       });
   };
   useEffect(() => {
-    if (needload) fetchData();
+    if (isLoading) fetchData();
   }, [currentPage, month, year]);
   return (
     <div>
-      <h1>Admin User Page</h1>
+      <h1>
+        Admin User Page {month} - {year}
+      </h1>
+      {error && (
+        <>
+          <h2>{error}</h2>
+        </>
+      )}
       <table>
         <thead>
           <tr>
