@@ -154,3 +154,19 @@ export const updatePasswordUser = (userid, newpassword, callback) => {
     return callback("Wrong password", null);
   });
 };
+export const getReputation = (userid, callback) => {
+  const q = "Select users.reputation from users where id=?";
+  db.query(q, [userid], (err, data) => {
+    if (err) return callback(err, null);
+    if (data.length === 0) return callback("Cant find user", null);
+    return callback(null, data[0]);
+  });
+};
+export const plusReputation = (userid, numberReputation, callback) => {
+  const q = "update users SET reputation=reputation+? where id=?";
+  db.query(q, [numberReputation, userid], (err, data) => {
+    if (err) return callback(err, null);
+    if (data.affectedRows > 0) return callback(null, "Updated!");
+    return callback("Not found", null);
+  });
+};
