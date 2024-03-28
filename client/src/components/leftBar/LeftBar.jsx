@@ -37,7 +37,13 @@ const LeftBar = () => {
             <img src={Friends} alt="" />
             <span>Friends</span>
           </div>
-          <div className="item">
+          <div
+            style={{ cursor: "pointer" }}
+            className="item"
+            onClick={() => {
+              window.location.href = `/groups/discover`;
+            }}
+          >
             <img src={Groups} alt="" />
             <span>Groups</span>
           </div>
