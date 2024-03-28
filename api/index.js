@@ -10,6 +10,8 @@ import friendshipRoutes from "./routes/friendship.js";
 import relationshipRoutes from "./routes/relationships.js";
 import messageRoutes from "./routes/message.js";
 import notificationRoutes from "./routes/notifications.js";
+import groupRoutes from "./routes/group.js";
+import joinRoutes from "./routes/join.js";
 import fileRoutes from "./routes/files.js";
 import adminRoutes from "./routes/admin.js";
 import cors from "cors";
@@ -62,6 +64,8 @@ app.use("/api/relationships", relationshipRoutes);
 app.use("/api/friendship", friendshipRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/groups", groupRoutes);
+app.use("/api/joins", joinRoutes);
 app.use("/api/file/", fileRoutes);
 app.use("/api/admin", adminRoutes);
 app.listen(8800, () => {
@@ -107,7 +111,7 @@ wss.on("connection", async (ws, req) => {
       ws.send("Welcome to the WebSocket server");
 
       // Xử lý tin nhắn từ client
-      ws.on("message", (message) => {});
+      ws.on("message", (message) => { });
 
       // Xử lý sự kiện khi client đóng kết nối
       ws.on("close", () => {

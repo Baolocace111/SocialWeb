@@ -40,6 +40,9 @@ import { makeRequest } from "./axios";
 import NineCube from "./components/loadingComponent/nineCube/NineCube";
 import AdminLogin from "./pages/admin/adminLogin/AdminLogin";
 import AdminLeftBar from "./components/adminComponent/leftBar/LeftBar";
+import GroupsBar from "./components/groups/GroupsBar";
+import MyGroup from "./pages/group/groupJoined/MyGroup";
+
 function App() {
   const { currentUser } = useContext(AuthContext);
 
@@ -107,6 +110,22 @@ function App() {
         <div style={{ display: "flex" }}>
           <div style={{ flex: "25%" }}>
             <FriendsBar />
+          </div>
+          <div style={{ flex: "75%", backgroundColor: "#f6f3f3" }}>
+            <Outlet />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const GroupsLayout = () => {
+    return (
+      <div className={`theme-${darkMode ? "dark" : "light"}`}>
+        <Navbar />
+        <div style={{ display: "flex" }}>
+          <div style={{ flex: "25%" }}>
+            <GroupsBar />
           </div>
           <div style={{ flex: "75%", backgroundColor: "#f6f3f3" }}>
             <Outlet />
@@ -226,6 +245,20 @@ function App() {
         {
           path: "/friends/suggestions",
           element: <FriendSuggest />,
+        },
+      ],
+    },
+    {
+      path: "/groups",
+      element: <GroupsLayout />,
+      children: [
+        {
+          path: "/groups/discover",
+          element: <FriendInvite />,
+        },
+        {
+          path: "/groups/joins",
+          element: <MyGroup />,
         },
       ],
     },
