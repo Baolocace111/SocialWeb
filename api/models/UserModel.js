@@ -26,6 +26,82 @@ export const findUserByName = (name, callback) => {
     return callback(null, users);
   });
 };
+export const findUserByNameOEmailOIdOUsername = (
+  name,
+  page,
+  limit,
+  callback
+) => {
+  // Tính chỉ số bắt đầu dựa trên trang hiện tại và giới hạn số mục trên mỗi trang
+  const offset = (page - 1) * limit;
+
+  // Câu truy vấn với phân trang
+  const q = `SELECT * FROM users WHERE username LIKE '%${name}%' OR email LIKE '%${name}%' OR name LIKE '%${name}%' OR id = ? LIMIT ${limit} OFFSET ${offset}`;
+
+  // Câu truy vấn để lấy tổng số người dùng (để tính số trang)
+  const qCount = `SELECT COUNT(*) as total FROM users WHERE username LIKE '%${name}%' OR email LIKE '%${name}%' OR name LIKE '%${name}%' OR id = ?`;
+
+  // Thực hiện câu truy vấn để lấy tổng số người dùng
+  db.query(qCount, [name], (err, data) => {
+    if (err) return callback(err);
+
+    // Tính tổng số trang
+    const totalUsers = data[0].total;
+    const totalPages = Math.ceil(totalUsers / limit);
+
+    // Thực hiện câu truy vấn với phân trang để lấy người dùng
+    db.query(q, [name], (err, data) => {
+      if (err) return callback(err);
+
+      let users = data.map((user) => {
+        const { password, ...info } = user;
+        return info;
+      });
+
+      // Trả về kết quả cùng thông tin phân trang
+      return callback(null, {
+        users,
+        currentPage: page,
+        totalPages,
+        nextPage: page < totalPages ? page + 1 : null,
+      });
+    });
+  });
+};
+export const findAllUsersWithPagination = (page, limit, callback) => {
+  const offset = (page - 1) * limit;
+
+  // Câu truy vấn để lấy người dùng với phân trang
+  const q = `SELECT * FROM users LIMIT ${limit} OFFSET ${offset}`;
+
+  // Câu truy vấn để lấy tổng số người dùng
+  const qCount = `SELECT COUNT(*) as total FROM users`;
+
+  db.query(qCount, (err, data) => {
+    if (err) return callback(err);
+
+    // Tính tổng số trang
+    const totalUsers = data[0].total;
+    const totalPages = Math.ceil(totalUsers / limit);
+
+    db.query(q, (err, data) => {
+      if (err) return callback(err);
+
+      let users = data.map((user) => {
+        const { password, ...info } = user;
+        return info;
+      });
+
+      // Trả về kết quả cùng thông tin phân trang
+      return callback(null, {
+        users,
+        currentPage: page,
+        totalPages,
+        nextPage: page < totalPages ? page + 1 : null,
+      });
+    });
+  });
+};
 export const getUsers = (user_id, offset, callback) => {
   const q = `
   SELECT u.id, u.name, u.username, u.profilePic

@@ -1,9 +1,10 @@
 import { useState } from "react";
 import UserTable from "./UserTable";
+import "./postManage.scss";
 const PostManage = () => {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
-  const [isLoading, setIsLoading] = useState("false");
+
   const months = [
     { value: 1, label: "January" },
     { value: 2, label: "February" },
@@ -39,26 +40,38 @@ const PostManage = () => {
     return month ? month.label : "";
   };
   return (
-    <div>
-      <label>Select Month:</label>
-      <select value={selectedMonth} onChange={handleMonthChange}>
-        <option value="">-- Select Month --</option>
-        {months.map((month) => (
-          <option key={month.value} value={month.value}>
-            {month.label}
-          </option>
-        ))}
-      </select>
+    <div className="post_manage">
+      <div className="dropdown-container">
+        <label htmlFor="month-select">Select Month:</label>
+        <select
+          id="month-select"
+          value={selectedMonth}
+          onChange={handleMonthChange}
+        >
+          <option value="">-- Select Month --</option>
+          {months.map((month) => (
+            <option key={month.value} value={month.value}>
+              {month.label}
+            </option>
+          ))}
+        </select>
+      </div>
 
-      <label>Select Year:</label>
-      <select value={selectedYear} onChange={handleYearChange}>
-        <option value="">-- Select Year --</option>
-        {years.map((year) => (
-          <option key={year} value={year}>
-            {year}
-          </option>
-        ))}
-      </select>
+      <div className="dropdown-container">
+        <label htmlFor="year-select">Select Year:</label>
+        <select
+          id="year-select"
+          value={selectedYear}
+          onChange={handleYearChange}
+        >
+          <option value="">-- Select Year --</option>
+          {years.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+      </div>
 
       <p>
         You selected:{" "}
@@ -66,9 +79,8 @@ const PostManage = () => {
           ? `${getMonthLabel(selectedMonth)} ${selectedYear}`
           : "Please select month and year"}
       </p>
-      <button>REFRESH</button>
       {selectedMonth && selectedYear && (
-        <UserTable year={selectedYear} month={selectedMonth}></UserTable>
+        <UserTable year={selectedYear} month={selectedMonth} />
       )}
     </div>
   );

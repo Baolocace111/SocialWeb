@@ -363,8 +363,8 @@ export const getPostsByUserWithPagination = (
 ) => {
   const offset = (page - 1) * limit;
   const q = `
-    SELECT p.*
-    FROM posts p
+    SELECT p.*,users.name
+    FROM posts p inner join users on p.userId = users.id
     WHERE p.userId = ? AND YEAR(p.createdAt) = ? AND MONTH(p.createdAt) = ?
     ORDER BY p.createdAt DESC
     LIMIT ? OFFSET ?;

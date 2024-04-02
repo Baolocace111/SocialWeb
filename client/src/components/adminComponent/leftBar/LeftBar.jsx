@@ -40,10 +40,19 @@ const AdminLeftBar = () => {
           }}
         >
           {" "}
-          Post manage{" "}
+          Post Management{" "}
+        </div>
+        <div
+          className="click-tag"
+          onClick={() => {
+            window.location.href = "/admin/user";
+          }}
+        >
+          {" "}
+          User Management{" "}
         </div>
         <div className="click-tag" onClick={handleLogout}>
-          Đăng xuất
+          Logout
         </div>
       </div>
     </>

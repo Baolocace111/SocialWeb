@@ -26,10 +26,10 @@ export const getPostByAdminController = async (req, res) => {
   try {
     await AuthService.verifyAdminToken(req.cookies.accessToken);
     await ValidateInputs(
-      req.body.year,
-      req.body.month,
-      req.body.page,
-      req.body.user_id
+      Number(req.body.year),
+      Number(req.body.month),
+      Number(req.body.page),
+      Number(req.body.user_id)
     );
     getPostByUserAdminService(
       req.body.year,

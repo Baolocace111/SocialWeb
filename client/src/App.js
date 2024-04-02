@@ -44,6 +44,7 @@ import GroupsBar from "./components/groups/GroupsBar";
 import GroupCreate from "./components/groups/GroupCreate/GroupCreate";
 import MyGroup from "./pages/group/groupJoined/MyGroup";
 import CreateGroup from "./pages/group/groupCreate/CreateGroup";
+import AdminUserManagement from "./pages/admin/adminHome/AdminUserManagement";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -333,6 +334,10 @@ function App() {
         {
           path: "/admin/home",
           element: <AdminHome />,
+        },
+        {
+          path: "/admin/user",
+          element: <AdminUserManagement />,
         },
       ],
     },
