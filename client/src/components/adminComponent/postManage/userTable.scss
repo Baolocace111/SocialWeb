@@ -1,0 +1,96 @@
+.manage_layout {
+  display: flex;
+  width: 100%;
+  margin-top: 20px; // Thêm khoảng cách giữa tiêu đề và nội dung
+  gap: 20px; // Thêm khoảng cách giữa các cột
+
+  .m_postusertable,
+  .m_posttable {
+    width: 50%;
+    background-color: #f7f7f7; // Màu nền nhẹ cho cả hai bảng
+    padding: 20px; // Thêm padding cho nội dung trong bảng
+    border-radius: 8px; // Bo góc cho container
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Thêm bóng đổ nhẹ
+
+    h1 {
+      margin-bottom: 20px; // Khoảng cách giữa tiêu đề và bảng
+    }
+
+    table {
+      width: 100%; // Bảng chiếm toàn bộ chiều rộng container
+      border-collapse: collapse; // Loại bỏ khoảng cách giữa các cell
+      margin-bottom: 20px; // Khoảng cách giữa bảng và phân trang
+
+      th,
+      td {
+        text-align: left;
+        padding: 8px; // Thêm padding cho cell
+        border-bottom: 1px solid #ddd; // Viền dưới mỗi hàng
+      }
+
+      th {
+        background-color: #4caf50; // Màu nền cho header
+        color: white; // Màu chữ cho header
+      }
+
+      tr:nth-child(even) {
+        background-color: #f2f2f2; // Màu nền xen kẽ cho hàng
+      }
+
+      .m_user:hover {
+        background-color: #4caf50; // Màu khi hover vào hàng người dùng
+        color: white;
+        cursor: pointer; // Thay đổi con trỏ khi hover
+      }
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center; // Căn giữa phân trang
+
+      button {
+        padding: 8px 16px;
+        margin: 0 4px;
+        border: 1px solid #4caf50; // Viền cho nút
+        background-color: white;
+        border-radius: 4px; // Bo góc cho nút
+        cursor: pointer;
+
+        &:hover {
+          background-color: #4caf50; // Màu khi hover vào nút
+          color: white;
+        }
+
+        &:focus {
+          outline: none; // Loại bỏ đường viền khi nút được focus
+          box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.5); // Tạo bóng đổ khi nút được focus
+        }
+      }
+    }
+  }
+
+  // Styles cho bảng bài viết
+  .m_posttable {
+    border-style: none; // Loại bỏ viền đã định sẵn
+  }
+  .delete-zone {
+    border: 2px dashed #ff4444;
+    background-color: #ffe6e6;
+    padding: 20px;
+    text-align: center;
+    color: #ff4444;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #ffcccc;
+    }
+  }
+
+  // Style cho bài viết có thể kéo thả
+  .draggable-post {
+    margin-bottom: 10px; // Khoảng cách giữa các bài viết
+    cursor: move; // Con trỏ biểu thị có thể kéo thả
+  }
+}

@@ -1,0 +1,42 @@
+.post_manage {
+  width: 100%;
+  height: auto; // Đặt chiều cao tự động để nó phù hợp với nội dung
+  display: flex;
+  flex-direction: column;
+  align-items: center; // Căn giữa các elements theo chiều dọc
+  padding: 20px; // Thêm padding để không gian trở nên thoải mái hơn
+
+  label {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-weight: bold; // Làm cho chữ đậm hơn để dễ nhận biết
+  }
+
+  select {
+    width: 200px; // Đặt chiều rộng cố định cho select box
+    padding: 5px; // Thêm padding cho select box
+    margin-bottom: 10px; // Thêm khoảng cách giữa các select box
+    border-radius: 5px; // Bo góc cho select box
+    border: 1px solid #ccc; // Đặt màu viền
+    &:focus {
+      border-color: #4caf50; // Màu viền khi focus
+    }
+  }
+
+  .refresh-button {
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px; // Thêm khoảng cách giữa nút và select box
+    &:hover {
+      background-color: darken(#4caf50, 10%); // Làm tối màu nút khi hover
+    }
+  }
+
+  p {
+    margin-top: 15px;
+  }
+}

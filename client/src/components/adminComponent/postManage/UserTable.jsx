@@ -1,72 +1,172 @@
 import { useEffect, useState } from "react";
 import { makeRequest } from "../../../axios";
+import MPost from "./MPost";
+import "./userTable.scss";
 const UserTable = ({ year, month }) => {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentPostPage, setCurrentPostPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
-  const fetchData = () => {
-    makeRequest
-      .post("/admin/user", {
+  const [posts, setPosts] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [draggedPost, setDraggedPost] = useState(null);
+  // Fetch user data
+  const fetchUserData = async () => {
+    try {
+      const response = await makeRequest.post("/admin/user", {
         year,
         month,
         page: currentPage,
-      })
-      .then((res) => {
-        setUsers(res.data.lists);
-        setTotalPages(res.data.totalPages);
-        //console.log(res);
-      })
-      .catch((error) => {
-        setError(error.response.data);
-      })
-      .finally(() => {
-        //setLoading(false);
-        setIsLoading(false);
       });
+      setUsers(response.data.lists);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      setError(error.response?.data || "An unexpected error occurred");
+    }
   };
-  useEffect(() => {
-    if (isLoading) fetchData();
-  }, [currentPage, month, year]);
-  return (
-    <div>
-      <h1>
-        Admin User Page {month} - {year}
-      </h1>
-      {error && (
-        <>
-          <h2>{error}</h2>
-        </>
-      )}
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Name</th>
-            <th>Total Posts</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user.id}>
-              <td>{user.id}</td>
-              <td>{user.username}</td>
-              <td>{user.name}</td>
-              <td>{user.total_posts}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
 
-      <div>
-        {/* Pagination */}
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button key={index + 1} onClick={() => setCurrentPage(index + 1)}>
-            {index + 1}
-          </button>
-        ))}
+  // Fetch posts by user
+  const fetchPostsByUser = async (userId, postPage) => {
+    try {
+      const response = await makeRequest.post("/admin/post", {
+        year,
+        month,
+        page: postPage,
+        user_id: userId,
+      });
+      setPosts(response.data.posts);
+      // Update currentPostPage state here if necessary
+      setCurrentPostPage(postPage);
+    } catch (error) {
+      setError(error.response?.data || "An unexpected error occurred");
+    }
+  };
+  const onclickUser = (user) => {
+    setSelectedUser(user);
+    fetchPostsByUser(user.id, 1);
+  };
+  const handleDragStart = (post) => {
+    setDraggedPost(post);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault(); // Ngăn chặn hành vi mặc định
+  };
+  const handleDrop = (e) => {
+    e.preventDefault();
+    if (draggedPost) {
+      // Hiển thị hộp thoại xác nhận
+      if (
+        window.confirm(
+          `Are you sure you want to delete the post with ID: ${draggedPost.id}?`
+        )
+      ) {
+        // Gọi API để xóa bài viết
+        makeRequest
+          .delete(`/admin/deletepost?postid=${draggedPost.id}`)
+          .then((response) => {
+            // Xử lý sau khi xóa thành công
+            console.log("Post deleted:", response);
+            // Cập nhật UI
+            setPosts((prevPosts) =>
+              prevPosts.filter((post) => post.id !== draggedPost.id)
+            );
+          })
+          .catch((error) => {
+            // Xử lý lỗi
+            console.error("Error deleting post:", error);
+          });
+      }
+      setDraggedPost(null); // Reset post đã kéo
+    }
+  };
+  // Effects
+  useEffect(() => {
+    fetchUserData();
+  }, [currentPage, month, year]);
+
+  useEffect(() => {
+    if (selectedUser) {
+      fetchPostsByUser(selectedUser.id, currentPostPage);
+    }
+  }, [selectedUser, currentPostPage]);
+
+  // Render pagination buttons
+  const renderPagination = (total, callback) => (
+    <div className="pagination">
+      {Array.from({ length: total }, (_, index) => (
+        <button key={index + 1} onClick={() => callback(index + 1)}>
+          {index + 1}
+        </button>
+      ))}
+    </div>
+  );
+  return (
+    <div className="manage_layout">
+      {error && <h2>{error}</h2>}
+      <div className="m_postusertable">
+        <h1>
+          Admin User Page {month} - {year}
+        </h1>
+        {error && (
+          <>
+            <h2>{error}</h2>
+          </>
+        )}
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Username</th>
+              <th>Name</th>
+              <th>Total Posts</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr
+                className="m_user"
+                key={user.id}
+                onClick={() => onclickUser(user)}
+              >
+                <td>{user.id}</td>
+                <td>{user.username}</td>
+                <td>{user.name}</td>
+                <td>{user.total_posts}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <div>{renderPagination(totalPages, setCurrentPage)}</div>
+      </div>
+      <div className="m_posttable">
+        {selectedUser && (
+          <>
+            <div
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
+              className="delete-zone"
+            >
+              Drag posts here to delete
+            </div>
+            <div>
+              {posts.map((post) => (
+                <div
+                  key={post.id}
+                  draggable
+                  onDragStart={() => handleDragStart(post)}
+                >
+                  <MPost post={post} />
+                </div>
+              ))}
+            </div>
+            {renderPagination(Math.ceil(selectedUser.total_posts / 3), (page) =>
+              fetchPostsByUser(selectedUser.id, page)
+            )}
+          </>
+        )}
       </div>
     </div>
   );

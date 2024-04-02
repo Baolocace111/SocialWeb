@@ -1,13 +1,29 @@
-import "./post.scss";
-import {
-  Popover,
-  List,
-  ListItemButton,
-  ListItemText,
-  ListItemIcon,
-} from "@mui/material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import PopupWindow from "../PopupComponent/PopupWindow";
+import { useState, useRef, useEffect, useContext } from "react";
+import { URL_OF_BACK_END } from "../../../axios";
+import { useQuery } from "@tanstack/react-query";
+import { AuthContext } from "../../../context/authContext";
+import { makeRequest } from "../../../axios";
+import Divider from "@mui/material/Divider";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Typography from "@mui/material/Typography";
+import EditIcon from "@mui/icons-material/Edit";
+
+import { TextareaAutosize } from "@mui/material";
+import Button from "@mui/material/Button";
+import Radio from "@mui/material/Radio";
+import Private from "../../post/Private";
+import Description from "../../post/desc";
+import Link from "@mui/material/Link";
+import ReactPlayer from "react-player";
+import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
+import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
+import PopupWindow from "../../PopupComponent/PopupWindow";
+import MiniPost from "../../post/MiniPost";
+import Comments from "../../comments/Comments";
 import {
   faTrashCan,
   faPen,
@@ -17,36 +33,17 @@ import {
   faUserGroup,
   faUserNinja,
 } from "@fortawesome/free-solid-svg-icons";
-import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
-import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
-import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
-import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-
-import { TextareaAutosize } from "@mui/material";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import Button from "@mui/material/Button";
-import EditIcon from "@mui/icons-material/Edit";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import Radio from "@mui/material/Radio";
-
-import Comments from "../comments/Comments";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  Popover,
+  List,
+  ListItemButton,
+  ListItemText,
+  ListItemIcon,
+} from "@mui/material";
 import moment from "moment";
-import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { makeRequest, URL_OF_BACK_END } from "../../axios";
-import { useContext, useEffect, useState, useRef } from "react";
-import { AuthContext } from "../../context/authContext";
-import Description from "./desc";
-import MiniPost from "./MiniPost";
-import Private from "./Private";
-import { Link } from "react-router-dom";
-import ReactPlayer from "react-player";
-
-const Post = ({ post }) => {
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+const MPost = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [deleteImage, setDeleteImage] = useState(false);
@@ -119,130 +116,12 @@ const Post = ({ post }) => {
     })
   );
 
-  const queryClient = useQueryClient();
-  //Use Mutation
-  const shareMutation = useMutation(
-    (data) => {
-      return makeRequest.post("/posts/share", { post: data });
-    },
-    {
-      onSuccess: () => {
-        // Invalidate and refetch
-        queryClient.invalidateQueries(["posts"]);
-      },
-    }
-  );
-  const mutation = useMutation(
-    (liked) => {
-      if (liked) return makeRequest.delete("/likes?postId=" + post.id);
-      return makeRequest.post("/likes", { postId: post.id });
-    },
-    {
-      onSuccess: () => {
-        // Invalidate and refetch
-        queryClient.invalidateQueries(["likes"]);
-      },
-    }
-  );
-  const deleteMutation = useMutation(
-    (postId) => {
-      return makeRequest.delete("/posts/" + postId);
-    },
-    {
-      onSuccess: () => {
-        // Invalidate and refetch
-        queryClient.invalidateQueries(["posts"]);
-      },
-    }
-  );
-  const updateMutation = useMutation(
-    async (data) => {
-      try {
-        return await makeRequest.put(`/posts/updatedesc`, data);
-      } catch (error) {
-        alert(error.response.data);
-      }
-    },
-    {
-      onSuccess: () => {
-        // Invalidate and refetch
-        queryClient.invalidateQueries(["posts"]);
-      },
-    }
-  );
-  const updateVideoMutation = useMutation(
-    async (data) => {
-      return await makeRequest.put(
-        `/posts/updateimage/${data.postId}`,
-        data.formData
-      );
-    },
-    {
-      onSuccess: () => {
-        // Invalidate and refetch
-        queryClient.invalidateQueries(["posts"]);
-      },
-    }
-  );
-  const updateSeeMutation = useMutation(
-    (data) => {
-      return makeRequest.put(`/posts/private/${data.postId}`, data);
-    },
-    {
-      onSuccess: () => {
-        // Invalidate and refetch
-        queryClient.invalidateQueries(["posts"]);
-      },
-    }
-  );
   //End Use Mutation
 
   const handleShare = () => {
     setShareDesc("");
     setShowSharePopup(!showSharePopup);
     setMenuAnchor(null);
-  };
-  const handleShareApi = () => {
-    shareMutation.mutate({
-      desc: shareDesc,
-      shareId: post.id,
-    });
-    handleShare();
-  };
-
-  const handleUpdate = async (e) => {
-    updateMutation.mutate({ postId: post.id, desc: desc });
-    if (deleteImage) {
-      try {
-        const formData = new FormData();
-        formData.append("file", file);
-        await updateVideoMutation.mutateAsync({ postId: post.id, formData });
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    window.location.reload();
-    setFile(null);
-    setOpenEdit(false);
-    setMenuAnchor(null);
-  };
-
-  const handleSave = () => {
-    if (privateRef.current && privateRef.current.savePrivate) {
-      privateRef.current.savePrivate();
-    }
-    const updatedSelectedValue = selectedValue === 3 ? 2 : selectedValue;
-    updateSeeMutation.mutate({ postId: post.id, status: updatedSelectedValue });
-    setOpenSeeEdit(false);
-    setMenuAnchor(null);
-  };
-
-  const handleLike = () => {
-    mutation.mutate(data.includes(currentUser.id));
-  };
-
-  const handleDelete = () => {
-    deleteMutation.mutate(post.id);
   };
 
   return (
@@ -261,7 +140,7 @@ const Post = ({ post }) => {
                   window.location.href = `/profile/${post.userId}`;
                 }}
               >
-                {post.name}
+                {post.name} - {post.id}
               </span>
               <span className="date">{moment(post.createdAt).fromNow()}</span>
             </div>
@@ -317,7 +196,7 @@ const Post = ({ post }) => {
               </ListItemButton>
               <Divider />
               {post.userId === currentUser.id && (
-                <ListItemButton onClick={handleDelete}>
+                <ListItemButton>
                   <ListItemIcon
                     style={{ fontSize: "18px", marginRight: "-25px" }}
                   >
@@ -441,9 +320,7 @@ const Post = ({ post }) => {
               </DialogContent>
               <Divider />
               <DialogActions>
-                <Button onClick={handleUpdate} color="primary">
-                  Save
-                </Button>
+                <Button color="primary">Save</Button>
                 <Button onClick={handleDialogClose} color="secondary">
                   Cancel
                 </Button>
@@ -634,9 +511,7 @@ const Post = ({ post }) => {
               </DialogContent>
               <Divider />
               <DialogActions>
-                <Button onClick={handleSave} color="primary">
-                  Save
-                </Button>
+                <Button color="primary">Save</Button>
                 <Button onClick={handleSeeDialogClose} color="secondary">
                   Cancel
                 </Button>
@@ -671,13 +546,9 @@ const Post = ({ post }) => {
                 <FavoriteOutlinedIcon
                   className="shake-heart"
                   style={{ color: "red" }}
-                  onClick={handleLike}
                 />
               ) : (
-                <FavoriteBorderOutlinedIcon
-                  className="white-color-heart"
-                  onClick={handleLike}
-                />
+                <FavoriteBorderOutlinedIcon className="white-color-heart" />
               )}
               {data?.length} Likes
             </div>
@@ -685,10 +556,7 @@ const Post = ({ post }) => {
               <TextsmsOutlinedIcon />
               See Comments
             </div>
-            <div className="item" onClick={() => handleShare()}>
-              <ShareOutlinedIcon />
-              Share
-            </div>
+
             <PopupWindow handleClose={handleShare} show={showSharePopup}>
               <div>
                 <EditIcon sx={{ marginRight: "8px", fontSize: "20px" }} />
@@ -768,9 +636,7 @@ const Post = ({ post }) => {
                   gap: "20px",
                 }}
               >
-                <button className="share" onClick={handleShareApi}>
-                  SHARE
-                </button>
+                <button className="share">SHARE</button>
                 <button className="cancel" onClick={handleShare}>
                   CANCEL
                 </button>
@@ -783,5 +649,4 @@ const Post = ({ post }) => {
     </div>
   );
 };
-
-export default Post;
+export default MPost;
