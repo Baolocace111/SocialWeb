@@ -41,7 +41,9 @@ import NineCube from "./components/loadingComponent/nineCube/NineCube";
 import AdminLogin from "./pages/admin/adminLogin/AdminLogin";
 import AdminLeftBar from "./components/adminComponent/leftBar/LeftBar";
 import GroupsBar from "./components/groups/GroupsBar";
+import GroupCreate from "./components/groups/GroupCreate/GroupCreate";
 import MyGroup from "./pages/group/groupJoined/MyGroup";
+import CreateGroup from "./pages/group/groupCreate/CreateGroup";
 import AdminUserManagement from "./pages/admin/adminHome/AdminUserManagement";
 
 function App() {
@@ -130,6 +132,30 @@ function App() {
           </div>
           <div style={{ flex: "75%", backgroundColor: "#f6f3f3" }}>
             <Outlet />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const GroupCreateLayout = () => {
+    const [groupName, setGroupName] = useState('');
+    const [groupPrivacy, setGroupPrivacy] = useState('');
+
+    return (
+      <div className={`theme-${darkMode ? "dark" : "light"}`}>
+        <Navbar />
+        <div style={{ display: "flex" }}>
+          <div style={{ flex: "25%" }}>
+            <GroupCreate
+              setGroupName={setGroupName}
+              setGroupPrivacy={setGroupPrivacy}
+              groupPrivacy={groupPrivacy}
+              groupName={groupName}
+            />
+          </div>
+          <div style={{ flex: "75%", backgroundColor: "#f6f3f3" }}>
+            <CreateGroup groupName={groupName} groupPrivacy={groupPrivacy} />
           </div>
         </div>
       </div>
@@ -262,6 +288,10 @@ function App() {
           element: <MyGroup />,
         },
       ],
+    },
+    {
+      path: "/groups/create",
+      element: <GroupCreateLayout />,
     },
     {
       path: "/search/:searchText",
