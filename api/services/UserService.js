@@ -91,3 +91,15 @@ export const changePasswordService = async (userid, newps, oldps, callback) => {
     return callback(error, null);
   }
 };
+export const searchUserByNameEmailIdService = (key, page, callback) => {
+  if (key === undefined)
+    userModel.findAllUsersWithPagination(page, 10, (err, data) => {
+      if (err) return callback(err, null);
+      return callback(null, data);
+    });
+  else
+    userModel.findUserByNameOEmailOIdOUsername(key, page, 10, (err, data) => {
+      if (err) return callback(err, null);
+      return callback(null, data);
+    });
+};

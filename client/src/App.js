@@ -42,6 +42,7 @@ import AdminLogin from "./pages/admin/adminLogin/AdminLogin";
 import AdminLeftBar from "./components/adminComponent/leftBar/LeftBar";
 import GroupsBar from "./components/groups/GroupsBar";
 import MyGroup from "./pages/group/groupJoined/MyGroup";
+import AdminUserManagement from "./pages/admin/adminHome/AdminUserManagement";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -303,6 +304,10 @@ function App() {
         {
           path: "/admin/home",
           element: <AdminHome />,
+        },
+        {
+          path: "/admin/user",
+          element: <AdminUserManagement />,
         },
       ],
     },
