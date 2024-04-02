@@ -47,7 +47,7 @@
             }
 
             .menu {
-                margin-top: 10px;
+                margin: 10px 0;
                 display: flex;
                 flex-direction: column;
 
@@ -91,6 +91,25 @@
                 .item:hover {
                     background-color: themed("bgSoft");
                 }
+            }
+
+            .create {
+                margin: 0 auto;
+                display: flex;
+                background-color: #ECF3FF;
+                font-size: 16px;
+                font-weight: 600;
+                color: #1877F2;
+                justify-content: center;
+                align-items: center;
+                width: 90%;
+                height: 35px;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            .create:hover {
+                background-color: #AAC9FF;
             }
         }
     }

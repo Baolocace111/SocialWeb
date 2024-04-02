@@ -2,7 +2,7 @@ import "./groupsBar.scss";
 import { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserPlus, faLightbulb, faGear } from "@fortawesome/free-solid-svg-icons";
+import { faLightbulb, faGear, faCompass } from "@fortawesome/free-solid-svg-icons";
 import { Link } from 'react-router-dom';
 
 const GroupsBar = () => {
@@ -36,7 +36,7 @@ const GroupsBar = () => {
                     <Link to={`/groups/discover`} style={{ textDecoration: "none", color: "inherit" }}>
                         <div className={`item ${isItemSelected('discover') ? 'selected' : ''}`} onClick={() => handleItemClick('discover')}>
                             <div className={`icon-button ${isItemSelected('discover') ? 'selected' : ''}`}>
-                                <FontAwesomeIcon icon={faUserPlus} size="lg" />
+                                <FontAwesomeIcon icon={faCompass} size="lg" />
                             </div>
                             <span>Khám phá</span>
                         </div>
@@ -49,6 +49,14 @@ const GroupsBar = () => {
                             <span>Nhóm của bạn</span>
                         </div>
                     </Link>
+                </div>
+                <div
+                    className="create"
+                    onClick={() => {
+                        window.location.href = `/groups/create`;
+                    }}
+                >
+                    <span> + Tạo nhóm mới </span>
                 </div>
             </div>
         </div>
