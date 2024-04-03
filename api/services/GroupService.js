@@ -13,3 +13,10 @@ export const getGroups = (userId, callback) => {
         return callback(null, data);
     });
 }
+
+export const createGroup = (groupName, privacyLevel, createdBy, callback) => {
+    groupModel.createGroup(groupName, privacyLevel, createdBy, (err, data) => {
+        if (err) return callback(err, null);
+        return callback(null, data);
+    });
+}

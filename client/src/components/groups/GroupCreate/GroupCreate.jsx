@@ -1,15 +1,18 @@
 import "./groupCreate.scss";
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { useMutation } from "@tanstack/react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX, faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../../context/authContext";
-import { useContext } from "react";
 import { URL_OF_BACK_END } from "../../../axios";
+import { makeRequest } from "../../../axios";
+import { useNavigate } from "react-router-dom";
 
 const GroupCreate = ({ setGroupPrivacy, groupPrivacy, setGroupName, groupName }) => {
     const { currentUser } = useContext(AuthContext);
     const [showDropdown, setShowDropdown] = useState(false);
     const [inputValue, setInputValue] = useState(groupName || '');
+    const navigate = useNavigate();
 
     const handleGroupNameChange = (event) => {
         setInputValue(event.target.value);
@@ -27,12 +30,28 @@ const GroupCreate = ({ setGroupPrivacy, groupPrivacy, setGroupName, groupName })
 
     const displayPrivacy = groupPrivacy || "Chọn quyền riêng tư";
 
+    // Mutation để tạo nhóm mới
+    const createGroupMutation = useMutation((newGroup) =>
+        makeRequest.post('/groups/create', newGroup)
+    );
+
+    // Hàm xử lý khi bấm nút "Tạo"
+    const handleCreateGroup = () => {
+        const privacyLevel = groupPrivacy === 'Công khai' ? 1 : 0;
+        createGroupMutation.mutate({
+            group_name: inputValue,
+            privacy_level: privacyLevel,
+            created_by: currentUser.id
+        });
+        navigate("/");
+    };
+
     return (
         <div className="group-create">
             <div className="container">
                 <div className="header">
                     <div className="close">
-                        <FontAwesomeIcon icon={faX} />
+                        <FontAwesomeIcon icon={faX} onClick={() => { window.location.href = `/groups/discover` }} />
                     </div>
                 </div>
                 <div className="create-form">
@@ -81,7 +100,7 @@ const GroupCreate = ({ setGroupPrivacy, groupPrivacy, setGroupName, groupName })
                     </div>
                 </div>
                 <div className="finish-create">
-                    <div className="create-btn">
+                    <div className="create-btn" onClick={handleCreateGroup}>
                         <span>Tạo</span>
                     </div>
                 </div>
