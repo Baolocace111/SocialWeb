@@ -8,10 +8,10 @@
     top: 70px;
     height: calc(100vh - 70px);
     overflow: scroll;
-    background-color: themed("bg");
+    background-color: themed("bgSoft");
     color: themed("textColor");
 
-    @include mobile{
+    @include mobile {
       display: none;
     }
 
