@@ -5,11 +5,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle, faEye, faLock, faEarthAmericas } from "@fortawesome/free-solid-svg-icons";
 import NineCube from "../../../components/loadingComponent/nineCube/NineCube.jsx";
 import Share from "../../../components/share/Share.jsx";
+import { URL_OF_BACK_END } from "../../../axios.js";
 import "./groupDetail.scss";
 
 const GroupDetail = () => {
     const { groupId } = useParams();
     const [groupData, setGroupData] = useState(null);
+    const [members, setMembers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [activeTab, setActiveTab] = useState('discussion');
@@ -25,7 +27,18 @@ const GroupDetail = () => {
                 setLoading(false);
             }
         };
+
+        const fetchMembers = async () => {
+            try {
+                const membersResponse = await makeRequest.get(`/joins/groups/${groupId}/users`);
+                setMembers(membersResponse.data);
+            } catch (error) {
+                setError(error);
+            }
+        };
+
         fetchGroupData();
+        fetchMembers();
     }, [groupId]);
 
     const handleTabChange = (tab) => {
@@ -88,10 +101,25 @@ const GroupDetail = () => {
                 <div className="group-info">
                     <h1 className="group-name">{groupData.group_name}</h1>
                     <p className="group-privacy">
+                        {
+                            groupData.privacy_level === 0 ?
+                                <FontAwesomeIcon icon={faLock} size="xs" style={{ marginRight: "5px" }} />
+                                : <FontAwesomeIcon icon={faEarthAmericas} size="xs" style={{ marginRight: "5px" }} />
+                        }
                         {groupData.privacy_level === 0 ? 'Nhóm Riêng tư' : 'Nhóm Công khai'}
                         <FontAwesomeIcon icon={faCircle} style={{ fontSize: "2px", margin: "0 5px" }} />
-                        <span className='member'>{'1 thành viên'}</span>
+                        <span className='member'>{members.length + ' thành viên'}</span>
                     </p>
+                </div>
+                <div className="group-members">
+                    <div className="members">
+                        {members.map(member => (
+                            <img key={member.id} src={`${URL_OF_BACK_END}users/profilePic/${member.id}`} alt={member.username} />
+                        ))}
+                    </div>
+                    <div className="invite">
+                        <span>+ Mời</span>
+                    </div>
                 </div>
                 <div className="group-tabs">
                     <div className="tab-container">
