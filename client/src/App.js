@@ -46,6 +46,8 @@ import GroupCreate from "./components/groups/GroupCreate/GroupCreate";
 import MyGroup from "./pages/group/groupJoined/MyGroup";
 import CreateGroup from "./pages/group/groupCreate/CreateGroup";
 import AdminUserManagement from "./pages/admin/adminHome/AdminUserManagement";
+import Gameindex from "./pages/games/Gameindex";
+import Carogames from "./pages/games/Carogame";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -140,8 +142,8 @@ function App() {
   };
 
   const GroupCreateLayout = () => {
-    const [groupName, setGroupName] = useState('');
-    const [groupPrivacy, setGroupPrivacy] = useState('');
+    const [groupName, setGroupName] = useState("");
+    const [groupPrivacy, setGroupPrivacy] = useState("");
 
     return (
       <div className={`theme-${darkMode ? "dark" : "light"}`}>
@@ -359,6 +361,16 @@ function App() {
         {
           path: "/admin/user",
           element: <AdminUserManagement />,
+        },
+      ],
+    },
+    {
+      path: "/game",
+      element: <Gameindex></Gameindex>,
+      children: [
+        {
+          path: "/game/caro",
+          element: <Carogames></Carogames>,
         },
       ],
     },
