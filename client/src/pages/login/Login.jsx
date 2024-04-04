@@ -30,11 +30,6 @@ const Login = () => {
     }
   };
 
-  const handleSocialLogin = (socialNetwork) => {
-    console.log(`Logging in with ${socialNetwork}`);
-    // Here you would implement the social login logic
-  };
-
   return (
     <div className="login">
       <div className="card">
@@ -67,16 +62,6 @@ const Login = () => {
             />
             {err && <div className="error">{err}</div>}
             <button type="submit" onClick={handleLogin}>Sign In</button>
-
-            <div className="social-login-buttons">
-              <button type="button" className="social-btn google" onClick={() => handleSocialLogin('Google')}>
-                Login with Google
-              </button>
-              <button type="button" className="social-btn facebook" onClick={() => handleSocialLogin('Facebook')}>
-                Login with Facebook
-              </button>
-            </div>
-
           </form>
         </div>
       </div>
