@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/authContext";
 import "./login.scss";
+// import { FaFacebook, FaGoogle } from 'react-icons/fa';
 
 const Login = () => {
   const [inputs, setInputs] = useState({
@@ -29,19 +30,22 @@ const Login = () => {
     }
   };
 
+  const handleSocialLogin = (socialNetwork) => {
+    console.log(`Logging in with ${socialNetwork}`);
+    // Here you would implement the social login logic
+  };
+
   return (
     <div className="login">
       <div className="card">
         <div className="left">
-          <h1>Hello World.</h1>
+          <h1>Welcome Back!</h1>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero cum,
-            alias totam numquam ipsa exercitationem dignissimos, error nam,
-            consequatur.
+            Join us and start your journey again. Explore new opportunities and expand your horizons.
           </p>
-          <span>Don't you have an account?</span>
+          <span>New here?</span>
           <Link to="/register">
-            <button>Register</button>
+            <button className="register-btn">Create Account</button>
           </Link>
         </div>
         <div className="right">
@@ -61,8 +65,18 @@ const Login = () => {
               onChange={handleChange}
               required
             />
-            {err && err}
-            <button onClick={handleLogin}>Login</button>
+            {err && <div className="error">{err}</div>}
+            <button type="submit" onClick={handleLogin}>Sign In</button>
+
+            <div className="social-login-buttons">
+              <button type="button" className="social-btn google" onClick={() => handleSocialLogin('Google')}>
+                Login with Google
+              </button>
+              <button type="button" className="social-btn facebook" onClick={() => handleSocialLogin('Facebook')}>
+                Login with Facebook
+              </button>
+            </div>
+
           </form>
         </div>
       </div>

@@ -15,6 +15,7 @@ import RightBar from "./components/rightBar/RightBar";
 import StoriesBar from "./components/stories/StoriesBar/storiesBar";
 import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
+import GroupDetail from "./pages/group/groupDetail/GroupDetail";
 import Search from "./pages/search/Search";
 import SearchBar from "./components/searchComponents/searchBar/SearchBar";
 import FriendsBar from "./components/friends/FriendsBar";
@@ -162,6 +163,22 @@ function App() {
     );
   };
 
+  const GroupDetailLayout = () => {
+    return (
+      <div className={`theme-${darkMode ? "dark" : "light"}`}>
+        <Navbar />
+        <div style={{ display: "flex" }}>
+          <div style={{ flex: "25%" }}>
+            <GroupsBar />
+          </div>
+          <div style={{ flex: "75%", backgroundColor: "#f6f3f3" }}>
+            <GroupDetail />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const PostLayout = () => {
     return (
       <div className={`theme-${darkMode ? "dark" : "light"}`}>
@@ -292,6 +309,10 @@ function App() {
     {
       path: "/groups/create",
       element: <GroupCreateLayout />,
+    },
+    {
+      path: "groups/:groupId",
+      element: <GroupDetailLayout />,
     },
     {
       path: "/search/:searchText",
