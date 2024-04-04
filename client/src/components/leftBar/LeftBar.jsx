@@ -30,7 +30,10 @@ const LeftBar = () => {
               window.location.href = `/profile/${currentUser.id}`;
             }}
           >
-            <img src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id} alt="" />
+            <img
+              src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id}
+              alt=""
+            />
             <span>{currentUser.name}</span>
           </div>
           <div className="item">
@@ -67,7 +70,13 @@ const LeftBar = () => {
             <img src={Events} alt="" />
             <span>Events</span>
           </div>
-          <div className="item">
+          <div
+            className="item"
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              window.location.href = `/game/caro`;
+            }}
+          >
             <img src={Gaming} alt="" />
             <span>Gaming</span>
           </div>

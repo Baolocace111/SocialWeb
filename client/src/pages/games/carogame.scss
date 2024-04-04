@@ -1,0 +1,72 @@
+.start-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  gap: 10px;
+}
+.carogamescreen {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+.caro-button {
+  display: flex;
+  margin-top: 10px;
+  gap: 50px;
+  button {
+    height: 30px;
+    width: 50px;
+  }
+}
+
+.square {
+  width: 50px;
+  height: 50px;
+  background: #fff;
+  border: 1px solid #999;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer; /* Cho biết có thể nhấn */
+  transition: background-color 0.3s, transform 0.1s;
+}
+.square:hover {
+  transform: scale(1.05); /* Nhẹ nhàng phóng to khi di chuột qua */
+  background-color: #eaeaea; /* Thay đổi màu khi hover */
+}
+
+/* Các nước đi có thể có màu khác nhau*/
+.square.X {
+  color: #ff5722; /* X là màu cam */
+}
+
+.square.O {
+  color: #2196f3; /* O là màu xanh dương */
+}
+
+.game-board {
+  grid-template-columns: repeat(14, 50px); /* Nếu bạn muốn 14x14 */
+  gap: 5px; /* Khoảng cách nhỏ hơn giữa các ô */
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+  .game-board {
+    grid-template-columns: repeat(14, 30px); /* Ô nhỏ hơn trên màn hình nhỏ */
+  }
+  .square {
+    width: 30px; /* Cỡ ô phù hợp với màn hình nhỏ */
+    height: 30px;
+  }
+}
+.carotitle {
+  display: flex;
+  justify-content: center;
+}

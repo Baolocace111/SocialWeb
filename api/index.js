@@ -77,6 +77,7 @@ import http from "http";
 import { WebSocketServer } from "ws";
 import { AuthService } from "./services/AuthService.js";
 import { getAllFriendsService } from "./services/FriendshipService.js";
+import { settingCaroWebsocket } from "./routes/carogame.js";
 
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
@@ -111,7 +112,7 @@ wss.on("connection", async (ws, req) => {
       ws.send("Welcome to the WebSocket server");
 
       // Xử lý tin nhắn từ client
-      ws.on("message", (message) => { });
+      ws.on("message", (message) => {});
 
       // Xử lý sự kiện khi client đóng kết nối
       ws.on("close", () => {
@@ -125,6 +126,9 @@ wss.on("connection", async (ws, req) => {
           }
         }
       });
+    } else if (type === "caro") {
+      await settingCaroWebsocket(ws, userId);
+      return;
     } else if (type === "index") {
       sendAMessageWhenUserOnlineService(userId, "A user is online");
       key = "index" + userId;
