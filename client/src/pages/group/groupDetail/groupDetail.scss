@@ -1,0 +1,126 @@
+@import "../../../style.scss";
+
+.group-detail {
+    background-color: #f6f3f3;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    .group-header {
+        background-color: #ffffff;
+        padding: 0 30px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+
+        .group-cover img {
+            width: 100%;
+            height: 410px;
+            border-radius: 0 0 8px 8px;
+            object-fit: cover;
+        }
+
+        .group-info {
+            margin-top: 10px;
+            padding: 0 30px;
+
+            .group-name {
+                font-size: 24px;
+                font-weight: bold;
+                margin: 10px 0;
+            }
+
+            .group-privacy {
+                display: inline-flex;
+                align-items: center;
+                font-size: 16px;
+                color: #606770;
+
+                .member {
+                    font-weight: 600;
+                }
+            }
+        }
+
+        .group-tabs {
+            display: flex;
+            margin-top: 30px;
+
+            .tab-container {
+                width: 100%;
+                border-top: 1px solid #ccd0d5;
+                margin: 0 30px;
+
+                .tab {
+                    padding: 15px 20px;
+                    border: none;
+                    background: none;
+                    cursor: pointer;
+                    font-size: 16px;
+                    color: #4b4f56;
+                    font-weight: 600;
+                    margin-right: 8px;
+
+                    &:hover {
+                        background-color: #f5f6f7;
+                    }
+
+                    &.active {
+                        border-bottom: 2px solid #1877f2;
+                        color: #1877f2;
+                    }
+                }
+            }
+        }
+    }
+
+    .group-body {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        border-radius: 0 0 8px 8px;
+        padding: 20px;
+        box-sizing: border-box;
+
+        .post-block {
+            flex: 65%;
+            margin-right: 10px;
+        }
+
+        .group-intro {
+            flex: 35%;
+            margin-left: 10px;
+            background-color: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+
+            .title {
+                font-size: 17px;
+                font-weight: 600;
+            }
+
+            .intro-privacy {
+                margin: 10px 0;
+                display: flex;
+                align-items: flex-start;
+                gap: 15px;
+
+                .content {
+                    display: flex;
+                    flex-direction: column;
+
+                    .intro-title {
+                        font-size: 16px;
+                        font-weight: bold;
+                        color: #333333;
+                        // margin-top: 20px;
+                        margin-bottom: 5px;
+                    }
+
+                    .intro-content {
+                        font-size: 14px;
+                        color: #666666;
+                        margin-bottom: 10px;
+                    }
+                }
+            }
+        }
+    }
+}

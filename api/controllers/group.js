@@ -3,7 +3,7 @@ import { AuthService } from "../services/AuthService.js";
 
 export const getGroupById = async (req, res) => {
     try {
-        const groupId = req.params.id;
+        const groupId = req.params.groupId;
         groupService.getGroupById(groupId, (err, data) => {
             if (err) return res.status(500).json({ error: err });
             return res.status(200).json(data);

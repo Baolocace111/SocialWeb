@@ -22,41 +22,35 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      //const {isLoading,error,data}= axios.post("http://localhost:8800/api/auth/register", inputs);
       makeRequest
         .post("/auth/register", inputs)
         .then((response) => {
-          setMessage(response.data);
+          setMessage(response.data.message); // Assuming response has a message field
         })
         .catch((error) => {
-          setMessage(error.data);
+          setMessage(error.response.data.message); // Assuming error response has a message field
         });
-      //setMessage("User has been created!");
     } catch (err) {
-      setMessage(err.response.data);
+      setMessage(err.response.data.message); // Assuming error response has a message field
     }
   };
-
-  //console.log(message);
 
   return (
     <div className="register">
       <div className="card">
         <div className="left">
-          <h1>Lama Social.</h1>
+          <h1>Welcome</h1>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero cum,
-            alias totam numquam ipsa exercitationem dignissimos, error nam,
-            consequatur.
+            Join the community and explore the endless possibilities.
           </p>
-          <span>Do you have an account?</span>
+          <span>Already have an account?</span>
           <Link to="/login">
-            <button>Login</button>
+            <button className="login-btn">Login</button>
           </Link>
         </div>
         <div className="right">
-          <h1>Register</h1>
-          <form>
+          <h1>Create Account</h1>
+          <form onSubmit={handleClick}>
             <input
               type="text"
               placeholder="Username"
@@ -87,13 +81,13 @@ const Register = () => {
             />
             <input
               type="password"
-              placeholder="Re-enter Password"
+              placeholder="Confirm Password"
               name="repassword"
               onChange={handleChange}
               required
             />
-            {message && <p>{message}</p>}
-            <button onClick={handleClick}>Register</button>
+            {message && <div className="message">{message}</div>}
+            <button type="submit">Sign Up</button>
           </form>
         </div>
       </div>
