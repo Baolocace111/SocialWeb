@@ -1,15 +1,23 @@
-import "./groupsJoined.scss";
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import "./groupsJoined.scss";
 
 const GroupJoined = ({ group }) => {
+    const navigate = useNavigate();
+
+    const viewGroup = () => {
+        navigate(`/groups/${group.group_id}`);
+    };
+
     return (
         <div className="card-invite">
-            <img src={"https://img5.thuthuatphanmem.vn/uploads/2021/11/19/hinh-nen-nhom-anh-nen-team-dep_052422440.jpg"} alt="User" />
+            <img src={group.group_avatar} alt={group.group_name} />
             <span>{group.group_name}</span>
-            <button className="accept">
-                Tham gia
+            <button className="accept" onClick={viewGroup}>
+                Xem nhóm
             </button>
         </div>
-    )
-}
+    );
+};
+
 export default GroupJoined;

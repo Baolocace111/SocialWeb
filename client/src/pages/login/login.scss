@@ -1,84 +1,150 @@
 .login {
   height: 100vh;
-  background-color: rgb(193, 190, 255);
+  background-color: #f0f0f5;
   display: flex;
   align-items: center;
   justify-content: center;
 
   .card {
-    width: 50%;
+    width: 65%;
+    min-height: 65vh;
     display: flex;
     background-color: white;
-    border-radius: 10px;
-    min-height: 600px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
     overflow: hidden;
 
     .left {
       flex: 1;
       background: linear-gradient(rgba(39, 11, 96, 0.5), rgba(39, 11, 96, 0.5)),
-        url("https://images.pexels.com/photos/3228727/pexels-photo-3228727.jpeg?auto=compress&cs=tinysrgb&w=1600")
-          center;
+        url("https://images.pexels.com/photos/3228727/pexels-photo-3228727.jpeg?auto=compress&cs=tinysrgb&w=1600") center;
       background-size: cover;
-      padding: 50px;
+      padding: 40px;
       display: flex;
       flex-direction: column;
-      gap: 30px;
+      gap: 20px;
       color: white;
 
       h1 {
-        font-size: 100px;
-        line-height: 100px;
+        font-size: 48px;
+        line-height: 1.2;
       }
-      
+
       p {
+        font-size: 16px;
       }
 
       span {
         font-size: 14px;
+        margin-top: auto;
       }
-      
-      button {
-        width: 50%;
-        padding: 10px;
+
+      .register-btn {
+        padding: 15px 20px;
+        margin-top: 10px;
         border: none;
         background-color: white;
-        color: rebeccapurple;
+        color: #270b60;
         font-weight: bold;
         cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+
+        &:hover {
+          background-color: #270b60;
+          color: white;
+        }
       }
     }
 
     .right {
       flex: 1;
-      padding: 50px;
+      padding: 40px;
       display: flex;
       flex-direction: column;
-      gap: 50px;
+      gap: 40px;
       justify-content: center;
 
       h1 {
-      color: #555;
+        color: #333;
       }
-      
+
       form {
         display: flex;
         flex-direction: column;
-        gap: 30px;
-        
+        gap: 25px;
+
         input {
-        border: none;
-        border-bottom: 1px solid lightgray;
-        padding: 20px 10px;
+          border: 2px solid #ccc;
+          border-radius: 5px;
+          padding: 10px 15px;
+          font-size: 16px;
+
+          &:focus {
+            border-color: #938eef;
+          }
         }
-        
+
+        .error {
+          color: red;
+          font-size: 14px;
+        }
+
         button {
-          width: 50%;
-          padding: 10px;
+          padding: 15px 0;
           border: none;
-          background-color: #938eef;
+          background-color: #270b60;
           color: white;
           font-weight: bold;
           cursor: pointer;
+          border-radius: 5px;
+          transition: background-color 0.3s;
+          width: 40%;
+          margin: 0 auto;
+
+          &:hover {
+            background-color: #938eef;
+          }
+        }
+      }
+
+      .social-login-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        .social-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 10px;
+          width: 60%;
+          margin: 0 auto;
+          border: none;
+          color: white;
+          font-weight: bold;
+          cursor: pointer;
+          border-radius: 5px;
+          transition: background-color 0.3s ease;
+
+          svg {
+            margin-right: 8px;
+          }
+
+          &.google {
+            background-color: #db4437;
+
+            &:hover {
+              background-color: darken(#db4437, 10%);
+            }
+          }
+
+          &.facebook {
+            background-color: #4267b2;
+
+            &:hover {
+              background-color: darken(#4267b2, 10%);
+            }
+          }
         }
       }
     }
