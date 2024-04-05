@@ -9,15 +9,16 @@ const currentGames = new Map();
 
 const checkWin = (board, row, col, player) => {
   const directions = [
-    [1, 0], // vertical
-    [0, 1], // horizontal
-    [1, 1], // diagonal \
-    [1, -1], // diagonal /
+    [1, 0], // dọc
+    [0, 1], // ngang
+    [1, 1], // chéo \
+    [1, -1], // chéo /
   ];
 
   for (const [dx, dy] of directions) {
     let count = 1;
 
+    // Kiểm tra hướng một
     for (let i = 1; i < WINNING_LENGTH; i++) {
       const newRow = row + dx * i;
       const newCol = col + dy * i;
@@ -35,13 +36,32 @@ const checkWin = (board, row, col, player) => {
       }
     }
 
-    if (count === WINNING_LENGTH) {
+    // Kiểm tra hướng đối diện
+    for (let i = 1; i < WINNING_LENGTH; i++) {
+      const newRow = row - dx * i;
+      const newCol = col - dy * i;
+
+      if (
+        newRow >= 0 &&
+        newRow < BOARD_SIZE &&
+        newCol >= 0 &&
+        newCol < BOARD_SIZE &&
+        board[newRow][newCol] === player
+      ) {
+        count++;
+      } else {
+        break;
+      }
+    }
+
+    if (count >= WINNING_LENGTH) {
       return true;
     }
   }
 
   return false;
 };
+
 export const settingCaroWebsocket = (ws, key) => {
   if (waitingPlayers.has(key) || currentGames.has(key)) {
     ws.close();
@@ -79,8 +99,12 @@ export const settingCaroWebsocket = (ws, key) => {
       opp: player1Key,
     });
 
-    player1.send(JSON.stringify({ type: "start", board, player: X }));
-    player2.send(JSON.stringify({ type: "start", board, player: O }));
+    player1.send(
+      JSON.stringify({ type: "start", board, player: X, oppkey: player2Key })
+    );
+    player2.send(
+      JSON.stringify({ type: "start", board, player: O, oppkey: player1Key })
+    );
   }
   ws.on("message", (message) => {
     const data = JSON.parse(message);
@@ -118,8 +142,12 @@ export const settingCaroWebsocket = (ws, key) => {
     board[row][col] = currentGames.get(key).player;
     const oppkey = currentGames.get(key).opp;
     if (checkWin(board, row, col, currentGames.get(key).player)) {
-      currentGames.get(key).ws.send(JSON.stringify({ type: "win" }));
-      currentGames.get(oppkey).ws.send(JSON.stringify({ type: "lose" }));
+      currentGames
+        .get(key)
+        .ws.send(JSON.stringify({ type: "win", message: "Out trình đối thủ" }));
+      currentGames
+        .get(oppkey)
+        .ws.send(JSON.stringify({ type: "lose", message: "Đối thủ quá hay" }));
       currentGames.delete(key);
       currentGames.delete(oppkey);
     } else {
@@ -141,7 +169,11 @@ export const settingCaroWebsocket = (ws, key) => {
       return;
     } else if (currentGames.has(key)) {
       const oppkey = currentGames.get(key).opp;
-      currentGames.get(oppkey).ws.send(JSON.stringify({ type: "win" }));
+      currentGames
+        .get(oppkey)
+        .ws.send(
+          JSON.stringify({ type: "win", message: "Đối thủ đã đầu hàng" })
+        );
       currentGames.delete(key);
       currentGames.delete(oppkey);
     }

@@ -70,3 +70,32 @@
   display: flex;
   justify-content: center;
 }
+.caroplayerbar {
+  background-color: #999;
+  height: 100%;
+  width: 15%;
+  position: fixed;
+  .carouserinfo {
+    display: flex;
+    align-items: center;
+    img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 99%;
+    }
+  }
+}
+.caroplayerbar.left {
+  left: 0%;
+  .carouserinfo {
+    justify-content: start;
+  }
+}
+.caroplayerbar.right {
+  right: 0%;
+  .carouserinfo {
+    flex-direction: row-reverse;
+    justify-content: end;
+  }
+}
