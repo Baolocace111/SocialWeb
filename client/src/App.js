@@ -43,6 +43,7 @@ import AdminLogin from "./pages/admin/adminLogin/AdminLogin";
 import AdminLeftBar from "./components/adminComponent/leftBar/LeftBar";
 import GroupsBar from "./components/groups/GroupsBar";
 import GroupCreate from "./components/groups/GroupCreate/GroupCreate";
+import GroupManage from "./components/groups/GroupManage/GroupManage";
 import MyGroup from "./pages/group/groupJoined/MyGroup";
 import CreateGroup from "./pages/group/groupCreate/CreateGroup";
 import AdminUserManagement from "./pages/admin/adminHome/AdminUserManagement";
@@ -171,10 +172,11 @@ function App() {
         <Navbar />
         <div style={{ display: "flex" }}>
           <div style={{ flex: "25%" }}>
-            <GroupsBar />
+            <GroupManage />
           </div>
           <div style={{ flex: "75%", backgroundColor: "#f6f3f3" }}>
-            <GroupDetail />
+            {/* <GroupDetail /> */}
+            <Outlet />
           </div>
         </div>
       </div>
@@ -313,8 +315,18 @@ function App() {
       element: <GroupCreateLayout />,
     },
     {
-      path: "groups/:groupId",
+      path: "/groups/:groupId",
       element: <GroupDetailLayout />,
+      children: [
+        {
+          path: "/groups/:groupId",
+          element: <GroupDetail />,
+        },
+        {
+          path: "/groups/:groupId/overview",
+          element: <FriendSuggest />,
+        },
+      ],
     },
     {
       path: "/search/:searchText",
@@ -366,11 +378,11 @@ function App() {
     },
     {
       path: "/game",
-      element: <Gameindex></Gameindex>,
+      element: <Gameindex />,
       children: [
         {
           path: "/game/caro",
-          element: <Carogames></Carogames>,
+          element: <Carogames />,
         },
       ],
     },
