@@ -1,17 +1,22 @@
 import * as joinModel from "../models/JoinModel.js";
 
-export const createJoin = (req, res) => {
-    const { userId, groupId } = req.body;
-    joinModel.createUserJoin(userId, groupId, (err) => {
-        if (err) return res.status(500).json(err);
-        return res.json({ message: "Joined the group successfully!" });
+export const createJoin = (userId, groupId, callback) => {
+    joinModel.createUserJoin(userId, groupId, (err, results) => {
+        if (err) return callback(err, null);
+        return callback(null, { message: "Joined the group successfully!" });
     });
 }
 
-export const deleteJoin = (req, res) => {
-    const { userId, groupId } = req.body;
-    joinModel.deleteUserJoin(userId, groupId, (err) => {
-        if (err) return res.status(500).json(err);
-        return res.json({ message: "Left the group successfully!" });
+export const deleteJoin = (userId, groupId, callback) => {
+    joinModel.deleteUserJoin(userId, groupId, (err, results) => {
+        if (err) return callback(err, null);
+        return callback(null, { message: "Left the group successfully!" });
     });
 }
+
+export const getUsersByGroup = (groupId, callback) => {
+    joinModel.getUsersByGroupId(groupId, (err, data) => {
+        if (err) return callback(err, null);
+        return callback(null, data);
+    });
+};
