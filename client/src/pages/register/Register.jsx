@@ -18,14 +18,13 @@ const Register = () => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleClick = async (e) => {
+  const handleClick = (e) => {
     e.preventDefault();
-
     try {
       makeRequest
         .post("/auth/register", inputs)
         .then((response) => {
-          setMessage(response.data.message); // Assuming response has a message field
+          setMessage(response.data); // Assuming response has a message field
         })
         .catch((error) => {
           setMessage(error.response.data.message); // Assuming error response has a message field
@@ -40,9 +39,7 @@ const Register = () => {
       <div className="card">
         <div className="left">
           <h1>Welcome</h1>
-          <p>
-            Join the community and explore the endless possibilities.
-          </p>
+          <p>Join the community and explore the endless possibilities.</p>
           <span>Already have an account?</span>
           <Link to="/login">
             <button className="login-btn">Login</button>
@@ -50,7 +47,7 @@ const Register = () => {
         </div>
         <div className="right">
           <h1>Create Account</h1>
-          <form onSubmit={handleClick}>
+          <form>
             <input
               type="text"
               placeholder="Username"
@@ -87,8 +84,8 @@ const Register = () => {
               required
             />
             {message && <div className="message">{message}</div>}
-            <button type="submit">Sign Up</button>
           </form>
+          <button onClick={handleClick}>Sign Up</button>
         </div>
       </div>
     </div>
