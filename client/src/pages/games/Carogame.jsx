@@ -1,5 +1,5 @@
 import "./carogame.scss";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { WEBSOCKET_BACK_END } from "../../axios";
 import { URL_OF_BACK_END } from "../../axios";
 import { useContext } from "react";
@@ -11,7 +11,7 @@ const Carogame = () => {
   const [gameStarted, setGameStarted] = useState(false);
   const [yourTurn, SetYourTurn] = useState(false);
   const [squares, setSquares] = useState(null);
-  const { currentUser, logout } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
   const [player, setPlayer] = useState(null);
   const [opponent, setOpponent] = useState(null);
   const [findPopup, setFindPopup] = useState(false);
@@ -35,60 +35,53 @@ const Carogame = () => {
     setFindPopup(true);
     const websocket = new WebSocket(`${WEBSOCKET_BACK_END}/caro`);
     websocket.onopen = () => {
-      setWs(websocket);
-    };
-    websocket.onmessage = (message) => {
-      // Xử lý tin nhắn từ server
-      const data = JSON.parse(message.data);
+      websocket.onmessage = (message) => {
+        // Xử lý tin nhắn từ server
+        const data = JSON.parse(message.data);
 
-      // Cập nhật trạng thái trò chơi dựa trên dữ liệu từ server
-      if (data.type === "start") {
-        makeRequest.get("/users/find/" + data.oppkey).then((res) => {
-          setOpponent(res.data);
-        });
-        setSquares(data.board);
-        setPlayer(data.player);
-        if (data.player === 1) SetYourTurn(true);
-        setGameStarted(true);
-        setFindPopup(false);
-      } else if (data.type === "win" || data.type === "lose") {
-        setPopupmessage(data.message);
-        if (data.type === "win") {
-          setWinPopup(true);
-        } else {
-          setLosePopup(true);
+        // Cập nhật trạng thái trò chơi dựa trên dữ liệu từ server
+        if (data.type === "start") {
+          makeRequest.get("/users/find/" + data.oppkey).then((res) => {
+            setOpponent(res.data);
+          });
+          setSquares(data.board);
+          setPlayer(data.player);
+          if (data.player === 1) SetYourTurn(true);
+          setGameStarted(true);
+          setFindPopup(false);
+        } else if (data.type === "win" || data.type === "lose") {
+          setPopupmessage(data.message);
+          if (data.type === "win") {
+            setWinPopup(true);
+          } else {
+            setLosePopup(true);
+          }
+          setPlayer(null);
+          setWs(null);
+          setGameStarted(false);
+          SetYourTurn(false);
+          setOpponent(null);
+        } else if (data.type === "opponentMove") {
+          SetYourTurn(true);
+          setSquares(data.board);
+          //setSquare(data.row, data.col, player === 1 ? 2 : 1);
+        } else if (data.type === "yourmove") {
+          SetYourTurn(false);
+          setSquares(data.board);
+          //setSquare(data.row, data.col, player === 2 ? 2 : 1);
         }
+      };
+      websocket.onclose = () => {
+        setOpponent(null);
         setPlayer(null);
         setWs(null);
         setGameStarted(false);
         SetYourTurn(false);
-        setOpponent(null);
-      } else if (data.type === "opponentMove") {
-        SetYourTurn(true);
-        setSquares(data.board);
-        //setSquare(data.row, data.col, player === 1 ? 2 : 1);
-      } else if (data.type === "yourmove") {
-        SetYourTurn(false);
-        setSquares(data.board);
-        //setSquare(data.row, data.col, player === 2 ? 2 : 1);
-      }
-    };
-    websocket.onclose = () => {
-      setOpponent(null);
-      setPlayer(null);
-      setWs(null);
-      setGameStarted(false);
-      SetYourTurn(false);
+      };
+      setWs(websocket);
     };
   };
-  // const setSquare = (row, col, value) => {
 
-  //   const newSquares = squares.map((row) => [...row]); // Deep copy mảng
-  //   // Cập nhật giá trị của ô tại vị trí được chỉ định bởi (row, col)
-  //   newSquares[row][col] = value;
-  //   // Cập nhật state với bảng squares mới
-  //   setSquares(newSquares);
-  // };
   const handleSquareClick = (row, col, cell) => {
     if (ws && yourTurn && cell === 0) {
       ws.send(JSON.stringify({ row, col }));
