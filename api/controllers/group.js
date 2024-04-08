@@ -1,5 +1,7 @@
 import * as groupService from "../services/GroupService.js";
 import { AuthService } from "../services/AuthService.js";
+import { upload } from "../Multer.js";
+import path from "path";
 
 export const getGroupById = async (req, res) => {
     try {
@@ -38,3 +40,51 @@ export const createGroup = async (req, res) => {
         return res.status(500).json({ error: error.message });
     }
 }
+
+export const updateGroupAvatarController = async (req, res) => {
+    try {
+        const groupId = req.params.groupId;
+        const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+
+        if (!userId) {
+            return res.status(401).json({ message: "Unauthorized access." });
+        }
+
+        upload(req, res, async (err) => {
+            if (err) {
+                return res.status(500).json(err);
+            }
+
+            if (!req.file) {
+                return res.status(400).json({ message: "No file uploaded." });
+            }
+
+            const absolutePath = path.resolve(req.file.path);
+            groupService.updateGroupAvatarService(userId, groupId, absolutePath, (err, data) => {
+                if (err) {
+                    return res.status(500).json({ message: err });
+                }
+                return res.status(200).json({ message: data });
+            });
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Error updating group avatar.", error: error });
+    }
+};
+
+export const getGroupAvatarController = async (req, res) => {
+    try {
+        groupService.getGroupAvatar(req.params.groupId, (error, data) => {
+            if (error) return res.status(500).json(error);
+            try {
+                return res.sendFile(data);
+            }
+            catch (err) {
+                return res.status(500).json(err);
+            }
+        });
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+};

@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp, faAngleDown, faHouse, faLayerGroup, faUserPlus, faClock, faHeadset, faCircle, faLock, faEarthAmericas } from "@fortawesome/free-solid-svg-icons";
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { makeRequest } from '../../../axios';
+import { URL_OF_BACK_END, makeRequest } from '../../../axios';
 
 const GroupManage = () => {
     const { groupId } = useParams();
@@ -57,13 +57,20 @@ const GroupManage = () => {
         }
     };
 
+    const getDefaultOrUploadedAvatar = () => {
+        const defaultAvatar = "https://hoanghamobile.com/tin-tuc/wp-content/uploads/2023/08/hinh-nen-anime-dep.jpg";
+
+        return groupDetails.group_avatar === defaultAvatar
+            ? groupDetails.group_avatar
+            : `${URL_OF_BACK_END}groups/${groupId}/avatar`;
+    };
 
     return (
         <div className="group-manage">
             <div className="container">
                 {groupDetails && (
                     <div className="manage-title">
-                        <img src={groupDetails.group_avatar} alt="Ảnh bìa nhóm" className="cover-image" />
+                        <img src={getDefaultOrUploadedAvatar()} alt={groupDetails.group_name} className="cover-image" />
                         <div className="group-info">
                             <h2 className="group-name">{groupDetails.group_name}</h2>
                             <div className="privacy">
