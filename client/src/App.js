@@ -48,6 +48,7 @@ import CreateGroup from "./pages/group/groupCreate/CreateGroup";
 import AdminUserManagement from "./pages/admin/adminHome/AdminUserManagement";
 import Gameindex from "./pages/games/Gameindex";
 import Carogames from "./pages/games/Carogame";
+import Call from "./pages/call/Call";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -373,6 +374,10 @@ function App() {
           element: <Carogames></Carogames>,
         },
       ],
+    },
+    {
+      path: "/call/:id",
+      element: <Call></Call>,
     },
   ]);
 
