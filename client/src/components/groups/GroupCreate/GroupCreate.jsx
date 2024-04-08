@@ -37,6 +37,11 @@ const GroupCreate = ({ setGroupPrivacy, groupPrivacy, setGroupName, groupName })
 
     // Hàm xử lý khi bấm nút "Tạo"
     const handleCreateGroup = () => {
+        if (!inputValue || !groupPrivacy) {
+            alert("Vui lòng nhập tên nhóm và chọn quyền riêng tư cho nhóm.");
+            return;
+        }
+
         const privacyLevel = groupPrivacy === 'Công khai' ? 1 : 0;
         createGroupMutation.mutate({
             group_name: inputValue,

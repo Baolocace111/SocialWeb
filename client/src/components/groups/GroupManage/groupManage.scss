@@ -1,0 +1,145 @@
+@import "../../../style.scss";
+
+.group-manage {
+    @include themify($themes) {
+        box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+        position: sticky;
+        top: 70px;
+        height: calc(100vh - 70px);
+        overflow: hidden;
+        background-color: themed("bg");
+        color: themed("textColor");
+
+        @include mobile {
+            display: none;
+        }
+
+        .container {
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+
+            .manage-title {
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                z-index: 2;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 15px 20px;
+                background-color: inherit;
+
+                .cover-image {
+                    width: 55px;
+                    height: 55px;
+                    border-radius: 10px;
+                    object-fit: cover;
+                    margin-right: 15px;
+                }
+
+                .group-info {
+                    flex-grow: 1;
+
+                    .group-name {
+                        font-weight: bold;
+                        font-size: 1.2em;
+                        margin-bottom: 5px;
+                    }
+
+                    .privacy {
+                        display: flex;
+                        align-items: center;
+                        font-size: 0.9em;
+
+                        .member-count {
+                            margin-right: 10px;
+                            font-weight: 600;
+                        }
+                    }
+                }
+            }
+
+            .manage-section {
+                flex-grow: 1;
+                overflow-y: auto;
+
+                .menu-box {
+                    margin: 10px 10px 0 10px;
+                    padding: 0 0 10px 0;
+                    border-bottom: 1px solid #ccd0d5;
+
+                    .menu-item {
+                        padding: 15px 10px;
+                        border-radius: 5px;
+                        font-weight: 500;
+                        cursor: pointer;
+                        transition: background-color 0.3s ease;
+
+                        &:hover {
+                            background-color: themed("bgSoft");
+                        }
+                    }
+
+                    .menu-item.selected {
+                        color: #1877F2;
+                        background-color: #ECF3FF;
+                    }
+                }
+
+                .dropdown-box {
+                    margin: 10px;
+
+                    .dropdown-menu {
+                        .dropdown-header {
+                            padding: 15px 10px;
+                            border-radius: 5px;
+                            font-weight: 500;
+                            color: themed("textColorSoft");
+                            cursor: pointer;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+
+                            &:hover {
+                                background-color: themed("bgSoft");
+                            }
+                        }
+
+                        .dropdown-content {
+                            display: none;
+
+                            &.show {
+                                display: block;
+                            }
+
+                            .dropdown-item {
+                                padding: 15px 10px;
+                                border-radius: 5px;
+                                font-weight: 500;
+                                cursor: pointer;
+                                transition: background-color 0.3s ease;
+
+                                &:hover {
+                                    background-color: themed("bgSoft");
+                                }
+                            }
+
+                            .dropdown-item.selected {
+                                color: #1877F2;
+                                background-color: #ECF3FF;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .finish-manage {
+                box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+                z-index: 2;
+                padding: 20px;
+                background-color: inherit;
+                text-align: center;
+            }
+        }
+    }
+}
