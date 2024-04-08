@@ -1,5 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
-import { URL_OF_BACK_END, WEBSOCKET_BACK_END, makeRequest } from "../../../axios";
+import {
+  URL_OF_BACK_END,
+  WEBSOCKET_BACK_END,
+  makeRequest,
+} from "../../../axios";
 import Message from "../message/Message";
 import "./chat.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -67,7 +71,9 @@ const Chat = ({ friend, onRemoveChatBox }) => {
       socket.close();
     };
   }
-
+  const handleClickToCall = () => {
+    window.open(`/call/${friendId}`, "_blank");
+  };
   const fetchMessages = async () => {
     try {
       const response = await makeRequest.post("/messages", {
@@ -126,14 +132,14 @@ const Chat = ({ friend, onRemoveChatBox }) => {
         <div className="actionButton">
           <button>
             <span>
-              <FontAwesomeIcon icon={faVideo} />
+              <FontAwesomeIcon icon={faVideo} onClick={handleClickToCall} />
             </span>
           </button>
-          <button>
+          {/* <button>
             <span>
               <FontAwesomeIcon icon={faPhone} />
             </span>
-          </button>
+          </button> */}
           <button onClick={onRemoveChatBox}>
             <span>
               <FontAwesomeIcon icon={faX} />

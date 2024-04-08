@@ -1,6 +1,6 @@
 import axios from "axios";
-const url =
-  "localhost:8800";
+const url = "localhost:8800";
+//"192.168.7.183:8800";
 // "social-api-ul9t.onrender.com";
 // export const URL_OF_BACK_END = "https://" + url + "/api/";
 export const URL_OF_BACK_END = "http://" + url + "/api/";

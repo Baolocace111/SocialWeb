@@ -30,6 +30,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
+      "http://192.168.7.183:3000",
       "https://cc95-115-78-232-69.ngrok-free.app",
     ],
     //credentials: true,
@@ -78,6 +79,7 @@ import { WebSocketServer } from "ws";
 import { AuthService } from "./services/AuthService.js";
 import { getAllFriendsService } from "./services/FriendshipService.js";
 import { settingCaroWebsocket } from "./routes/carogame.js";
+import { settingCallWebsocket } from "./routes/call.js";
 
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
@@ -129,6 +131,11 @@ wss.on("connection", async (ws, req) => {
     } else if (type === "caro") {
       await settingCaroWebsocket(ws, userId);
       return;
+    } else if (type === "call") {
+      key = await (req.url.split("/")[2] + "to" + userId);
+      //await console.log(key);
+      await settingCallWebsocket(ws, key);
+      return;
     } else if (type === "index") {
       sendAMessageWhenUserOnlineService(userId, "A user is online");
       key = "index" + userId;
@@ -146,6 +153,8 @@ wss.on("connection", async (ws, req) => {
       });
 
       //console.log("user '" + userId + "' is Online");
+    } else {
+      ws.close();
     }
 
     if (!clients.has(key)) {
