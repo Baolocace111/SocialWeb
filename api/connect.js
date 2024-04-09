@@ -9,5 +9,6 @@ export const db = mysql.createConnection({
   // password: "123456",
   database: "SocialDB_groundheld",
   multipleStatements: true,
-  port: 3307
+  port: 3307,
 });
+//
