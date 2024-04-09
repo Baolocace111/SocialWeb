@@ -83,19 +83,31 @@ const Update = ({ setOpenUpdate, user }) => {
     }
   };
   const handleUpdate = async () => {
-    if (updatedProfile.profilePic) {
-      const formData = new FormData();
-      formData.append("file", updatedProfile.profilePic);
-      imageProfileMutation.mutate(formData);
+    try {
+      const mutationPromises = [];
+
+      if (updatedProfile.profilePic) {
+        const formDataProfile = new FormData();
+        formDataProfile.append("file", updatedProfile.profilePic);
+        mutationPromises.push(imageProfileMutation.mutateAsync(formDataProfile));
+      }
+
+      if (updatedProfile.coverPic) {
+        const formDataCover = new FormData();
+        formDataCover.append("file", updatedProfile.coverPic);
+        mutationPromises.push(imageCoverMutation.mutateAsync(formDataCover));
+      }
+
+      await Promise.all(mutationPromises); // Chờ tất cả các mutations hoàn thành
+
+      setOpenUpdate(false);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error occurred during update:", error);
+      // Xử lý lỗi nếu cần thiết
     }
-    if (updatedProfile.coverPic) {
-      const formData = new FormData();
-      formData.append("file", updatedProfile.coverPic);
-      imageCoverMutation.mutate(formData);
-    }
-    setOpenUpdate(false);
-    window.location.reload();
   };
+
 
   const handleChange = (value, name) => {
     setTexts((prevTexts) => ({
