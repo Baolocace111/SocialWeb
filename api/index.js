@@ -185,8 +185,14 @@ export const sendMessageToUser = (userId, message) => {
 };
 const sendAMessageWhenUserOnlineService = (user_id, message) => {
   getAllFriendsService(user_id, (error, data) => {
-    if (error) console.log(error);
-    if (!data) console.log("data null");
+    if (error) {
+      console.log(error);
+      return;
+    }
+    if (!data) {
+      console.log("data null");
+      return;
+    }
     for (const item of data) {
       if (clients.has("index" + item.id)) {
         sendMessageToUser("index" + item.id, message);

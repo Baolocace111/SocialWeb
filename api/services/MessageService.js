@@ -3,7 +3,8 @@ import {
   getLatestMessagesWithUsers,
   getMessages,
 } from "../models/MessageModel.js";
-
+import * as userModel from "../models/UserModel.js";
+import { clients, sendMessageToUser } from "../index.js";
 export const sendMessageService = (content, userId1, userId2, callback) => {
   createMessage(content, userId1, userId2, (err, data) => {
     //console.log(content);
@@ -37,5 +38,20 @@ export const getLastestMessageofMyFriendService = (userId, callback) => {
   getLatestMessagesWithUsers(userId, (err, data) => {
     if (err) return callback(err, null);
     return callback(null, data);
+  });
+};
+export const makeACallService = (userId, friendId, callback) => {
+  userModel.getUserById(userId, (error, data) => {
+    if (error) return callback(error, null);
+    if (clients.has("index" + friendId)) {
+      sendMessageToUser("index" + friendId, {
+        type: "call",
+        id: userId,
+        name: data.name,
+      });
+      return callback(null, "Đang gọi");
+    } else {
+      return callback("Người dùng không online", null);
+    }
   });
 };
