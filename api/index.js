@@ -28,11 +28,7 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "http://192.168.7.183:3000",
-      "https://cc95-115-78-232-69.ngrok-free.app",
-    ],
+    origin: ["https://social-web-neon.vercel.app/", "http://localhost:3000"],
     //credentials: true,
     exposeHeaders:
       "access-control-allow-origin,access-control-allow-methods,access-control-allow-headers",
@@ -114,7 +110,7 @@ wss.on("connection", async (ws, req) => {
       ws.send("Welcome to the WebSocket server");
 
       // Xử lý tin nhắn từ client
-      ws.on("message", (message) => { });
+      ws.on("message", (message) => {});
 
       // Xử lý sự kiện khi client đóng kết nối
       ws.on("close", () => {
