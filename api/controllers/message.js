@@ -1,5 +1,6 @@
 import {
   getLastestMessageofMyFriendService,
+  makeACallService,
   seeMessageService,
   sendMessageService,
 } from "../services/MessageService.js";
@@ -74,6 +75,24 @@ export const getLastestMessageController = async (req, res) => {
       // Nếu tài khoản không bị cấm, tiếp tục xử lý
       getLastestMessageofMyFriendService(userId, (err, data) => {
         if (err) return res.status(500).json(err);
+        return res.status(200).json(data);
+      });
+    });
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+export const makeACallController = async (req, res) => {
+  try {
+    const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+
+    // Kiểm tra xem tài khoản có bị cấm không
+    AuthService.IsAccountBanned(userId, async (err, data) => {
+      if (err) {
+        return res.status(500).json({ error: "This account is banned" });
+      }
+      makeACallService(userId, req.params.id, (error, data) => {
+        if (error) return res.status(500).json(error);
         return res.status(200).json(data);
       });
     });
