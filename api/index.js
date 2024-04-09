@@ -28,7 +28,11 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(
   cors({
-    origin: ["https://social-web-neon.vercel.app/", "http://localhost:3000"],
+    origin: [
+      "*",
+      "https://social-web-neon.vercel.app",
+      "http://localhost:3000",
+    ],
     //credentials: true,
     exposeHeaders:
       "access-control-allow-origin,access-control-allow-methods,access-control-allow-headers",
