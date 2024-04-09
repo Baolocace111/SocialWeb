@@ -78,12 +78,18 @@ const GroupDetail = () => {
         }
     );
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!selectedImageFile) return;
+
         const formData = new FormData();
         formData.append('file', selectedImageFile);
-        groupAvatarMutation.mutate(formData);
-        window.location.reload();
+
+        try {
+            await groupAvatarMutation.mutateAsync(formData);
+            window.location.reload();
+        } catch (error) {
+            console.error('Error while uploading image:', error);
+        }
     };
 
     const handleCancel = () => {
