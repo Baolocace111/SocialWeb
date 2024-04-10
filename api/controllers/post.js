@@ -15,6 +15,9 @@ import {
   getVideoFromPostService,
   deleteImagePostService,
   updateImagePostService,
+  addGroupPostService,
+  addGroupVideoPostService,
+  getGroupPostsService,
 } from "../services/PostService.js";
 import { AuthService } from "../services/AuthService.js";
 import { upload } from "../Multer.js";
@@ -352,5 +355,83 @@ export const getVideoFromPostController = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json(error);
+  }
+};
+
+export const addGroupPostController = (req, res) => {
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json("Not logged in!");
+
+  jwt.verify(token, "secretkey", (err, userInfo) => {
+    if (err) return res.status(403).json("Token is not valid!");
+    AuthService.IsAccountBanned(userInfo.id, async (err, data) => {
+      if (err) {
+        return res.status(500).json({ error: "This account is banned" });
+      }
+      const post = {
+        desc: req.body.desc,
+        img: "",
+        userId: userInfo.id,
+        groupId: req.body.groupId,
+        type: 3
+      };
+      if (!post.desc) return res.status(400).json("Your post description is required");
+      addGroupPostService(post, (err, data) => {
+        if (err) return res.status(500).json(err);
+        return res.status(200).json(data);
+      });
+    });
+  });
+};
+
+export const addGroupVideoPostController = async (req, res) => {
+  try {
+    const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+    AuthService.IsAccountBanned(userId, async (err, data) => {
+      if (err) {
+        return res.status(500).json({ error: "This account is banned!" });
+      }
+      upload(req, res, (err) => {
+        if (err) return res.status(500).json(err);
+        if (!req.file) return res.status(400).json("Can't add post, error in uploading file!");
+
+        const absolutePath = path.resolve(req.file.path);
+        const post = {
+          desc: req.body.desc || "",
+          img: absolutePath,
+          userId: userId,
+          groupId: req.body.groupId,
+          type: 3
+        };
+
+        addGroupVideoPostService(post, (err, data) => {
+          if (err) return res.status(500).json(err);
+          return res.status(200).json(data);
+        });
+      });
+    });
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
+export const getGroupPostsController = async (req, res) => {
+  try {
+    const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+    AuthService.IsAccountBanned(userId, async (err) => {
+      if (err) {
+        return res.status(500).json({ error: "This account is banned" });
+      }
+      const { groupId } = req.params;
+
+      getGroupPostsService(groupId, (err, posts) => {
+        if (err) {
+          return res.status(500).json({ error: err });
+        }
+        return res.status(200).json(posts);
+      });
+    });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
   }
 };

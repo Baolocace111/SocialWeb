@@ -5,10 +5,18 @@ import path from "path";
 
 export const getGroupById = async (req, res) => {
     try {
-        const groupId = req.params.groupId;
-        groupService.getGroupById(groupId, (err, data) => {
-            if (err) return res.status(500).json({ error: err });
-            return res.status(200).json(data);
+        const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+
+        AuthService.IsAccountBanned(userId, async (err, data) => {
+            if (err) {
+                return res.status(500).json({ error: "This account is banned" });
+            }
+
+            const groupId = req.params.groupId;
+            groupService.getGroupById(groupId, (err, data) => {
+                if (err) return res.status(500).json({ error: err });
+                return res.status(200).json(data);
+            });
         });
     } catch (error) {
         return res.status(500).json(error);
@@ -18,9 +26,16 @@ export const getGroupById = async (req, res) => {
 export const getGroups = async (req, res) => {
     try {
         const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
-        groupService.getGroups(userId, (err, data) => {
-            if (err) return res.status(500).json({ error: err });
-            return res.status(200).json(data);
+
+        AuthService.IsAccountBanned(userId, async (err, data) => {
+            if (err) {
+                return res.status(500).json({ error: "This account is banned" });
+            }
+
+            groupService.getGroups(userId, (err, data) => {
+                if (err) return res.status(500).json({ error: err });
+                return res.status(200).json(data);
+            });
         });
     } catch (error) {
         return res.status(500).json(error);
@@ -30,11 +45,17 @@ export const getGroups = async (req, res) => {
 export const createGroup = async (req, res) => {
     try {
         const { group_name, privacy_level } = req.body;
-        const createdBy = await AuthService.verifyUserToken(req.cookies.accessToken); // Giả sử bạn có hàm AuthService.verifyUserToken để lấy ID người dùng từ token
+        const createdBy = await AuthService.verifyUserToken(req.cookies.accessToken);
 
-        groupService.createGroup(group_name, privacy_level, createdBy, (err, data) => {
-            if (err) return res.status(500).json({ error: err.message });
-            return res.status(201).json({ message: 'Group created successfully', group: data });
+        AuthService.IsAccountBanned(createdBy, async (err, data) => {
+            if (err) {
+                return res.status(500).json({ error: "This account is banned" });
+            }
+
+            groupService.createGroup(group_name, privacy_level, createdBy, (err, data) => {
+                if (err) return res.status(500).json({ error: err.message });
+                return res.status(201).json({ message: 'Group created successfully', group: data });
+            });
         });
     } catch (error) {
         return res.status(500).json({ error: error.message });
@@ -46,25 +67,27 @@ export const updateGroupAvatarController = async (req, res) => {
         const groupId = req.params.groupId;
         const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
 
-        if (!userId) {
-            return res.status(401).json({ message: "Unauthorized access." });
-        }
-
-        upload(req, res, async (err) => {
+        AuthService.IsAccountBanned(userId, async (err, data) => {
             if (err) {
-                return res.status(500).json(err);
+                return res.status(500).json({ error: "This account is banned" });
             }
 
-            if (!req.file) {
-                return res.status(400).json({ message: "No file uploaded." });
-            }
-
-            const absolutePath = path.resolve(req.file.path);
-            groupService.updateGroupAvatarService(userId, groupId, absolutePath, (err, data) => {
+            upload(req, res, async (err) => {
                 if (err) {
-                    return res.status(500).json({ message: err });
+                    return res.status(500).json(err);
                 }
-                return res.status(200).json({ message: data });
+
+                if (!req.file) {
+                    return res.status(400).json({ message: "No file uploaded." });
+                }
+
+                const absolutePath = path.resolve(req.file.path);
+                groupService.updateGroupAvatarService(userId, groupId, absolutePath, (err, data) => {
+                    if (err) {
+                        return res.status(500).json({ message: err });
+                    }
+                    return res.status(200).json({ message: data });
+                });
             });
         });
     } catch (error) {
@@ -79,8 +102,7 @@ export const getGroupAvatarController = async (req, res) => {
             if (error) return res.status(500).json(error);
             try {
                 return res.sendFile(data);
-            }
-            catch (err) {
+            } catch (err) {
                 return res.status(500).json(err);
             }
         });
