@@ -20,7 +20,7 @@ const Call = () => {
 
   useEffect(() => {
     navigator.mediaDevices
-      .getUserMedia({ video: true, audio: false })
+      .getUserMedia({ video: true, audio: true })
       .then((stream) => {
         setLocalStream(stream);
         if (localVideoRef.current) {
@@ -158,7 +158,7 @@ const Call = () => {
       <div className="video-container">
         <div className="local-video">
           <h1>Your camera</h1>
-          <video autoPlay ref={localVideoRef}></video>
+          <video autoPlay ref={localVideoRef} muted></video>
         </div>
         <div className="remote-video">
           <h1>Your friend's camera</h1>

@@ -30,7 +30,7 @@ import ListFriendRequest from "./ListFriendRequest";
 import { makeRequest, URL_OF_BACK_END, WEBSOCKET_BACK_END } from "../../axios";
 import ListNotification from "./ListNotification";
 import ListMessages from "./ListMessages";
-
+import { ChatContext } from "./ChatContext";
 const Navbar = () => {
   const { toggle, darkMode } = useContext(DarkModeContext);
   const { currentUser, logout } = useContext(AuthContext);
@@ -39,7 +39,7 @@ const Navbar = () => {
   const [content, setContent] = useState("");
   const [request_number, setRequestNumber] = useState(0);
   const [notification_number, setNotificationNumber] = useState(0);
-  const [ws, setWS] = useState(null);
+  const { ws, setWS } = useContext(ChatContext);
 
   const update_request_number = async () => {
     try {
@@ -58,27 +58,6 @@ const Navbar = () => {
       setNotificationNumber(-1);
     }
   };
-
-  if (!ws) {
-    const socket = new WebSocket(WEBSOCKET_BACK_END + `/index`);
-    socket.onopen = () => {
-      console.log("Connected");
-    };
-    socket.onmessage = (event) => {
-      if (event.data === "A Request has sent or cancelled") {
-        update_request_number();
-      } else if (event.data === "New notification") {
-        //console.log("OK");
-        update_notification_number();
-      } else if (event.data === "New message or seen") {
-        updateMessage();
-      }
-    };
-    socket.onclose = () => {
-      console.log("Closed");
-    };
-    setWS(socket);
-  }
 
   update_request_number();
   update_notification_number();
@@ -117,8 +96,8 @@ const Navbar = () => {
     iconId === "profile"
       ? setAnchorEl(event.currentTarget.parentElement.parentElement)
       : setAnchorEl(
-        event.currentTarget.parentElement.parentElement.parentElement
-      );
+          event.currentTarget.parentElement.parentElement.parentElement
+        );
     setContent(contentType);
   };
 
@@ -166,6 +145,28 @@ const Navbar = () => {
       updateMessage();
     }
   }, [messLoading]);
+  useEffect(() => {
+    if (!ws) {
+      const socket = new WebSocket(WEBSOCKET_BACK_END + `/index`);
+      socket.onopen = () => {
+        console.log("Connected");
+      };
+      socket.onmessage = (event) => {
+        if (event.data === "A Request has sent or cancelled") {
+          update_request_number();
+        } else if (event.data === "New notification") {
+          //console.log("OK");
+          update_notification_number();
+        } else if (event.data === "New message or seen") {
+          updateMessage();
+        }
+      };
+      socket.onclose = () => {
+        console.log("Closed");
+      };
+      setWS(socket);
+    }
+  }, [ws, setWS]);
 
   return (
     <div className="navbar">
@@ -241,7 +242,10 @@ const Navbar = () => {
           style={{ cursor: "pointer" }}
           id="profile"
         >
-          <img src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id} alt="" />
+          <img
+            src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id}
+            alt=""
+          />
           <span>{currentUser.name}</span>
           <FontAwesomeIcon icon={faCaretDown} />
         </div>
