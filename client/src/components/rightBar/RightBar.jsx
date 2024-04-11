@@ -51,7 +51,7 @@ const RightBar = () => {
       <div className="container">
         <div className="item">
           <span>Online Friends</span>
-          {needReload ? (
+          {needReload && followedUsers.length === 0 ? (
             <NineCube></NineCube>
           ) : error ? (
             "Something went wrong!!!"
@@ -63,7 +63,10 @@ const RightBar = () => {
                 onClick={() => handleAddChatBox(user)}
               >
                 <div className="userInfo">
-                  <img src={URL_OF_BACK_END + `users/profilePic/` + user.id} alt={user.name} />
+                  <img
+                    src={URL_OF_BACK_END + `users/profilePic/` + user.id}
+                    alt={user.name}
+                  />
                   <div className="online" />
                   <span>{user.name}</span>
                 </div>

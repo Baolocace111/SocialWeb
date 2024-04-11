@@ -14,7 +14,7 @@ export const AuthService = {
 
       await AuthModel.createUser(username, email, hashedPassword, name);
 
-      return "User has been created.";
+      return "Successfully !!!";
     } catch (err) {
       throw err;
     }
