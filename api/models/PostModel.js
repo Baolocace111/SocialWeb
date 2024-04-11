@@ -283,10 +283,10 @@ export const addListPostPrivate = (userIDs, postID, userID, callback) => {
     const deleteAndInsertQuery =
       userIDs.length > 0
         ? "" +
-          "DELETE FROM post_private WHERE post_id = ?;" +
-          "INSERT INTO post_private(`post_id`, `user_id`) VALUES" +
-          userIDs.map((id) => `(${postID}, ${id})`).join(", ") +
-          `;`
+        "DELETE FROM post_private WHERE post_id = ?;" +
+        "INSERT INTO post_private(`post_id`, `user_id`) VALUES" +
+        userIDs.map((id) => `(${postID}, ${id})`).join(", ") +
+        `;`
         : `DELETE FROM post_private WHERE post_id = ?`;
 
     db.query(deleteAndInsertQuery, Number(postID), (error, results) => {
@@ -407,5 +407,39 @@ export const deleteImageOfPost = (postId, userId, callback) => {
     } else {
       return callback("Post can't delete image", null);
     }
+  });
+};
+
+export const addGroupPost = (post, callback) => {
+  const query = "INSERT INTO posts(`desc`, `img`, `userId`, `type`) VALUES (?)";
+  const values = [
+    post.desc,
+    post.img,
+    post.userId,
+    post.type,
+  ];
+
+  db.query(query, [values], (err, postResult) => {
+    if (err) return callback(err);
+
+    const postId = postResult.insertId;
+    const groupPostQuery = "INSERT INTO group_posts(`post_id`, `group_id`, `user_id`) VALUES (?, ?, ?)";
+    db.query(groupPostQuery, [postId, post.groupId, post.userId], (err, groupPostResult) => {
+      if (err) return callback(err);
+      return callback(null, "Group post has been created.");
+    });
+  });
+};
+
+export const addGroupVideoPost = (post, callback) => {
+  addGroupPost(post, callback);
+};
+
+export const getGroupPosts = (groupId, callback) => {
+  const q = "SELECT * FROM posts WHERE type = 3 AND id IN (SELECT post_id FROM group_posts WHERE group_id = ?)";
+
+  db.query(q, [groupId], (err, results) => {
+    if (err) return callback(err);
+    return callback(null, results);
   });
 };

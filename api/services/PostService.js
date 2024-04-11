@@ -18,6 +18,9 @@ import {
   updateDescPost,
   deleteImageOfPost,
   updateImagePost,
+  addGroupPost,
+  addGroupVideoPost,
+  getGroupPosts,
 } from "../models/PostModel.js";
 
 export const getPostsService = (userId, userInfo, offset, callback) => {
@@ -155,6 +158,27 @@ export const getVideoFromPostService = (postId, userId, callback) => {
 export const deleteImagePostService = (postId, userId, callback) => {
   deleteImageOfPost(postId, userId, (error, data) => {
     if (error) return callback(error, null);
+    return callback(null, data);
+  });
+};
+
+export const addGroupPostService = (post, callback) => {
+  addGroupPost(post, (err, data) => {
+    if (err) return callback(err);
+    return callback(null, data);
+  });
+};
+
+export const addGroupVideoPostService = (post, callback) => {
+  addGroupVideoPost(post, (err, data) => {
+    if (err) return callback(err);
+    return callback(null, data);
+  });
+};
+
+export const getGroupPostsService = (groupId, callback) => {
+  getGroupPosts(groupId, (err, data) => {
+    if (err) return callback(err);
     return callback(null, data);
   });
 };
