@@ -5,6 +5,7 @@ import {
 } from "../models/MessageModel.js";
 import * as userModel from "../models/UserModel.js";
 import { clients, sendMessageToUser } from "../index.js";
+import { callingUser } from "../routes/call.js";
 export const sendMessageService = (content, userId1, userId2, callback) => {
   createMessage(content, userId1, userId2, (err, data) => {
     //console.log(content);
@@ -43,13 +44,25 @@ export const getLastestMessageofMyFriendService = (userId, callback) => {
 export const makeACallService = (userId, friendId, callback) => {
   userModel.getUserById(userId, (error, data) => {
     if (error) return callback(error, null);
+    const oppkey = `${userId}to${friendId}`;
+    if (callingUser.has(oppkey)) {
+      callingUser
+        .get(oppkey)
+        .send(
+          JSON.stringify({ type: "ready", message: "Your friend is ready" })
+        );
+      return callback(null, { type: "ready", message: "Your friend is ready" });
+    }
     if (clients.has("index" + friendId)) {
-      sendMessageToUser("index" + friendId, {
-        type: "call",
-        id: userId,
-        name: data.name,
-      });
-      return callback(null, "Đang gọi");
+      sendMessageToUser(
+        "index" + friendId,
+        JSON.stringify({
+          type: "call",
+          id: userId,
+          name: data.name,
+        })
+      );
+      return callback(null, { type: "call", message: "Đang gọi" });
     } else {
       return callback("Người dùng không online", null);
     }

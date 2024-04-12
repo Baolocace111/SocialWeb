@@ -19,8 +19,9 @@ const RightBar = () => {
     socket.onmessage = (event) => {
       //console.log(event.data);
       if (
-        event.data === "A user is offline" ||
-        event.data === "A user is online"
+        typeof event.data === "string" &&
+        (event.data === "A user is offline" ||
+          event.data === "A user is online")
       ) {
         setNeedReload(true);
       }

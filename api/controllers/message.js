@@ -92,7 +92,10 @@ export const makeACallController = async (req, res) => {
         return res.status(500).json({ error: "This account is banned" });
       }
       makeACallService(userId, req.params.id, (error, data) => {
-        if (error) return res.status(500).json(error);
+        if (error) {
+          //console.log(error);
+          return res.status(500).json(error);
+        }
         return res.status(200).json(data);
       });
     });

@@ -80,7 +80,9 @@ import { AuthService } from "./services/AuthService.js";
 import { getAllFriendsService } from "./services/FriendshipService.js";
 import { settingCaroWebsocket } from "./routes/carogame.js";
 import { settingCallWebsocket } from "./routes/call.js";
-
+import { callingUser } from "./routes/call.js";
+import { ValidateInputs } from "./services/ValidateService.js";
+import { error } from "console";
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
@@ -139,6 +141,34 @@ wss.on("connection", async (ws, req) => {
     } else if (type === "index") {
       sendAMessageWhenUserOnlineService(userId, "A user is online");
       key = "index" + userId;
+      ws.on("message", (message) => {
+        const data = JSON.parse(message);
+        //console.log(data);
+        ValidateInputs(data.type, Number(data.friendId), data.message)
+          .then(() => {
+            switch (data.type) {
+              case "deny": {
+                const oppkey = `${userId}to${data.friendId}`;
+                //console.log(oppkey);
+                // console.error(callingUser.keys());
+                if (callingUser.has(oppkey)) {
+                  //console.log("Đã gửi tới" + oppkey);
+                  callingUser
+                    .get(oppkey)
+                    .send(
+                      JSON.stringify({ type: "deny", message: data.message })
+                    );
+                }
+                break;
+              }
+            }
+          })
+          .catch((error) => {
+            return console.error(
+              `User ${userId} is sent wrong message: ${error}`
+            );
+          });
+      });
       ws.on("close", () => {
         // console.log("user is offline");
         const userConnections = clients.get(key);
