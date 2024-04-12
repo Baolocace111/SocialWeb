@@ -4,10 +4,11 @@ import { makeRequest } from "../../../axios.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle, faEye, faLock, faEarthAmericas, faPen, faUpload, faImage } from "@fortawesome/free-solid-svg-icons";
 import NineCube from "../../../components/loadingComponent/nineCube/NineCube.jsx";
-import Share from "../../../components/share/Share.jsx";
+import GroupShare from "../../../components/groups/GroupShare/GroupShare.jsx";
 import { URL_OF_BACK_END } from "../../../axios.js";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import "./groupDetail.scss";
+import GroupPosts from "../../../components/groups/GroupPosts/GroupPosts.jsx";
 
 const GroupDetail = () => {
     const { groupId } = useParams();
@@ -228,7 +229,8 @@ const GroupDetail = () => {
             </div>
             <div className="group-body">
                 <div className="post-block">
-                    <Share />
+                    <GroupShare />
+                    <GroupPosts groupId={groupId} />
                 </div>
                 <div className="group-intro">
                     <span className="title">Giới thiệu</span>

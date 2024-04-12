@@ -176,9 +176,10 @@ export const addGroupVideoPostService = (post, callback) => {
   });
 };
 
-export const getGroupPostsService = (groupId, callback) => {
-  getGroupPosts(groupId, (err, data) => {
+export const getGroupPostsService = (groupId, offset, callback) => {
+  const limit = 3;
+  getGroupPosts(groupId, offset, limit, (err, posts) => {
     if (err) return callback(err);
-    return callback(null, data);
+    return callback(null, posts);
   });
 };
