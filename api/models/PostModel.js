@@ -61,7 +61,7 @@ export const getPostsWithPrivateByUserLimit = (
     FROM posts p
     LEFT JOIN friendships f ON (p.userId=f.friend_id AND f.user_id = ? AND f.status = 1)
     LEFT JOIN users u ON (p.userId = u.id)
-    WHERE p.userId = ? AND (p.status = 0 OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?)))) ORDER BY p.createdAt DESC limit ? offset ?`;
+    WHERE (p.type <> 3) AND (p.userId = ?) AND (p.status = 0 OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?)))) ORDER BY p.createdAt DESC limit ? offset ?`;
 
   db.query(
     q,
@@ -79,7 +79,7 @@ export const getPostsWithPrivateLimit = (userId, offset, limit, callback) => {
     LEFT JOIN friendships f ON (p.userId=f.friend_id AND f.user_id = ? AND f.status = 1)
     LEFT JOIN users u ON (p.userId = u.id)
     LEFT JOIN relationships r ON (p.userId = r.followedUserId)
-    WHERE (r.followerUserId = ? OR p.userId = ?) AND (p.status = 0 OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?)))) ORDER BY p.createdAt DESC limit ? offset ?`;
+    WHERE (p.type <> 3) AND (r.followerUserId = ? OR p.userId = ?) AND (p.status = 0 OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?)))) ORDER BY p.createdAt DESC limit ? offset ?`;
 
   db.query(
     q,
@@ -435,10 +435,19 @@ export const addGroupVideoPost = (post, callback) => {
   addGroupPost(post, callback);
 };
 
-export const getGroupPosts = (groupId, callback) => {
-  const q = "SELECT * FROM posts WHERE type = 3 AND id IN (SELECT post_id FROM group_posts WHERE group_id = ?)";
+export const getGroupPosts = (groupId, offset, limit, callback) => {
+  const sqlOffset = (offset - 1) * limit;
+  const q = `
+    SELECT posts.*, users.name, users.profilePic 
+    FROM posts 
+    JOIN users ON posts.userId = users.id
+    WHERE posts.type = 3 AND posts.id IN (
+      SELECT post_id FROM group_posts WHERE group_id = ?
+    )
+    ORDER BY posts.createdAt DESC 
+    LIMIT ? OFFSET ?`;
 
-  db.query(q, [groupId], (err, results) => {
+  db.query(q, [groupId, limit, sqlOffset], (err, results) => {
     if (err) return callback(err);
     return callback(null, results);
   });

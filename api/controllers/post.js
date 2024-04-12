@@ -422,13 +422,16 @@ export const getGroupPostsController = async (req, res) => {
       if (err) {
         return res.status(500).json({ error: "This account is banned" });
       }
-      const { groupId } = req.params;
 
-      getGroupPostsService(groupId, (err, posts) => {
+      const { groupId } = req.params;
+      const offset = Number(req.query.offset) || 1;
+
+      getGroupPostsService(groupId, offset, (err, posts) => {
         if (err) {
           return res.status(500).json({ error: err });
         }
-        return res.status(200).json(posts);
+
+        return res.status(200).json({ posts, next: posts.length < 3 ? -1 : offset + 1 });
       });
     });
   } catch (error) {
