@@ -5,6 +5,7 @@ import {
   makeRequest,
 } from "../../../axios";
 import Message from "../message/Message";
+import PopupWindow from "../../PopupComponent/PopupWindow";
 import "./chat.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import NineCube from "../../loadingComponent/nineCube/NineCube";
@@ -22,6 +23,7 @@ const Chat = ({ friend, onRemoveChatBox }) => {
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(true);
   const friendId = friend.id;
+  const [isCalling, setIsCalling] = useState(false);
 
   const messageContainerRef = useRef(null);
 

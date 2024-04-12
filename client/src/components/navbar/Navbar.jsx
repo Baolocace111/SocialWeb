@@ -31,6 +31,7 @@ import { makeRequest, URL_OF_BACK_END, WEBSOCKET_BACK_END } from "../../axios";
 import ListNotification from "./ListNotification";
 import ListMessages from "./ListMessages";
 import { ChatContext } from "./ChatContext";
+import PopupWindow from "../PopupComponent/PopupWindow";
 const Navbar = () => {
   const { toggle, darkMode } = useContext(DarkModeContext);
   const { currentUser, logout } = useContext(AuthContext);
@@ -40,6 +41,9 @@ const Navbar = () => {
   const [request_number, setRequestNumber] = useState(0);
   const [notification_number, setNotificationNumber] = useState(0);
   const { ws, setWS } = useContext(ChatContext);
+  const [isCalling, setIsCalling] = useState(false);
+  const [callId, setCallId] = useState(0);
+  const [callName, setCallName] = useState("");
 
   const update_request_number = async () => {
     try {
@@ -49,6 +53,24 @@ const Navbar = () => {
     } catch (error) {
       setRequestNumber(-1); // Xử lý lỗi và gán giá trị mặc định
     }
+  };
+  const handleCloseCall = () => {
+    setIsCalling(false);
+  };
+  const handleAcceptCall = () => {
+    window.open(`/call/${callId}`, "_blank");
+    handleCloseCall();
+  };
+  const handleDenyCall = () => {
+    ws.send(
+      JSON.stringify({
+        type: "deny",
+
+        friendId: callId,
+        message: "User deny your call",
+      })
+    );
+    handleCloseCall();
   };
   const update_notification_number = async () => {
     try {
@@ -152,13 +174,24 @@ const Navbar = () => {
         console.log("Connected");
       };
       socket.onmessage = (event) => {
-        if (event.data === "A Request has sent or cancelled") {
-          update_request_number();
-        } else if (event.data === "New notification") {
-          //console.log("OK");
-          update_notification_number();
-        } else if (event.data === "New message or seen") {
-          updateMessage();
+        if (typeof event.data === "string") {
+          if (event.data === "A Request has sent or cancelled") {
+            update_request_number();
+          } else if (event.data === "New notification") {
+            update_notification_number();
+          } else if (event.data === "New message or seen") {
+            updateMessage();
+          } else {
+            try {
+              const data = JSON.parse(event.data);
+              if (data.type === "call") {
+                setCallId(data.id);
+                setCallName(data.name);
+                setIsCalling(true);
+              }
+            } catch (error) {}
+          }
+        } else {
         }
       };
       socket.onclose = () => {
@@ -171,6 +204,15 @@ const Navbar = () => {
   return (
     <div className="navbar">
       <ListBoxChat></ListBoxChat>
+      <PopupWindow show={isCalling} handleClose={handleDenyCall}>
+        <div>
+          <h1>{callName} đang gọi bạn</h1>
+        </div>
+        <div>
+          <button onClick={handleAcceptCall}>Nghe</button>
+          <button onClick={handleDenyCall}>Hủy</button>
+        </div>
+      </PopupWindow>
       <div className="left">
         <span
           style={{ cursor: "pointer" }}

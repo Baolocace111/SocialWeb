@@ -1,4 +1,4 @@
-const callingUser = new Map();
+export const callingUser = new Map();
 //const waitingCandidateList = new Map();
 export const settingCallWebsocket = (ws, key) => {
   if (callingUser.has(key)) {

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { WEBSOCKET_BACK_END } from "../../axios";
+import { WEBSOCKET_BACK_END, makeRequest } from "../../axios";
 import PopupWindow from "../../components/PopupComponent/PopupWindow";
 import { useCallback } from "react";
 const Call = () => {
@@ -17,6 +17,8 @@ const Call = () => {
   const remoteVideoRef = useRef(null);
   const [remoteStream, setRemoteStream] = useState(null);
   const [peerConnection, setPeerConnection] = useState(null);
+  const [popupMessage, setPopupMessage] = useState(null);
+  const popupType = useRef(null);
 
   useEffect(() => {
     navigator.mediaDevices
@@ -35,10 +37,26 @@ const Call = () => {
     setPeerConnection(pc);
   }, []);
   const onCloseCallPopup = () => {
+    if (popupType.current === "call") {
+      if (ws) ws.close();
+      setPopupType(null);
+    } else if (popupType.current === "deny") {
+      setPopupType(null);
+    }
+    SetCallingPopup(false);
     //ws.close();
   };
+  const setPopupType = (PopupType) => {
+    popupType.current = PopupType;
+  };
+  const handleDeny = (deny) => {
+    if (popupType.current === "call") {
+      if (wsRef.current) wsRef.current.close();
+      setPopupType("deny");
+      setPopupMessage(deny);
+    }
+  };
   const handleIceCandidate = (event) => {
-    console.log("icecadidate");
     if (event.candidate && wsRef.current) {
       wsRef.current.send(
         JSON.stringify({ type: "candidate", candidate: event.candidate })
@@ -46,7 +64,6 @@ const Call = () => {
     }
   };
   const handleTrack = (event) => {
-    console.log("HandleTrack");
     setRemoteStream(event.streams[0]);
 
     remoteVideoRef.current.srcObject = event.streams[0];
@@ -81,22 +98,30 @@ const Call = () => {
   const handleCandidate = async (candidate) => {
     try {
       await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+      if (popupType.current === "ready") {
+        SetCallingPopup(false);
+      }
     } catch (e) {
       console.error("Error adding received ice candidate", e);
     }
   };
 
-  const handleCall = async () => {
+  const handleCall = async (message) => {
     try {
       localStream
         .getTracks()
         .forEach((track) => peerConnection.addTrack(track, localStream));
 
+      if (popupType.current === "call") {
+        setPopupType("ready");
+        setPopupMessage(message + " - Đang xử lý ...");
+      }
+
       const offer = await peerConnection.createOffer();
       await peerConnection.setLocalDescription(offer);
 
       // Gửi offer đến server
-      ws.send(JSON.stringify({ type: "offer", offer: offer }));
+      wsRef.current.send(JSON.stringify({ type: "offer", offer: offer }));
     } catch (error) {
       console.error("Error during handleCall:", error);
     }
@@ -112,25 +137,36 @@ const Call = () => {
         websocket.onmessage = (message) => {
           const data = JSON.parse(message.data);
           switch (data.type) {
+            case "ready":
+              handleCall(data.message);
+              break;
+            case "deny":
+              handleDeny(data.message);
+              break;
             case "offer":
-              console.log("Get offer");
+              //console.log("Get offer");
               handleOffer(data.offer);
               break;
             case "answer":
-              console.log("Get answer");
+              //console.log("Get answer");
               handleAnswer(data.answer);
               break;
             case "candidate":
-              console.log("Get candidate:", data.candidate);
+              //console.log("Get candidate:", data.candidate);
               handleCandidate(data.candidate);
               break;
             case "quit":
               // Xử lý khi người dùng khác kết thúc cuộc gọi hoặc ngắt kết nối
-              console.log("The other user has ended the call or disconnected.");
+              setPopupMessage("Đối phương đã thoát");
+              setPopupType("quit");
+              SetCallingPopup(true);
+              wsRef.current.close();
               break;
             default:
               // Handle other message types or errors
-              console.log("Received an unknown message type:", data.type);
+              // console.log("Received an unknown message type:", data.type);
+
+              break;
           }
         };
         websocket.onclose = () => {
@@ -142,14 +178,30 @@ const Call = () => {
         console.log("Calling ...");
       };
     }
+    makeRequest
+      .post(`messages/call/${id}`)
+      .then((res) => {
+        setPopupMessage(res.data.message);
+        setPopupType(res.data.type);
+
+        SetCallingPopup(true);
+      })
+      .catch((e) => {
+        console.error(e);
+        ws.close();
+        setPopupMessage(e.response.data);
+        setPopupType("fail");
+        SetCallingPopup(true);
+      });
   };
 
   return (
     <div className="App">
       <h1>Video Call App</h1>
+
       <PopupWindow show={callPopup} handleClose={onCloseCallPopup}>
         <div>
-          <h1>Calling ...</h1>
+          <h1>{popupMessage && popupMessage}</h1>
         </div>
         <div>
           <button onClick={onCloseCallPopup}>Cancel</button>
@@ -165,7 +217,7 @@ const Call = () => {
           <video autoPlay ref={remoteVideoRef}></video>
         </div>
       </div>
-      <button onClick={handleCall}>Call</button>
+
       {!ws && <button onClick={handleReady}>Ready</button>}
     </div>
   );
