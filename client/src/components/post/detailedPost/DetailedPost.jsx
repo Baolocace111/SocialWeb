@@ -14,6 +14,7 @@ import { makeRequest, URL_OF_BACK_END } from "../../../axios";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { useContext } from "react";
 import { AuthContext } from "../../../context/authContext";
+import { useNavigate } from 'react-router-dom';
 import ReactPlayer from "react-player";
 
 const DetailedPost = ({ post }) => {
@@ -24,6 +25,11 @@ const DetailedPost = ({ post }) => {
         })
     );
     const queryClient = useQueryClient();
+
+    const navigate = useNavigate();
+    const handleCloseClick = () => {
+        navigate(-1);
+    };
 
     const mutation = useMutation(
         (liked) => {
@@ -45,7 +51,7 @@ const DetailedPost = ({ post }) => {
         <div className="detail-post">
             <div className="image-area">
                 <div className="action-button">
-                    <FontAwesomeIcon onClick={() => window.location.href = `/`} icon={faX} />
+                    <FontAwesomeIcon onClick={handleCloseClick} icon={faX} />
                     {post.type === 0 ? <div className="zoom">
                         <FontAwesomeIcon icon={faMagnifyingGlassPlus} />
                         <FontAwesomeIcon icon={faMagnifyingGlassMinus} />

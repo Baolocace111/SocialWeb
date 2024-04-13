@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { URL_OF_BACK_END } from "../../../axios";
 import "./groupsJoined.scss";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
 const GroupJoined = ({ group }) => {
     const navigate = useNavigate();
@@ -20,11 +21,18 @@ const GroupJoined = ({ group }) => {
 
     return (
         <div className="card-invite">
-            <img src={getDefaultOrUploadedAvatar()} alt={group.group_name} />
-            <span>{group.group_name}</span>
-            <button className="accept" onClick={viewGroup}>
-                Xem nhóm
-            </button>
+            <div className="card-info">
+                <img src={getDefaultOrUploadedAvatar()} alt={group.group_name} />
+                <span className="group-name">{group.group_name}</span>
+            </div>
+            <div className="group-action">
+                <button className="view" onClick={viewGroup}>
+                    Xem nhóm
+                </button>
+                <button className="more">
+                    <MoreHorizIcon fontSize="small" />
+                </button>
+            </div>
         </div>
     );
 };

@@ -1,4 +1,5 @@
 import "./myGroup.scss";
+import "../../../components/groups/GroupsJoined/groupsJoined.scss";
 import NineCube from "../../../components/loadingComponent/nineCube/NineCube.jsx";
 import { makeRequest } from "../../../axios.js";
 import { useQuery } from "@tanstack/react-query";

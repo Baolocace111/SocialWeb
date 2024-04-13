@@ -39,7 +39,7 @@ const PostPage = () => {
         "not found"
       ) : (
         <div className="post-page">
-          {(data.type === 0 || data.type === 2) && <DetailedPost post={data} />}
+          {(data.type === 0 || data.type === 2 || data.type === 3) && <DetailedPost post={data} />}
           {data.type === 1 && sharedPost && <DetailedPost post={sharedPostData} />}
         </div>
       )}

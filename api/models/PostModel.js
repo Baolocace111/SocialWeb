@@ -152,14 +152,14 @@ export const getVideoFromPost = (userId, postId, callback) => {
   });
 };
 export const sharePost = (post, callback) => {
-  const checkQuery = "SELECT * FROM posts WHERE id = ? AND type = ?";
-  db.query(checkQuery, [post.shareId, 1], (checkErr, checkData) => {
+  const checkQuery = "SELECT * FROM posts WHERE id = ? AND (type = ? OR type = ?)";
+  db.query(checkQuery, [post.shareId, 1, 3], (checkErr, checkData) => {
     if (checkErr) {
       return callback(checkErr, null);
     }
 
     if (checkData.length > 0) {
-      return callback("Cannot share a Share post", null);
+      return callback("Cannot share a Share post or a Group post", null);
     }
 
     const insertQuery =

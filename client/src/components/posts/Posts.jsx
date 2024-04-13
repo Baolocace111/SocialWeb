@@ -9,7 +9,7 @@ const Posts = ({ userId }) => {
   const [isLoadingMore, setisLoadingMore] = useState(false);
 
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
-    ['posts'],
+    ['posts', userId],
     ({ pageParam = 1 }) => makeRequest.get(`/posts?userId=${userId}&offset=${pageParam}`).then((res) => res.data),
     {
       getNextPageParam: (lastPage) => (lastPage && lastPage.next !== undefined && lastPage.next !== -1) ? lastPage.next + 1 : undefined,
