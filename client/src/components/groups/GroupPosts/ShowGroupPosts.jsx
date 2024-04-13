@@ -1,4 +1,4 @@
-import Post from "../../post/Post";
+import GroupPost from "../../groups/GroupPost/GroupPost";
 import "./groupPosts.scss";
 
 import ThreePointLoading from "../../loadingComponent/threepointLoading/ThreePointLoading";
@@ -12,7 +12,7 @@ const ShowGroupPosts = ({ isLoading, error, posts }) => {
             ) : Array.isArray(posts) ? (
                 posts.map((post) => (
                     <div key={post.id}>
-                        <Post post={post} />
+                        <GroupPost post={post} />
                     </div>
                 ))
             ) : (

@@ -1,90 +1,82 @@
 @import "../../../style.scss";
 
-.group-joined {
+.card-invite {
     @include themify($themes) {
-        background-color: themed("bgSoft");
-        color: themed("textColor");
-        width: 90%;
-        margin: 40px auto;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+        background-color: themed("bg");
+        width: calc(33.3333% - 10px);
+        display: flex;
+        flex-direction: column;
+        margin: 5px;
+        border-radius: 10px;
+        padding: 15px;
+        gap: 10px;
+        box-sizing: border-box;
 
-        .row {
+        .card-info {
             display: flex;
-            flex-wrap: wrap;
+            align-items: center;
             justify-content: flex-start;
 
-            .card-invite {
-                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
-                background-color: themed("bg");
-                width: calc(25% - 10px);
-                display: flex;
-                flex-direction: column;
-                margin: 5px;
+            img {
+                width: 90px;
+                height: 90px;
+                object-fit: cover;
+                object-position: center;
                 border-radius: 10px;
-                padding-bottom: 20px;
-                gap: 10px;
-                box-sizing: border-box;
+            }
 
-                img {
-                    width: 100%;
-                    height: 270px;
-                    object-fit: cover;
-                    object-position: center;
-                    border-radius: 10px 10px 0 0;
-                }
+            .group-name {
+                font-size: 16px;
+                font-weight: 600;
+                margin-left: 10px;
+            }
+        }
 
-                span {
-                    font-size: 18px;
-                    font-weight: 600;
-                    margin-left: 10px;
-                    padding-bottom: 20px;
-                }
+        .group-action {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-top: 10px;
+            gap: 10px;
 
-                .accept {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    padding: 8px 0;
-                    width: 70%;
-                    margin: 0 auto;
-                    border: none;
+            .view {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 8px 0;
+                width: 80%;
+                margin: 0 auto;
+                border: none;
+                background-color: #ECF3FF;
+                color: #1877F2;
+                border-radius: 5px;
+                font-size: 15px;
+                font-weight: 600;
+                cursor: pointer;
+
+                &:hover {
                     background-color: #0866FF;
                     color: white;
-                    border-radius: 5px;
-                    font-size: 15px;
-                    font-weight: 600;
-                    cursor: pointer;
-                }
-
-                .accept:hover {
-                    background-color: blue;
-                }
-
-                .deny {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    padding: 8px 0;
-                    width: 70%;
-                    margin: 0 auto;
-                    border: none;
-                    background-color: themed("bgSoft");
-                    color: themed("textColor");
-                    border-radius: 5px;
-                    font-size: 15px;
-                    font-weight: 600;
-                    cursor: pointer;
-                }
-
-                .deny:hover {
-                    background-color: gainsboro;
                 }
             }
 
-            .card-invite:nth-child(4n+1),
-            .card-invite:nth-child(4n+2),
-            .card-invite:nth-child(4n+3),
-            .card-invite:nth-child(4n+4) {
-                width: calc(25% - 10px);
+            .more {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 8px 0;
+                width: 20%;
+                margin: 0 auto;
+                border: none;
+                background-color: themed("bgSoft");
+                color: themed("textColor");
+                border-radius: 5px;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: gainsboro;
+                }
             }
         }
     }
