@@ -17,7 +17,8 @@ import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
 import GroupDetail from "./pages/group/groupDetail/GroupDetail";
 import GroupRequest from "./pages/group/groupRequest/GroupRequest";
-import Search from "./pages/search/Search";
+import Search from "./pages/search/searchUser/Search";
+import SearchGroup from "./pages/search/searchGroup/SearchGroup";
 import SearchBar from "./components/searchComponents/searchBar/SearchBar";
 import FriendsBar from "./components/friends/FriendsBar";
 
@@ -33,7 +34,7 @@ import { AuthContext } from "./context/authContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import FriendInvite from "./pages/friend/friendinvite/FriendInvite";
 import FriendSuggest from "./pages/friend/friendSuggest/FriendSuggest";
-import SearchPost from "./pages/searchPost/SearchPost";
+import SearchPost from "./pages/search/searchPost/SearchPost";
 import PostPage from "./pages/postPage/PostPage";
 import Error from "./pages/Error/Error";
 import AdminOnly from "./pages/Error/AdminOnly";
@@ -360,6 +361,10 @@ function App() {
         {
           path: "/search/:searchText/hashtag",
           element: <SearchPost isHashtag={true} />,
+        },
+        {
+          path: "/search/:searchText/groups",
+          element: <SearchGroup />,
         },
       ],
     },

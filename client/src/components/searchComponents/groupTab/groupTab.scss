@@ -1,0 +1,87 @@
+@import "../../../style.scss";
+
+.groupTab {
+    @include themify($themes) {
+        background-color: themed("bg");
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 15px;
+        border: solid 1px #DADDE1;
+        border-radius: 10px;
+
+        img {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+        }
+
+        .about-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 65%;
+
+            .group-name {
+                color: themed("textColor");
+                font-size: 18px;
+                font-weight: 600;
+                cursor: pointer;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+
+            .group-privacy {
+                display: flex;
+                align-items: center;
+                color: themed("textColorSoft");
+                font-size: 15px;
+                font-weight: 300;
+            }
+
+            .group-intro {
+                color: themed("textColorSoft");
+                font-size: 13px;
+                font-weight: 300;
+            }
+        }
+
+        .group-join {
+            cursor: pointer;
+            padding: 10px 15px;
+            background-color: #ECF3FF;
+            color: #1877F2;
+            border-radius: 10px;
+            margin-left: auto;
+
+            span {
+                font-size: 16px;
+                font-weight: 600;
+            }
+
+            &:hover {
+                background-color: #1877F2;
+                color: white;
+            }
+        }
+
+        .group-view {
+            cursor: pointer;
+            padding: 10px 15px;
+            background-color: themed("bgSoft");
+            border-radius: 10px;
+            margin-left: auto;
+
+            span {
+                font-size: 16px;
+                font-weight: 600;
+            }
+
+            &:hover {
+                background-color: gainsboro;
+            }
+        }
+    }
+}

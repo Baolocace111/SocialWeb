@@ -1,11 +1,14 @@
-@import "../../style.scss";
+@import "../../../style.scss";
 
-.search-post {
+.search-group {
     @include themify($themes) {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
         background-color: themed("bgSoft");
         color: themed("textColor");
         border-radius: 10px;
-        width: 65%;
+        width: 60%;
         margin: 40px auto;
     }
 }

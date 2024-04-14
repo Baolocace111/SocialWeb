@@ -2,7 +2,7 @@ import "./searchBar.scss";
 import { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserGroup, faAddressCard, faTags } from "@fortawesome/free-solid-svg-icons";
+import { faUserGroup, faAddressCard, faTags, faChampagneGlasses } from "@fortawesome/free-solid-svg-icons";
 import { Link, useParams } from 'react-router-dom';
 
 const SearchBar = () => {
@@ -24,6 +24,8 @@ const SearchBar = () => {
       window.location.href = `/search/${searchText}/hashtag`;
     if (item === 'post')
       window.location.href = `/search/${searchText}/post`;
+    if (item === 'groups')
+      window.location.href = `/search/${searchText}/groups`;
   };
   const isItemSelected = (item) => {
     return item === selectedItem;
@@ -55,6 +57,12 @@ const SearchBar = () => {
               <FontAwesomeIcon className="icon" icon={faTags} />
             </div>
             <span>Hashtag</span>
+          </div>
+          <div className={`item ${isItemSelected('groups') ? 'selected' : ''}`} onClick={() => handleItemClick('groups')}>
+            <div className={`icon-button ${isItemSelected('groups') ? 'selected' : ''}`}>
+              <FontAwesomeIcon className="icon" icon={faChampagneGlasses} />
+            </div>
+            <span>Nhóm</span>
           </div>
         </div>
       </div>

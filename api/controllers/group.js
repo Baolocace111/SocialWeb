@@ -110,3 +110,21 @@ export const getGroupAvatarController = async (req, res) => {
         return res.status(500).json(error);
     }
 };
+
+export const searchGroupsController = async (req, res) => {
+    try {
+        const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+        AuthService.IsAccountBanned(userId, async (err, data) => {
+            if (err) {
+                return res.status(500).json({ error: "This account is banned" });
+            }
+            const searchText = req.body.searchText;
+            groupService.getGroupsBySearchText(searchText, userId, (err, data) => {
+                if (err) return res.status(500).json({ error: err });
+                return res.status(200).json(data);
+            });
+        });
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+}

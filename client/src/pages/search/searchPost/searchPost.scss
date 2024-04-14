@@ -1,0 +1,11 @@
+@import "../../../style.scss";
+
+.search-post {
+    @include themify($themes) {
+        background-color: themed("bgSoft");
+        color: themed("textColor");
+        border-radius: 10px;
+        width: 65%;
+        margin: 40px auto;
+    }
+}

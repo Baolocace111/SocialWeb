@@ -1,8 +1,8 @@
-import { makeRequest } from "../../axios";
+import { makeRequest } from "../../../axios";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import "./searchPost.scss";
-import ShowPosts from "../../components/posts/ShowPosts";
+import ShowPosts from "../../../components/posts/ShowPosts";
 const SearchPost = ({ isHashtag }) => {
   const { searchText } = useParams();
   const query = isHashtag ? "posts/hashtag" : "/posts/content";

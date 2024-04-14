@@ -42,3 +42,10 @@ export const getGroupAvatar = (groupId, callback) => {
         }
     });
 };
+
+export const getGroupsBySearchText = (searchText, userId, callback) => {
+    groupModel.searchGroupsBySearchText(searchText, userId, (err, data) => {
+        if (err) return callback(err);
+        return callback(null, data);
+    });
+};

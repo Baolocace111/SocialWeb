@@ -9,17 +9,19 @@ const ShowPosts = ({ isLoading, error, posts }) => {
       {error ? (
         "Something went wrong!"
       ) : isLoading ? (
-        <ThreePointLoading></ThreePointLoading>
+        <ThreePointLoading />
       ) : Array.isArray(posts) ? (
-        posts.map((post) => (
-          <div key={post.id}>
-            {post.type === 2 || post.type === 0 ? (
-              <Post post={post} />
-            ) : (
-              <SharedPost post={post}></SharedPost>
-            )}
-          </div>
-        ))
+        posts
+          .filter((post) => post.type !== 3)
+          .map((post) => (
+            <div key={post.id}>
+              {post.type === 2 || post.type === 0 ? (
+                <Post post={post} />
+              ) : (
+                <SharedPost post={post} />
+              )}
+            </div>
+          ))
       ) : (
         "No data available"
       )}

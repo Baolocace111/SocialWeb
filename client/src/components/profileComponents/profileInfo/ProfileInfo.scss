@@ -4,6 +4,8 @@
     @include themify($themes) {
         background-color: themed("bgSoft");
         color: themed("textColor");
+        position: sticky;
+        top: 75px;
 
         .friend-container {
             -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);

@@ -64,3 +64,39 @@ export const updateGroupAvatar = (groupId, avatar, callback) => {
         return callback("You can update only your group!");
     });
 };
+
+export const searchGroupsBySearchText = (searchText, userId, callback) => {
+    const sqlQuery = `
+        SELECT 
+            teams.*, 
+            COUNT(DISTINCT joins.user_id) AS member_count,
+            IF(joined_table.user_id IS NULL, 0, IF(MAX(joins.status) = 1, 2, 1)) AS joined
+        FROM 
+            teams
+        LEFT JOIN 
+            joins ON teams.id = joins.group_id AND joins.user_id = ?
+        LEFT JOIN (
+            SELECT 
+                group_id, 
+                user_id
+            FROM 
+                joins
+            WHERE 
+                user_id = ?
+        ) AS joined_table ON teams.id = joined_table.group_id
+        WHERE 
+            teams.group_name LIKE ? OR teams.group_intro LIKE ?
+        GROUP BY 
+            teams.id
+        ORDER BY 
+            teams.creation_at DESC
+    `;
+
+    const likeSearchText = `%${searchText}%`;
+    db.query(sqlQuery, [userId, userId, likeSearchText, likeSearchText], (err, results) => {
+        if (err) return callback(err, null);
+        return callback(null, results);
+    });
+};
+
+
