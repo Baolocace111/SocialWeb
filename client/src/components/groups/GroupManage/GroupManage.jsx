@@ -26,7 +26,7 @@ const GroupManage = () => {
         const path = location.pathname;
         const pathSegments = path.split('/');
         const lastSegment = pathSegments[pathSegments.length - 1];
-        setSelectedItem(lastSegment);
+        !isNaN(lastSegment) ? setSelectedItem(null) : setSelectedItem(lastSegment);
     }, [location.pathname]);
 
     useEffect(() => {
@@ -97,7 +97,7 @@ const GroupManage = () => {
                 <div className="manage-section">
                     <div className="menu-box">
                         <Link to={`/groups/${groupId}`} style={{ textDecoration: "none", color: "inherit" }}>
-                            <div className={`menu-item ${isItemSelected('main-page') ? 'selected' : ''}`} onClick={() => handleItemClick('main-page')}>
+                            <div className={`menu-item ${(isItemSelected('main-page') || isItemSelected(null)) ? 'selected' : ''}`} onClick={() => handleItemClick('main-page')}>
                                 <FontAwesomeIcon icon={faHouse} style={{ marginRight: "10px" }} />
                                 <span>Trang chủ nhóm</span>
                             </div>
@@ -127,7 +127,7 @@ const GroupManage = () => {
                                     </div>
                                 </Link>
                                 <Link to={`/groups/${groupId}/pending_posts`} style={{ textDecoration: "none", color: "inherit" }}>
-                                    <div className={`dropdown-item ${isItemSelected('waiting-posts') ? 'selected' : ''}`} onClick={() => handleItemClick('waiting-posts')}>
+                                    <div className={`dropdown-item ${isItemSelected('pending_posts') ? 'selected' : ''}`} onClick={() => handleItemClick('pending_posts')}>
                                         <FontAwesomeIcon icon={faClock} style={{ marginRight: "10px" }} />
                                         <span>Bài viết đang chờ</span>
                                     </div>

@@ -411,22 +411,29 @@ export const deleteImageOfPost = (postId, userId, callback) => {
 };
 
 export const addGroupPost = (post, callback) => {
-  const query = "INSERT INTO posts(`desc`, `img`, `userId`, `type`) VALUES (?)";
-  const values = [
-    post.desc,
-    post.img,
-    post.userId,
-    post.type,
-  ];
-
-  db.query(query, [values], (err, postResult) => {
+  checkGroupMembership(post.userId, post.groupId, (err, isMember) => {
     if (err) return callback(err);
+    // Nếu không phải thành viên, không cho phép tạo post
+    if (!isMember) return callback("This user is not a member of the group");
 
-    const postId = postResult.insertId;
-    const groupPostQuery = "INSERT INTO group_posts(`post_id`, `group_id`, `user_id`) VALUES (?, ?, ?)";
-    db.query(groupPostQuery, [postId, post.groupId, post.userId], (err, groupPostResult) => {
+    // Tiếp tục thêm post như bình thường
+    const query = "INSERT INTO posts(`desc`, `img`, `userId`, `type`) VALUES (?)";
+    const values = [
+      post.desc,
+      post.img,
+      post.userId,
+      post.type,
+    ];
+
+    db.query(query, [values], (err, postResult) => {
       if (err) return callback(err);
-      return callback(null, "Group post has been created.");
+
+      const postId = postResult.insertId;
+      const groupPostQuery = "INSERT INTO group_posts(`post_id`, `group_id`, `user_id`) VALUES (?, ?, ?)";
+      db.query(groupPostQuery, [postId, post.groupId, post.userId], (err, groupPostResult) => {
+        if (err) return callback(err);
+        return callback(null, "Group post has been created.");
+      });
     });
   });
 };
@@ -450,5 +457,14 @@ export const getGroupPosts = (groupId, offset, limit, callback) => {
   db.query(q, [groupId, limit, sqlOffset], (err, results) => {
     if (err) return callback(err);
     return callback(null, results);
+  });
+};
+
+export const checkGroupMembership = (userId, groupId, callback) => {
+  const query = "SELECT status FROM joins WHERE user_id = ? AND group_id = ?";
+  db.query(query, [userId, groupId], (err, results) => {
+    if (err) return callback(err);
+    const isMember = results.length > 0 && results[0].status === 1;
+    return callback(null, isMember);
   });
 };

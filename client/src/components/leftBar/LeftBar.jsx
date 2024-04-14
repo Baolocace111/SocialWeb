@@ -24,7 +24,6 @@ const LeftBar = () => {
       <div className="container">
         <div className="menu">
           <div
-            style={{ cursor: "pointer" }}
             className="user"
             onClick={() => {
               window.location.href = `/profile/${currentUser.id}`;
@@ -41,7 +40,6 @@ const LeftBar = () => {
             <span>Friends</span>
           </div>
           <div
-            style={{ cursor: "pointer" }}
             className="item"
             onClick={() => {
               window.location.href = `/groups/discover`;
@@ -72,7 +70,6 @@ const LeftBar = () => {
           </div>
           <div
             className="item"
-            style={{ cursor: "pointer" }}
             onClick={() => {
               window.location.href = `/game/caro`;
             }}
