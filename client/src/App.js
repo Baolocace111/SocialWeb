@@ -64,11 +64,15 @@ function App() {
       <div className={`theme-${darkMode ? "dark" : "light"}`}>
         <Navbar />
         <div style={{ display: "flex" }}>
-          <LeftBar />
-          <div style={{ flex: 6 }}>
+          <div style={{ flex: 2 }}>
+            <LeftBar />
+          </div>
+          <div style={{ flex: 5 }}>
             <Outlet />
           </div>
-          <RightBar />
+          <div style={{ flex: 3 }}>
+            <RightBar />
+          </div>
         </div>
       </div>
     );

@@ -3,11 +3,10 @@
 .leftBar {
   @include themify($themes) {
     min-height: 100vh;
-    flex: 2;
     position: sticky;
     top: 70px;
     height: calc(100vh - 70px);
-    overflow: scroll;
+    overflow: hidden; // Ẩn thanh cuộn khi không rê chuột vào
     background-color: themed("bgSoft");
     color: themed("textColor");
 
@@ -15,15 +14,28 @@
       display: none;
     }
 
-    &::-webkit-scrollbar {
-      display: none;
+    &:hover {
+      overflow-y: scroll; // Cho phép thanh cuộn hiển thị khi rê chuột vào
+
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: themed("bgSoft"); // Màu nền của track
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: #BEC3C9;
+        border-radius: 20px;
+      }
     }
 
     .container {
-      padding: 20px;
+      padding: 5px;
 
       hr {
-        margin: 20px 0px;
+        margin: 10px 0px;
         border: none;
         height: 0.5px;
         background-color: themed("border");
@@ -32,26 +44,32 @@
       .menu {
         display: flex;
         flex-direction: column;
-        gap: 20px;
 
         span {
           font-size: 12px;
+          padding: 10px;
         }
 
         .user {
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 5px;
+          padding: 10px;
+          border-radius: 5px;
+          cursor: pointer;
 
           img {
-            width: 30px;
-            height: 30px;
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
-            object-fit: cover;
           }
 
           span {
             font-size: 14px;
+          }
+
+          &:hover {
+            background-color: #DADDE1;
           }
         }
 
@@ -59,6 +77,9 @@
           display: flex;
           align-items: center;
           gap: 10px;
+          padding: 10px;
+          border-radius: 5px;
+          cursor: pointer;
 
           img {
             width: 30px;
@@ -66,6 +87,10 @@
 
           span {
             font-size: 14px;
+          }
+
+          &:hover {
+            background-color: #DADDE1;
           }
         }
       }
