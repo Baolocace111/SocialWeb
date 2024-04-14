@@ -1,8 +1,8 @@
-import UserTab from "../../components/searchComponents/userTab/UserTab";
+import UserTab from "../../../components/searchComponents/userTab/UserTab";
 import { useQuery } from "@tanstack/react-query";
-import { makeRequest } from "../../axios";
+import { makeRequest } from "../../../axios";
 import { useParams } from "react-router-dom";
-import NineCube from "../../components/loadingComponent/nineCube/NineCube";
+import NineCube from "../../../components/loadingComponent/nineCube/NineCube";
 import "./search.scss";
 
 const Search = () => {
