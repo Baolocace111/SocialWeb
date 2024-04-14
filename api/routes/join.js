@@ -5,6 +5,8 @@ const router = express.Router();
 
 router.post('/join', joinController.createJoin);
 router.delete('/', joinController.deleteJoin);
+router.put('/join/approve', joinController.approveJoinRequest);
+router.get('/groups/:groupId/join-requests', joinController.getJoinRequestsByGroupId);
 router.get('/groups/:groupId/users', joinController.getUsersByGroup);
 
 export default router;

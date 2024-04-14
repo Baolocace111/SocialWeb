@@ -7,7 +7,7 @@ import React from "react";
 import GroupsJoined from "../../../components/groups/GroupsJoined/GroupsJoined";
 
 const MyGroup = () => {
-    const { isLoading, data } = useQuery(["stories"], () =>
+    const { isLoading, data } = useQuery(["groups-joined"], () =>
         makeRequest.get("/groups").then((res) => {
             return res.data;
         })

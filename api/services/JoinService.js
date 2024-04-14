@@ -20,3 +20,36 @@ export const getUsersByGroup = (groupId, callback) => {
         return callback(null, data);
     });
 };
+
+export const getJoinRequestsByGroupId = (adminUserId, groupId, callback) => {
+    joinModel.checkIfUserIsGroupLeader(adminUserId, groupId, (err, isLeader) => {
+        if (err) {
+            return callback(err, null);
+        }
+        if (!isLeader) {
+            return callback(new Error("Only group leader can view join requests."), null);
+        }
+        joinModel.getJoinRequestsByGroupId(groupId, callback);
+    });
+};
+
+export const approveJoinRequest = (adminUserId, joinRequestId, callback) => {
+    joinModel.getJoinRequestById(joinRequestId, (err, joinRequest) => {
+        if (err) {
+            return callback(err, null);
+        }
+        if (!joinRequest) {
+            return callback(new Error("Join request not found!"), null);
+        }
+
+        joinModel.checkIfUserIsGroupLeader(adminUserId, joinRequest.group_id, (err, isLeader) => {
+            if (err) {
+                return callback(err, null);
+            }
+            if (!isLeader) {
+                return callback(new Error("Only group leader can approve request!"), null);
+            }
+            joinModel.approveJoinRequest(joinRequestId, callback);
+        });
+    });
+};

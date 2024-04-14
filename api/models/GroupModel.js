@@ -20,7 +20,7 @@ export const getGroupAvatarById = (groupId, callback) => {
 };
 
 export const getGroupsByUserId = (userId, callback) => {
-    const q = "SELECT * FROM teams INNER JOIN joins ON teams.id = joins.group_id WHERE joins.user_id=?";
+    const q = "SELECT * FROM teams INNER JOIN joins ON teams.id = joins.group_id WHERE joins.user_id = ? AND joins.status = 1";
 
     db.query(q, [userId], (err, data) => {
         if (err) return callback(err);
