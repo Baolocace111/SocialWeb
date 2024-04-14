@@ -2,17 +2,18 @@ import "./groupManage.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp, faAngleDown, faHouse, faLayerGroup, faUserPlus, faClock, faHeadset, faCircle, faLock, faEarthAmericas } from "@fortawesome/free-solid-svg-icons";
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams, useLocation } from 'react-router-dom';
 import { URL_OF_BACK_END, makeRequest } from '../../../axios';
 
 const GroupManage = () => {
     const { groupId } = useParams();
+    const location = useLocation();
     const [groupDetails, setGroupDetails] = useState(null);
     const [groupUsers, setGroupUsers] = useState([]);
 
-    const [activeDropdown_1, setActiveDropdown_1] = useState(null);
-    const [activeDropdown_2, setActiveDropdown_2] = useState(null);
-    const [selectedItem, setSelectedItem] = useState('');
+    const [activeDropdown_1, setActiveDropdown_1] = useState('adminTools_1');
+    const [activeDropdown_2, setActiveDropdown_2] = useState('adminTools_2');
+    const [selectedItem, setSelectedItem] = useState(null);
 
     const handleItemClick = (item) => {
         setSelectedItem(item);
@@ -20,6 +21,13 @@ const GroupManage = () => {
     const isItemSelected = (item) => {
         return item === selectedItem;
     };
+
+    useEffect(() => {
+        const path = location.pathname;
+        const pathSegments = path.split('/');
+        const lastSegment = pathSegments[pathSegments.length - 1];
+        setSelectedItem(lastSegment);
+    }, [location.pathname]);
 
     useEffect(() => {
         // Lấy thông tin nhóm
@@ -44,16 +52,16 @@ const GroupManage = () => {
     // Hàm để toggle dropdown
     const toggleDropdown_1 = (dropdownName) => {
         if (activeDropdown_1 === dropdownName) {
-            setActiveDropdown_1(null); // Đóng dropdown nếu nó đang mở
+            setActiveDropdown_1(null);
         } else {
-            setActiveDropdown_1(dropdownName); // Mở dropdown
+            setActiveDropdown_1(dropdownName);
         }
     };
     const toggleDropdown_2 = (dropdownName) => {
         if (activeDropdown_2 === dropdownName) {
-            setActiveDropdown_2(null); // Đóng dropdown nếu nó đang mở
+            setActiveDropdown_2(null);
         } else {
-            setActiveDropdown_2(dropdownName); // Mở dropdown
+            setActiveDropdown_2(dropdownName);
         }
     };
 
@@ -88,14 +96,18 @@ const GroupManage = () => {
                 )}
                 <div className="manage-section">
                     <div className="menu-box">
-                        <div className={`menu-item ${isItemSelected('main-page') ? 'selected' : ''}`} onClick={() => handleItemClick('main-page')}>
-                            <FontAwesomeIcon icon={faHouse} style={{ marginRight: "10px" }} />
-                            <span>Trang chủ nhóm</span>
-                        </div>
-                        <div className={`menu-item ${isItemSelected('overall') ? 'selected' : ''}`} onClick={() => handleItemClick('overall')}>
-                            <FontAwesomeIcon icon={faLayerGroup} style={{ marginRight: "10px" }} />
-                            <span>Tổng quan</span>
-                        </div>
+                        <Link to={`/groups/${groupId}`} style={{ textDecoration: "none", color: "inherit" }}>
+                            <div className={`menu-item ${isItemSelected('main-page') ? 'selected' : ''}`} onClick={() => handleItemClick('main-page')}>
+                                <FontAwesomeIcon icon={faHouse} style={{ marginRight: "10px" }} />
+                                <span>Trang chủ nhóm</span>
+                            </div>
+                        </Link>
+                        <Link to={`/groups/${groupId}/overview`} style={{ textDecoration: "none", color: "inherit" }}>
+                            <div className={`menu-item ${isItemSelected('overview') ? 'selected' : ''}`} onClick={() => handleItemClick('overview')}>
+                                <FontAwesomeIcon icon={faLayerGroup} style={{ marginRight: "10px" }} />
+                                <span>Tổng quan</span>
+                            </div>
+                        </Link>
                     </div>
                     <div className="dropdown-box">
                         <div className="dropdown-menu">
@@ -108,14 +120,18 @@ const GroupManage = () => {
                                 )}
                             </div>
                             <div className={`dropdown-content ${activeDropdown_1 === 'adminTools_1' ? 'show' : ''}`}>
-                                <div className={`dropdown-item ${isItemSelected('member-requests') ? 'selected' : ''}`} onClick={() => handleItemClick('member-requests')}>
-                                    <FontAwesomeIcon icon={faUserPlus} style={{ marginRight: "10px" }} />
-                                    <span>Yêu cầu làm thành viên</span>
-                                </div>
-                                <div className={`dropdown-item ${isItemSelected('waiting-posts') ? 'selected' : ''}`} onClick={() => handleItemClick('waiting-posts')}>
-                                    <FontAwesomeIcon icon={faClock} style={{ marginRight: "10px" }} />
-                                    <span>Bài viết đang chờ</span>
-                                </div>
+                                <Link to={`/groups/${groupId}/member-requests`} style={{ textDecoration: "none", color: "inherit" }}>
+                                    <div className={`dropdown-item ${isItemSelected('member-requests') ? 'selected' : ''}`} onClick={() => handleItemClick('member-requests')}>
+                                        <FontAwesomeIcon icon={faUserPlus} style={{ marginRight: "10px" }} />
+                                        <span>Yêu cầu làm thành viên</span>
+                                    </div>
+                                </Link>
+                                <Link to={`/groups/${groupId}/pending_posts`} style={{ textDecoration: "none", color: "inherit" }}>
+                                    <div className={`dropdown-item ${isItemSelected('waiting-posts') ? 'selected' : ''}`} onClick={() => handleItemClick('waiting-posts')}>
+                                        <FontAwesomeIcon icon={faClock} style={{ marginRight: "10px" }} />
+                                        <span>Bài viết đang chờ</span>
+                                    </div>
+                                </Link>
                             </div>
                         </div>
                         <div className="dropdown-menu">

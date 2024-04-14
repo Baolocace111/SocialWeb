@@ -1,0 +1,17 @@
+@import "../../../style.scss";
+
+.group-request {
+    @include themify($themes) {
+        background-color: themed("bgSoft");
+        color: themed("textColor");
+        width: 80%;
+        margin: 40px auto;
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 15px;
+        }
+    }
+}

@@ -62,3 +62,44 @@ export const getUsersByGroup = async (req, res) => {
         return res.status(500).json({ error: error.message });
     }
 };
+
+export const getJoinRequestsByGroupId = async (req, res) => {
+    try {
+        const adminUserId = await AuthService.verifyUserToken(req.cookies.accessToken);
+        const groupId = req.params.groupId;
+
+        AuthService.IsAccountBanned(adminUserId, async (err, data) => {
+            if (err) {
+                return res.status(403).json({ message: "Your account is banned or invalid." });
+            }
+
+            joinService.getJoinRequestsByGroupId(adminUserId, groupId, (err, joinRequests) => {
+                if (err) return res.status(500).json({ error: err.message });
+                return res.json({ joinRequests });
+            });
+        });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+};
+
+export const approveJoinRequest = async (req, res) => {
+    try {
+        const adminUserId = await AuthService.verifyUserToken(req.cookies.accessToken);
+
+        AuthService.IsAccountBanned(adminUserId, async (err, data) => {
+            if (err) {
+                return res.status(403).json({ message: "Your account is banned or invalid." });
+            }
+
+            const { joinRequestId } = req.body;
+
+            joinService.approveJoinRequest(adminUserId, joinRequestId, (err, response) => {
+                if (err) return res.status(500).json({ error: err.message });
+                return res.json({ message: "Join request approved successfully." });
+            });
+        });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+};

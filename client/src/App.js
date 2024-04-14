@@ -16,6 +16,7 @@ import StoriesBar from "./components/stories/StoriesBar/storiesBar";
 import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
 import GroupDetail from "./pages/group/groupDetail/GroupDetail";
+import GroupRequest from "./pages/group/groupRequest/GroupRequest";
 import Search from "./pages/search/Search";
 import SearchBar from "./components/searchComponents/searchBar/SearchBar";
 import FriendsBar from "./components/friends/FriendsBar";
@@ -176,7 +177,6 @@ function App() {
             <GroupManage />
           </div>
           <div style={{ flex: "75%", backgroundColor: "#f6f3f3" }}>
-            {/* <GroupDetail /> */}
             <Outlet />
           </div>
         </div>
@@ -325,6 +325,14 @@ function App() {
         },
         {
           path: "/groups/:groupId/overview",
+          element: <FriendSuggest />,
+        },
+        {
+          path: "/groups/:groupId/member-requests",
+          element: <GroupRequest />,
+        },
+        {
+          path: "/groups/:groupId/pending_posts",
           element: <FriendSuggest />,
         },
       ],

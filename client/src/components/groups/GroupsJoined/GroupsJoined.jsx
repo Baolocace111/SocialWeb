@@ -20,7 +20,7 @@ const GroupJoined = ({ group }) => {
     };
 
     return (
-        <div className="card-invite">
+        <div className="card-join">
             <div className="card-info">
                 <img src={getDefaultOrUploadedAvatar()} alt={group.group_name} />
                 <span className="group-name">{group.group_name}</span>
