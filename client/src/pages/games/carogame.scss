@@ -1,101 +1,143 @@
-.start-screen {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-}
+.app {
 
-.game-board {
-  display: grid;
-  grid-template-columns: repeat(3, 100px);
-  gap: 10px;
-}
-.carogamescreen {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-}
-.caro-button {
-  display: flex;
-  margin-top: 10px;
-  gap: 50px;
-  button {
-    height: 30px;
-    width: 50px;
-  }
-}
-
-.square {
-  width: 50px;
-  height: 50px;
-  background: #fff;
-  border: 1px solid #999;
-  font-size: 24px;
-  font-weight: bold;
-  cursor: pointer; /* Cho biết có thể nhấn */
-  transition: background-color 0.3s, transform 0.1s;
-}
-.square:hover {
-  transform: scale(1.05); /* Nhẹ nhàng phóng to khi di chuột qua */
-  background-color: #eaeaea; /* Thay đổi màu khi hover */
-}
-
-/* Các nước đi có thể có màu khác nhau*/
-.square.X {
-  color: #ff5722; /* X là màu cam */
-}
-
-.square.O {
-  color: #2196f3; /* O là màu xanh dương */
-}
-
-.game-board {
-  grid-template-columns: repeat(14, 50px); /* Nếu bạn muốn 14x14 */
-  gap: 5px; /* Khoảng cách nhỏ hơn giữa các ô */
-}
-
-/* Responsive layout */
-@media (max-width: 768px) {
-  .game-board {
-    grid-template-columns: repeat(14, 30px); /* Ô nhỏ hơn trên màn hình nhỏ */
-  }
-  .square {
-    width: 30px; /* Cỡ ô phù hợp với màn hình nhỏ */
-    height: 30px;
-  }
-}
-.carotitle {
-  display: flex;
-  justify-content: center;
-}
-.caroplayerbar {
-  background-color: #999;
-  height: 100%;
-  width: 15%;
-  position: fixed;
-  .carouserinfo {
+  .start-screen {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    img {
-      width: 60px;
-      height: 60px;
-      object-fit: cover;
-      border-radius: 99%;
+    justify-content: center;
+    height: 100vh;
+
+    button {
+      padding: 10px 20px;
+      font-size: 1.5em;
+      cursor: pointer;
     }
   }
-}
-.caroplayerbar.left {
-  left: 0%;
-  .carouserinfo {
-    justify-content: start;
+
+  .carotitle {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
   }
-}
-.caroplayerbar.right {
-  right: 0%;
-  .carouserinfo {
-    flex-direction: row-reverse;
-    justify-content: end;
+
+  .caroplayerbar {
+    background-color: #999;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 15%;
+
+    &.left {
+      left: 0;
+    }
+
+    &.right {
+      right: 0;
+    }
+
+    .carouserinfo {
+      display: flex;
+      align-items: center;
+
+      img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+
+      span {
+        font-weight: bold;
+      }
+    }
+  }
+
+  .carogamescreen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .game-board-wrapper {
+      border: 4px solid violet;
+
+      .game-board {
+        display: grid;
+        grid-template-columns: repeat(14, 40px);
+        // gap: 5px;
+
+        .square {
+          width: 40px;
+          height: 40px;
+          background: #fff;
+          border: 1px solid lightgray;
+          font-size: 24px;
+          font-weight: bold;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background-color 0.3s, transform 0.1s;
+
+          &.X {
+            color: #ff5722;
+
+            &:hover {
+              transform: scale(1.05);
+              background-color: lightyellow;
+              border: 2px solid #ff5722;
+            }
+          }
+
+          &.O {
+            color: #2196f3;
+
+            &:hover {
+              transform: scale(1.05);
+              background-color: lightyellow;
+              border: 2px solid #2196f3;
+            }
+
+          }
+
+          &:hover {
+            transform: scale(1.05);
+            background-color: lightyellow;
+            border: 2px solid gray;
+          }
+        }
+      }
+
+      // Responsive layout
+      @media (max-width: 768px) {
+        .game-board {
+          grid-template-columns: repeat(14, 30px);
+
+          .square {
+            width: 30px;
+            height: 30px;
+            font-size: 18px;
+          }
+        }
+      }
+    }
+
+    .caro-button {
+      display: flex;
+      justify-content: center;
+      margin: 10px 0;
+
+      button {
+        padding: 10px 20px;
+        font-size: 1em;
+        cursor: pointer;
+      }
+    }
   }
 }
