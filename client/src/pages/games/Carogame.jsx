@@ -148,22 +148,24 @@ const Carogame = () => {
         <StartScreen onStartGame={handleStartGame} />
       ) : (
         <div className="carogamescreen">
-          <div className="game-board">
-            {squares &&
-              squares.map((row, rowIndex) => (
-                <div key={rowIndex}>
-                  {row.map((cell, colIndex) => (
-                    <Square
-                      key={`${rowIndex}-${colIndex}`}
-                      className="square"
-                      value={cell === 0 ? "" : cell === 1 ? "X" : "O"}
-                      onClick={() => {
-                        handleSquareClick(rowIndex, colIndex, cell);
-                      }}
-                    ></Square>
-                  ))}
-                </div>
-              ))}
+          <div className="game-board-wrapper">
+            <div className="game-board">
+              {squares &&
+                squares.map((row, rowIndex) => (
+                  <div key={rowIndex}>
+                    {row.map((cell, colIndex) => (
+                      <Square
+                        key={`${rowIndex}-${colIndex}`}
+                        className="square"
+                        value={cell === 0 ? "" : cell === 1 ? "X" : "O"}
+                        onClick={() => {
+                          handleSquareClick(rowIndex, colIndex, cell);
+                        }}
+                      ></Square>
+                    ))}
+                  </div>
+                ))}
+            </div>
           </div>
           <div className="caro-button">
             <button onClick={handleBackToStartScreen}> Trở về </button>
