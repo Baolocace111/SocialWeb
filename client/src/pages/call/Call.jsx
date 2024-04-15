@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { WEBSOCKET_BACK_END, makeRequest } from "../../axios";
 import PopupWindow from "../../components/PopupComponent/PopupWindow";
+import "./call.scss";
 import { useCallback } from "react";
 const Call = () => {
   const { RTCPeerConnection, RTCSessionDescription } = window;
@@ -38,6 +39,7 @@ const Call = () => {
   }, []);
   const onCloseCallPopup = () => {
     if (popupType.current === "call") {
+      wsRef.current.send(JSON.stringify({ type: "cancel" }));
       if (ws) ws.close();
       setPopupType(null);
     } else if (popupType.current === "deny") {
@@ -123,6 +125,7 @@ const Call = () => {
       // Gửi offer đến server
       wsRef.current.send(JSON.stringify({ type: "offer", offer: offer }));
     } catch (error) {
+      window.location.reload();
       console.error("Error during handleCall:", error);
     }
   };
@@ -188,7 +191,7 @@ const Call = () => {
       })
       .catch((e) => {
         console.error(e);
-        ws.close();
+        if (ws) ws.close();
         setPopupMessage(e.response.data);
         setPopupType("fail");
         SetCallingPopup(true);
@@ -196,9 +199,7 @@ const Call = () => {
   };
 
   return (
-    <div className="App">
-      <h1>Video Call App</h1>
-
+    <div className="video-call">
       <PopupWindow show={callPopup} handleClose={onCloseCallPopup}>
         <div>
           <h1>{popupMessage && popupMessage}</h1>
@@ -209,11 +210,9 @@ const Call = () => {
       </PopupWindow>
       <div className="video-container">
         <div className="local-video">
-          <h1>Your camera</h1>
           <video autoPlay ref={localVideoRef} muted></video>
         </div>
         <div className="remote-video">
-          <h1>Your friend's camera</h1>
           <video autoPlay ref={remoteVideoRef}></video>
         </div>
       </div>

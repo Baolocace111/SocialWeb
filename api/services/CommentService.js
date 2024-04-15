@@ -1,7 +1,11 @@
 import jwt from "jsonwebtoken";
 import moment from "moment";
-import { getCommentsByPostId, addComment, deleteComment } from "../models/CommentModel.js";
-
+import {
+  getCommentsByPostId,
+  addComment,
+  deleteComment,
+} from "../models/CommentModel.js";
+import { SECRET_KEY } from "./AuthService.js";
 export const getCommentsService = (postId, callback) => {
   getCommentsByPostId(postId, (err, data) => {
     if (err) return callback(err, null);
@@ -12,7 +16,7 @@ export const getCommentsService = (postId, callback) => {
 export const addCommentWithTokenService = (token, desc, postId, callback) => {
   if (!token) return callback("Not logged in!", null);
 
-  jwt.verify(token, "secretkey", (err, userInfo) => {
+  jwt.verify(token, SECRET_KEY, (err, userInfo) => {
     if (err) return callback("Token is not valid!", null);
 
     const createdAt = moment(Date.now()).format("YYYY-MM-DD HH:mm:ss");
@@ -27,7 +31,7 @@ export const addCommentWithTokenService = (token, desc, postId, callback) => {
 export const deleteCommentWithTokenService = (token, commentId, callback) => {
   if (!token) return callback("Not authenticated!", null);
 
-  jwt.verify(token, "jwtkey", (err, userInfo) => {
+  jwt.verify(token, SECRET_KEY, (err, userInfo) => {
     if (err) return callback("Token is not valid!", null);
 
     deleteComment(commentId, userInfo.id, (err, data) => {

@@ -5,7 +5,7 @@ import {
   deleteRelationshipService,
 } from "../services/RelationshipService.js";
 import { AuthService } from "../services/AuthService.js";
-
+import { SECRET_KEY } from "../services/AuthService.js";
 export const getRelationships = async (req, res) => {
   try {
     const followedUserId = await req.query.followedUserId;
@@ -28,7 +28,7 @@ export const addRelationship = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in!");
 
-  jwt.verify(token, "secretkey", (err, userInfo) => {
+  jwt.verify(token, SECRET_KEY, (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
     AuthService.IsAccountBanned(userInfo.id, async (err, data) => {
       if (err) {
@@ -49,7 +49,7 @@ export const deleteRelationship = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in!");
 
-  jwt.verify(token, "secretkey", (err, userInfo) => {
+  jwt.verify(token, SECRET_KEY, (err, userInfo) => {
     AuthService.IsAccountBanned(userInfo.id, async (err, data) => {
       if (err) {
         return res.status(500).json({ error: "This account is banned" });

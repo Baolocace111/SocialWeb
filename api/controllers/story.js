@@ -8,12 +8,12 @@ import { upload } from "../Multer.js";
 import path from "path";
 import { AuthService } from "../services/AuthService.js";
 import { getStory } from "../models/StoryModel.js";
-
+import { SECRET_KEY } from "../services/AuthService.js";
 export const getStories = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in!");
 
-  jwt.verify(token, "secretkey", (err, userInfo) => {
+  jwt.verify(token, SECRET_KEY, (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
     AuthService.IsAccountBanned(userInfo.id, async (err, data) => {
       if (err) {
@@ -34,7 +34,7 @@ export const addStory = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in!");
 
-  jwt.verify(token, "secretkey", (err, userInfo) => {
+  jwt.verify(token, SECRET_KEY, (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
     AuthService.IsAccountBanned(userInfo.id, async (err, data) => {
       if (err) {
@@ -62,7 +62,7 @@ export const deleteStory = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in!");
 
-  jwt.verify(token, "secretkey", (err, userInfo) => {
+  jwt.verify(token, SECRET_KEY, (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
     AuthService.IsAccountBanned(userInfo.id, async (err, data) => {
       if (err) {
