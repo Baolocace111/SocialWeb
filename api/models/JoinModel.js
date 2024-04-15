@@ -80,3 +80,14 @@ export const checkIfUserIsGroupLeader = (userId, groupId, callback) => {
         return callback(null, false);
     });
 };
+
+export const rejectJoinRequest = (joinRequestId, callback) => {
+    const q = "DELETE FROM joins WHERE id = ? AND status = 0";
+    db.query(q, [joinRequestId], (err, results) => {
+        if (err) return callback(err);
+        if (results.affectedRows === 0) {
+            return callback(new Error("Join request not found or cannot be rejected!"));
+        }
+        return callback(null, results);
+    });
+};
