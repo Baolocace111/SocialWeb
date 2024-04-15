@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { AuthModel } from "../models/AuthModel.js";
 import { getReputation } from "../models/UserModel.js";
-const key = "secretkey";
+export const SECRET_KEY = "secretkey";
 export const AuthService = {
   async register(username, email, password, name) {
     try {
@@ -35,8 +35,8 @@ export const AuthService = {
 
           const token =
             user.role === 1
-              ? jwt.sign({ id: user.id, isadmin: true }, "secretkey")
-              : jwt.sign({ id: user.id }, "secretkey");
+              ? jwt.sign({ id: user.id, isadmin: true }, SECRET_KEY)
+              : jwt.sign({ id: user.id }, SECRET_KEY);
 
           const { password: _, ...others } = user;
 
@@ -51,7 +51,7 @@ export const AuthService = {
   },
   async verifyUserToken(token) {
     return new Promise((resolve, reject) => {
-      jwt.verify(token, key, (err, userInfo) => {
+      jwt.verify(token, SECRET_KEY, (err, userInfo) => {
         if (err) {
           //console.log(err);
           reject(-1);
@@ -63,7 +63,7 @@ export const AuthService = {
   },
   async verifyAdminToken(token) {
     return new Promise((resolve, reject) => {
-      jwt.verify(token, key, (err, userInfo) => {
+      jwt.verify(token, SECRET_KEY, (err, userInfo) => {
         if (err) {
           reject("This is not account");
         }

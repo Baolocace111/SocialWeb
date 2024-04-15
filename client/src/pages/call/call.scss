@@ -1,0 +1,44 @@
+.video-call {
+  .video-container {
+    .local-video {
+      border: solid;
+      background-color: antiquewhite;
+      width: 30%;
+      height: 30%;
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      display: flex;
+      video {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .remote-video {
+      background-color: antiquewhite;
+      display: flex;
+      border: solid;
+      width: 90%;
+      height: 90%;
+      video {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+  button {
+    border: none;
+    background-color: crimson;
+    color: white;
+    position: fixed;
+    bottom: 5%;
+    right: 50%;
+    width: 50px;
+    height: 50px;
+    border-radius: 99%;
+  }
+  button:hover {
+    background-color: darkgrey;
+    color: black;
+  }
+}

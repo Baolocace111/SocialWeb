@@ -17,7 +17,8 @@
     .left {
       flex: 1;
       background: linear-gradient(rgba(39, 11, 96, 0.5), rgba(39, 11, 96, 0.5)),
-        url("https://images.pexels.com/photos/3228727/pexels-photo-3228727.jpeg?auto=compress&cs=tinysrgb&w=1600") center;
+        url("https://images.pexels.com/photos/3228727/pexels-photo-3228727.jpeg?auto=compress&cs=tinysrgb&w=1600")
+          center;
       background-size: cover;
       padding: 40px;
       display: flex;
@@ -75,7 +76,7 @@
 
         input {
           border: 2px solid #ccc;
-          border-radius: 5px;
+          border-radius: 30px;
           padding: 10px 15px;
           font-size: 16px;
 
@@ -146,6 +147,45 @@
             }
           }
         }
+      }
+    }
+  }
+}
+@media (max-width: 768px) {
+  .login {
+    .card {
+      width: 90%; // Điều chỉnh chiều rộng
+      flex-direction: column; // Xếp chồng theo chiều dọc
+    }
+
+    .left,
+    .right {
+      flex: none; // Đặt lại giá trị flex
+      width: 100%; // Chiếm toàn bộ chiều rộng
+      padding: 20px; // Giảm padding
+    }
+
+    .left {
+      h1 {
+        font-size: 32px; // Giảm kích cỡ font chữ
+        display: none;
+      }
+      p {
+        font-size: 14px; // Giảm kích cỡ font chữ
+        display: none;
+      }
+      button {
+        position: fixed;
+      }
+    }
+
+    .right {
+      form {
+        button {
+          width: 100%; // Chiếm toàn bộ chiều rộng
+          padding: 10px 0; // Giảm padding
+        }
+        // Làm tương tự với input và các phần tử khác nếu cần
       }
     }
   }
