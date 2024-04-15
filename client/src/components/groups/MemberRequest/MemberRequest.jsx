@@ -23,8 +23,28 @@ const MemberRequest = ({ request }) => {
         }
     );
 
+    const rejectMutation = useMutation(
+        async (joinRequestId) => {
+            try {
+                const response = await makeRequest.delete(`/joins/join/reject`, { data: { joinRequestId } });
+                return response.data;
+            } catch (error) {
+                alert(error.response.data.message);
+            }
+        },
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['group-join-requests']);
+            }
+        }
+    );
+
     const handleApprove = () => {
         approveMutation.mutate(request.id);
+    };
+
+    const handleReject = () => {
+        rejectMutation.mutate(request.id);
     };
 
     return (
@@ -36,6 +56,9 @@ const MemberRequest = ({ request }) => {
             <div className="request-action">
                 <button className="accept" onClick={handleApprove} disabled={approveMutation.isLoading}>
                     Phê duyệt
+                </button>
+                <button className="deny" onClick={handleReject} disabled={rejectMutation.isLoading}>
+                    Từ chối
                 </button>
                 <button className="more">
                     <MoreHorizIcon fontSize="small" />

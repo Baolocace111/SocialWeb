@@ -53,3 +53,24 @@ export const approveJoinRequest = (adminUserId, joinRequestId, callback) => {
         });
     });
 };
+
+export const rejectJoinRequest = (adminUserId, joinRequestId, callback) => {
+    joinModel.getJoinRequestById(joinRequestId, (err, joinRequest) => {
+        if (err) {
+            return callback(err, null);
+        }
+        if (!joinRequest) {
+            return callback(new Error("Join request not found!"), null);
+        }
+
+        joinModel.checkIfUserIsGroupLeader(adminUserId, joinRequest.group_id, (err, isLeader) => {
+            if (err) {
+                return callback(err, null);
+            }
+            if (!isLeader) {
+                return callback(new Error("Only group leader can reject request!"), null);
+            }
+            joinModel.rejectJoinRequest(joinRequestId, callback);
+        });
+    });
+};
