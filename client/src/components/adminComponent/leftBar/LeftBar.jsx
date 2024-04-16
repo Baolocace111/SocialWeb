@@ -4,6 +4,7 @@ import { AuthContext } from "../../../context/authContext";
 import { makeRequest } from "../../../axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
+import LanguageSwitcher from "../../languageSwitcher/LanguageSwitcher";
 
 const AdminLeftBar = () => {
   const { currentUser, logout } = useContext(AuthContext);
@@ -50,6 +51,21 @@ const AdminLeftBar = () => {
         >
           {" "}
           User Management{" "}
+        </div>
+        {false && (
+          <div
+            className="click-tag"
+            onClick={() => {
+              window.location.href = "/admin/language";
+            }}
+          >
+            {" "}
+            Language Management{" "}
+          </div>
+        )}
+        <div>
+          {" "}
+          <LanguageSwitcher text={true}></LanguageSwitcher>
         </div>
         <div className="click-tag" onClick={handleLogout}>
           Logout

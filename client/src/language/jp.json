@@ -1,7 +1,20 @@
 {
     "welcome": "ウェブサイトへようこそ！",
     "explore_opportunities": "新しい機会を探索し、視野を広げましょう。",
+    "Join_the_community":"コミュニティに参加して、無限の可能性を探ってください。",
+    "Already have an account?":"利用可能なアカウントはありますか?",
     "new_here": "こちらは初めてですか？",
-    "create_account": "アカウントを作成する"
+    "create_account": "アカウントを作成する",
+    "login":"ログイン",
+    "Name":"名前",
+    "Email":"Eメール",
+    "Username":"ユーザー名",
+    "Password":"パスワード",
+    "Confirm Password":"パスワードの確認",
+    "Sign In":"サインイン",
+    "Sign Up":"サインアップ",
+    "User is not found":"ユーザーが見つかりません",
+    "Wrong password or username!":"アカウントまたはパスワードが間違っています",
+    "Fill out the form":"すべての情報を入力します"
   }
   

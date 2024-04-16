@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./register.scss";
-
+import LanguageSwitcher from "../../components/languageSwitcher/LanguageSwitcher";
 import { makeRequest } from "../../axios";
-
+import { useLanguage } from "../../context/languageContext";
 const Register = () => {
+  const { trl } = useLanguage();
   const [inputs, setInputs] = useState({
     username: "",
     email: "",
@@ -36,56 +37,59 @@ const Register = () => {
 
   return (
     <div className="register">
+      <div className="float">
+        <LanguageSwitcher text={true}></LanguageSwitcher>
+      </div>
       <div className="card">
         <div className="left">
-          <h1>Welcome</h1>
-          <p>Join the community and explore the endless possibilities.</p>
-          <span>Already have an account?</span>
+          <h1>{trl("welcome")}</h1>
+          <p>{trl("Join_the_community")}</p>
+          <span>{trl("Already have an account?")}</span>
           <Link to="/login">
-            <button className="login-btn">Login</button>
+            <button className="login-btn">{trl("login")}</button>
           </Link>
         </div>
         <div className="right">
-          <h1>Create Account</h1>
+          <h1>{trl("Create Account")}</h1>
           <form>
             <input
               type="text"
-              placeholder="Username"
+              placeholder={trl("Username")}
               name="username"
               onChange={handleChange}
               required
             />
             <input
               type="email"
-              placeholder="Email"
+              placeholder={trl("Email")}
               name="email"
               onChange={handleChange}
               required
             />
             <input
               type="text"
-              placeholder="Name"
+              placeholder={trl("Name")}
               name="name"
               onChange={handleChange}
               required
             />
             <input
               type="password"
-              placeholder="Password"
+              placeholder={trl("Password")}
               name="password"
               onChange={handleChange}
               required
             />
             <input
               type="password"
-              placeholder="Confirm Password"
+              placeholder={trl("Confirm Password")}
               name="repassword"
               onChange={handleChange}
               required
             />
-            {message && <div className="message">{message}</div>}
+            {message && <div className="message">{trl(message)}</div>}
           </form>
-          <button onClick={handleClick}>Sign Up</button>
+          <button onClick={handleClick}>{trl("Sign Up")}</button>
         </div>
       </div>
     </div>

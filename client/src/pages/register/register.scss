@@ -4,6 +4,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  .float {
+    position: fixed;
+    top: 5%;
+    left: 5%;
+  }
 
   .card {
     width: 60%;
