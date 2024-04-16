@@ -103,3 +103,24 @@ export const approveJoinRequest = async (req, res) => {
         return res.status(500).json({ error: error.message });
     }
 };
+
+export const rejectJoinRequest = async (req, res) => {
+    try {
+        const adminUserId = await AuthService.verifyUserToken(req.cookies.accessToken);
+
+        AuthService.IsAccountBanned(adminUserId, async (err, data) => {
+            if (err) {
+                return res.status(403).json({ message: "Your account is banned or invalid." });
+            }
+
+            const { joinRequestId } = req.body;
+
+            joinService.rejectJoinRequest(adminUserId, joinRequestId, (err, response) => {
+                if (err) return res.status(500).json({ error: err.message });
+                return res.json({ message: "Join request rejected successfully." });
+            });
+        });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+};

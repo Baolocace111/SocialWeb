@@ -69,7 +69,11 @@ export const searchGroupsBySearchText = (searchText, userId, callback) => {
     const sqlQuery = `
         SELECT 
             teams.*, 
-            COUNT(DISTINCT joins.user_id) AS member_count,
+            (
+                SELECT COUNT(*)
+                FROM joins
+                WHERE teams.id = joins.group_id AND joins.status = 1
+            ) AS member_count,
             IF(joined_table.user_id IS NULL, 0, IF(MAX(joins.status) = 1, 2, 1)) AS joined
         FROM 
             teams
