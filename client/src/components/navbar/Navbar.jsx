@@ -32,6 +32,7 @@ import ListNotification from "./ListNotification";
 import ListMessages from "./ListMessages";
 import { ChatContext } from "./ChatContext";
 import PopupWindow from "../PopupComponent/PopupWindow";
+import LanguageSwitcher from "../languageSwitcher/LanguageSwitcher";
 const Navbar = () => {
   const { toggle, darkMode } = useContext(DarkModeContext);
   const { currentUser, logout } = useContext(AuthContext);
@@ -239,6 +240,7 @@ const Navbar = () => {
             onKeyPress={handleKeyPress}
           />
         </div>
+        <LanguageSwitcher></LanguageSwitcher>
       </div>
       <div className="right">
         <div className="icon-container">
