@@ -2,9 +2,11 @@ import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/authContext";
 import "./login.scss";
+import LanguageSwitcher from "../../components/languageSwitcher/LanguageSwitcher";
 // import { FaFacebook, FaGoogle } from 'react-icons/fa';
-
+import { useLanguage } from "../../context/languageContext";
 const Login = () => {
+  const { trl } = useLanguage();
   const [inputs, setInputs] = useState({
     username: "",
     password: "",
@@ -32,15 +34,16 @@ const Login = () => {
 
   return (
     <div className="login">
+      <div className="float">
+        <LanguageSwitcher text={true}></LanguageSwitcher>
+      </div>
       <div className="card">
         <div className="left">
-          <h1>Welcome Back!</h1>
-          <p>
-            Join us and start your journey again. Explore new opportunities and expand your horizons.
-          </p>
-          <span>New here?</span>
+          <h1>{trl("welcome")}</h1>
+          <p>{trl("explore_opportunities")}</p>
+          <span>{trl("new_here")}</span>
           <Link to="/register">
-            <button className="register-btn">Create Account</button>
+            <button className="register-btn">{trl("create_account")}</button>
           </Link>
         </div>
         <div className="right">
@@ -61,7 +64,9 @@ const Login = () => {
               required
             />
             {err && <div className="error">{err}</div>}
-            <button type="submit" onClick={handleLogin}>Sign In</button>
+            <button type="submit" onClick={handleLogin}>
+              Sign In
+            </button>
           </form>
         </div>
       </div>
