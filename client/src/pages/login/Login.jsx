@@ -47,25 +47,25 @@ const Login = () => {
           </Link>
         </div>
         <div className="right">
-          <h1>Login</h1>
+          <h1>{trl("login")}</h1>
           <form>
             <input
               type="text"
-              placeholder="Username"
+              placeholder={trl("Username")}
               name="username"
               onChange={handleChange}
               required
             />
             <input
               type="password"
-              placeholder="Password"
+              placeholder={trl("Password")}
               name="password"
               onChange={handleChange}
               required
             />
-            {err && <div className="error">{err}</div>}
+            {err && <div className="error">{trl(err)}</div>}
             <button type="submit" onClick={handleLogin}>
-              Sign In
+              {trl("Sign In")}
             </button>
           </form>
         </div>

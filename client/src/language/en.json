@@ -1,7 +1,20 @@
 {
     "welcome": "Welcome to our website!",
     "explore_opportunities": "Explore new opportunities and expand your horizons.",
+    "Join_the_community":"Join the community and explore the endless possibilities.",
+    "Already have an account?":"Do you have an available account?",
     "new_here": "New here?",
-    "create_account": "Create Account"
+    "create_account": "Create Account",
+    "login":"Login",
+    "Name":"Name",
+    "Email":"Email",
+    "Username":"Username",
+    "Password":"Password",
+    "Confirm Password":"Confirm password",
+    "Sign In":"Sign In",
+    "Sign Up":"Sign Up",
+    "User is not found":"User not found",
+    "Wrong password or username!":"Incorrect username or password",
+    "Fill out the form":"Fill in all information"
   }
   

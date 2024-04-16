@@ -52,6 +52,7 @@ import AdminUserManagement from "./pages/admin/adminHome/AdminUserManagement";
 import Gameindex from "./pages/games/Gameindex";
 import Carogames from "./pages/games/Carogame";
 import Call from "./pages/call/Call";
+import AdminLanguageManagement from "./pages/admin/adminLanguageManagement/AdminLanguageManagement";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -391,6 +392,10 @@ function App() {
         {
           path: "/admin/user",
           element: <AdminUserManagement />,
+        },
+        {
+          path: "/admin/language",
+          element: <AdminLanguageManagement />,
         },
       ],
     },
