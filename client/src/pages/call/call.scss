@@ -41,4 +41,9 @@
     background-color: darkgrey;
     color: black;
   }
+  .popup-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }

@@ -5,7 +5,8 @@ import { useParams } from "react-router-dom";
 import { WEBSOCKET_BACK_END, makeRequest } from "../../axios";
 import PopupWindow from "../../components/PopupComponent/PopupWindow";
 import "./call.scss";
-import { useCallback } from "react";
+import CountdownTimer from "../../components/CountdownTimer/CountdownTimer";
+
 const Call = () => {
   const { RTCPeerConnection, RTCSessionDescription } = window;
   const { id } = useParams();
@@ -39,7 +40,7 @@ const Call = () => {
   }, []);
   const onCloseCallPopup = () => {
     if (popupType.current === "call") {
-      wsRef.current.send(JSON.stringify({ type: "cancel" }));
+      //wsRef.current.send(JSON.stringify({ type: "cancel" }));
       if (ws) ws.close();
       setPopupType(null);
     } else if (popupType.current === "deny") {
@@ -201,8 +202,14 @@ const Call = () => {
   return (
     <div className="video-call">
       <PopupWindow show={callPopup} handleClose={onCloseCallPopup}>
-        <div>
+        <div className="popup-content">
           <h1>{popupMessage && popupMessage}</h1>
+          {callPopup && popupType.current === "call" && (
+            <CountdownTimer
+              seconds={60}
+              handleTimeOut={onCloseCallPopup}
+            ></CountdownTimer>
+          )}
         </div>
         <div>
           <button onClick={onCloseCallPopup}>Cancel</button>

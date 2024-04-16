@@ -188,6 +188,8 @@ const Navbar = () => {
                 setCallId(data.id);
                 setCallName(data.name);
                 setIsCalling(true);
+              } else if (data.type === "quit") {
+                setIsCalling(false);
               }
             } catch (error) {}
           }

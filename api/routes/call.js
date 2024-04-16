@@ -1,4 +1,5 @@
 export const callingUser = new Map();
+import { sendMessageToUser } from "../index.js";
 //const waitingCandidateList = new Map();
 export const settingCallWebsocket = (ws, key) => {
   if (callingUser.has(key)) {
@@ -53,6 +54,7 @@ export const settingCallWebsocket = (ws, key) => {
     }
   });
   ws.on("close", () => {
+    sendMessageToUser(indexString(key), JSON.stringify({ type: "quit" }));
     if (callingUser.has(key)) {
       callingUser.delete(key);
     }
@@ -60,6 +62,7 @@ export const settingCallWebsocket = (ws, key) => {
     if (callingUser.has(rvkey)) {
       callingUser.get(rvkey).send(JSON.stringify({ type: "quit" }));
     }
+
     // if (waitingCandidateList.has(rvkey)) {
     //   waitingCandidateList.delete(rvkey);
     // }
@@ -71,4 +74,8 @@ const reverseString = (input) => {
 
   // Đảo ngược thứ tự của các phần con và kết hợp lại với chuỗi "to" giữa chúng
   return parts.reverse().join("to");
+};
+const indexString = (input) => {
+  const parts = input.split("to");
+  return "index" + parts[0];
 };
