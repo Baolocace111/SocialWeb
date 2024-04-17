@@ -17,8 +17,10 @@ import { Link } from "react-router-dom";
 import FlipCube from "../loadingComponent/flipCube/FlipCube";
 import { useRef } from "react";
 import Slider from "react-slick";
+import { useLanguage } from "../../context/languageContext";
 
 const Stories = () => {
+  const { trl } = useLanguage();
   const { currentUser } = useContext(AuthContext);
   const inputRef = useRef(null);
   const { isLoading, error, data } = useQuery(["stories"], () =>
@@ -122,7 +124,10 @@ const Stories = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const slides = [
     <div className="story" key={1}>
-      <img src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id} alt="" />
+      <img
+        src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id}
+        alt=""
+      />
       <span>{currentUser.name}</span>
       <button onClick={handleDialogOpen}>+</button>
 
@@ -139,7 +144,7 @@ const Stories = () => {
         >
           <MovieIcon sx={{ marginRight: "8px" }} />
           <Typography variant="title1" sx={{ flexGrow: 1 }}>
-            Create a story
+            {trl("Create a story")}
           </Typography>
         </DialogTitle>
         <Divider />
@@ -156,7 +161,9 @@ const Stories = () => {
               variant="body1"
               sx={{ alignSelf: "flex-start", mb: "25px", textAlign: "left" }}
             >
-              Câu chuyện là hình ảnh/video được đăng lên và sẽ biến mất sau 24 giờ
+              {trl(
+                "Câu chuyện là hình ảnh/video được đăng lên và sẽ biến mất sau 24 giờ"
+              )}
             </Typography>
             <input
               type="file"
@@ -171,24 +178,30 @@ const Stories = () => {
                 }
               }}
             />
-            {selectedImage && isImage(file) ?
+            {selectedImage && isImage(file) ? (
               <img
                 src={selectedImage}
                 alt=""
                 style={{ marginTop: "8px", maxWidth: "300px" }}
               />
-              : isImageAndVideo(file) ?
-                <video src={selectedImage} preload="metadata" style={{ marginTop: "8px", maxWidth: "300px" }} /> : <></>
-            }
+            ) : isImageAndVideo(file) ? (
+              <video
+                src={selectedImage}
+                preload="metadata"
+                style={{ marginTop: "8px", maxWidth: "300px" }}
+              />
+            ) : (
+              <></>
+            )}
           </Box>
         </DialogContent>
         <Divider />
         <DialogActions>
           <Button onClick={handleAddStoryClick} color="primary">
-            Add Story
+            {trl("Add Story")}
           </Button>
           <Button onClick={handleDialogClose} color="secondary">
-            Cancel
+            {trl("Cancel")}
           </Button>
         </DialogActions>
       </Dialog>
@@ -219,12 +232,29 @@ const Stories = () => {
         <Link to={`/stories/${userId}`} key={userId}>
           <div className="story">
             <div className="profile-pic">
-              {user && <img src={URL_OF_BACK_END + `users/profilePic/` + latestStory.userId} alt="" />}
+              {user && (
+                <img
+                  src={
+                    URL_OF_BACK_END + `users/profilePic/` + latestStory.userId
+                  }
+                  alt=""
+                />
+              )}
             </div>
             <div className="story-content">
-              {(latestStory.img.endsWith("mp4") || latestStory.img.endsWith("avi") || latestStory.img.endsWith("mov"))
-                ? <video src={URL_OF_BACK_END + `stories/image/` + latestStory.id} preload="metadata" />
-                : <img src={URL_OF_BACK_END + `stories/image/` + latestStory.id} alt="" />}
+              {latestStory.img.endsWith("mp4") ||
+              latestStory.img.endsWith("avi") ||
+              latestStory.img.endsWith("mov") ? (
+                <video
+                  src={URL_OF_BACK_END + `stories/image/` + latestStory.id}
+                  preload="metadata"
+                />
+              ) : (
+                <img
+                  src={URL_OF_BACK_END + `stories/image/` + latestStory.id}
+                  alt=""
+                />
+              )}
               <span>{latestStory.name}</span>
             </div>
           </div>
@@ -248,9 +278,12 @@ const Stories = () => {
 
 export default Stories;
 function isImageAndVideo(file) {
-  return file && (file["type"].split("/")[0] === "image" || file["type"].split("/")[0] === "video");
+  return (
+    file &&
+    (file["type"].split("/")[0] === "image" ||
+      file["type"].split("/")[0] === "video")
+  );
 }
 function isImage(file) {
-  return file && (file["type"].split("/")[0] === "image");
+  return file && file["type"].split("/")[0] === "image";
 }
-

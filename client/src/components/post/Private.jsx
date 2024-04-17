@@ -1,95 +1,73 @@
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { forwardRef, useState } from "react";
-import { useImperativeHandle, useEffect } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { forwardRef, useState, useEffect } from "react";
+import { useImperativeHandle } from "react";
 import { makeRequest } from "../../axios";
 import ThreePointLoading from "../loadingComponent/threepointLoading/ThreePointLoading";
+import { useLanguage } from "../../context/languageContext";
+import "./private.scss";
 
 const Private = forwardRef((props, ref) => {
+  const { trl } = useLanguage();
   const { post_id } = props;
   const savePrivate = () => {
     privateMutation.mutate(selectedUsers);
   };
+
   const queryClient = useQueryClient();
   useImperativeHandle(ref, () => ({
     savePrivate,
   }));
 
   const privateMutation = useMutation(
-    (lists) => {
-      return makeRequest.post("/posts/privatelist/" + post_id, {
+    (lists) =>
+      makeRequest.post(`/posts/privatelist/${post_id}`, {
         list: lists.map((user) => user.id),
-      });
-    },
+      }),
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["posts"]);
       },
     }
   );
+
   const {
     isLoading: ilFriend,
     error: eFriends,
     data: Friends,
   } = useQuery(["userData"], () => {
-    return makeRequest.get("/friendship/allfriend").then((res) => {
-      return res.data;
-    });
+    return makeRequest.get("/friendship/allfriend").then((res) => res.data);
   });
+
   const {
     isLoading: ilPrivate,
     error: ePrivate,
     data: Privates,
   } = useQuery(["private"], () => {
-    return makeRequest.post("/posts/private/" + post_id).then((res) => {
-      return res.data;
-    });
+    return makeRequest
+      .post(`/posts/private/${post_id}`)
+      .then((res) => res.data);
   });
+
   const [inputValue, setInputValue] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [suggestedUsers, setSuggestedUsers] = useState([]);
   const [validUsers, setValidUsers] = useState([]);
   const [firstcall, setFirstCall] = useState(true);
-
-  //   if (firstcall && Friends && Privates) {
-  //     setValidUsers(Friends);
-  //     setSuggestedUsers(validUsers);
-  //     setSelectedUsers(Privates);
-  //     setValidUsers(
-  //       Friends
-  //       //   Friends.filter(
-  //       //     (item1) => !Privates.find((item2) => item1.id === item2.id)
-  //       //   )
-  //     );
-  //     console.log("value:", validUsers);
-  //     console.log(
-  //       "function:",
-  //       Friends.filter(
-  //         (item1) => !Privates.find((item2) => item1.id === item2.id)
-  //       )
-  //     );
-
-  //     setFirstCall(false);
-  //   }
-
+  const [suggestedUsers, setSuggestedUsers] = useState([]);
   useEffect(() => {
     if (firstcall && Friends && Privates) {
       setSelectedUsers(Privates);
       setValidUsers(
         Friends.filter(
-          (item1) => !Privates.find((item2) => item1.id === item2.id)
+          (item1) => !Privates.some((item2) => item1.id === item2.id)
         )
       );
       setFirstCall(false);
     }
   }, [firstcall, Friends, Privates]);
+
   const handleInputChange = (event) => {
     const value = event.target.value;
     setInputValue(value);
-    // Tìm kiếm người dùng có username hoặc name chứa giá trị nhập vào
     if (value !== "") {
       setSuggestedUsers(
         validUsers.filter(
@@ -98,13 +76,13 @@ const Private = forwardRef((props, ref) => {
             user.name.toLowerCase().includes(value.toLowerCase())
         )
       );
-    } else setSuggestedUsers(validUsers);
+    } else {
+      setSuggestedUsers(validUsers);
+    }
   };
 
   const handleUserSelect = (user) => {
-    // Thêm người dùng vào danh sách được chọn và loại bỏ khỏi danh sách gợi ý
     setSelectedUsers([...selectedUsers, user]);
-    setSuggestedUsers(suggestedUsers.filter((u) => u.id !== user.id));
     setValidUsers(validUsers.filter((u) => u.id !== user.id));
   };
 
@@ -114,103 +92,66 @@ const Private = forwardRef((props, ref) => {
   };
 
   return (
-    <>
+    <div className="private-container">
       {ilFriend ? (
-        <>
-          <ThreePointLoading></ThreePointLoading>
-        </>
+        <ThreePointLoading />
       ) : eFriends ? (
-        <>
-          <p>X X</p>
-          <p> _ </p>
-          <p>Im Dead!!</p>
-        </>
+        <div className="error-message">Error loading friends list!</div>
       ) : (
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          <div>
-            <input
-              type="text"
-              value={inputValue}
-              onChange={handleInputChange}
-              placeholder="Nhập tên người dùng"
-            />
-            <div style={{ border: "solid", height: "150px", width: "160px" }}>
-              {suggestedUsers.map((user) => (
-                <div
-                  key={user.id}
-                  style={{
-                    background: "grey",
-                    width: "fit-content",
-                    gap: "10px",
-                    borderRadius: "30px",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignContent: "center",
-                    alignItems: "center",
-                  }}
-                  onClick={() => handleUserSelect(user)}
-                >
-                  <img
-                    style={{
-                      width: "50px",
-                      height: "50px",
-                      borderRadius: "99%",
-                    }}
-                    src={"/upload/" + user.profilePic}
-                    alt=""
-                  />
-                  {user.name}
-                  <span style={{ margin: "10px" }}>+</span>
-                </div>
-              ))}
-            </div>
+        <>
+          <input
+            className="search-user-input"
+            type="text"
+            value={inputValue}
+            onChange={handleInputChange}
+            placeholder={trl("Nhập tên người dùng...")}
+          />
+          <div className="users-suggestion">
+            {validUsers.map((user) => (
+              <div
+                key={user.id}
+                className="user-card"
+                onClick={() => handleUserSelect(user)}
+              >
+                <img
+                  className="profile-pic"
+                  src={`/upload/${user.profilePic}`}
+                  alt={`${user.name}`}
+                />
+                <span className="user-name">{user.name}</span>
+                <span className="action-icon">+</span>
+              </div>
+            ))}
           </div>
-          <div>
-            <h4>Danh sách người dùng được chọn:</h4>
+          <div className="selected-users-container">
+            <h4>{trl("Danh sách người dùng được chọn:")}</h4>
             {ePrivate ? (
-              <>
-                <p>X X</p>
-                <p> _ </p>
-                <p>Im Dead!!</p>
-              </>
+              <div className="error-message">Error loading private list!</div>
             ) : ilPrivate ? (
-              <ThreePointLoading></ThreePointLoading>
+              <ThreePointLoading />
             ) : (
-              <div style={{ border: "solid", height: "150px", width: "160px" }}>
+              <div className="selected-users">
                 {selectedUsers.map((user) => (
                   <div
                     key={user.id}
+                    className="user-card"
                     onClick={() => handleSelectedUserClick(user)}
-                    style={{
-                      background: "grey",
-                      width: "fit-content",
-                      gap: "10px",
-                      borderRadius: "30px",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignContent: "center",
-                      alignItems: "center",
-                    }}
                   >
                     <img
-                      style={{
-                        width: "50px",
-                        height: "50px",
-                        borderRadius: "99%",
-                      }}
-                      src={"/upload/" + user.profilePic}
-                      alt=""
+                      className="profile-pic"
+                      src={`/upload/${user.profilePic}`}
+                      alt={`${user.name}`}
                     />
-                    {user.name}
-                    <span style={{ margin: "10px" }}>X</span>
+                    <span className="user-name">{user.name}</span>
+                    <span className="action-icon">x</span>
                   </div>
                 ))}
               </div>
             )}
           </div>
-        </div>
+        </>
       )}
-    </>
+    </div>
   );
 });
 export default Private;

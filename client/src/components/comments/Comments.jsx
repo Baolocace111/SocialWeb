@@ -5,10 +5,17 @@ import { AuthContext } from "../../context/authContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { URL_OF_BACK_END, makeRequest } from "../../axios";
 import moment from "moment";
-
+import { useEffect } from "react";
+import { useLanguage } from "../../context/languageContext";
 const Comments = ({ postId }) => {
   const [desc, setDesc] = useState("");
   const { currentUser } = useContext(AuthContext);
+  const { trl, language } = useLanguage();
+  useEffect(() => {
+    if (language === "jp") moment.locale("ja");
+    if (language === "vn") moment.locale("vi");
+    else moment.locale("en");
+  }, []);
 
   const { isLoading, error, data } = useQuery(["comments"], () =>
     makeRequest.get("/comments?postId=" + postId).then((res) => {
@@ -41,31 +48,37 @@ const Comments = ({ postId }) => {
   return (
     <div className="comments">
       <div className="write">
-        <img src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id} alt="" />
+        <img
+          src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id}
+          alt=""
+        />
         <input
           type="text"
-          placeholder="Write a comment"
+          placeholder={trl("Write a comment")}
           value={desc}
           onChange={(e) => setDesc(e.target.value)}
         />
-        <button onClick={handleClick}>Send</button>
+        <button onClick={handleClick}>{trl("Send")}</button>
       </div>
-      {error
-        ? "Something went wrong"
-        : isLoading
-          ? <ThreePointLoading />
-          : data.map((comment) => (
-            <div className="comment" key={comment.id}>
-              <img src={URL_OF_BACK_END + `users/profilePic/` + comment.userId} alt="" />
-              <div className="info">
-                <span>{comment.name}</span>
-                <p>{comment.desc}</p>
-              </div>
-              <span className="date">
-                {moment(comment.createdAt).fromNow()}
-              </span>
+      {error ? (
+        "Something went wrong"
+      ) : isLoading ? (
+        <ThreePointLoading />
+      ) : (
+        data.map((comment) => (
+          <div className="comment" key={comment.id}>
+            <img
+              src={URL_OF_BACK_END + `users/profilePic/` + comment.userId}
+              alt=""
+            />
+            <div className="info">
+              <span>{comment.name}</span>
+              <p>{comment.desc}</p>
             </div>
-          ))}
+            <span className="date">{moment(comment.createdAt).fromNow()}</span>
+          </div>
+        ))
+      )}
     </div>
   );
 };

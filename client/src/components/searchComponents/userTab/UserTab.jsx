@@ -3,10 +3,18 @@ import { URL_OF_BACK_END, makeRequest } from "../../../axios";
 import { Button } from "@mui/material";
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserPlus, faUserMinus, faHeartCircleCheck, faBan, faUserSlash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faUserPlus,
+  faUserMinus,
+  faHeartCircleCheck,
+  faBan,
+  faUserSlash,
+} from "@fortawesome/free-solid-svg-icons";
 import "./userTab.scss";
+import { useLanguage } from "../../../context/languageContext";
 
 const UserTab = ({ user }) => {
+  const { trl } = useLanguage();
   const [status, setStatus] = useState(user.friendStatus);
   const navigate = useNavigate();
   const SendRequest = async () => {
@@ -86,7 +94,7 @@ const UserTab = ({ user }) => {
           {status === 0 ? (
             <Button onClick={SendRequest}>
               <FontAwesomeIcon icon={faUserPlus} />
-              <span>Kết bạn</span>
+              <span>{trl("Thêm bạn bè")}</span>
             </Button>
           ) : (
             <></>
@@ -94,7 +102,7 @@ const UserTab = ({ user }) => {
           {status === 1 ? (
             <Button onClick={CancelRequest}>
               <FontAwesomeIcon icon={faUserMinus} />
-              <span>Hủy lời mời</span>
+              <span>{trl("Hủy lời mời")}</span>
             </Button>
           ) : (
             <></>
@@ -103,26 +111,26 @@ const UserTab = ({ user }) => {
             <>
               <Button onClick={AcceptRequest}>
                 <FontAwesomeIcon icon={faHeartCircleCheck} />
-                <span>Đồng ý</span>
+                <span>{trl("Chấp nhận")}</span>
               </Button>
               <Button className="deny-friend" onClick={DenyRequest}>
                 <FontAwesomeIcon icon={faBan} />
-                <span>Từ chối</span>
+                <span>{trl("Từ chối")}</span>
               </Button>
             </>
           ) : (
             <></>
           )}
-          {status === 3 ?
+          {status === 3 ? (
             <Button className="delete-friend" onClick={Unfriend}>
               <FontAwesomeIcon icon={faUserSlash} />
-              <span>Xóa bạn</span>
+              <span>{trl("Xóa bạn")}</span>
             </Button>
-            :
+          ) : (
             <></>
-          }
-          {status === -2 ? "Có lỗi xảy ra..." : <></>}
-          {status === -3 ? "Đang tải..." : <></>}
+          )}
+          {status === -2 ? `${trl("Có lỗi xảy ra")}...` : <></>}
+          {status === -3 ? `${trl("Loading")}...` : <></>}
         </div>
       </div>
     </>

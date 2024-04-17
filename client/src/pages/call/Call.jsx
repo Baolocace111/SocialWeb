@@ -6,8 +6,10 @@ import { WEBSOCKET_BACK_END, makeRequest } from "../../axios";
 import PopupWindow from "../../components/PopupComponent/PopupWindow";
 import "./call.scss";
 import CountdownTimer from "../../components/CountdownTimer/CountdownTimer";
+import { useLanguage } from "../../context/languageContext";
 
 const Call = () => {
+  const { trl } = useLanguage();
   const { RTCPeerConnection, RTCSessionDescription } = window;
   const { id } = useParams();
   const [ws, setWs] = useState(null);

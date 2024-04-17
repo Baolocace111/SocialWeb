@@ -1,0 +1,72 @@
+.private-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #f7f7f7;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+  .search-user-input {
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    width: calc(100% - 30px); // 15px padding on both sides
+
+    &:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+  }
+
+  .users-suggestion,
+  .selected-users-container {
+    margin-bottom: 20px;
+
+    .user-card {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      margin-top: 10px;
+      background: white;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+
+      &:hover {
+        background: #efefef;
+      }
+
+      img.profile-pic {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+
+      .user-name {
+        flex-grow: 1;
+      }
+
+      .action-icon {
+        font-weight: bold;
+        margin-left: 10px;
+      }
+    }
+  }
+
+  .selected-users-container {
+    h4 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+  }
+
+  .error-message {
+    color: #ff3860;
+    text-align: center;
+    padding: 20px;
+  }
+}

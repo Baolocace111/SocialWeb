@@ -4,13 +4,14 @@ import React, { useState, useContext } from "react";
 import { URL_OF_BACK_END, WEBSOCKET_BACK_END, makeRequest } from "../../axios";
 import NineCube from "../loadingComponent/nineCube/NineCube";
 import { ChatContext } from "../navbar/ChatContext";
+import { useLanguage } from "../../context/languageContext";
 const RightBar = () => {
   const [needReload, setNeedReload] = useState(true);
   const [error, setError] = useState(false);
   const [followedUsers, setFollowedUsers] = useState([]);
   const { chattingUser, setChattingUser } = useContext(ChatContext);
   const [ws, setWS] = useState(null);
-
+  const { trl } = useLanguage();
   if (!ws) {
     const socket = new WebSocket(WEBSOCKET_BACK_END + `/index`);
     socket.onopen = () => {
@@ -51,11 +52,11 @@ const RightBar = () => {
     <div className="rightBar">
       <div className="container">
         <div className="item">
-          <span>Online Friends</span>
+          <span>{trl("Online Friends")}</span>
           {needReload && followedUsers.length === 0 ? (
             <NineCube></NineCube>
           ) : error ? (
-            "Something went wrong!!!"
+            <h1>{trl("Something went wrong!")}</h1>
           ) : (
             followedUsers.map((user) => (
               <div

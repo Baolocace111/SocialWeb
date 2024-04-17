@@ -2,8 +2,9 @@ import React, { useState, useCallback } from "react";
 import { URL_OF_BACK_END, makeRequest } from "../../axios";
 import { Link } from "react-router-dom";
 import NineCube from "../loadingComponent/nineCube/NineCube";
-
+import { useLanguage } from "../../context/languageContext";
 const ListFriendRequest = () => {
+  const { trl } = useLanguage();
   const [requests, setRequests] = useState([]);
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -133,17 +134,19 @@ const ListFriendRequest = () => {
             >
               <>
                 <button onClick={() => handleAccept(request.id)}>
-                  Chấp nhận
+                  {trl("Chấp nhận")}
                 </button>
                 <div></div>
-                <button onClick={() => handleDeny(request.id)}>Từ chối</button>
+                <button onClick={() => handleDeny(request.id)}>
+                  {trl("Từ chối")}
+                </button>
               </>
             </div>
           </div>
         </div>
       ))}
       {loading && <NineCube />}
-      {!loading && <button onClick={handleShowMore}>Show More</button>}
+      {!loading && <button onClick={handleShowMore}>{trl("Show More")}</button>}
     </div>
   );
 };

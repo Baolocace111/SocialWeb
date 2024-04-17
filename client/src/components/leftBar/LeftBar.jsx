@@ -15,10 +15,10 @@ import Fund from "../../assets/13.png";
 import { AuthContext } from "../../context/authContext";
 import { useContext } from "react";
 import { URL_OF_BACK_END } from "../../axios";
-
+import { useLanguage } from "../../context/languageContext";
 const LeftBar = () => {
   const { currentUser } = useContext(AuthContext);
-
+  const { trl } = useLanguage();
   return (
     <div className="leftBar">
       <div className="container">
@@ -37,7 +37,7 @@ const LeftBar = () => {
           </div>
           <div className="item">
             <img src={Friends} alt="" />
-            <span>Friends</span>
+            <span>{trl("Friends")}</span>
           </div>
           <div
             className="item"
@@ -46,19 +46,19 @@ const LeftBar = () => {
             }}
           >
             <img src={Groups} alt="" />
-            <span>Groups</span>
+            <span>{trl("Groups")}</span>
           </div>
           <div className="item">
             <img src={Market} alt="" />
-            <span>Marketplace</span>
+            <span>{trl("Marketplace")}</span>
           </div>
           <div className="item">
             <img src={Watch} alt="" />
-            <span>Watch</span>
+            <span>{trl("Watch")}</span>
           </div>
           <div className="item">
             <img src={Memories} alt="" />
-            <span>Memories</span>
+            <span>{trl("Memories")}</span>
           </div>
         </div>
         <hr />
@@ -66,7 +66,7 @@ const LeftBar = () => {
           <span>Your shortcuts</span>
           <div className="item">
             <img src={Events} alt="" />
-            <span>Events</span>
+            <span>{trl("Events")}</span>
           </div>
           <div
             className="item"
@@ -75,35 +75,35 @@ const LeftBar = () => {
             }}
           >
             <img src={Gaming} alt="" />
-            <span>Gaming</span>
+            <span>{trl("Gaming")}</span>
           </div>
           <div className="item">
             <img src={Gallery} alt="" />
-            <span>Gallery</span>
+            <span>{trl("Gallery")}</span>
           </div>
           <div className="item">
             <img src={Videos} alt="" />
-            <span>Videos</span>
+            <span>{trl("Videos")}</span>
           </div>
           <div className="item">
             <img src={Messages} alt="" />
-            <span>Messages</span>
+            <span>{trl("Messages")}</span>
           </div>
         </div>
         <hr />
         <div className="menu">
-          <span>Others</span>
+          <span>{"Others"}</span>
           <div className="item">
             <img src={Fund} alt="" />
-            <span>Fundraiser</span>
+            <span>{trl("Fundraiser")}</span>
           </div>
           <div className="item">
             <img src={Tutorials} alt="" />
-            <span>Tutorials</span>
+            <span>{trl("Tutorials")}</span>
           </div>
           <div className="item">
             <img src={Courses} alt="" />
-            <span>Courses</span>
+            <span>{trl("Courses")}</span>
           </div>
         </div>
       </div>

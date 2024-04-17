@@ -1,23 +1,24 @@
 import { useState } from "react";
 import UserTable from "./UserTable";
 import "./postManage.scss";
+import { useLanguage } from "../../../context/languageContext";
 const PostManage = () => {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
-
+  const { trl } = useLanguage();
   const months = [
-    { value: 1, label: "January" },
-    { value: 2, label: "February" },
-    { value: 3, label: "March" },
-    { value: 4, label: "April" },
-    { value: 5, label: "May" },
-    { value: 6, label: "June" },
-    { value: 7, label: "July" },
-    { value: 8, label: "August" },
-    { value: 9, label: "September" },
-    { value: 10, label: "October" },
-    { value: 11, label: "November" },
-    { value: 12, label: "December" },
+    { value: 1, label: trl("January") },
+    { value: 2, label: trl("February") },
+    { value: 3, label: trl("March") },
+    { value: 4, label: trl("April") },
+    { value: 5, label: trl("May") },
+    { value: 6, label: trl("June") },
+    { value: 7, label: trl("July") },
+    { value: 8, label: trl("August") },
+    { value: 9, label: trl("September") },
+    { value: 10, label: trl("October") },
+    { value: 11, label: trl("November") },
+    { value: 12, label: trl("December") },
   ];
 
   // Tạo danh sách năm từ 1990 đến hiện tại
@@ -42,13 +43,13 @@ const PostManage = () => {
   return (
     <div className="post_manage">
       <div className="dropdown-container">
-        <label htmlFor="month-select">Select Month:</label>
+        <label htmlFor="month-select">{trl("Select Month")}:</label>
         <select
           id="month-select"
           value={selectedMonth}
           onChange={handleMonthChange}
         >
-          <option value="">-- Select Month --</option>
+          <option value="">-- {trl("Select Month")} --</option>
           {months.map((month) => (
             <option key={month.value} value={month.value}>
               {month.label}
@@ -58,13 +59,13 @@ const PostManage = () => {
       </div>
 
       <div className="dropdown-container">
-        <label htmlFor="year-select">Select Year:</label>
+        <label htmlFor="year-select">{trl("Select Year")}:</label>
         <select
           id="year-select"
           value={selectedYear}
           onChange={handleYearChange}
         >
-          <option value="">-- Select Year --</option>
+          <option value="">-- {trl("Select Year")} --</option>
           {years.map((year) => (
             <option key={year} value={year}>
               {year}
@@ -74,10 +75,10 @@ const PostManage = () => {
       </div>
 
       <p>
-        You selected:{" "}
+        {trl("You selected")}:{" "}
         {selectedMonth && selectedYear
           ? `${getMonthLabel(selectedMonth)} ${selectedYear}`
-          : "Please select month and year"}
+          : trl("Please select month and year")}
       </p>
       {selectedMonth && selectedYear && (
         <UserTable year={selectedYear} month={selectedMonth} />

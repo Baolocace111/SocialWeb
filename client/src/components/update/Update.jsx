@@ -11,6 +11,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import { FormThemeProvider } from "react-form-component";
 import Form, { Input } from "react-form-component";
+import { useLanguage } from "../../context/languageContext";
 
 const useStyles = makeStyles({
   root: {
@@ -19,6 +20,7 @@ const useStyles = makeStyles({
 });
 
 const Update = ({ setOpenUpdate, user }) => {
+  const { trl } = useLanguage();
   const [texts, setTexts] = useState({
     email: user.email || "",
     name: user.name || "",
@@ -63,7 +65,7 @@ const Update = ({ setOpenUpdate, user }) => {
       setSelectedProfile({ ...selectedProfile, profilePic: imageUrl });
       setUpdatedProfile({ ...updatedProfile, profilePic: file });
     } else {
-      alert("Vui lòng chỉ chọn tệp ảnh (jpg, jpeg, png, gif).");
+      alert(`${trl("Vui lòng chỉ chọn tệp ảnh")} (jpg, jpeg, png, gif)`);
       event.target.value = null;
     }
   };
@@ -78,7 +80,7 @@ const Update = ({ setOpenUpdate, user }) => {
       setSelectedProfile({ ...selectedProfile, coverPic: imageUrl });
       setUpdatedProfile({ ...updatedProfile, coverPic: file });
     } else {
-      alert("Vui lòng chỉ chọn tệp ảnh (jpg, jpeg, png, gif).");
+      alert(`${trl("Vui lòng chỉ chọn tệp ảnh")} (jpg, jpeg, png, gif).`);
       event.target.value = null;
     }
   };
@@ -89,7 +91,9 @@ const Update = ({ setOpenUpdate, user }) => {
       if (updatedProfile.profilePic) {
         const formDataProfile = new FormData();
         formDataProfile.append("file", updatedProfile.profilePic);
-        mutationPromises.push(imageProfileMutation.mutateAsync(formDataProfile));
+        mutationPromises.push(
+          imageProfileMutation.mutateAsync(formDataProfile)
+        );
       }
 
       if (updatedProfile.coverPic) {
@@ -107,7 +111,6 @@ const Update = ({ setOpenUpdate, user }) => {
       // Xử lý lỗi nếu cần thiết
     }
   };
-
 
   const handleChange = (value, name) => {
     setTexts((prevTexts) => ({
@@ -193,16 +196,18 @@ const Update = ({ setOpenUpdate, user }) => {
               textColor="primary"
               centered
             >
-              <Tab label="Thông tin" />
-              <Tab label="Ảnh hồ sơ" />
-              <Tab label="Tài khoản" />
+              <Tab label={trl("Thông tin")} />
+              <Tab label={trl("Ảnh hồ sơ")} />
+              <Tab label={trl("Tài khoản")} />
             </Tabs>
           </Paper>
         </div>
 
         {value === 0 && (
           <>
-            <span className="title-update">Update Your Infor</span>
+            <span className="title-update">
+              {trl("Update Your Information")}
+            </span>
             <FormThemeProvider>
               <Form
                 className="form-update"
@@ -219,7 +224,7 @@ const Update = ({ setOpenUpdate, user }) => {
                 <Input
                   name="name"
                   type="text"
-                  label="Name"
+                  label={trl("Name")}
                   id="name"
                   initialValue={texts.name || ""}
                   onChange={(value) => handleChange(value, "name")}
@@ -227,7 +232,7 @@ const Update = ({ setOpenUpdate, user }) => {
                 <Input
                   name="city"
                   type="text"
-                  label="Country / City"
+                  label={`${trl("Country")} / ${trl("City")}`}
                   id="city"
                   initialValue={texts.city || ""}
                   onChange={(value) => handleChange(value, "city")}
@@ -242,7 +247,7 @@ const Update = ({ setOpenUpdate, user }) => {
                 />
               </Form>
               <button className="btn-save" onClick={handleClick}>
-                Save
+                {trl("Save")}
               </button>
             </FormThemeProvider>
           </>
@@ -252,7 +257,7 @@ const Update = ({ setOpenUpdate, user }) => {
           <>
             <div className="form-image">
               <div className="update-profile">
-                <span className="avatar">Ảnh đại diện</span>
+                <span className="avatar">{trl("Ảnh đại diện")}</span>
                 <input
                   style={{ display: "none" }}
                   type="file"
@@ -260,18 +265,28 @@ const Update = ({ setOpenUpdate, user }) => {
                   onChange={handleProfileSelect}
                   accept="image/*"
                 />
-                <label className="edit-avatar" htmlFor="profileInput">Chỉnh sửa</label>
+                <label className="edit-avatar" htmlFor="profileInput">
+                  {trl("Chỉnh sửa")}
+                </label>
               </div>
               <div className="image-profile">
                 {selectedProfile.profilePic && (
-                  <img className="img-profile" src={selectedProfile.profilePic} alt="Selected" />
+                  <img
+                    className="img-profile"
+                    src={selectedProfile.profilePic}
+                    alt="Selected"
+                  />
                 )}
                 {!selectedProfile.profilePic && profile.profilePic && (
-                  <img className="img-profile" src={URL_OF_BACK_END + `users/profilePic/` + user.id} alt="Profile Pic" />
+                  <img
+                    className="img-profile"
+                    src={URL_OF_BACK_END + `users/profilePic/` + user.id}
+                    alt="Profile Pic"
+                  />
                 )}
               </div>
               <div className="update-profile">
-                <span className="avatar">Ảnh bìa</span>
+                <span className="avatar">{trl("Ảnh bìa")}</span>
                 <input
                   style={{ display: "none" }}
                   type="file"
@@ -279,24 +294,36 @@ const Update = ({ setOpenUpdate, user }) => {
                   onChange={handleCoverSelect}
                   accept="image/*"
                 />
-                <label className="edit-avatar" htmlFor="coverInput">Chỉnh sửa</label>
+                <label className="edit-avatar" htmlFor="coverInput">
+                  {trl("Chỉnh sửa")}
+                </label>
               </div>
               <div className="image-profile">
                 {selectedProfile.coverPic && (
-                  <img className="img-cover" src={selectedProfile.coverPic} alt="Selected" />
+                  <img
+                    className="img-cover"
+                    src={selectedProfile.coverPic}
+                    alt="Selected"
+                  />
                 )}
                 {!selectedProfile.coverPic && profile.coverPic && (
-                  <img className="img-cover" src={URL_OF_BACK_END + `users/coverPic/` + user.id} alt="Cover Pic" />
+                  <img
+                    className="img-cover"
+                    src={URL_OF_BACK_END + `users/coverPic/` + user.id}
+                    alt="Cover Pic"
+                  />
                 )}
               </div>
             </div>
-            <button className="btn-save" onClick={handleUpdate}>Save</button>
+            <button className="btn-save" onClick={handleUpdate}>
+              {trl("Save")}
+            </button>
           </>
         )}
 
         {value === 2 && (
           <>
-            <span className="title-update">Change Your Password</span>
+            <span className="title-update">{trl("Change Your Password")}</span>
             <FormThemeProvider>
               <Form
                 className="form-update"
@@ -305,28 +332,28 @@ const Update = ({ setOpenUpdate, user }) => {
                 <Input
                   name="password"
                   type="password"
-                  label="New password"
+                  label={trl("New password")}
                   id="password"
                   onChange={(value) => handleChangeCP(value, "password")}
                 />
                 <Input
                   name="repassword"
                   type="password"
-                  label="Re-enter password"
+                  label={trl("Re-enter password")}
                   id="repassword"
                   onChange={(value) => handleChangeCP(value, "repassword")}
                 />
                 <Input
                   name="oldpassword"
                   type="password"
-                  label="Current password"
+                  label={trl("Current password")}
                   id="oldpassword"
                   onChange={(value) => handleChangeCP(value, "oldpassword")}
                 />
               </Form>
-              {CPerror && <span className="error">{CPerror}</span>}
+              {CPerror && <span className="error">{trl(CPerror)}</span>}
               <button className="btn-save" onClick={handleClickCP}>
-                Save
+                {trl("Save")}
               </button>
             </FormThemeProvider>
           </>
