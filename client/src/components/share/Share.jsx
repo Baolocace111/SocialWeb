@@ -1,19 +1,26 @@
 import "./share.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faImages, faLocationDot, faTags, faFaceSmileBeam, faX } from "@fortawesome/free-solid-svg-icons";
+import {
+  faImages,
+  faLocationDot,
+  faTags,
+  faFaceSmileBeam,
+  faX,
+} from "@fortawesome/free-solid-svg-icons";
 import { TextareaAutosize } from "@mui/material";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/authContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { URL_OF_BACK_END, makeRequest } from "../../axios";
 
-import data from '@emoji-mart/data'
-import Picker from '@emoji-mart/react'
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
+import { useLanguage } from "../../context/languageContext";
 
 const Share = () => {
   const [file, setFile] = useState(null);
   const [desc, setDesc] = useState("");
-
+  const { trl } = useLanguage();
   const [showPicker, setShowPicker] = useState(false);
   const [clickedInside, setClickedInside] = useState(false);
   const handleClickOutside = () => {
@@ -67,21 +74,42 @@ const Share = () => {
         <div className="container">
           <div className="top">
             <div className="text-container">
-              <img src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id} alt="" />
+              <img
+                src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id}
+                alt=""
+              />
               <TextareaAutosize
-                placeholder={`What's on your mind ${currentUser.name}?`}
+                placeholder={`${trl("What's on your mind")} ${
+                  currentUser.name + trl("san")
+                }?`}
                 onChange={(e) => setDesc(e.target.value)}
                 value={desc}
                 className="text-input"
               />
-              <FontAwesomeIcon className="emo-icon" icon={faFaceSmileBeam} color="gray" size="xl" onClick={handleTogglePicker} />
+              <FontAwesomeIcon
+                className="emo-icon"
+                icon={faFaceSmileBeam}
+                color="gray"
+                size="xl"
+                onClick={handleTogglePicker}
+              />
             </div>
             <div className="file-container">
               {file && (
                 <div className="preview">
-                  {isImage(file) ? <img className="file" alt="" src={URL.createObjectURL(file)} />
-                    : <video className="file" src={URL.createObjectURL(file)} />}
-                  <button className="close-button" onClick={() => setFile(null)}>
+                  {isImage(file) ? (
+                    <img
+                      className="file"
+                      alt=""
+                      src={URL.createObjectURL(file)}
+                    />
+                  ) : (
+                    <video className="file" src={URL.createObjectURL(file)} />
+                  )}
+                  <button
+                    className="close-button"
+                    onClick={() => setFile(null)}
+                  >
                     <FontAwesomeIcon icon={faX} />
                   </button>
                 </div>
@@ -108,26 +136,33 @@ const Share = () => {
               <label htmlFor="file">
                 <div className="item">
                   <FontAwesomeIcon icon={faImages} color="green" size="xl" />
-                  <span>Image/Video</span>
+                  <span>
+                    {trl("Image")}/{trl("Video")}
+                  </span>
                 </div>
               </label>
-              <div className="item">
+              {/* <div className="item">
                 <FontAwesomeIcon icon={faLocationDot} color="red" size="xl" />
                 <span>Add Place</span>
               </div>
               <div className="item">
                 <FontAwesomeIcon icon={faTags} color="orange" size="xl" />
                 <span>Tag Friends</span>
-              </div>
+              </div> */}
             </div>
             <div className="right">
-              <button onClick={handleClick}>Share</button>
+              <button onClick={handleClick}>{trl("Share")}</button>
             </div>
           </div>
         </div>
         {showPicker && (
           <div className="picker-container">
-            <Picker className="picker" data={data} onEmojiSelect={handleEmojiSelect} onClickOutside={handleClickOutside} />
+            <Picker
+              className="picker"
+              data={data}
+              onEmojiSelect={handleEmojiSelect}
+              onClickOutside={handleClickOutside}
+            />
           </div>
         )}
       </div>
@@ -137,8 +172,12 @@ const Share = () => {
 
 export default Share;
 function isImageAndVideo(file) {
-  return file && (file["type"].split("/")[0] === "image" || file["type"].split("/")[0] === "video");
+  return (
+    file &&
+    (file["type"].split("/")[0] === "image" ||
+      file["type"].split("/")[0] === "video")
+  );
 }
 function isImage(file) {
-  return file && (file["type"].split("/")[0] === "image");
+  return file && file["type"].split("/")[0] === "image";
 }
