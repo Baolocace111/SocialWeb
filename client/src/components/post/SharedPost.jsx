@@ -39,7 +39,8 @@ import { makeRequest, URL_OF_BACK_END } from "../../axios";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/authContext";
 import MiniPost from "./MiniPost";
-
+import { useLanguage } from "../../context/languageContext";
+import { useEffect } from "react";
 const SharedPost = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
@@ -47,7 +48,12 @@ const SharedPost = ({ post }) => {
   const [openSeeEdit, setOpenSeeEdit] = useState(false);
   const [selectedValue, setSelectedValue] = useState(""); // State để lưu giá trị của Radio được chọn
   const [desc, setDesc] = useState(post.desc);
-
+  const { trl, language } = useLanguage();
+  useEffect(() => {
+    if (language === "jp") moment.locale("ja");
+    if (language === "vn") moment.locale("vi");
+    else moment.locale("en");
+  }, []);
   const { currentUser } = useContext(AuthContext);
   const queryClient = useQueryClient();
 
@@ -164,7 +170,10 @@ const SharedPost = ({ post }) => {
       <div className="container">
         <div className="user">
           <div className="userInfo">
-            <img src={URL_OF_BACK_END + `users/profilePic/` + post.userId} alt="" />
+            <img
+              src={URL_OF_BACK_END + `users/profilePic/` + post.userId}
+              alt=""
+            />
             <div className="details">
               <span
                 className="name"
@@ -210,7 +219,7 @@ const SharedPost = ({ post }) => {
                   <FontAwesomeIcon icon={faPen} />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Chỉnh sửa bài viết"
+                  primary={trl("Chỉnh sửa bài viết")}
                   style={{ fontSize: "14px", marginRight: "50px" }}
                 />
               </ListItemButton>
@@ -222,7 +231,7 @@ const SharedPost = ({ post }) => {
                   <FontAwesomeIcon icon={faLock} />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Chỉnh sửa đối tượng"
+                  primary={trl("Chỉnh sửa đối tượng")}
                   style={{ fontSize: "14px", marginRight: "50px" }}
                 />
               </ListItemButton>
@@ -235,7 +244,7 @@ const SharedPost = ({ post }) => {
                     <FontAwesomeIcon icon={faTrashCan} />
                   </ListItemIcon>
                   <ListItemText
-                    primary="Xóa bài viết"
+                    primary={trl("Xóa bài viết")}
                     style={{ fontSize: "14px", marginRight: "50px" }}
                   />
                 </ListItemButton>
@@ -252,7 +261,7 @@ const SharedPost = ({ post }) => {
                 >
                   <EditIcon sx={{ marginRight: "8px", fontSize: "20px" }} />
                   <span style={{ fontSize: "22px", fontWeight: "700" }}>
-                    Chỉnh sửa bài viết
+                    {trl("Chỉnh sửa bài viết")}
                   </span>
                 </Typography>
               </DialogTitle>
@@ -294,7 +303,7 @@ const SharedPost = ({ post }) => {
                 </div>
                 <TextareaAutosize
                   minRows={2}
-                  placeholder="Nhập nội dung mới của bạn"
+                  placeholder={trl("Nhập nội mô tả của bạn")}
                   defaultValue={post.desc}
                   onChange={(e) => setDesc(e.target.value)}
                   style={{
@@ -330,7 +339,7 @@ const SharedPost = ({ post }) => {
                     icon={faLock}
                   />
                   <span style={{ fontSize: "22px", fontWeight: "700" }}>
-                    Chỉnh sửa đối tượng
+                    {trl("Chỉnh sửa đối tượng")}
                   </span>
                 </Typography>
               </DialogTitle>
@@ -369,9 +378,11 @@ const SharedPost = ({ post }) => {
                       <ListItemText
                         style={{ marginLeft: "20px", marginRight: "80px" }}
                       >
-                        <Typography variant="h6">Công khai</Typography>
+                        <Typography variant="h6">{trl("Công khai")}</Typography>
                         <Typography variant="body2" color="textSecondary">
-                          Ai trên TinySocial cũng sẽ nhìn thấy bài viết này
+                          {trl(
+                            "Ai trên TinySocial cũng sẽ nhìn thấy bài viết này"
+                          )}
                         </Typography>
                       </ListItemText>
                       <ListItemIcon>
@@ -406,9 +417,9 @@ const SharedPost = ({ post }) => {
                       <ListItemText
                         style={{ marginLeft: "20px", marginRight: "80px" }}
                       >
-                        <Typography variant="h6">Bạn bè</Typography>
+                        <Typography variant="h6">{trl("Bạn bè")}</Typography>
                         <Typography variant="body2" color="textSecondary">
-                          Bạn bè của bạn trên TinySocial
+                          {trl("Bạn bè của bạn trên TinySocial")}
                         </Typography>
                       </ListItemText>
                       <ListItemIcon>
@@ -443,7 +454,9 @@ const SharedPost = ({ post }) => {
                       <ListItemText
                         style={{ marginLeft: "20px", marginRight: "80px" }}
                       >
-                        <Typography variant="h6">Chỉ mình tôi</Typography>
+                        <Typography variant="h6">
+                          {trl("Chỉ mình tôi")}
+                        </Typography>
                       </ListItemText>
                       <ListItemIcon>
                         <Radio
@@ -459,10 +472,10 @@ const SharedPost = ({ post }) => {
               <Divider />
               <DialogActions>
                 <Button onClick={handleSave} color="primary">
-                  Save
+                  {trl("Save")}
                 </Button>
                 <Button onClick={handleSeeDialogClose} color="secondary">
-                  Cancel
+                  {trl("Cancel")}
                 </Button>
               </DialogActions>
             </Dialog>
@@ -494,11 +507,13 @@ const SharedPost = ({ post }) => {
                 onClick={handleLike}
               />
             )}
-            {data?.length} Likes
+            {data?.length < 2
+              ? trl([data?.length, " ", "Like"])
+              : trl([data?.length, " ", "Likes"])}
           </div>
           <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
             <TextsmsOutlinedIcon />
-            See Comments
+            {trl("See Comments")}
           </div>
         </div>
         {commentOpen && <Comments postId={post.id} />}

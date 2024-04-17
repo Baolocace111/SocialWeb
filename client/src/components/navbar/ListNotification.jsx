@@ -7,7 +7,15 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import NineCube from "../loadingComponent/nineCube/NineCube";
+import { useLanguage } from "../../context/languageContext";
+import { useEffect } from "react";
 const ListNotification = () => {
+  const { trl, language } = useLanguage();
+  useEffect(() => {
+    if (language === "jp") moment.locale("ja");
+    if (language === "vn") moment.locale("vi");
+    else moment.locale("en");
+  }, []);
   const [notifications, setNotifications] = useState([]);
   const [offset, setOffset] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -66,7 +74,7 @@ const ListNotification = () => {
   return (
     <div className="list-notification">
       <div className="title-notification">
-        <span>Thông báo</span>
+        <span>{trl("Thông báo")}</span>
         <div className="more">
           <MoreHorizIcon />
         </div>
@@ -75,7 +83,11 @@ const ListNotification = () => {
         <div className="item-notification" key={notification.id}>
           <Link to={notification.link} style={{ cursor: "pointer" }}>
             <img
-              src={URL_OF_BACK_END + `users/profilePic/` + notification.userInteractionId}
+              src={
+                URL_OF_BACK_END +
+                `users/profilePic/` +
+                notification.userInteractionId
+              }
               onError={(e) => {
                 e.target.onerror = null;
                 e.target.src = "/notificationtype/null.jpg";
@@ -84,7 +96,10 @@ const ListNotification = () => {
             />
           </Link>
           <div className="content-notification">
-            <div className="message" dangerouslySetInnerHTML={{ __html: notification.message }}></div>
+            <div
+              className="message"
+              dangerouslySetInnerHTML={{ __html: notification.message }}
+            ></div>
             <div className="date">
               {moment(notification.createdAt).fromNow()}
             </div>
@@ -97,7 +112,7 @@ const ListNotification = () => {
         </div>
       ))}
       {loading && <NineCube />}
-      {!loading && <button onClick={handleShowMore}>Show More</button>}
+      {!loading && <button onClick={handleShowMore}>{trl("Show More")}</button>}
     </div>
   );
 };
@@ -112,7 +127,7 @@ function removeDuplicateUnits(arr) {
 
   // Chuyển mảng set thành mảng thông thường và sắp xếp theo createdAt giảm dần
   const sortedArr = Array.from(uniqueUnits.values()).sort(
-    (a, b) => - new Date(a.createdAt) + new Date(b.createdAt)
+    (a, b) => -new Date(a.createdAt) + new Date(b.createdAt)
   );
 
   // Trả về mảng đã sắp xếp và không có phần tử trùng lặp

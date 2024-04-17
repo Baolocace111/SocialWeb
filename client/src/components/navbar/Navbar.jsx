@@ -33,6 +33,7 @@ import ListMessages from "./ListMessages";
 import { ChatContext } from "./ChatContext";
 import PopupWindow from "../PopupComponent/PopupWindow";
 import LanguageSwitcher from "../languageSwitcher/LanguageSwitcher";
+import { useLanguage } from "../../context/languageContext";
 const Navbar = () => {
   const { toggle, darkMode } = useContext(DarkModeContext);
   const { currentUser, logout } = useContext(AuthContext);
@@ -45,7 +46,7 @@ const Navbar = () => {
   const [isCalling, setIsCalling] = useState(false);
   const [callId, setCallId] = useState(0);
   const [callName, setCallName] = useState("");
-
+  const { trl } = useLanguage();
   const update_request_number = async () => {
     try {
       const response = await makeRequest.get("/friendship/count");
@@ -209,11 +210,13 @@ const Navbar = () => {
       <ListBoxChat></ListBoxChat>
       <PopupWindow show={isCalling} handleClose={handleDenyCall}>
         <div>
-          <h1>{callName} đang gọi bạn</h1>
+          <h1>
+            {callName} {trl("đang gọi bạn")}
+          </h1>
         </div>
         <div>
-          <button onClick={handleAcceptCall}>Nghe</button>
-          <button onClick={handleDenyCall}>Hủy</button>
+          <button onClick={handleAcceptCall}>{trl("Nghe")}</button>
+          <button onClick={handleDenyCall}>{trl("Từ chối")}</button>
         </div>
       </PopupWindow>
       <div className="left">
@@ -234,7 +237,7 @@ const Navbar = () => {
           <SearchOutlinedIcon onClick={handleSearch} />
           <input
             type="text"
-            placeholder="Search..."
+            placeholder={trl("Search...")}
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             onKeyPress={handleKeyPress}
@@ -318,7 +321,7 @@ const Navbar = () => {
                   <FontAwesomeIcon icon={faGear} />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Cài đặt riêng tư"
+                  primary={trl("Cài đặt riêng tư")}
                   style={{ marginRight: "100px" }}
                 />
               </ListItemButton>
@@ -329,7 +332,7 @@ const Navbar = () => {
                   <FontAwesomeIcon icon={faCircleExclamation} />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Đóng góp ý kiến"
+                  primary={trl("Đóng góp ý kiến")}
                   style={{ marginRight: "100px" }}
                 />
               </ListItemButton>
@@ -340,7 +343,7 @@ const Navbar = () => {
                   <FontAwesomeIcon icon={faArrowRightFromBracket} />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Đăng xuất"
+                  primary={trl("Logout")}
                   style={{ marginRight: "100px" }}
                 />
               </ListItemButton>

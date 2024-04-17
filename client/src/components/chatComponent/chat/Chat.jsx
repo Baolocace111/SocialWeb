@@ -5,16 +5,11 @@ import {
   makeRequest,
 } from "../../../axios";
 import Message from "../message/Message";
-import PopupWindow from "../../PopupComponent/PopupWindow";
 import "./chat.scss";
+import { useLanguage } from "../../../context/languageContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import NineCube from "../../loadingComponent/nineCube/NineCube";
-import {
-  faPhone,
-  faVideo,
-  faX,
-  faPaperPlane,
-} from "@fortawesome/free-solid-svg-icons";
+import { faVideo, faX, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 const Chat = ({ friend, onRemoveChatBox }) => {
   const [messages, setMessages] = useState([]);
@@ -23,7 +18,8 @@ const Chat = ({ friend, onRemoveChatBox }) => {
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(true);
   const friendId = friend.id;
-  const [isCalling, setIsCalling] = useState(false);
+
+  const { trl } = useLanguage();
 
   const messageContainerRef = useRef(null);
 
@@ -42,7 +38,7 @@ const Chat = ({ friend, onRemoveChatBox }) => {
 
     // Xử lý sự kiện khi mở kết nối
     socket.onopen = () => {
-      console.log("WebSocket connected");
+      //console.log("WebSocket connected");
     };
 
     // Xử lý sự kiện khi nhận tin nhắn từ server
@@ -152,7 +148,7 @@ const Chat = ({ friend, onRemoveChatBox }) => {
       <div className="messages" ref={messageContainerRef}>
         {!loading && (
           <div className="showMore" onClick={handleShowMore}>
-            Show More
+            {trl("Show More")}
           </div>
         )}
         {messages &&
