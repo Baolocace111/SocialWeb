@@ -3,11 +3,13 @@ import "./posts.scss";
 
 import ThreePointLoading from "../loadingComponent/threepointLoading/ThreePointLoading";
 import SharedPost from "../post/SharedPost";
+import { useLanguage } from "../../context/languageContext";
 const ShowPosts = ({ isLoading, error, posts }) => {
+  const { trl } = useLanguage();
   return (
     <div className="posts">
       {error ? (
-        "Something went wrong!"
+        <h1> {trl("Something went wrong!")}</h1>
       ) : isLoading ? (
         <ThreePointLoading />
       ) : Array.isArray(posts) ? (
@@ -23,7 +25,7 @@ const ShowPosts = ({ isLoading, error, posts }) => {
             </div>
           ))
       ) : (
-        "No data available"
+        <h1>{trl("No data available")}</h1>
       )}
     </div>
   );

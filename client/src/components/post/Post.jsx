@@ -45,8 +45,14 @@ import MiniPost from "./MiniPost";
 import Private from "./Private";
 import { Link } from "react-router-dom";
 import ReactPlayer from "react-player";
-
+import { useLanguage } from "../../context/languageContext";
 const Post = ({ post }) => {
+  const { trl, language } = useLanguage();
+  useEffect(() => {
+    if (language === "jp") moment.locale("ja");
+    if (language === "vn") moment.locale("vi");
+    else moment.locale("en");
+  }, []);
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [deleteImage, setDeleteImage] = useState(false);
@@ -299,7 +305,7 @@ const Post = ({ post }) => {
                   <FontAwesomeIcon icon={faPen} />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Chỉnh sửa bài viết"
+                  primary={trl("Chỉnh sửa bài viết")}
                   style={{ fontSize: "14px", marginRight: "50px" }}
                 />
               </ListItemButton>
@@ -311,7 +317,7 @@ const Post = ({ post }) => {
                   <FontAwesomeIcon icon={faLock} />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Chỉnh sửa đối tượng"
+                  primary={trl("Chỉnh sửa đối tượng")}
                   style={{ fontSize: "14px", marginRight: "50px" }}
                 />
               </ListItemButton>
@@ -324,7 +330,7 @@ const Post = ({ post }) => {
                     <FontAwesomeIcon icon={faTrashCan} />
                   </ListItemIcon>
                   <ListItemText
-                    primary="Xóa bài viết"
+                    primary={trl("Xóa bài viết")}
                     style={{ fontSize: "14px", marginRight: "50px" }}
                   />
                 </ListItemButton>
@@ -341,7 +347,7 @@ const Post = ({ post }) => {
                 >
                   <EditIcon sx={{ marginRight: "8px", fontSize: "20px" }} />
                   <span style={{ fontSize: "22px", fontWeight: "700" }}>
-                    Chỉnh sửa bài viết
+                    {trl("Chỉnh sửa bài viết")}
                   </span>
                 </Typography>
               </DialogTitle>
@@ -383,7 +389,7 @@ const Post = ({ post }) => {
                 </div>
                 <TextareaAutosize
                   minRows={2}
-                  placeholder="Nhập nội dung mới của bạn"
+                  placeholder={trl("Nhập nội mô tả của bạn")}
                   defaultValue={post.desc}
                   onChange={(e) => setDesc(e.target.value)}
                   style={{
@@ -442,10 +448,10 @@ const Post = ({ post }) => {
               <Divider />
               <DialogActions>
                 <Button onClick={handleUpdate} color="primary">
-                  Save
+                  {trl("Save")}
                 </Button>
                 <Button onClick={handleDialogClose} color="secondary">
-                  Cancel
+                  {trl("Cancel")}
                 </Button>
               </DialogActions>
             </Dialog>
@@ -463,7 +469,7 @@ const Post = ({ post }) => {
                     icon={faLock}
                   />
                   <span style={{ fontSize: "22px", fontWeight: "700" }}>
-                    Chỉnh sửa đối tượng
+                    {trl("Chỉnh sửa đối tượng")}
                   </span>
                 </Typography>
               </DialogTitle>
@@ -503,9 +509,11 @@ const Post = ({ post }) => {
                       <ListItemText
                         style={{ marginLeft: "20px", marginRight: "80px" }}
                       >
-                        <Typography variant="h6">Công khai</Typography>
+                        <Typography variant="h6">{trl("Công khai")}</Typography>
                         <Typography variant="body2" color="textSecondary">
-                          Ai trên TinySocial cũng sẽ nhìn thấy bài viết này
+                          {trl(
+                            "Ai trên TinySocial cũng sẽ nhìn thấy bài viết này"
+                          )}
                         </Typography>
                       </ListItemText>
                       <ListItemIcon>
@@ -540,9 +548,9 @@ const Post = ({ post }) => {
                       <ListItemText
                         style={{ marginLeft: "20px", marginRight: "80px" }}
                       >
-                        <Typography variant="h6">Bạn bè</Typography>
+                        <Typography variant="h6">{trl("Bạn bè")}</Typography>
                         <Typography variant="body2" color="textSecondary">
-                          Bạn bè của bạn trên TinySocial
+                          {trl("Bạn bè của bạn trên TinySocial")}
                         </Typography>
                       </ListItemText>
                       <ListItemIcon>
@@ -577,9 +585,11 @@ const Post = ({ post }) => {
                       <ListItemText
                         style={{ marginLeft: "20px", marginRight: "80px" }}
                       >
-                        <Typography variant="h6">Bạn bè cụ thể</Typography>
+                        <Typography variant="h6">
+                          {trl("Bạn bè cụ thể")}
+                        </Typography>
                         <Typography variant="body2" color="textSecondary">
-                          Chỉ định riêng những người bạn muốn
+                          {trl("Chỉ định riêng những người bạn muốn")}
                         </Typography>
                       </ListItemText>
                       <ListItemIcon>
@@ -614,7 +624,9 @@ const Post = ({ post }) => {
                       <ListItemText
                         style={{ marginLeft: "20px", marginRight: "80px" }}
                       >
-                        <Typography variant="h6">Chỉ mình tôi</Typography>
+                        <Typography variant="h6">
+                          {trl("Chỉ mình tôi")}
+                        </Typography>
                       </ListItemText>
                       <ListItemIcon>
                         <Radio
@@ -635,10 +647,10 @@ const Post = ({ post }) => {
               <Divider />
               <DialogActions>
                 <Button onClick={handleSave} color="primary">
-                  Save
+                  {trl("Save")}
                 </Button>
                 <Button onClick={handleSeeDialogClose} color="secondary">
-                  Cancel
+                  {trl("Cancel")}
                 </Button>
               </DialogActions>
             </Dialog>
@@ -679,21 +691,23 @@ const Post = ({ post }) => {
                   onClick={handleLike}
                 />
               )}
-              {data?.length} Likes
+              {data?.length < 2
+                ? trl([data?.length, " ", "Like"])
+                : trl([data?.length, " ", "Likes"])}
             </div>
             <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
               <TextsmsOutlinedIcon />
-              See Comments
+              {trl("See Comments")}
             </div>
             <div className="item" onClick={() => handleShare()}>
               <ShareOutlinedIcon />
-              Share
+              {trl("Share")}
             </div>
             <PopupWindow handleClose={handleShare} show={showSharePopup}>
               <div>
                 <EditIcon sx={{ marginRight: "8px", fontSize: "20px" }} />
                 <span style={{ fontSize: "22px", fontWeight: "700" }}>
-                  Share this post
+                  {trl("Share this post")}
                 </span>
               </div>
               <hr />
@@ -769,10 +783,10 @@ const Post = ({ post }) => {
                 }}
               >
                 <button className="share" onClick={handleShareApi}>
-                  SHARE
+                  {trl("SHARE")}
                 </button>
                 <button className="cancel" onClick={handleShare}>
-                  CANCEL
+                  {trl("CANCEL")}
                 </button>
               </div>
             </PopupWindow>

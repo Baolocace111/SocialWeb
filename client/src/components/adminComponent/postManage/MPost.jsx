@@ -467,7 +467,9 @@ const MPost = ({ post }) => {
                       <ListItemText
                         style={{ marginLeft: "20px", marginRight: "80px" }}
                       >
-                        <Typography variant="h6">Bạn bè cụ thể</Typography>
+                        <Typography variant="h6">
+                          {trl("Bạn bè cụ thể")}
+                        </Typography>
                         <Typography variant="body2" color="textSecondary">
                           {trl("Chỉ định riêng những người bạn muốn")}
                         </Typography>
