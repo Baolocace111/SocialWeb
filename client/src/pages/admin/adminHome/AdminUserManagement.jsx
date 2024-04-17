@@ -2,6 +2,7 @@ import "./adminUserManagement.scss";
 import { useState } from "react";
 import { useEffect } from "react";
 import { makeRequest } from "../../../axios";
+import { useLanguage } from "../../../context/languageContext";
 const AdminUserManagement = () => {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -45,6 +46,7 @@ const AdminUserManagement = () => {
   );
 };
 const UserList = ({ users }) => {
+  const { trl } = useLanguage();
   return (
     <div>
       {users.map((user) => (
@@ -58,13 +60,19 @@ const UserList = ({ users }) => {
         >
           <img
             src={`http://localhost:8800/api/admin/profilePic/${user.id}`}
-            alt={`${user.username}'s profile`}
+            alt={`${user.username}${trl("'s profile")}`}
             style={{ width: "100px", height: "100px", objectFit: "cover" }}
           />
           <h3>{user.name}</h3>
-          <p>Username: {user.username}</p>
+          <p>
+            {trl("Username")}: {user.username}
+          </p>
           <p>Email: {user.email}</p>
-          {user.city && <p>City: {user.city}</p>}
+          {user.city && (
+            <p>
+              {trl("City")}: {user.city}
+            </p>
+          )}
           {user.website && (
             <p>
               Website:{" "}
@@ -73,15 +81,31 @@ const UserList = ({ users }) => {
               </a>
             </p>
           )}
-          <p>Gender: {user.gender === 0 ? "Male" : "Female"}</p>
-          <p>State: {user.state === 0 ? "Inactive" : "Active"}</p>
+          <p>
+            {trl("Gender")}: {user.gender === 0 ? "Male" : "Female"}
+          </p>
+          <p>
+            {trl("State")}: {user.state === 0 ? "Inactive" : "Active"}
+          </p>
           {user.birthdate && (
-            <p>Birthdate: {new Date(user.birthdate).toLocaleDateString()}</p>
+            <p>
+              {trl("Birthdate")}:{" "}
+              {new Date(user.birthdate).toLocaleDateString()}
+            </p>
           )}
-          <p>Joined on: {new Date(user.create_at).toLocaleDateString()}</p>
-          <p>Last updated: {new Date(user.update_at).toLocaleDateString()}</p>
-          <p>Role: {user.role === 1 ? "Admin" : "User"}</p>
-          <p>Reputation: {user.reputation}</p>
+          <p>
+            {trl("Joined on")}: {new Date(user.create_at).toLocaleDateString()}
+          </p>
+          <p>
+            {trl("Last updated")}:{" "}
+            {new Date(user.update_at).toLocaleDateString()}
+          </p>
+          <p>
+            {trl("Role")}: {user.role === 1 ? "Admin" : "User"}
+          </p>
+          <p>
+            {trl("Reputation")}: {user.reputation}
+          </p>
         </div>
       ))}
     </div>
@@ -89,6 +113,7 @@ const UserList = ({ users }) => {
 };
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+  const { trl } = useLanguage();
   const pageNumbers = [];
 
   for (let i = 1; i <= totalPages; i++) {
@@ -108,7 +133,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         {currentPage > 1 && (
           <li style={{ margin: "0 5px" }}>
             <button onClick={() => onPageChange(currentPage - 1)}>
-              Previous
+              {trl("Previous")}
             </button>
           </li>
         )}
@@ -124,7 +149,9 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         ))}
         {currentPage < totalPages && (
           <li style={{ margin: "0 5px" }}>
-            <button onClick={() => onPageChange(currentPage + 1)}>Next</button>
+            <button onClick={() => onPageChange(currentPage + 1)}>
+              {trl("Next")}
+            </button>
           </li>
         )}
       </ul>
@@ -133,6 +160,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 };
 
 const SearchBar = ({ onSearch }) => {
+  const { trl } = useLanguage();
   const [input, setInput] = useState("");
 
   const handleSearch = () => {
@@ -146,7 +174,7 @@ const SearchBar = ({ onSearch }) => {
         value={input}
         onChange={(e) => setInput(e.target.value)}
       />
-      <button onClick={handleSearch}>Search</button>
+      <button onClick={handleSearch}>{trl("Search")}</button>
     </div>
   );
 };
