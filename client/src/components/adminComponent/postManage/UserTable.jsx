@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { makeRequest } from "../../../axios";
 import MPost from "./MPost";
 import "./userTable.scss";
+import { useLanguage } from "../../../context/languageContext";
 const UserTable = ({ year, month }) => {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -11,6 +12,7 @@ const UserTable = ({ year, month }) => {
   const [posts, setPosts] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [draggedPost, setDraggedPost] = useState(null);
+  const { trl } = useLanguage();
   // Fetch user data
   const fetchUserData = async () => {
     try {
@@ -22,7 +24,7 @@ const UserTable = ({ year, month }) => {
       setUsers(response.data.lists);
       setTotalPages(response.data.totalPages);
     } catch (error) {
-      setError(error.response?.data || "An unexpected error occurred");
+      setError(error.response?.data || trl("An unexpected error occurred"));
     }
   };
 
@@ -39,7 +41,7 @@ const UserTable = ({ year, month }) => {
       // Update currentPostPage state here if necessary
       setCurrentPostPage(postPage);
     } catch (error) {
-      setError(error.response?.data || "An unexpected error occurred");
+      setError(error.response?.data || trl("An unexpected error occurred"));
     }
   };
   const onclickUser = (user) => {
@@ -59,7 +61,9 @@ const UserTable = ({ year, month }) => {
       // Hiển thị hộp thoại xác nhận
       if (
         window.confirm(
-          `Are you sure you want to delete the post with ID: ${draggedPost.id}?`
+          `${trl("Are you sure you want to delete the post with ID")}: ${
+            draggedPost.id
+          }?`
         )
       ) {
         // Gọi API để xóa bài viết
@@ -67,7 +71,7 @@ const UserTable = ({ year, month }) => {
           .delete(`/admin/deletepost?postid=${draggedPost.id}`)
           .then((response) => {
             // Xử lý sau khi xóa thành công
-            console.log("Post deleted:", response);
+            //console.log("Post deleted:", response);
             // Cập nhật UI
             setPosts((prevPosts) =>
               prevPosts.filter((post) => post.id !== draggedPost.id)
@@ -107,7 +111,7 @@ const UserTable = ({ year, month }) => {
       {error && <h2>{error}</h2>}
       <div className="m_postusertable">
         <h1>
-          Admin User Page {month} - {year}
+          {trl("Admin User Page")} {month} - {year}
         </h1>
         {error && (
           <>
@@ -118,9 +122,9 @@ const UserTable = ({ year, month }) => {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Username</th>
-              <th>Name</th>
-              <th>Total Posts</th>
+              <th>{trl("Username")}</th>
+              <th>{trl("Name")}</th>
+              <th>{trl("Total Posts")}</th>
             </tr>
           </thead>
           <tbody>
@@ -149,7 +153,7 @@ const UserTable = ({ year, month }) => {
               onDrop={handleDrop}
               className="delete-zone"
             >
-              Drag posts here to delete
+              {trl("Drag posts here to delete")}
             </div>
             <div>
               {posts.map((post) => (

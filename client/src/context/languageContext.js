@@ -22,7 +22,16 @@ export const LanguageProvider = ({ children }) => {
   const trl = (key) => {
     // Lấy tệp dịch tương ứng với ngôn ngữ hiện tại
     const translations = require(`../language/${language}.json`);
-    return translations[key] || key;
+    if (typeof key === "string") {
+      // Nếu key là một chuỗi, trả về bản dịch tương ứng hoặc key nếu không có bản dịch
+      return translations[key] || key;
+    } else if (Array.isArray(key)) {
+      // Nếu key là một mảng, xử lý mỗi phần tử trong mảng và dịch
+      return key.map((k) => translations[k] || k).join(" ");
+    } else {
+      // Trường hợp khác, trả về key ban đầu
+      return key;
+    }
   };
 
   return (

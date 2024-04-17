@@ -42,7 +42,12 @@ import {
   ListItemIcon,
 } from "@mui/material";
 import moment from "moment";
+import { useLanguage } from "../../../context/languageContext";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+
+import "moment/locale/vi";
+//import "moment/locale/en";
+import "moment/locale/ja";
 const MPost = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
@@ -53,6 +58,12 @@ const MPost = ({ post }) => {
   const [openSeeEdit, setOpenSeeEdit] = useState(false);
   const [selectedValue, setSelectedValue] = useState(0); // State để lưu giá trị của Radio được chọn
   const privateRef = useRef(null);
+  const { trl, language } = useLanguage();
+  useEffect(() => {
+    if (language === "jp") moment.locale("ja");
+    if (language === "vn") moment.locale("vi");
+    else moment.locale("en");
+  }, []);
 
   const isVideoContent = post.img
     ? post.img.endsWith(".mp4") ||
@@ -119,7 +130,7 @@ const MPost = ({ post }) => {
   //End Use Mutation
 
   const handleShare = () => {
-    setShareDesc("");
+    setShareDesc(trl(""));
     setShowSharePopup(!showSharePopup);
     setMenuAnchor(null);
   };
@@ -178,7 +189,7 @@ const MPost = ({ post }) => {
                   <FontAwesomeIcon icon={faPen} />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Chỉnh sửa bài viết"
+                  primary={trl("Chỉnh sửa bài viết")}
                   style={{ fontSize: "14px", marginRight: "50px" }}
                 />
               </ListItemButton>
@@ -190,7 +201,7 @@ const MPost = ({ post }) => {
                   <FontAwesomeIcon icon={faLock} />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Chỉnh sửa đối tượng"
+                  primary={trl("Chỉnh sửa đối tượng")}
                   style={{ fontSize: "14px", marginRight: "50px" }}
                 />
               </ListItemButton>
@@ -203,7 +214,7 @@ const MPost = ({ post }) => {
                     <FontAwesomeIcon icon={faTrashCan} />
                   </ListItemIcon>
                   <ListItemText
-                    primary="Xóa bài viết"
+                    primary={trl("Xóa bài viết")}
                     style={{ fontSize: "14px", marginRight: "50px" }}
                   />
                 </ListItemButton>
@@ -220,7 +231,7 @@ const MPost = ({ post }) => {
                 >
                   <EditIcon sx={{ marginRight: "8px", fontSize: "20px" }} />
                   <span style={{ fontSize: "22px", fontWeight: "700" }}>
-                    Chỉnh sửa bài viết
+                    {trl("Chỉnh sửa bài viết")}
                   </span>
                 </Typography>
               </DialogTitle>
@@ -262,7 +273,7 @@ const MPost = ({ post }) => {
                 </div>
                 <TextareaAutosize
                   minRows={2}
-                  placeholder="Nhập nội dung mới của bạn"
+                  placeholder={trl("Nhập nội mô tả của bạn")}
                   defaultValue={post.desc}
                   onChange={(e) => setDesc(e.target.value)}
                   style={{
@@ -320,9 +331,9 @@ const MPost = ({ post }) => {
               </DialogContent>
               <Divider />
               <DialogActions>
-                <Button color="primary">Save</Button>
+                <Button color="primary">{trl("SAVE")}</Button>
                 <Button onClick={handleDialogClose} color="secondary">
-                  Cancel
+                  {trl("CANCEL")}
                 </Button>
               </DialogActions>
             </Dialog>
@@ -340,7 +351,7 @@ const MPost = ({ post }) => {
                     icon={faLock}
                   />
                   <span style={{ fontSize: "22px", fontWeight: "700" }}>
-                    Chỉnh sửa đối tượng
+                    {trl("Chỉnh sửa đối tượng")}
                   </span>
                 </Typography>
               </DialogTitle>
@@ -380,9 +391,11 @@ const MPost = ({ post }) => {
                       <ListItemText
                         style={{ marginLeft: "20px", marginRight: "80px" }}
                       >
-                        <Typography variant="h6">Công khai</Typography>
+                        <Typography variant="h6">{trl("Công khai")}</Typography>
                         <Typography variant="body2" color="textSecondary">
-                          Ai trên TinySocial cũng sẽ nhìn thấy bài viết này
+                          {trl(
+                            "Ai trên TinySocial cũng sẽ nhìn thấy bài viết này"
+                          )}
                         </Typography>
                       </ListItemText>
                       <ListItemIcon>
@@ -417,9 +430,9 @@ const MPost = ({ post }) => {
                       <ListItemText
                         style={{ marginLeft: "20px", marginRight: "80px" }}
                       >
-                        <Typography variant="h6">Bạn bè</Typography>
+                        <Typography variant="h6">{trl("Bạn bè")}</Typography>
                         <Typography variant="body2" color="textSecondary">
-                          Bạn bè của bạn trên TinySocial
+                          {trl("Bạn bè của bạn trên TinySocial")}
                         </Typography>
                       </ListItemText>
                       <ListItemIcon>
@@ -456,7 +469,7 @@ const MPost = ({ post }) => {
                       >
                         <Typography variant="h6">Bạn bè cụ thể</Typography>
                         <Typography variant="body2" color="textSecondary">
-                          Chỉ định riêng những người bạn muốn
+                          {trl("Chỉ định riêng những người bạn muốn")}
                         </Typography>
                       </ListItemText>
                       <ListItemIcon>
@@ -491,7 +504,9 @@ const MPost = ({ post }) => {
                       <ListItemText
                         style={{ marginLeft: "20px", marginRight: "80px" }}
                       >
-                        <Typography variant="h6">Chỉ mình tôi</Typography>
+                        <Typography variant="h6">
+                          {trl("Chỉ mình tôi")}
+                        </Typography>
                       </ListItemText>
                       <ListItemIcon>
                         <Radio
@@ -511,9 +526,9 @@ const MPost = ({ post }) => {
               </DialogContent>
               <Divider />
               <DialogActions>
-                <Button color="primary">Save</Button>
+                <Button color="primary">{trl("SAVE")}</Button>
                 <Button onClick={handleSeeDialogClose} color="secondary">
-                  Cancel
+                  {trl("CANCEL")}
                 </Button>
               </DialogActions>
             </Dialog>
@@ -550,18 +565,20 @@ const MPost = ({ post }) => {
               ) : (
                 <FavoriteBorderOutlinedIcon className="white-color-heart" />
               )}
-              {data?.length} Likes
+              {data?.length < 2
+                ? trl([data?.length, " ", "Like"])
+                : trl([data?.length, " ", "Likes"])}
             </div>
             <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
               <TextsmsOutlinedIcon />
-              See Comments
+              {trl("See Comments")}
             </div>
 
             <PopupWindow handleClose={handleShare} show={showSharePopup}>
               <div>
                 <EditIcon sx={{ marginRight: "8px", fontSize: "20px" }} />
                 <span style={{ fontSize: "22px", fontWeight: "700" }}>
-                  Share this post
+                  {trl("Share this post")}
                 </span>
               </div>
               <hr />
@@ -606,7 +623,7 @@ const MPost = ({ post }) => {
                 </div>
                 <TextareaAutosize
                   minRows={2}
-                  placeholder="Nhập nội mô tả của bạn"
+                  placeholder={trl("Nhập nội mô tả của bạn")}
                   defaultValue={shareDesc}
                   onChange={(e) => setShareDesc(e.target.value)}
                   style={{
@@ -636,9 +653,9 @@ const MPost = ({ post }) => {
                   gap: "20px",
                 }}
               >
-                <button className="share">SHARE</button>
+                <button className="share">{trl("SHARE")}</button>
                 <button className="cancel" onClick={handleShare}>
-                  CANCEL
+                  {trl("CANCEL")}
                 </button>
               </div>
             </PopupWindow>
