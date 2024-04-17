@@ -5,8 +5,9 @@ import { makeRequest } from "../../../axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import LanguageSwitcher from "../../languageSwitcher/LanguageSwitcher";
-
+import { useLanguage } from "../../../context/languageContext";
 const AdminLeftBar = () => {
+  const { trl } = useLanguage();
   const { currentUser, logout } = useContext(AuthContext);
   const [showBar, setShowBar] = useState(false);
   const handleLogout = async (e) => {
@@ -41,7 +42,7 @@ const AdminLeftBar = () => {
           }}
         >
           {" "}
-          Post Management{" "}
+          {trl("Post Management")}{" "}
         </div>
         <div
           className="click-tag"
@@ -50,7 +51,7 @@ const AdminLeftBar = () => {
           }}
         >
           {" "}
-          User Management{" "}
+          {trl("User Management")}{" "}
         </div>
         {false && (
           <div
@@ -68,7 +69,7 @@ const AdminLeftBar = () => {
           <LanguageSwitcher text={true}></LanguageSwitcher>
         </div>
         <div className="click-tag" onClick={handleLogout}>
-          Logout
+          {trl("Logout")}
         </div>
       </div>
     </>
