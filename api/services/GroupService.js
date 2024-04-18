@@ -49,3 +49,46 @@ export const getGroupsBySearchText = (searchText, userId, callback) => {
         return callback(null, data);
     });
 };
+
+export const getPendingGroupPosts = (userId, groupId, offset, callback) => {
+    groupModel.checkIfUserIsGroupLeader(userId, groupId, (err, isLeader) => {
+        if (err) return callback(err, null);
+        if (!isLeader) {
+            return callback(new Error("Only group leaders can view pending posts."), null);
+        }
+
+        const limit = 3; // Số lượng bài viết trên mỗi trang
+        groupModel.getPendingPostsByGroupId(groupId, offset, limit, (err, data) => {
+            if (err) return callback(err, null);
+            return callback(null, data);
+        });
+    });
+};
+
+export const approvePendingGroupPost = (userId, groupId, postId, callback) => {
+    groupModel.checkIfUserIsGroupLeader(userId, groupId, (err, isLeader) => {
+        if (err) return callback(err, null);
+        if (!isLeader) {
+            return callback(new Error("Only group leaders can approve posts."), null);
+        }
+
+        groupModel.approveGroupPost(postId, groupId, (err, result) => {
+            if (err) return callback(err, null);
+            return callback(null, result);
+        });
+    });
+};
+
+export const rejectPendingGroupPost = (userId, groupId, postId, callback) => {
+    groupModel.checkIfUserIsGroupLeader(userId, groupId, (err, isLeader) => {
+        if (err) return callback(err, null);
+        if (!isLeader) {
+            return callback(new Error("Only group leaders can reject posts."), null);
+        }
+
+        groupModel.rejectGroupPost(postId, groupId, (err, result) => {
+            if (err) return callback(err, null);
+            return callback(null, result);
+        });
+    });
+};

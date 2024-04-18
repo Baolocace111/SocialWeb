@@ -128,3 +128,77 @@ export const searchGroupsController = async (req, res) => {
         return res.status(500).json(error);
     }
 }
+
+export const getPendingGroupPosts = async (req, res) => {
+    try {
+        const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+        const { groupId } = req.params;
+        const offset = Number(req.query.offset) || 1; // Thêm offset từ query
+
+        AuthService.IsAccountBanned(userId, async (err, data) => {
+            if (err) {
+                return res.status(500).json({ error: "This account is banned" });
+            }
+
+            groupService.getPendingGroupPosts(userId, groupId, offset, (err, data) => {
+                if (err) return res.status(500).json({ error: err.message });
+
+                const next = data.length < 3 ? -1 : offset + 1;
+
+                return res.status(200).json({ data, next });
+            });
+        });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+};
+
+export const approveGroupPost = async (req, res) => {
+    try {
+        const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+        const { groupId } = req.params;
+        const { postId } = req.body;
+
+        if (!postId) {
+            return res.status(400).json({ error: "Post ID is required" });
+        }
+
+        AuthService.IsAccountBanned(userId, async (err) => {
+            if (err) {
+                return res.status(500).json({ error: "This account is banned" });
+            }
+
+            groupService.approvePendingGroupPost(userId, groupId, postId, (err, result) => {
+                if (err) return res.status(500).json({ error: err.message });
+                return res.status(200).json(result);
+            });
+        });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+};
+
+export const rejectGroupPost = async (req, res) => {
+    try {
+        const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+        const { groupId } = req.params;
+        const { postId } = req.body;
+
+        if (!postId) {
+            return res.status(400).json({ error: "Post ID is required" });
+        }
+
+        AuthService.IsAccountBanned(userId, async (err) => {
+            if (err) {
+                return res.status(500).json({ error: "This account is banned" });
+            }
+
+            groupService.rejectPendingGroupPost(userId, groupId, postId, (err, result) => {
+                if (err) return res.status(500).json({ error: err.message });
+                return res.status(200).json(result);
+            });
+        });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+};

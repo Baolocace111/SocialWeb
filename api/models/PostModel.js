@@ -448,9 +448,8 @@ export const getGroupPosts = (groupId, offset, limit, callback) => {
     SELECT posts.*, users.name, users.profilePic 
     FROM posts 
     JOIN users ON posts.userId = users.id
-    WHERE posts.type = 3 AND posts.id IN (
-      SELECT post_id FROM group_posts WHERE group_id = ?
-    )
+    JOIN group_posts ON posts.id = group_posts.post_id
+    WHERE posts.type = 3 AND group_posts.group_id = ? AND group_posts.status = 1
     ORDER BY posts.createdAt DESC 
     LIMIT ? OFFSET ?`;
 

@@ -42,8 +42,19 @@ import Description from "../../post/desc";
 import Private from "../../post/Private";
 import { Link } from "react-router-dom";
 import ReactPlayer from "react-player";
+import { useLanguage } from "../../../context/languageContext";
 
 const GroupPost = ({ post }) => {
+    const { trl, language } = useLanguage();
+    useEffect(() => {
+        if (language === "jp") {
+            moment.locale("ja");
+        } else if (language === "vn") {
+            moment.locale("vi");
+        } else {
+            moment.locale("en");
+        }
+    }, [language]);
     const [commentOpen, setCommentOpen] = useState(false);
     const [menuAnchor, setMenuAnchor] = useState(null);
     const [deleteImage, setDeleteImage] = useState(false);

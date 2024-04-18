@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { forwardRef, useState, useEffect } from "react";
 import { useImperativeHandle } from "react";
-import { makeRequest } from "../../axios";
+import { URL_OF_BACK_END, makeRequest } from "../../axios";
 import ThreePointLoading from "../loadingComponent/threepointLoading/ThreePointLoading";
 import { useLanguage } from "../../context/languageContext";
 import "./private.scss";
@@ -115,7 +115,7 @@ const Private = forwardRef((props, ref) => {
               >
                 <img
                   className="profile-pic"
-                  src={`/upload/${user.profilePic}`}
+                  src={`${URL_OF_BACK_END}users/profilePic/${user.id}`}
                   alt={`${user.name}`}
                 />
                 <span className="user-name">{user.name}</span>
