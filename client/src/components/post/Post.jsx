@@ -49,10 +49,14 @@ import { useLanguage } from "../../context/languageContext";
 const Post = ({ post }) => {
   const { trl, language } = useLanguage();
   useEffect(() => {
-    if (language === "jp") moment.locale("ja");
-    if (language === "vn") moment.locale("vi");
-    else moment.locale("en");
-  }, []);
+    if (language === "jp") {
+      moment.locale("ja");
+    } else if (language === "vn") {
+      moment.locale("vi");
+    } else {
+      moment.locale("en");
+    }
+  }, [language]);
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [deleteImage, setDeleteImage] = useState(false);
@@ -65,8 +69,8 @@ const Post = ({ post }) => {
 
   const isVideoContent = post.img
     ? post.img.endsWith(".mp4") ||
-      post.img.endsWith(".avi") ||
-      post.img.endsWith(".mov")
+    post.img.endsWith(".avi") ||
+    post.img.endsWith(".mov")
     : false;
 
   useEffect(() => {

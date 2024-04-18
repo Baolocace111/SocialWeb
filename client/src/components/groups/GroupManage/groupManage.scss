@@ -9,6 +9,7 @@
         overflow: hidden;
         background-color: themed("bg");
         color: themed("textColor");
+        z-index: 1;
 
         @include mobile {
             display: none;
