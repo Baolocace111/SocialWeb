@@ -12,7 +12,7 @@
     align-items: center;
     padding: 20px;
     background-color: #e6e6e6; // Màu nền cho tiêu đề thông báo, tạo độ tương phản
-    border-bottom: 1px solid #ccc; // Đường kẻ phân cách
+    border-bottom: 1px solid #ccc;
 
     span {
       font-size: 22px;
@@ -50,10 +50,10 @@
     }
 
     img {
-      width: 50px; // Giảm kích thước ảnh để tăng không gian cho nội dung
+      width: 50px;
       height: 50px;
       border-radius: 50%;
-      object-fit: cover; // Đảm bảo ảnh không bị méo
+      object-fit: contain;
     }
 
     .content-notification {
@@ -63,8 +63,14 @@
         font-size: 15px;
         overflow: hidden;
         text-overflow: ellipsis;
-        white-space: nowrap; // Tránh xuống dòng văn bản trong thông báo
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        line-height: 1.5;
+        max-height: calc(1.5 * 3);
+        white-space: pre-line;
       }
+
 
       .date {
         font-size: 13px;
@@ -105,8 +111,8 @@
     width: 100%;
     padding: 10px 0;
     border: none;
-    background-color: #d9d9d9; // Màu nền cho nút
-    border-top: 1px solid #ccc; // Đường kẻ phân cách
+    background-color: #d9d9d9;
+    border-top: 1px solid #ccc;
     cursor: pointer;
 
     &:hover {

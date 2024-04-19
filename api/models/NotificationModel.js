@@ -12,6 +12,7 @@ export const createNotification = (userId, message, link, image, callback) => {
     return callback(null, "Notification has been created");
   });
 };
+
 // Function to get paginated notifications for a specific user and mark them as read
 export const getAndMarkPaginatedNotifications = (
   userId,
@@ -21,32 +22,49 @@ export const getAndMarkPaginatedNotifications = (
 ) => {
   const offset = (page - 1) * pageSize;
 
+  const userLinkCondition =
+    "notifications.link LIKE '/profile/%' OR notifications.link LIKE '/seepost/%'";
+
   const qSelect =
-    "SELECT notifications.*, users.id AS userInteractionId, users.profilePic " +
-    "FROM notifications " +
-    "JOIN users ON users.id = SUBSTRING_INDEX(SUBSTRING_INDEX(notifications.message, '/profile/', -1), '\"', 1) " +
-    "WHERE notifications.userId = ? " +
-    "ORDER BY createdAt DESC " +
-    "LIMIT ?, ?";
+    `SELECT notifications.*,
+            CASE
+                WHEN ${userLinkCondition} THEN users.profilePic
+                WHEN notifications.link LIKE '/groups/%' THEN teams.group_avatar
+                ELSE NULL
+            END AS interactionAvatar,
+            CASE
+                WHEN ${userLinkCondition} THEN users.id
+                WHEN notifications.link LIKE '/groups/%' THEN teams.id
+                ELSE NULL
+            END AS interactionId
+     FROM notifications
+     LEFT JOIN users ON (${userLinkCondition}) AND users.id = SUBSTRING_INDEX(SUBSTRING_INDEX(notifications.message, '/profile/', -1), '\"', 1)
+     LEFT JOIN teams ON notifications.link LIKE '/groups/%' AND teams.id = SUBSTRING_INDEX(notifications.link, '/groups/', -1)
+     WHERE notifications.userId = ?
+     ORDER BY notifications.createdAt DESC
+     LIMIT ?, ?`;
   const valuesSelect = [userId, offset, pageSize];
 
   db.query(qSelect, valuesSelect, (err, notifications) => {
     if (err) return callback(err, null);
-    if (notifications.length === 0) return callback(null, []);
 
-    const notificationIds = notifications.map((notification) => notification.id);
-
-    const qUpdate = "UPDATE notifications SET `read` = ? WHERE id IN (?)";
-    const valuesUpdate = [true, notificationIds];
-
-    db.query(qUpdate, valuesUpdate, (updateErr, updateResult) => {
-      if (updateErr) return callback(updateErr, null);
-
-      // Here, 'notifications' contains paginated notifications with 'read' status updated
-      return callback(null, notifications);
-    });
+    // Đánh dấu các thông báo là đã đọc
+    const notificationIds = notifications.map(notification => notification.id);
+    if (notificationIds.length > 0) {
+      const qUpdate = "UPDATE notifications SET `read` = 1 WHERE id IN (?)";
+      db.query(qUpdate, [notificationIds], (updateErr, updateResult) => {
+        if (updateErr) {
+          return callback(updateErr, null);
+        }
+        // Trả về kết quả thông báo sau khi đã cập nhật trạng thái `read`
+        return callback(null, notifications);
+      });
+    } else {
+      return callback(null, []);
+    }
   });
 };
+
 // Function to delete a notification for a specific user by its ID
 export const deleteNotification = (userId, notificationId, callback) => {
   const qDelete = "DELETE FROM notifications WHERE id = ? AND userId = ?";
