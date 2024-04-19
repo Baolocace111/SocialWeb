@@ -1,0 +1,83 @@
+@import "../../style.scss";
+
+.listFriendRequest-container {
+  width: 360px;
+  margin: 0 auto;
+
+  // Các styles của bạn ở đây
+
+  .listFriendRequest-item {
+    display: flex;
+    margin: 15px 15px;
+    align-items: center;
+  }
+
+  .listFriendRequest-avatarWrapper {
+    margin-right: 15px;
+    flex: 0 0 auto;
+  }
+
+  .listFriendRequest-profileLink {
+    cursor: pointer;
+  }
+
+  .listFriendRequest-avatar {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+  }
+
+  .listFriendRequest-requestDetails {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .listFriendRequest-requestName {
+    margin-bottom: 10px;
+  }
+
+  .listFriendRequest-actionButtons {
+    display: grid;
+    grid-template-columns: 1fr 10px 1fr;
+  }
+
+  .listFriendRequest-acceptButton,
+  .listFriendRequest-denyButton {
+    cursor: pointer;
+    background-color: white;
+    border: none;
+    padding: 8px 16px;
+    border: solid black;
+    color: rgb(0, 0, 0);
+  }
+  .listFriendRequest-acceptButton {
+    &:hover {
+      background-color: rgb(129, 255, 75);
+    }
+  }
+  .listFriendRequest-denyButton {
+    &:hover {
+      background-color: rgb(255, 70, 70);
+    }
+  }
+
+  .listFriendRequest-buttonSpacer {
+    width: 10px;
+  }
+
+  .listFriendRequest-showMoreButton {
+    width: 100%;
+    padding: 10px 0;
+    border: none;
+    background-color: blue;
+    color: white;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgb(0, 0, 173);
+    }
+  }
+}
