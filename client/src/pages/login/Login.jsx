@@ -5,6 +5,8 @@ import "./login.scss";
 import LanguageSwitcher from "../../components/languageSwitcher/LanguageSwitcher";
 // import { FaFacebook, FaGoogle } from 'react-icons/fa';
 import { useLanguage } from "../../context/languageContext";
+import PopupWindow from "../../components/PopupComponent/PopupWindow";
+import CircleProgressBar from "../../components/loadingComponent/CircleProgressBar/CircleProgressBar";
 const Login = () => {
   const { trl } = useLanguage();
   const [inputs, setInputs] = useState({
@@ -12,9 +14,11 @@ const Login = () => {
     password: "",
   });
   const [err, setErr] = useState(null);
-
+  const [checkConnection, setCheckConnection] = useState(true);
   const navigate = useNavigate();
-
+  const closePopup = () => {
+    setCheckConnection(false);
+  };
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -34,6 +38,9 @@ const Login = () => {
 
   return (
     <div className="login">
+      <PopupWindow show={checkConnection}>
+        <CircleProgressBar handleClose={closePopup}></CircleProgressBar>
+      </PopupWindow>
       <div className="float">
         <LanguageSwitcher text={true}></LanguageSwitcher>
       </div>
