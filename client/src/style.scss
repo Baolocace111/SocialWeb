@@ -2,18 +2,22 @@ $themes: (
   light: (
     textColor: #000,
     bg: white,
-    logo: darkblue,
+    logo: rgb(169, 37, 160),
     bgSoft: #f6f3f3,
     textColorSoft: #555,
     border: lightgray,
+    buttonTextColor: white,
+    buttonBackgroundColor: rgb(169, 37, 160),
   ),
   dark: (
     textColor: whitesmoke,
     bg: #222,
-    logo: white,
+    logo: rgb(221, 195, 219),
     bgSoft: #333,
     textColorSoft: lightgray,
     border: #444,
+    buttonTextColor: black,
+    buttonBackgroundColor: rgb(221, 195, 219),
   ),
 );
 

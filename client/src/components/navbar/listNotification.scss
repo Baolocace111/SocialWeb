@@ -1,94 +1,116 @@
 .list-notification {
-    width: 360px;
-    height: 500px;
+  width: 500px;
 
-    .title-notification {
-        display: flex;
-        align-items: center;
-        padding: 20px 20px 0 20px;
+  height: fit-content;
+  max-height: 800px;
+  background-color: #f5f5f5; // Màu nền nhẹ cho toàn bộ danh sách thông báo
 
-        span {
-            font-size: 22px;
-            font-weight: 700;
-        }
+  overflow-y: auto; // Cho phép cuộn nếu nội dung quá dài
 
-        .more {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-left: auto;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-        }
+  .title-notification {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background-color: #e6e6e6; // Màu nền cho tiêu đề thông báo, tạo độ tương phản
+    border-bottom: 1px solid #ccc; // Đường kẻ phân cách
 
-        .more:hover {
-            background-color: gainsboro;
-        }
+    span {
+      font-size: 22px;
+      font-weight: 700;
     }
 
-    .item-notification {
-        position: relative;
+    .more {
+      margin-left: auto;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
+      &:hover {
+        background-color: gainsboro;
+      }
+    }
+  }
+
+  .item-notification {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    margin: 10px auto;
+    gap: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #e6e6e6; // Màu nền khi di chuột vào item
+    }
+
+    img {
+      width: 50px; // Giảm kích thước ảnh để tăng không gian cho nội dung
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover; // Đảm bảo ảnh không bị méo
+    }
+
+    .content-notification {
+      flex-grow: 1; // Cho phép nội dung mở rộng để lấp đầy không gian
+
+      .message {
+        font-size: 15px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap; // Tránh xuống dòng văn bản trong thông báo
+      }
+
+      .date {
+        font-size: 13px;
+        color: #999; // Màu sắc nhẹ cho ngày tháng
+      }
+    }
+
+    .action-notification {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      button {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: none;
         display: flex;
         align-items: center;
-        margin: 10px;
-        padding: 10px;
-        gap: 15px;
-        border-radius: 10px;
+        justify-content: center;
+        background-color: #ff4d4d; // Màu sắc nổi bật cho nút xóa
         cursor: pointer;
-
-        img {
-            display: flex;
-            align-items: center;
-            width: 65px;
-            height: 65px;
-            border-radius: 50%;
-        }
-
-        .content-notification {
-            display: flex;
-            flex-direction: column;
-
-            .message {
-                font-size: 17px;
-                font-weight: 500;
-            }
-
-            .date {
-                font-size: 15px;
-                font-weight: 400;
-            }
-        }
-
-        .action-notification {
-            position: absolute;
-            top: 50%;
-            right: 10px;
-            transform: translate(0, -50%);
-            display: none;
-
-            button {
-                width: 35px;
-                height: 35px;
-                border-radius: 50%;
-                border: none;
-                font-size: 17px;
-                cursor: pointer;
-            }
-
-            button:hover {
-                background-color: gainsboro;
-            }
-        }
+        transition: background-color 0.3s;
 
         &:hover {
-            background-color: aliceblue;
-
-            .action-notification {
-                display: flex;
-            }
+          background-color: #e60000; // Đổi màu khi di chuột
         }
+
+        svg {
+          color: white; // Màu icon
+        }
+      }
     }
+  }
+
+  // Nút "Hiển thị thêm"
+  button {
+    width: 100%;
+    padding: 10px 0;
+    border: none;
+    background-color: #d9d9d9; // Màu nền cho nút
+    border-top: 1px solid #ccc; // Đường kẻ phân cách
+    cursor: pointer;
+
+    &:hover {
+      background-color: #bfbfbf; // Đổi màu khi di chuột
+    }
+  }
 }
