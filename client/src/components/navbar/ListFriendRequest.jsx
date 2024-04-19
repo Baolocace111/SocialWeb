@@ -3,6 +3,7 @@ import { URL_OF_BACK_END, makeRequest } from "../../axios";
 import { Link } from "react-router-dom";
 import NineCube from "../loadingComponent/nineCube/NineCube";
 import { useLanguage } from "../../context/languageContext";
+import "./listFriendRequest.scss";
 const ListFriendRequest = () => {
   const { trl } = useLanguage();
   const [requests, setRequests] = useState([]);
@@ -87,70 +88,63 @@ const ListFriendRequest = () => {
   };
   if (loading) fetchRequests();
   return (
-    <div style={{ width: "360px" }}>
+    <div className="listFriendRequest-container">
       {requests.map((request) => (
-        <div style={{ display: "flex", margin: "15px 10px" }} key={request.id}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginRight: "15px",
-              flex: "0 0 auto",
-            }}
-          >
+        <div className="listFriendRequest-item" key={request.id}>
+          <div className="listFriendRequest-avatarWrapper">
             <Link
               to={`/profile/${request.id}`}
-              style={{ cursor: "pointer" }}
+              className="listFriendRequest-profileLink"
               target="_blank"
             >
               <img
                 src={URL_OF_BACK_END + `users/profilePic/` + request.id}
-                style={{ borderRadius: "50%", width: "50px", height: "50px" }}
+                className="listFriendRequest-avatar"
                 onError={(e) => {
                   e.target.onerror = null;
                   e.target.src = "/upload/errorImage.png";
                 }}
-                alt={""}
+                alt={request.name}
               />
             </Link>
           </div>
-          <div
-            style={{
-              flex: "1",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <div style={{ marginBottom: "10px" }}>
+          <div className="listFriendRequest-requestDetails">
+            <div className="listFriendRequest-requestName">
               <Link
                 to={`/profile/${request.id}`}
-                style={{ cursor: "pointer" }}
+                className="listFriendRequest-profileLink"
                 target="_blank"
               >
                 {request.name}
               </Link>
             </div>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 10px 1fr",
-              }}
-            >
-              <>
-                <button onClick={() => handleAccept(request.id)}>
-                  {trl("Chấp nhận")}
-                </button>
-                <div></div>
-                <button onClick={() => handleDeny(request.id)}>
-                  {trl("Từ chối")}
-                </button>
-              </>
+            <div className="listFriendRequest-actionButtons">
+              <button
+                className="listFriendRequest-acceptButton"
+                onClick={() => handleAccept(request.id)}
+              >
+                {trl("Chấp nhận")}
+              </button>
+              <div className="listFriendRequest-buttonSpacer"></div>
+              <button
+                className="listFriendRequest-denyButton"
+                onClick={() => handleDeny(request.id)}
+              >
+                {trl("Từ chối")}
+              </button>
             </div>
           </div>
         </div>
       ))}
       {loading && <NineCube />}
-      {!loading && <button onClick={handleShowMore}>{trl("Show More")}</button>}
+      {!loading && (
+        <button
+          className="listFriendRequest-showMoreButton"
+          onClick={handleShowMore}
+        >
+          {trl("Show More")}
+        </button>
+      )}
     </div>
   );
 };
