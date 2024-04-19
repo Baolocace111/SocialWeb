@@ -1,4 +1,7 @@
+import { useLanguage } from "../../context/languageContext";
+
 const Error = ({ errorCode, errorMessage }) => {
+  const { trl } = useLanguage();
   return (
     <div
       style={{
@@ -10,7 +13,7 @@ const Error = ({ errorCode, errorMessage }) => {
         height: "100%",
       }}
     >
-      <h1>Error</h1>
+      <h1>{trl("Có lỗi xảy ra")}</h1>
 
       <img
         src="notificationtype/erroranimegirl.png"
