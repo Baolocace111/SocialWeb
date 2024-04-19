@@ -1,10 +1,12 @@
 import React from "react";
+import { useLanguage } from "../../../context/languageContext";
 import "./memberRequest.scss";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { URL_OF_BACK_END, makeRequest } from "../../../axios";
 
 const MemberRequest = ({ request }) => {
+  const { trl } = useLanguage();
   const queryClient = useQueryClient();
 
   const approveMutation = useMutation(
@@ -70,14 +72,14 @@ const MemberRequest = ({ request }) => {
           onClick={handleApprove}
           disabled={approveMutation.isLoading}
         >
-          Phê duyệt
+          {trl("Phê duyệt")}
         </button>
         <button
           className="deny"
           onClick={handleReject}
           disabled={rejectMutation.isLoading}
         >
-          Từ chối
+          {trl("Từ chối")}
         </button>
         <button className="more">
           <MoreHorizIcon fontSize="small" />

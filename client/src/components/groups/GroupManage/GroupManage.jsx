@@ -1,4 +1,5 @@
 import "./groupManage.scss";
+import { useLanguage } from "../../../context/languageContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleUp,
@@ -19,6 +20,7 @@ import { Link, useParams, useLocation } from "react-router-dom";
 import { URL_OF_BACK_END, makeRequest } from "../../../axios";
 
 const GroupManage = () => {
+  const { trl } = useLanguage();
   const { currentUser } = useContext(AuthContext);
   const { groupId } = useParams();
   const location = useLocation();
@@ -133,14 +135,14 @@ const GroupManage = () => {
                   />
                 )}
                 {groupDetails.privacy_level === 0
-                  ? "Nhóm Riêng tư"
-                  : "Nhóm Công khai"}
+                  ? trl("Nhóm Riêng tư")
+                  : trl("Nhóm Công khai")}
                 <FontAwesomeIcon
                   icon={faCircle}
                   style={{ fontSize: "2px", margin: "0 5px" }}
                 />
                 <span className="member-count">
-                  {groupUsers.length} thành viên
+                  {groupUsers.length} {trl("thành viên")}
                 </span>
               </div>
             </div>
@@ -155,18 +157,17 @@ const GroupManage = () => {
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
                   <div
-                    className={`menu-item ${
-                      isItemSelected("main-page") || isItemSelected(null)
-                        ? "selected"
-                        : ""
-                    }`}
+                    className={`menu-item ${isItemSelected("main-page") || isItemSelected(null)
+                      ? "selected"
+                      : ""
+                      }`}
                     onClick={() => handleItemClick("main-page")}
                   >
                     <FontAwesomeIcon
                       icon={faHouse}
                       style={{ marginRight: "10px" }}
                     />
-                    <span>Trang chủ nhóm</span>
+                    <span>{trl("Trang chủ nhóm")}</span>
                   </div>
                 </Link>
                 <Link
@@ -174,16 +175,15 @@ const GroupManage = () => {
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
                   <div
-                    className={`menu-item ${
-                      isItemSelected("overview") ? "selected" : ""
-                    }`}
+                    className={`menu-item ${isItemSelected("overview") ? "selected" : ""
+                      }`}
                     onClick={() => handleItemClick("overview")}
                   >
                     <FontAwesomeIcon
                       icon={faLayerGroup}
                       style={{ marginRight: "10px" }}
                     />
-                    <span>Tổng quan</span>
+                    <span>{trl("Tổng quan")}</span>
                   </div>
                 </Link>
               </div>
@@ -193,7 +193,7 @@ const GroupManage = () => {
                     className="dropdown-header"
                     onClick={() => toggleDropdown_1("adminTools_1")}
                   >
-                    <span>Công cụ quản trị</span>
+                    <span>{trl("Công cụ quản trị")}</span>
                     {activeDropdown_1 === "adminTools_1" ? (
                       <FontAwesomeIcon icon={faAngleUp} />
                     ) : (
@@ -201,25 +201,23 @@ const GroupManage = () => {
                     )}
                   </div>
                   <div
-                    className={`dropdown-content ${
-                      activeDropdown_1 === "adminTools_1" ? "show" : ""
-                    }`}
+                    className={`dropdown-content ${activeDropdown_1 === "adminTools_1" ? "show" : ""
+                      }`}
                   >
                     <Link
                       to={`/groups/${groupId}/member-requests`}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
                       <div
-                        className={`dropdown-item ${
-                          isItemSelected("member-requests") ? "selected" : ""
-                        }`}
+                        className={`dropdown-item ${isItemSelected("member-requests") ? "selected" : ""
+                          }`}
                         onClick={() => handleItemClick("member-requests")}
                       >
                         <FontAwesomeIcon
                           icon={faUserPlus}
                           style={{ marginRight: "10px" }}
                         />
-                        <span>Yêu cầu làm thành viên</span>
+                        <span>{trl("Yêu cầu làm thành viên")}</span>
                       </div>
                     </Link>
                     <Link
@@ -227,16 +225,15 @@ const GroupManage = () => {
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
                       <div
-                        className={`dropdown-item ${
-                          isItemSelected("pending_posts") ? "selected" : ""
-                        }`}
+                        className={`dropdown-item ${isItemSelected("pending_posts") ? "selected" : ""
+                          }`}
                         onClick={() => handleItemClick("pending_posts")}
                       >
                         <FontAwesomeIcon
                           icon={faClock}
                           style={{ marginRight: "10px" }}
                         />
-                        <span>Bài viết đang chờ</span>
+                        <span>{trl("Bài viết đang chờ")}</span>
                       </div>
                     </Link>
                   </div>
@@ -246,7 +243,7 @@ const GroupManage = () => {
                     className="dropdown-header"
                     onClick={() => toggleDropdown_2("adminTools_2")}
                   >
-                    <span>Trung tâm hỗ trợ</span>
+                    <span>{trl("Trung tâm hỗ trợ")}</span>
                     {activeDropdown_2 === "adminTools_2" ? (
                       <FontAwesomeIcon icon={faAngleUp} />
                     ) : (
@@ -254,21 +251,19 @@ const GroupManage = () => {
                     )}
                   </div>
                   <div
-                    className={`dropdown-content ${
-                      activeDropdown_2 === "adminTools_2" ? "show" : ""
-                    }`}
+                    className={`dropdown-content ${activeDropdown_2 === "adminTools_2" ? "show" : ""
+                      }`}
                   >
                     <div
-                      className={`dropdown-item ${
-                        isItemSelected("support") ? "selected" : ""
-                      }`}
+                      className={`dropdown-item ${isItemSelected("support") ? "selected" : ""
+                        }`}
                       onClick={() => handleItemClick("support")}
                     >
                       <FontAwesomeIcon
                         icon={faHeadset}
                         style={{ marginRight: "10px" }}
                       />
-                      <span>Nhắn tin trợ giúp</span>
+                      <span>{trl("Nhắn tin trợ giúp")}</span>
                     </div>
                   </div>
                 </div>

@@ -1,10 +1,12 @@
 import React from "react";
+import { useLanguage } from "../../../context/languageContext";
 import { useNavigate } from "react-router-dom";
 import { URL_OF_BACK_END } from "../../../axios";
 import "./groupsJoined.scss";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
 const GroupJoined = ({ group }) => {
+  const { trl } = useLanguage();
   const navigate = useNavigate();
 
   const viewGroup = () => {
@@ -35,7 +37,7 @@ const GroupJoined = ({ group }) => {
       </div>
       <div className="group-action">
         <button className="view" onClick={viewGroup}>
-          Xem nhóm
+          {trl("Xem nhóm")}
         </button>
         <button className="more">
           <MoreHorizIcon fontSize="small" />
