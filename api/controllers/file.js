@@ -11,7 +11,7 @@ export const testupFile = (req, res) => {
       //console.log(absolutePath);
       return res.sendFile(absolutePath);
     } catch (error) {
-      console.log(error);
+      //console.log(error);
       return res.status(500).json(error);
     }
   });

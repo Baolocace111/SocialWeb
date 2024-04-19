@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { makeRequest } from "../../../axios.js";
+import { AuthContext } from "../../../context/authContext.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle, faEye, faLock, faEarthAmericas, faPen, faUpload, faImage } from "@fortawesome/free-solid-svg-icons";
 import NineCube from "../../../components/loadingComponent/nineCube/NineCube.jsx";
@@ -11,6 +12,7 @@ import "./groupDetail.scss";
 import GroupPosts from "../../../components/groups/GroupPosts/GroupPosts.jsx";
 
 const GroupDetail = () => {
+    const { currentUser } = useContext(AuthContext);
     const { groupId } = useParams();
     const [groupData, setGroupData] = useState(null);
     const [members, setMembers] = useState([]);
@@ -167,7 +169,7 @@ const GroupDetail = () => {
                     )}
                     <img src={selectedImage || getDefaultOrUploadedAvatar()} alt={groupData.group_name} />
                     <div className="edit-box">
-                        {!selectedImage && (
+                        {!selectedImage && currentUser.id === groupData.created_by && (
                             <button className="edit-button" onClick={togglePopover}>
                                 <FontAwesomeIcon icon={faPen} style={{ marginRight: "5px" }} />
                                 Chỉnh sửa

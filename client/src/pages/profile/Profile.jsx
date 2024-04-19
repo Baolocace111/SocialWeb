@@ -27,6 +27,7 @@ import ProfileInfo from "../../components/profileComponents/profileInfo/ProfileI
 
 import Share from "../../components/share/Share";
 import { ChatContext } from "../../components/navbar/ChatContext";
+import { useLanguage } from "../../context/languageContext";
 
 const useStyles = makeStyles({
   root: {
@@ -39,7 +40,7 @@ const Profile = () => {
   const { currentUser } = useContext(AuthContext);
   const { chattingUser, setChattingUser } = useContext(ChatContext);
   const [userId] = useState(Number(useParams().userId));
-
+  const { trl } = useLanguage();
   const { isLoading, data, error } = useQuery(["user"], () =>
     makeRequest.get("/users/find/" + userId).then((res) => {
       return res.data;
@@ -102,7 +103,11 @@ const Profile = () => {
       ) : (
         <>
           <div className="images">
-            <img src={URL_OF_BACK_END + `users/coverPic/` + data.id} alt="" className="cover" />
+            <img
+              src={URL_OF_BACK_END + `users/coverPic/` + data.id}
+              alt=""
+              className="cover"
+            />
             <div className="profilePicContainer">
               <img
                 src={URL_OF_BACK_END + `users/profilePic/` + data.id}
@@ -120,7 +125,10 @@ const Profile = () => {
               {countLoading ? (
                 <FlipCube />
               ) : (
-                <span className="uFriends">{countData} bạn bè</span>
+                <span className="uFriends">
+                  {countData}{" "}
+                  {trl("người bạn") + (countData > 1 ? trl("+s") : "")}
+                </span>
               )}
             </div>
             {rIsLoading ? (
@@ -128,7 +136,7 @@ const Profile = () => {
             ) : userId === currentUser.id ? (
               <button className="edit" onClick={() => setOpenUpdate(true)}>
                 <FontAwesomeIcon icon={faPenToSquare} />
-                Chỉnh sửa trang cá nhân
+                {trl("Chỉnh sửa trang cá nhân")}
               </button>
             ) : (
               <div className="action">
@@ -136,18 +144,18 @@ const Profile = () => {
                   {relationshipData.includes(currentUser.id) ? (
                     <>
                       <FontAwesomeIcon icon={faUserMinus} />
-                      <span>Unfollow</span>
+                      <span>{trl("Unfollow")}</span>
                     </>
                   ) : (
                     <>
                       <FontAwesomeIcon icon={faUserPlus} />
-                      <span>Follow</span>
+                      <span>{trl("Follow")}</span>
                     </>
                   )}
                 </button>
                 <button className="chat" onClick={() => handleAddChatBox(data)}>
                   <FontAwesomeIcon icon={faFacebookMessenger} size="xl" />
-                  <span>Chat</span>
+                  <span>{trl("Chat")}</span>
                 </button>
               </div>
             )}
@@ -174,35 +182,35 @@ const Profile = () => {
                     fontWeight: "700",
                     color: value === 0 ? "#f50057" : "inherit",
                   }}
-                  label="Bài viết"
+                  label={trl("Bài viết")}
                 />
                 <Tab
                   style={{
                     fontWeight: "700",
                     color: value === 1 ? "#f50057" : "inherit",
                   }}
-                  label="Giới thiệu"
+                  label={trl("Suggestion")}
                 />
                 <Tab
                   style={{
                     fontWeight: "700",
                     color: value === 2 ? "#f50057" : "inherit",
                   }}
-                  label="Bạn bè"
+                  label={trl("Bạn bè")}
                 />
                 <Tab
                   style={{
                     fontWeight: "700",
                     color: value === 3 ? "#f50057" : "inherit",
                   }}
-                  label="Hình ảnh"
+                  label={trl("Image")}
                 />
                 <Tab
                   style={{
                     fontWeight: "700",
                     color: value === 4 ? "#f50057" : "inherit",
                   }}
-                  label="Xem thêm"
+                  label={trl("Others")}
                 />
               </Tabs>
             </Paper>
@@ -229,7 +237,7 @@ const Profile = () => {
           )}
           {value === 1 && (
             <div className="profileContainer">
-              <span>Đang xây dựng</span>
+              <span>{trl("Đang xây dựng")}</span>
             </div>
           )}
           {value === 2 && (
@@ -239,12 +247,12 @@ const Profile = () => {
           )}
           {value === 3 && (
             <div className="profileContainer">
-              <span>Đang xây dựng</span>
+              <span>{trl("Đang xây dựng")}</span>
             </div>
           )}
           {value === 4 && (
             <div className="profileContainer">
-              <span>Đang xây dựng</span>
+              <span>{trl("Đang xây dựng")}</span>
             </div>
           )}
         </>

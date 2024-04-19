@@ -103,4 +103,51 @@ export const searchGroupsBySearchText = (searchText, userId, callback) => {
     });
 };
 
+export const getPendingPostsByGroupId = (groupId, offset, limit, callback) => {
+    const sqlOffset = (offset - 1) * limit;
+    const query = `
+        SELECT posts.id, posts.desc, posts.img, posts.createdAt, group_posts.user_id, group_posts.status,
+               users.name, users.profilePic
+        FROM group_posts
+        INNER JOIN posts ON group_posts.post_id = posts.id
+        INNER JOIN users ON posts.userId = users.id
+        WHERE group_posts.group_id = ? AND group_posts.status = 0
+        ORDER BY posts.createdAt DESC
+        LIMIT ? OFFSET ?`;
+
+    db.query(query, [groupId, limit, sqlOffset], (err, data) => {
+        if (err) return callback(err);
+        return callback(null, data);
+    });
+};
+
+export const approveGroupPost = (postId, groupId, callback) => {
+    const query = `
+        UPDATE group_posts
+        SET status = 1
+        WHERE post_id = ? AND group_id = ?`;
+
+    db.query(query, [postId, groupId], (err, result) => {
+        if (err) return callback(err);
+        if (result.affectedRows === 0) {
+            return callback(new Error("No post found or you don't have the permission."));
+        }
+        return callback(null, { message: "Post approved successfully." });
+    });
+};
+
+export const rejectGroupPost = (postId, groupId, callback) => {
+    const query = `
+        UPDATE group_posts
+        SET status = -1
+        WHERE post_id = ? AND group_id = ?`;
+
+    db.query(query, [postId, groupId], (err, result) => {
+        if (err) return callback(err);
+        if (result.affectedRows === 0) {
+            return callback(new Error("No post found or you don't have the permission."));
+        }
+        return callback(null, { message: "Post rejected successfully." });
+    });
+};
 

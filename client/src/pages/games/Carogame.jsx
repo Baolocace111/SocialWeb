@@ -6,6 +6,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../context/authContext";
 import { makeRequest } from "../../axios";
 import PopupWindow from "../../components/PopupComponent/PopupWindow";
+import { useLanguage } from "../../context/languageContext";
 const Carogame = () => {
   const [ws, setWs] = useState(null);
   const [gameStarted, setGameStarted] = useState(false);
@@ -18,6 +19,7 @@ const Carogame = () => {
   const [winPopup, setWinPopup] = useState(false);
   const [losePopup, setLosePopup] = useState(false);
   const [popupMessage, setPopupmessage] = useState(null);
+  const { trl } = useLanguage();
 
   const closeFindPopup = () => {
     if (ws && !gameStarted) ws.close();
@@ -106,7 +108,7 @@ const Carogame = () => {
         <h1>Caro Game</h1>
         <h2>
           {player === 1 ? "X" : player === 2 ? "O" : ""}{" "}
-          {yourTurn ? "- Your turn" : ""}{" "}
+          {yourTurn ? trl("- Your turn") : ""}{" "}
         </h2>
       </div>
       <PlayerBar
@@ -119,26 +121,26 @@ const Carogame = () => {
       ></PlayerBar>
       <PopupWindow show={findPopup} handleClose={closeFindPopup}>
         {" "}
-        <h1>Finding your opponent...</h1>
-        <button onClick={closeFindPopup}>Cancel</button>
+        <h1>{trl("Finding your opponent...")}</h1>
+        <button onClick={closeFindPopup}>{trl("Cancel")}</button>
       </PopupWindow>
       <PopupWindow show={winPopup} handleClose={closeWinPopup}>
         <div>
-          <h1>VICTORY</h1>
+          <h1>{trl("VICTORY")}</h1>
         </div>
         <div>
-          <h2>{popupMessage && popupMessage}</h2>
+          <h2>{popupMessage && trl("popupMessage")}</h2>
         </div>
         <div>
-          <button onClick={closeWinPopup}>Tuyệt vời</button>
+          <button onClick={closeWinPopup}>{trl("Tuyệt vời")}</button>
         </div>
       </PopupWindow>
       <PopupWindow show={losePopup} handleClose={closeLosePopup}>
         <div>
-          <h1>DEFEAT</h1>
+          <h1>{trl("DEFEAT")}</h1>
         </div>
         <div>
-          <h2>{popupMessage && popupMessage}</h2>
+          <h2>{popupMessage && trl(popupMessage)}</h2>
         </div>
         <div>
           <button onClick={closeLosePopup}>OKAYYY...</button>
@@ -168,7 +170,7 @@ const Carogame = () => {
             </div>
           </div>
           <div className="caro-button">
-            <button onClick={handleBackToStartScreen}> Trở về </button>
+            <button onClick={handleBackToStartScreen}> {trl("Back")} </button>
           </div>
         </div>
       )}
@@ -192,11 +194,14 @@ const PlayerBar = ({ player, isleft }) => {
     </div>
   );
 };
-const StartScreen = ({ onStartGame }) => (
-  <div className="start-screen">
-    <button onClick={onStartGame}>Bắt đầu</button>
-  </div>
-);
+const StartScreen = ({ onStartGame }) => {
+  const { trl } = useLanguage();
+  return (
+    <div className="start-screen">
+      <button onClick={onStartGame}>{trl("Bắt đầu")}</button>
+    </div>
+  );
+};
 
 const Square = ({ value, onClick }) => (
   <button className={`square ${value}`} onClick={onClick}>

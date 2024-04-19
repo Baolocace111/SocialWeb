@@ -4,10 +4,11 @@ import { makeRequest } from "../../../axios";
 import { useParams } from "react-router-dom";
 import NineCube from "../../../components/loadingComponent/nineCube/NineCube";
 import "./search.scss";
+import { useLanguage } from "../../../context/languageContext";
 
 const Search = () => {
   const { searchText } = useParams();
-
+  const { trl } = useLanguage();
   const { isLoading, error, data } = useQuery(["users"], () =>
     makeRequest.get("/users/searchuser/" + searchText).then((res) => {
       return res.data;
@@ -18,7 +19,7 @@ const Search = () => {
       <div className="search-text">Mọi người</div>
       <div className="cards">
         {error ? (
-          "Error!!!"
+          trl("Có lỗi xảy ra")
         ) : isLoading ? (
           <NineCube />
         ) : (

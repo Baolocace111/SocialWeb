@@ -17,6 +17,7 @@ import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
 import GroupDetail from "./pages/group/groupDetail/GroupDetail";
 import GroupRequest from "./pages/group/groupRequest/GroupRequest";
+import GroupPendingPost from "./pages/group/groupPendingPost/GroupPendingPost";
 import Search from "./pages/search/searchUser/Search";
 import SearchGroup from "./pages/search/searchGroup/SearchGroup";
 import SearchBar from "./components/searchComponents/searchBar/SearchBar";
@@ -339,7 +340,7 @@ function App() {
         },
         {
           path: "/groups/:groupId/pending_posts",
-          element: <FriendSuggest />,
+          element: <GroupPendingPost />,
         },
       ],
     },
@@ -411,7 +412,7 @@ function App() {
     },
     {
       path: "/call/:id",
-      element: <Call></Call>,
+      element: <Call />,
     },
   ]);
 

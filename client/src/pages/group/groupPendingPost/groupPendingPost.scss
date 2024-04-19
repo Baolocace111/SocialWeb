@@ -1,6 +1,6 @@
 @import "../../../style.scss";
 
-.group-request {
+.group-pending-post {
     @include themify($themes) {
         background-color: themed("bgSoft");
         color: themed("textColor");
