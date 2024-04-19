@@ -76,7 +76,11 @@ const Share = () => {
             <div className="text-container">
               <img
                 src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id}
-                alt=""
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "/upload/errorImage.png";
+                }}
+                alt={""}
               />
               <TextareaAutosize
                 placeholder={`${trl("What's on your mind")} ${
@@ -100,7 +104,11 @@ const Share = () => {
                   {isImage(file) ? (
                     <img
                       className="file"
-                      alt=""
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "/upload/errorImage.png";
+                      }}
+                      alt={""}
                       src={URL.createObjectURL(file)}
                     />
                   ) : (

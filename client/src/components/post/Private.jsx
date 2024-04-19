@@ -116,7 +116,11 @@ const Private = forwardRef((props, ref) => {
                 <img
                   className="profile-pic"
                   src={`${URL_OF_BACK_END}users/profilePic/${user.id}`}
-                  alt={`${user.name}`}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "/upload/errorImage.png";
+                  }}
+                  alt={""}
                 />
                 <span className="user-name">{user.name}</span>
                 <span className="action-icon">+</span>
@@ -140,7 +144,11 @@ const Private = forwardRef((props, ref) => {
                     <img
                       className="profile-pic"
                       src={`/upload/${user.profilePic}`}
-                      alt={`${user.name}`}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "/upload/errorImage.png";
+                      }}
+                      alt={""}
                     />
                     <span className="user-name">{user.name}</span>
                     <span className="action-icon">x</span>

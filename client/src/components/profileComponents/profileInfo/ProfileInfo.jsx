@@ -54,7 +54,11 @@ const ProfileInfo = ({ user_id, countData, onChangeValue }) => {
               <div className="user" key={friend.id}>
                 <img
                   src={URL_OF_BACK_END + `users/profilePic/` + friend.id}
-                  alt=""
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "/upload/errorImage.png";
+                  }}
+                  alt={""}
                 />
                 <span
                   className="name"

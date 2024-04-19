@@ -78,7 +78,14 @@ const Messages = ({ mess, handleClose }) => {
         handleClose();
       }}
     >
-      <img src={URL_OF_BACK_END + `users/profilePic/` + mess.user_id} alt="" />
+      <img
+        src={URL_OF_BACK_END + `users/profilePic/` + mess.user_id}
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = "/upload/errorImage.png";
+        }}
+        alt={""}
+      />
       <div className="username">
         <div className="name">{mess.name}</div>
         <div className={`mess ${mess.status === 0 ? "not-read" : ""}`}>

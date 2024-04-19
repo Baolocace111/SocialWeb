@@ -293,7 +293,11 @@ const Navbar = () => {
         >
           <img
             src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id}
-            alt=""
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "/upload/errorImage.png";
+            }}
+            alt={""}
           />
           <span>{currentUser.name}</span>
           <FontAwesomeIcon icon={faCaretDown} />

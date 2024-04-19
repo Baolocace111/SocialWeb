@@ -32,7 +32,14 @@ const AdminLeftBar = () => {
           <FontAwesomeIcon icon={faRightToBracket} />
         </div>
         <div className="admin-user-info">
-          <img src={"/upload/" + currentUser.profilePic} alt="" />
+          <img
+            src={"/upload/" + currentUser.profilePic}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "/upload/errorImage.png";
+            }}
+            alt={""}
+          />
           {currentUser.name}
         </div>
         <div
