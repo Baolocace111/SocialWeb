@@ -274,14 +274,22 @@ const Update = ({ setOpenUpdate, user }) => {
                   <img
                     className="img-profile"
                     src={selectedProfile.profilePic}
-                    alt="Selected"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "/upload/errorImage.png";
+                    }}
+                    alt={""}
                   />
                 )}
                 {!selectedProfile.profilePic && profile.profilePic && (
                   <img
                     className="img-profile"
                     src={URL_OF_BACK_END + `users/profilePic/` + user.id}
-                    alt="Profile Pic"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "/upload/errorImage.png";
+                    }}
+                    alt={""}
                   />
                 )}
               </div>
@@ -303,14 +311,22 @@ const Update = ({ setOpenUpdate, user }) => {
                   <img
                     className="img-cover"
                     src={selectedProfile.coverPic}
-                    alt="Selected"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "/upload/errorImage.png";
+                    }}
+                    alt={""}
                   />
                 )}
                 {!selectedProfile.coverPic && profile.coverPic && (
                   <img
                     className="img-cover"
                     src={URL_OF_BACK_END + `users/coverPic/` + user.id}
-                    alt="Cover Pic"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "/upload/errorImage.png";
+                    }}
+                    alt={""}
                   />
                 )}
               </div>

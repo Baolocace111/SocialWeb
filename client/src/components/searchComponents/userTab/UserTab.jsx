@@ -85,7 +85,11 @@ const UserTab = ({ user }) => {
         <img
           onClick={handleClicktoProfile}
           src={URL_OF_BACK_END + `users/profilePic/` + user.id}
-          alt=""
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "/upload/errorImage.png";
+          }}
+          alt={""}
         />
         <div onClick={handleClicktoProfile} className="username">
           {user.name}

@@ -69,8 +69,8 @@ const Post = ({ post }) => {
 
   const isVideoContent = post.img
     ? post.img.endsWith(".mp4") ||
-    post.img.endsWith(".avi") ||
-    post.img.endsWith(".mov")
+      post.img.endsWith(".avi") ||
+      post.img.endsWith(".mov")
     : false;
 
   useEffect(() => {
@@ -262,7 +262,11 @@ const Post = ({ post }) => {
           <div className="userInfo">
             <img
               src={URL_OF_BACK_END + `users/profilePic/` + post.userId}
-              alt=""
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "/upload/errorImage.png";
+              }}
+              alt={""}
             />
             <div className="details">
               <span
@@ -379,7 +383,11 @@ const Post = ({ post }) => {
                         width: "45px",
                         height: "45px",
                       }}
-                      alt="User"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "/upload/errorImage.png";
+                      }}
+                      alt={""}
                     />
                   </div>
                   <div
@@ -412,7 +420,11 @@ const Post = ({ post }) => {
                     >
                       <img
                         src={selectedImage}
-                        alt=""
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = "/upload/errorImage.png";
+                        }}
+                        alt={""}
                         style={{ maxWidth: "400px" }}
                       />
                       <button
@@ -673,7 +685,11 @@ const Post = ({ post }) => {
             ) : (
               <img
                 src={URL_OF_BACK_END + `posts/videopost/` + post.id}
-                alt=""
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "/upload/errorImage.png";
+                }}
+                alt={""}
               />
             )}
           </Link>
@@ -741,7 +757,11 @@ const Post = ({ post }) => {
                         width: "45px",
                         height: "45px",
                       }}
-                      alt="User"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "/upload/errorImage.png";
+                      }}
+                      alt={""}
                     />
                     <div
                       style={{

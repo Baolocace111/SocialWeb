@@ -126,7 +126,11 @@ const Stories = () => {
     <div className="story" key={1}>
       <img
         src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id}
-        alt=""
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = "/upload/errorImage.png";
+        }}
+        alt={""}
       />
       <span>{currentUser.name}</span>
       <button onClick={handleDialogOpen}>+</button>
@@ -181,7 +185,11 @@ const Stories = () => {
             {selectedImage && isImage(file) ? (
               <img
                 src={selectedImage}
-                alt=""
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "/upload/errorImage.png";
+                }}
+                alt={""}
                 style={{ marginTop: "8px", maxWidth: "300px" }}
               />
             ) : isImageAndVideo(file) ? (
@@ -237,7 +245,11 @@ const Stories = () => {
                   src={
                     URL_OF_BACK_END + `users/profilePic/` + latestStory.userId
                   }
-                  alt=""
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "/upload/errorImage.png";
+                  }}
+                  alt={""}
                 />
               )}
             </div>
@@ -252,7 +264,11 @@ const Stories = () => {
               ) : (
                 <img
                   src={URL_OF_BACK_END + `stories/image/` + latestStory.id}
-                  alt=""
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "/upload/errorImage.png";
+                  }}
+                  alt={""}
                 />
               )}
               <span>{latestStory.name}</span>

@@ -48,7 +48,11 @@ const Message = ({ messageShow, friendProfilePic }) => {
         <div className="messageis_friends">
           <img
             src={URL_OF_BACK_END + `users/profilePic/` + friendProfilePic}
-            alt=""
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "/upload/errorImage.png";
+            }}
+            alt={""}
           />
           <div className="content-and-date">
             <div className="mess-content">{messageShow.message}</div>

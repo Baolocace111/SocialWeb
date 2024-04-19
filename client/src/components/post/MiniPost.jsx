@@ -36,7 +36,11 @@ const MiniPost = ({ post }) => {
             ) : (
               <img
                 src={URL_OF_BACK_END + `posts/videopost/` + post.id}
-                alt=""
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "/upload/errorImage.png";
+                }}
+                alt={""}
               />
             )}
           </Link>
@@ -48,7 +52,11 @@ const MiniPost = ({ post }) => {
                 ? URL_OF_BACK_END + `users/profilePic/` + post.userId
                 : "/upload/deadskull.png"
             }
-            alt=""
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "/upload/errorImage.png";
+            }}
+            alt={""}
           />
           <div className="details">
             <Link

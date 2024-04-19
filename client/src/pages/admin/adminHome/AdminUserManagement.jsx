@@ -60,6 +60,10 @@ const UserList = ({ users }) => {
         >
           <img
             src={`http://localhost:8800/api/admin/profilePic/${user.id}`}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "/upload/errorImage.png";
+            }}
             alt={`${user.username}${trl("'s profile")}`}
             style={{ width: "100px", height: "100px", objectFit: "cover" }}
           />

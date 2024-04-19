@@ -50,7 +50,11 @@ const Comments = ({ postId }) => {
       <div className="write">
         <img
           src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id}
-          alt=""
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "/upload/errorImage.png";
+          }}
+          alt={""}
         />
         <input
           type="text"
@@ -69,7 +73,11 @@ const Comments = ({ postId }) => {
           <div className="comment" key={comment.id}>
             <img
               src={URL_OF_BACK_END + `users/profilePic/` + comment.userId}
-              alt=""
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "/upload/errorImage.png";
+              }}
+              alt={""}
             />
             <div className="info">
               <span>{comment.name}</span>
