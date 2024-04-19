@@ -4,8 +4,14 @@ import "./register.scss";
 import LanguageSwitcher from "../../components/languageSwitcher/LanguageSwitcher";
 import { makeRequest } from "../../axios";
 import { useLanguage } from "../../context/languageContext";
+import PopupWindow from "../../components/PopupComponent/PopupWindow";
+import CircleProgressBar from "../../components/loadingComponent/CircleProgressBar/CircleProgressBar";
 const Register = () => {
   const { trl } = useLanguage();
+  const [checkConnection, setCheckConnection] = useState(true);
+  const closePopup = () => {
+    setCheckConnection(false);
+  };
   const [inputs, setInputs] = useState({
     username: "",
     email: "",
@@ -37,6 +43,9 @@ const Register = () => {
 
   return (
     <div className="register">
+      <PopupWindow show={checkConnection}>
+        <CircleProgressBar handleClose={closePopup}></CircleProgressBar>
+      </PopupWindow>
       <div className="float">
         <LanguageSwitcher text={true}></LanguageSwitcher>
       </div>

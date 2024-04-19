@@ -119,3 +119,6 @@ export const checkAdmin = async (req, res) => {
     return res.status(500).json(error);
   }
 };
+export const checkConnectionController = (req, res) => {
+  return res.status(200).json("Successfully");
+};
