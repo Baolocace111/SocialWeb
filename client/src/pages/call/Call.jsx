@@ -205,7 +205,7 @@ const Call = () => {
     <div className="video-call">
       <PopupWindow show={callPopup} handleClose={onCloseCallPopup}>
         <div className="popup-content">
-          <h1>{popupMessage && popupMessage}</h1>
+          <h1>{popupMessage && trl(popupMessage)}</h1>
           {callPopup && popupType.current === "call" && (
             <CountdownTimer
               seconds={60}
@@ -214,7 +214,7 @@ const Call = () => {
           )}
         </div>
         <div>
-          <button onClick={onCloseCallPopup}>Cancel</button>
+          <button onClick={onCloseCallPopup}>{trl("Cancel")}</button>
         </div>
       </PopupWindow>
       <div className="video-container">
@@ -226,7 +226,7 @@ const Call = () => {
         </div>
       </div>
 
-      {!ws && <button onClick={handleReady}>Ready</button>}
+      {!ws && <button onClick={handleReady}>{trl("Gọi/Nghe")}</button>}
     </div>
   );
 };

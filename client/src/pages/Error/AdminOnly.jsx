@@ -1,4 +1,6 @@
+import { useLanguage } from "../../context/languageContext";
 const AdminOnly = () => {
+  const { trl } = useLanguage();
   return (
     <div
       style={{
@@ -10,7 +12,7 @@ const AdminOnly = () => {
         height: "100%",
       }}
     >
-      <h1>This page only for Admin</h1>
+      <h1>{trl("This page only for Admin")}</h1>
 
       <img
         src="notificationtype/erroranimegirl.png"

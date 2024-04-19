@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { makeRequest } from "../../axios";
 import DetailedPost from "../../components/post/detailedPost/DetailedPost";
 import ThreePointLoading from "../../components/loadingComponent/threepointLoading/ThreePointLoading";
+import { useLanguage } from "../../context/languageContext";
 
 const PostPage = () => {
+  const { trl } = useLanguage();
   const { postId } = useParams();
   const { isLoading, error, data } = useQuery(["posts"], () =>
     makeRequest.get("/posts/post/" + postId).then((res) => {
@@ -25,22 +27,26 @@ const PostPage = () => {
 
   const sharedPostData = {
     ...data,
-    img: sharedPost ? sharedPost.img : '',
-    id: sharedPost ? sharedPost.id : '',
+    img: sharedPost ? sharedPost.img : "",
+    id: sharedPost ? sharedPost.id : "",
   };
 
   return (
     <div>
       {error ? (
-        "Something went wrong!"
+        trl("Something went wrong!")
       ) : isLoading ? (
         <ThreePointLoading />
       ) : data.length === 0 ? (
-        "not found"
+        trl("Not found")
       ) : (
         <div className="post-page">
-          {(data.type === 0 || data.type === 2 || data.type === 3) && <DetailedPost post={data} />}
-          {data.type === 1 && sharedPost && <DetailedPost post={sharedPostData} />}
+          {(data.type === 0 || data.type === 2 || data.type === 3) && (
+            <DetailedPost post={data} />
+          )}
+          {data.type === 1 && sharedPost && (
+            <DetailedPost post={sharedPostData} />
+          )}
         </div>
       )}
     </div>
