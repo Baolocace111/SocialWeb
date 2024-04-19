@@ -82,14 +82,25 @@ const DetailedPost = ({ post }) => {
             className="react-player"
           />
         ) : (
-          <img src={URL_OF_BACK_END + `posts/videopost/` + post.id} alt="" />
+          <img
+            src={URL_OF_BACK_END + `posts/videopost/` + post.id}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "/upload/errorImage.png";
+            }}
+            alt={""}
+          />
         )}
       </div>
       <div className="content-area">
         <div className="userInfo">
           <img
             src={URL_OF_BACK_END + `users/profilePic/` + post.userId}
-            alt=""
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "/upload/errorImage.png";
+            }}
+            alt={""}
           />
           <div className="details">
             <span

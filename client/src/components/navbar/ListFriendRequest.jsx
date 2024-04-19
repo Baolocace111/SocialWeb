@@ -106,7 +106,11 @@ const ListFriendRequest = () => {
               <img
                 src={URL_OF_BACK_END + `users/profilePic/` + request.id}
                 style={{ borderRadius: "50%", width: "50px", height: "50px" }}
-                alt="User 1"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "/upload/errorImage.png";
+                }}
+                alt={""}
               />
             </Link>
           </div>

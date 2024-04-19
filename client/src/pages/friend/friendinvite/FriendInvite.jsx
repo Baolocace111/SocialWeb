@@ -60,6 +60,10 @@ const FriendInvite = () => {
           <div className="card-invite" key={request.id}>
             <img
               src={URL_OF_BACK_END + `users/profilePic/` + request.id}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "/upload/errorImage.png";
+              }}
               alt="User"
             />
             <span>{request.name}</span>

@@ -182,12 +182,26 @@ const PlayerBar = ({ player, isleft }) => {
     <div className={isleft ? "caroplayerbar left" : "caroplayerbar right"}>
       {player ? (
         <div className="carouserinfo">
-          <img src={URL_OF_BACK_END + `users/profilePic/` + player.id} alt="" />
+          <img
+            src={URL_OF_BACK_END + `users/profilePic/` + player.id}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "/upload/errorImage.png";
+            }}
+            alt={""}
+          />
           <span>{player.name}</span>
         </div>
       ) : (
         <div className="carouserinfo">
-          <img src="/upload/unknowplayer.png" alt="" />
+          <img
+            src="/upload/unknowplayer.png"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "/upload/errorImage.png";
+            }}
+            alt={""}
+          />
           <span>??????</span>
         </div>
       )}

@@ -67,7 +67,11 @@ const RightBar = () => {
                 <div className="userInfo">
                   <img
                     src={URL_OF_BACK_END + `users/profilePic/` + user.id}
-                    alt={user.name}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "/upload/errorImage.png";
+                    }}
+                    alt={""}
                   />
                   <div className="online" />
                   <span>{user.name}</span>

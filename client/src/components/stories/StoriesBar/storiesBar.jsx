@@ -83,7 +83,11 @@ const StoriesBar = () => {
               >
                 <img
                   src={URL_OF_BACK_END + `users/profilePic/` + user.id}
-                  alt=""
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "/upload/errorImage.png";
+                  }}
+                  alt={""}
                 />
                 <div className="details">
                   <span className="name">{user.name}</span>

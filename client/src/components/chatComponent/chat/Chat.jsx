@@ -125,7 +125,14 @@ const Chat = ({ friend, onRemoveChatBox }) => {
   return (
     <div className="parent-container">
       <div className="top-box">
-        <img src={URL_OF_BACK_END + `users/profilePic/` + friend.id} alt="" />
+        <img
+          src={URL_OF_BACK_END + `users/profilePic/` + friend.id}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "/upload/errorImage.png";
+          }}
+          alt={""}
+        />
         <div className="name">{friend.name}</div>
         <div className="actionButton">
           <button>

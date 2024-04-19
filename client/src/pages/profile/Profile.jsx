@@ -105,13 +105,21 @@ const Profile = () => {
           <div className="images">
             <img
               src={URL_OF_BACK_END + `users/coverPic/` + data.id}
-              alt=""
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "/upload/errorImage.png";
+              }}
+              alt={""}
               className="cover"
             />
             <div className="profilePicContainer">
               <img
                 src={URL_OF_BACK_END + `users/profilePic/` + data.id}
-                alt=""
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "/upload/errorImage.png";
+                }}
+                alt={""}
                 className="profilePic"
               />
             </div>
