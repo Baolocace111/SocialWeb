@@ -1,4 +1,6 @@
 import * as joinModel from "../models/JoinModel.js";
+import { getGroupById } from "../models/GroupModel.js";
+import { addNotificationService } from "./NotificationService.js";
 
 export const createJoin = (userId, groupId, callback) => {
     joinModel.createUserJoin(userId, groupId, (err, results) => {
@@ -49,7 +51,28 @@ export const approveJoinRequest = (adminUserId, joinRequestId, callback) => {
             if (!isLeader) {
                 return callback(new Error("Only group leader can approve request!"), null);
             }
-            joinModel.approveJoinRequest(joinRequestId, callback);
+            joinModel.approveJoinRequest(joinRequestId, (err, response) => {
+                if (err) return callback(err);
+
+                getGroupById(joinRequest.group_id, (err, group) => {
+                    if (err || !group) {
+                        console.error("Failed to get group info for notification.");
+                    } else {
+                        addNotificationService(
+                            joinRequest.user_id,
+                            `Yêu cầu tham gia nhóm ${group[0].group_name} của bạn đã được chấp thuận.`,
+                            `/groups/${joinRequest.group_id}`,
+                            group[0].group_avatar,
+                            (err, notificationResult) => {
+                                if (err) {
+                                    console.error("Failed to send notification.");
+                                }
+                            }
+                        );
+                    }
+                });
+                return callback(null, response);
+            });
         });
     });
 };
@@ -70,7 +93,28 @@ export const rejectJoinRequest = (adminUserId, joinRequestId, callback) => {
             if (!isLeader) {
                 return callback(new Error("Only group leader can reject request!"), null);
             }
-            joinModel.rejectJoinRequest(joinRequestId, callback);
+            joinModel.rejectJoinRequest(joinRequestId, (err, response) => {
+                if (err) return callback(err);
+
+                getGroupById(joinRequest.group_id, (err, group) => {
+                    if (err || !group) {
+                        console.error("Failed to get group info for notification.");
+                    } else {
+                        addNotificationService(
+                            joinRequest.user_id,
+                            `Yêu cầu tham gia nhóm ${group[0].group_name} của bạn đã bị từ chối.`,
+                            `/groups/${joinRequest.group_id}`,
+                            group[0].group_avatar,
+                            (err, notificationResult) => {
+                                if (err) {
+                                    console.error("Failed to send notification.");
+                                }
+                            }
+                        );
+                    }
+                });
+                return callback(null, response);
+            });
         });
     });
 };

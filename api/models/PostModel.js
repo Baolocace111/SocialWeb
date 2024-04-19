@@ -1,4 +1,3 @@
-import { query } from "express";
 import { db } from "../connect.js";
 import moment from "moment";
 export const getPostById = (userId, postId, callback) => {

@@ -151,3 +151,13 @@ export const rejectGroupPost = (postId, groupId, callback) => {
     });
 };
 
+export const getUserFromGroupPost = (postId, callback) => {
+    const query = `SELECT user_id FROM group_posts WHERE post_id = ? LIMIT 1`;
+    db.query(query, [postId], (err, rows) => {
+        if (err) return callback(err);
+        if (rows.length === 0) {
+            return callback(new Error("No post found in assigned group!"));
+        }
+        return callback(null, rows[0].user_id);
+    });
+};
