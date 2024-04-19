@@ -1,4 +1,5 @@
 import "./groupCreate.scss";
+import { useLanguage } from "../../../context/languageContext";
 import React, { useState, useContext } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,6 +15,7 @@ const GroupCreate = ({
   setGroupName,
   groupName,
 }) => {
+  const { trl } = useLanguage();
   const { currentUser } = useContext(AuthContext);
   const [showDropdown, setShowDropdown] = useState(false);
   const [inputValue, setInputValue] = useState(groupName || "");
@@ -33,7 +35,7 @@ const GroupCreate = ({
     setShowDropdown(false);
   };
 
-  const displayPrivacy = groupPrivacy || "Chọn quyền riêng tư";
+  const displayPrivacy = groupPrivacy || trl("Chọn quyền riêng tư");
 
   // Mutation để tạo nhóm mới
   const createGroupMutation = useMutation((newGroup) =>
@@ -43,11 +45,11 @@ const GroupCreate = ({
   // Hàm xử lý khi bấm nút "Tạo"
   const handleCreateGroup = () => {
     if (!inputValue || !groupPrivacy) {
-      alert("Vui lòng nhập tên nhóm và chọn quyền riêng tư cho nhóm.");
+      alert(trl("Vui lòng nhập tên nhóm và chọn quyền riêng tư cho nhóm."));
       return;
     }
 
-    const privacyLevel = groupPrivacy === "Công khai" ? 1 : 0;
+    const privacyLevel = groupPrivacy === trl("Công khai") ? 1 : 0;
     createGroupMutation.mutate({
       group_name: inputValue,
       privacy_level: privacyLevel,
@@ -70,7 +72,7 @@ const GroupCreate = ({
           </div>
         </div>
         <div className="create-form">
-          <span className="title">Tạo Nhóm</span>
+          <span className="title">{trl("Tạo Nhóm")}</span>
           <div className="create">
             <div className="creator">
               <img
@@ -83,16 +85,16 @@ const GroupCreate = ({
               />
               <div className="info">
                 <span className="admin">{currentUser.name}</span>
-                <span>Quản trị viên</span>
+                <span>{trl("Quản trị viên")}</span>
               </div>
             </div>
             <div className="form-input">
               <div className="input-group">
-                <label htmlFor="group-name">Tên nhóm</label>
+                <label htmlFor="group-name">{trl("Tên nhóm")}</label>
                 <input
                   type="text"
                   id="group-name"
-                  placeholder="Nhập tên nhóm"
+                  placeholder={trl("Nhập tên nhóm")}
                   value={inputValue}
                   onChange={handleGroupNameChange}
                   onBlur={handleGroupNameBlur}
@@ -108,21 +110,20 @@ const GroupCreate = ({
                   </button>
                   {showDropdown && (
                     <div
-                      className={`dropdown-content ${
-                        showDropdown ? "show" : ""
-                      }`}
+                      className={`dropdown-content ${showDropdown ? "show" : ""
+                        }`}
                     >
                       <div
                         className="dropdown-item"
-                        onClick={() => handlePrivacyChange("Công khai")}
+                        onClick={() => handlePrivacyChange(trl("Công khai"))}
                       >
-                        Công khai
+                        {trl("Công khai")}
                       </div>
                       <div
                         className="dropdown-item"
-                        onClick={() => handlePrivacyChange("Riêng tư")}
+                        onClick={() => handlePrivacyChange(trl("Riêng tư"))}
                       >
-                        Riêng tư
+                        {trl("Riêng tư")}
                       </div>
                     </div>
                   )}
@@ -130,12 +131,12 @@ const GroupCreate = ({
               </div>
               <div className="input-group">
                 <label htmlFor="invite-friends">
-                  Mời bạn bè (không bắt buộc)
+                  {trl("Mời bạn bè (không bắt buộc)")}
                 </label>
                 <input
                   type="text"
                   id="invite-friends"
-                  placeholder="Nhập tên bạn bè"
+                  placeholder={trl("Nhập tên bạn bè")}
                 />
               </div>
             </div>
@@ -143,7 +144,7 @@ const GroupCreate = ({
         </div>
         <div className="finish-create">
           <div className="create-btn" onClick={handleCreateGroup}>
-            <span>Tạo</span>
+            <span>{trl("Tạo")}</span>
           </div>
         </div>
       </div>

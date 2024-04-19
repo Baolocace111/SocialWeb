@@ -1,9 +1,8 @@
 import "./groupShare.scss";
+import { useLanguage } from "../../../context/languageContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faImages,
-  faLocationDot,
-  faTags,
   faFaceSmileBeam,
   faX,
 } from "@fortawesome/free-solid-svg-icons";
@@ -18,6 +17,7 @@ import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 
 const GroupShare = () => {
+  const { trl } = useLanguage();
   const { groupId } = useParams();
   const [file, setFile] = useState(null);
   const [desc, setDesc] = useState("");
@@ -109,7 +109,7 @@ const GroupShare = () => {
                 alt={""}
               />
               <TextareaAutosize
-                placeholder={`What's on your mind ${currentUser.name}?`}
+                placeholder={`${trl("What's on your mind")} ${currentUser.name + trl("san")}?`}
                 onChange={(e) => setDesc(e.target.value)}
                 value={desc}
                 className="text-input"
@@ -168,20 +168,20 @@ const GroupShare = () => {
               <label htmlFor="file">
                 <div className="item">
                   <FontAwesomeIcon icon={faImages} color="green" size="xl" />
-                  <span>Image/Video</span>
+                  <span>{trl("Image")}/{trl("Video")}</span>
                 </div>
               </label>
-              <div className="item">
+              {/* <div className="item">
                 <FontAwesomeIcon icon={faLocationDot} color="red" size="xl" />
                 <span>Add Place</span>
               </div>
               <div className="item">
                 <FontAwesomeIcon icon={faTags} color="orange" size="xl" />
                 <span>Tag Friends</span>
-              </div>
+              </div> */}
             </div>
             <div className="right">
-              <button onClick={handleClick}>Share</button>
+              <button onClick={handleClick}>{trl("Share")}</button>
             </div>
           </div>
         </div>

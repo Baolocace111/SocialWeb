@@ -38,9 +38,9 @@ export const createGroup = (groupName, privacyLevel, createdBy, callback) => {
         const groupId = result.insertId;
 
         // Thêm người dùng vào nhóm mới với role là quản trị viên
-        const addToJoinsQuery = "INSERT INTO joins(user_id, group_id, joined_date, role) VALUES (?, ?, NOW(), ?)";
+        const addToJoinsQuery = "INSERT INTO joins(user_id, group_id, joined_date, role, status) VALUES (?, ?, NOW(), ?, ?)";
 
-        db.query(addToJoinsQuery, [createdBy, groupId, 1], (err, result) => {
+        db.query(addToJoinsQuery, [createdBy, groupId, 1, 1], (err, result) => {
             if (err) return callback(err);
             return callback(null, { groupId: groupId, ...result });
         });

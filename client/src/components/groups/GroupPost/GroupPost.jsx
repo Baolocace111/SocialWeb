@@ -650,10 +650,16 @@ const GroupPost = ({ post }) => {
                 className="react-player"
               />
             ) : (
-              <img
-                src={URL_OF_BACK_END + `posts/videopost/` + post.id}
-                alt={""}
-              />
+              (
+                post.img && <img
+                  src={URL_OF_BACK_END + `posts/videopost/` + post.id}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "/upload/errorImage.png";
+                  }}
+                  alt={""}
+                />
+              )
             )}
           </Link>
         </div>
@@ -674,11 +680,11 @@ const GroupPost = ({ post }) => {
                   onClick={handleLike}
                 />
               )}
-              {data?.length} Likes
+              {data?.length} {trl("Likes")}
             </div>
             <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
               <TextsmsOutlinedIcon />
-              See Comments
+              {trl("See Comments")}
             </div>
           </div>
         )}
