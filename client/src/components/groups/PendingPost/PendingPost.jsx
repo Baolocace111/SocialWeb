@@ -22,6 +22,7 @@ const PendingPost = ({ post }) => {
             onSuccess: () => {
                 queryClient.invalidateQueries(['group-pending-posts']);
                 queryClient.invalidateQueries(['group-posts', groupId]);
+                queryClient.invalidateQueries(['pendingPostsCount', groupId]);
             }
         }
     );
@@ -36,6 +37,7 @@ const PendingPost = ({ post }) => {
             onSuccess: () => {
                 queryClient.invalidateQueries(['group-pending-posts']);
                 queryClient.invalidateQueries(['group-posts', groupId]);
+                queryClient.invalidateQueries(['pendingPostsCount', groupId]);
             }
         }
     );

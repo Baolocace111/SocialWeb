@@ -2,11 +2,13 @@ import React from "react";
 import { useLanguage } from "../../../context/languageContext";
 import "./memberRequest.scss";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { useParams } from 'react-router-dom';
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { URL_OF_BACK_END, makeRequest } from "../../../axios";
 
 const MemberRequest = ({ request }) => {
   const { trl } = useLanguage();
+  const { groupId } = useParams();
   const queryClient = useQueryClient();
 
   const approveMutation = useMutation(
@@ -23,6 +25,7 @@ const MemberRequest = ({ request }) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["group-join-requests"]);
+        queryClient.invalidateQueries(['pendingRequestsCount', groupId]);
       },
     }
   );
@@ -41,6 +44,7 @@ const MemberRequest = ({ request }) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["group-join-requests"]);
+        queryClient.invalidateQueries(['pendingRequestsCount', groupId]);
       },
     }
   );

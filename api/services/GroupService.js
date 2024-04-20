@@ -145,3 +145,29 @@ export const rejectPendingGroupPost = (userId, groupId, postId, callback) => {
         });
     });
 };
+
+export const getPendingPostsCount = (userId, groupId, callback) => {
+    groupModel.checkIfUserIsGroupLeader(userId, groupId, (err, isLeader) => {
+        if (err) return callback(err, null);
+        if (!isLeader) {
+            return callback(new Error("Only group leaders can view join requests."), null);
+        }
+        groupModel.getPendingPostsCount(groupId, (err, data) => {
+            if (err) return callback(err, null);
+            return callback(null, data);
+        });
+    });
+};
+
+export const getJoinRequestsCount = (userId, groupId, callback) => {
+    groupModel.checkIfUserIsGroupLeader(userId, groupId, (err, isLeader) => {
+        if (err) return callback(err, null);
+        if (!isLeader) {
+            return callback(new Error("Only group leaders can view join requests."), null);
+        }
+        groupModel.getJoinRequestsCount(groupId, (err, data) => {
+            if (err) return callback(err, null);
+            return callback(null, data);
+        });
+    });
+};
