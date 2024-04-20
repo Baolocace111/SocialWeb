@@ -38,30 +38,20 @@ const GroupDetail = () => {
   };
 
   useEffect(() => {
-    const fetchGroupData = async () => {
+    const fetchData = async () => {
       try {
-        const response = await makeRequest.get(`/groups/${groupId}`);
-        setGroupData(response.data[0]); // Assuming the API returns an array
+        const groupDetailsResponse = await makeRequest.get(`/groups/${groupId}`);
+        const groupUsersResponse = await makeRequest.get(`/joins/groups/${groupId}/users`);
+        setGroupData(groupDetailsResponse.data[0]);
+        setMembers(groupUsersResponse.data);
         setLoading(false);
-      } catch (error) {
+      }
+      catch (error) {
         setError(error);
         setLoading(false);
       }
     };
-
-    const fetchMembers = async () => {
-      try {
-        const membersResponse = await makeRequest.get(
-          `/joins/groups/${groupId}/users`
-        );
-        setMembers(membersResponse.data);
-      } catch (error) {
-        setError(error);
-      }
-    };
-
-    fetchGroupData();
-    fetchMembers();
+    fetchData();
   }, [groupId]);
 
   const handleTabChange = (tab) => {
