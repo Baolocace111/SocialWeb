@@ -7,16 +7,20 @@ import ReactPlayer from "react-player";
 import { useEffect } from "react";
 import { useLanguage } from "../../context/languageContext";
 const MiniPost = ({ post }) => {
-  const { trl, language } = useLanguage();
+  const { language } = useLanguage();
   useEffect(() => {
-    if (language === "jp") moment.locale("ja");
-    if (language === "vn") moment.locale("vi");
-    else moment.locale("en");
-  }, []);
+    if (language === "jp") {
+      moment.locale("ja");
+    } else if (language === "vn") {
+      moment.locale("vi");
+    } else {
+      moment.locale("en");
+    }
+  }, [language]);
   const isVideoContent = post.img
     ? post.img.endsWith(".mp4") ||
-      post.img.endsWith(".avi") ||
-      post.img.endsWith(".mov")
+    post.img.endsWith(".avi") ||
+    post.img.endsWith(".mov")
     : false;
 
   return (
