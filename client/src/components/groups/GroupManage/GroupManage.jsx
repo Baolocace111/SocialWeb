@@ -213,7 +213,7 @@ const GroupManage = () => {
                           <span>{trl("Yêu cầu làm thành viên")}</span>
                           <div className="count">
                             {pendingRequestCount > 0 && <div className="new"></div>}
-                            <span>{pendingRequestCount} mục mới</span>
+                            <span>{pendingRequestCount} {trl("mục mới")}</span>
                           </div>
                         </div>
                         {pendingRequestCount > 0 &&
@@ -240,7 +240,7 @@ const GroupManage = () => {
                           <span>{trl("Bài viết đang chờ")}</span>
                           <div className="count">
                             {pendingPostCount > 0 && <div className="new"></div>}
-                            <span>{pendingPostCount} mục mới</span>
+                            <span>{pendingPostCount} {trl("mục mới")}</span>
                           </div>
                         </div>
                         {pendingPostCount > 0 &&
