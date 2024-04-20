@@ -1,49 +1,125 @@
 .video-call {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f2f5;
+
   .video-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 80%;
+    max-width: 1200px;
+    justify-content: flex-start;
+
+    .local-video,
+    .remote-video {
+      background-color: #fff;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      video {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+      }
+    }
+
     .local-video {
-      border: solid;
-      background-color: antiquewhite;
       width: 30%;
       height: 30%;
-      position: fixed;
-      bottom: 10px;
-      right: 10px;
-      display: flex;
-      video {
-        width: 100%;
-        height: 100%;
-      }
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
     }
+
     .remote-video {
-      background-color: antiquewhite;
-      display: flex;
-      border: solid;
-      width: 90%;
-      height: 90%;
-      video {
-        width: 100%;
-        height: 100%;
-      }
+      width: 70%;
+      height: 70%;
     }
   }
+
   button {
     border: none;
-    background-color: crimson;
+    background-color: #007bff;
     color: white;
-    position: fixed;
-    bottom: 5%;
-    right: 50%;
-    width: 50px;
-    height: 50px;
-    border-radius: 99%;
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border: 1px solid #0056b3; /* Thêm viền */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      background-color: #0056b3;
+    }
   }
-  button:hover {
-    background-color: darkgrey;
-    color: black;
-  }
+
   .popup-content {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    padding: 30px;
+    h1 {
+      font-size: 24px; /* Tăng kích thước font */
+      /* Các thuộc tính khác không thay đổi */
+    }
+    button {
+      margin: 0 10px; /* Thêm margin giữa các nút */
+      /* Các thuộc tính khác không thay đổi */
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    button {
+      margin-top: 20px;
+    }
+  }
+  .control-panel {
+    position: fixed;
+    bottom: 20px;
+    right: 50%;
+    transform: translateX(50%);
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 10px;
+    background-color: rgba(255, 255, 255, 0.8); /* Thêm màu nền */
+    padding: 10px; /* Thêm padding */
+    border-radius: 10px;
+
+    .control-button {
+      width: 30px;
+      height: 30px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: #0056b3;
+      }
+
+      &.toggled {
+        background-color: #dc3545;
+      }
+
+      i {
+        font-size: 16px;
+      }
+    }
   }
 }
