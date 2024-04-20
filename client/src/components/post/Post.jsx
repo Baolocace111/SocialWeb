@@ -69,8 +69,8 @@ const Post = ({ post }) => {
 
   const isVideoContent = post.img
     ? post.img.endsWith(".mp4") ||
-      post.img.endsWith(".avi") ||
-      post.img.endsWith(".mov")
+    post.img.endsWith(".avi") ||
+    post.img.endsWith(".mov")
     : false;
 
   useEffect(() => {
@@ -683,14 +683,16 @@ const Post = ({ post }) => {
                 className="react-player"
               />
             ) : (
-              <img
-                src={URL_OF_BACK_END + `posts/videopost/` + post.id}
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = "/upload/errorImage.png";
-                }}
-                alt={""}
-              />
+              (
+                post.img && <img
+                  src={URL_OF_BACK_END + `posts/videopost/` + post.id}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "/upload/errorImage.png";
+                  }}
+                  alt={""}
+                />
+              )
             )}
           </Link>
         </div>

@@ -1,4 +1,5 @@
 import "./groupsBar.scss";
+import { useLanguage } from "../../context/languageContext";
 import { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -6,7 +7,7 @@ import { faLightbulb, faGear, faCompass } from "@fortawesome/free-solid-svg-icon
 import { Link } from 'react-router-dom';
 
 const GroupsBar = () => {
-
+    const { trl } = useLanguage();
     const location = useLocation();
     const [selectedItem, setSelectedItem] = useState('');
 
@@ -27,7 +28,7 @@ const GroupsBar = () => {
         <div className="groups-bar">
             <div className="container">
                 <div className="groups-title">
-                    <span>Nhóm</span>
+                    <span>{trl("Nhóm")}</span>
                     <button className="icon">
                         <FontAwesomeIcon icon={faGear} />
                     </button>
@@ -38,7 +39,7 @@ const GroupsBar = () => {
                             <div className={`icon-button ${isItemSelected('discover') ? 'selected' : ''}`}>
                                 <FontAwesomeIcon icon={faCompass} size="lg" />
                             </div>
-                            <span>Khám phá</span>
+                            <span>{trl("Khám phá")}</span>
                         </div>
                     </Link>
                     <Link to={`/groups/joins`} style={{ textDecoration: "none", color: "inherit" }}>
@@ -46,7 +47,7 @@ const GroupsBar = () => {
                             <div className={`icon-button ${isItemSelected('joins') ? 'selected' : ''}`}>
                                 <FontAwesomeIcon icon={faLightbulb} size="lg" />
                             </div>
-                            <span>Nhóm của bạn</span>
+                            <span>{trl("Nhóm của bạn")}</span>
                         </div>
                     </Link>
                 </div>
@@ -56,7 +57,7 @@ const GroupsBar = () => {
                         window.location.href = `/groups/create`;
                     }}
                 >
-                    <span> + Tạo nhóm mới </span>
+                    <span>{trl("+ Tạo nhóm mới")}</span>
                 </div>
             </div>
         </div>

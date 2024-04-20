@@ -57,19 +57,19 @@ const GroupPendingPost = () => {
   return (
     <div className="group-pending-post">
       <div className="header">
-        <span className="manage-header">Đang chờ phê duyệt</span>
+        <span className="manage-header">{trl("Đang chờ phê duyệt")}</span>
         <div className="sort-info">
           <input
             type="text"
-            placeholder="Tìm kiếm theo tên"
+            placeholder={trl("Tìm kiếm theo tên")}
             className="search-input"
           />
           <button className="filter-button" onClick={toggleDropdown}>
-            <span>Loại nội dung</span>
+            <span>{trl("Loại nội dung")}</span>
             <FontAwesomeIcon icon={faCaretDown} />
             <div className={`dropdown-menu ${isDropdownOpen ? "show" : ""}`}>
-              <div className="option">Ảnh</div>
-              <div className="option">Video</div>
+              <div className="option">{trl("Ảnh")}</div>
+              <div className="option">{trl("Video")}</div>
             </div>
           </button>
         </div>
@@ -92,7 +92,7 @@ const GroupPendingPost = () => {
                 }}
                 alt="No request"
               />
-              <p>No pending post found.</p>
+              <p>{trl("Không có bài viết đang chờ.")}</p>
             </div>
           )}
         </div>

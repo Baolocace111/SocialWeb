@@ -38,9 +38,9 @@ export const createGroup = (groupName, privacyLevel, createdBy, callback) => {
         const groupId = result.insertId;
 
         // Thêm người dùng vào nhóm mới với role là quản trị viên
-        const addToJoinsQuery = "INSERT INTO joins(user_id, group_id, joined_date, role) VALUES (?, ?, NOW(), ?)";
+        const addToJoinsQuery = "INSERT INTO joins(user_id, group_id, joined_date, role, status) VALUES (?, ?, NOW(), ?, ?)";
 
-        db.query(addToJoinsQuery, [createdBy, groupId, 1], (err, result) => {
+        db.query(addToJoinsQuery, [createdBy, groupId, 1, 1], (err, result) => {
             if (err) return callback(err);
             return callback(null, { groupId: groupId, ...result });
         });
@@ -151,3 +151,13 @@ export const rejectGroupPost = (postId, groupId, callback) => {
     });
 };
 
+export const getUserFromGroupPost = (postId, callback) => {
+    const query = `SELECT user_id FROM group_posts WHERE post_id = ? LIMIT 1`;
+    db.query(query, [postId], (err, rows) => {
+        if (err) return callback(err);
+        if (rows.length === 0) {
+            return callback(new Error("No post found in assigned group!"));
+        }
+        return callback(null, rows[0].user_id);
+    });
+};

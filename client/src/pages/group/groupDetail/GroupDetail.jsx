@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useLanguage } from "../../../context/languageContext";
 import { useParams } from "react-router-dom";
 import { makeRequest } from "../../../axios.js";
 import { AuthContext } from "../../../context/authContext.js";
@@ -20,6 +21,7 @@ import "./groupDetail.scss";
 import GroupPosts from "../../../components/groups/GroupPosts/GroupPosts.jsx";
 
 const GroupDetail = () => {
+  const { trl } = useLanguage();
   const { currentUser } = useContext(AuthContext);
   const { groupId } = useParams();
   const [groupData, setGroupData] = useState(null);
@@ -120,19 +122,18 @@ const GroupDetail = () => {
         <div className="intro-privacy">
           <FontAwesomeIcon icon={faLock} style={{ marginTop: "4px" }} />
           <div className="content">
-            <span className="intro-title">Riêng tư</span>
+            <span className="intro-title">{trl("Riêng tư")}</span>
             <span className="intro-content">
-              Chỉ thành viên mới nhìn thấy mọi người trong nhóm và những gì họ
-              đăng.
+              {trl("Chỉ thành viên mới nhìn thấy mọi người trong nhóm và những gì họ đăng.")}
             </span>
           </div>
         </div>
         <div className="intro-privacy">
           <FontAwesomeIcon icon={faEye} style={{ marginTop: "4px" }} />
           <div className="content">
-            <span className="intro-title">Hiển thị</span>
+            <span className="intro-title">{trl("Hiển thị")}</span>
             <span className="intro-content">
-              Ai cũng có thể tìm thấy nhóm này.
+              {trl("Ai cũng có thể tìm thấy nhóm này.")}
             </span>
           </div>
         </div>
@@ -147,18 +148,18 @@ const GroupDetail = () => {
             style={{ marginTop: "4px" }}
           />
           <div className="content">
-            <span className="intro-title">Công khai</span>
+            <span className="intro-title">{trl("Công khai")}</span>
             <span className="intro-content">
-              Ai cũng nhìn thấy mọi người trong nhóm và những gì họ đăng
+              {trl("Ai cũng nhìn thấy mọi người trong nhóm và những gì họ đăng.")}
             </span>
           </div>
         </div>
         <div className="intro-privacy">
           <FontAwesomeIcon icon={faEye} style={{ marginTop: "4px" }} />
           <div className="content">
-            <span className="intro-title">Hiển thị</span>
+            <span className="intro-title">{trl("Hiển thị")}</span>
             <span className="intro-content">
-              Ai cũng có thể tìm thấy nhóm này.
+              {trl("Ai cũng có thể tìm thấy nhóm này.")}
             </span>
           </div>
         </div>
@@ -185,10 +186,10 @@ const GroupDetail = () => {
             <div className="cover-toolbar">
               <div className="option">
                 <button className="button cancel" onClick={handleCancel}>
-                  Hủy
+                  {trl("Hủy")}
                 </button>
                 <button className="button save" onClick={handleSave}>
-                  Lưu thay đổi
+                  {trl("Lưu thay đổi")}
                 </button>
               </div>
             </div>
@@ -201,7 +202,7 @@ const GroupDetail = () => {
             {!selectedImage && currentUser.id === groupData.created_by && (
               <button className="edit-button" onClick={togglePopover}>
                 <FontAwesomeIcon icon={faPen} style={{ marginRight: "5px" }} />
-                Chỉnh sửa
+                {trl("Chỉnh sửa")}
               </button>
             )}
             {showPopover && (
@@ -227,7 +228,7 @@ const GroupDetail = () => {
                       icon={faUpload}
                       style={{ marginRight: "10px" }}
                     />
-                    Tải ảnh lên
+                    {trl("Tải ảnh lên")}
                   </label>
                 </div>
                 <div className="popover-item">
@@ -235,7 +236,7 @@ const GroupDetail = () => {
                     icon={faImage}
                     style={{ marginRight: "10px" }}
                   />
-                  Chọn từ ảnh minh họa
+                  {trl("Chọn từ ảnh minh họa")}
                 </div>
               </div>
             )}
@@ -257,12 +258,12 @@ const GroupDetail = () => {
                 style={{ marginRight: "5px" }}
               />
             )}
-            {groupData.privacy_level === 0 ? "Nhóm Riêng tư" : "Nhóm Công khai"}
+            {groupData.privacy_level === 0 ? trl("Nhóm Riêng tư") : trl("Nhóm Công khai")}
             <FontAwesomeIcon
               icon={faCircle}
               style={{ fontSize: "2px", margin: "0 5px" }}
             />
-            <span className="member">{members.length + " thành viên"}</span>
+            <span className="member">{members.length + trl(" thành viên")}</span>
           </p>
         </div>
         <div className="group-members">
@@ -280,7 +281,7 @@ const GroupDetail = () => {
             ))}
           </div>
           <div className="invite">
-            <span>+ Mời</span>
+            <span>{trl("+ Mời")}</span>
           </div>
         </div>
         <div className="group-tabs">
@@ -289,25 +290,25 @@ const GroupDetail = () => {
               className={`tab ${activeTab === "discussion" ? "active" : ""}`}
               onClick={() => handleTabChange("discussion")}
             >
-              Thảo luận
+              {trl("Thảo luận")}
             </button>
             <button
               className={`tab ${activeTab === "members" ? "active" : ""}`}
               onClick={() => handleTabChange("members")}
             >
-              Thành viên
+              {trl("Thành viên")}
             </button>
             <button
               className={`tab ${activeTab === "events" ? "active" : ""}`}
               onClick={() => handleTabChange("events")}
             >
-              Sự kiện
+              {trl("Sự kiện")}
             </button>
             <button
               className={`tab ${activeTab === "files" ? "active" : ""}`}
               onClick={() => handleTabChange("files")}
             >
-              File
+              {trl("File")}
             </button>
           </div>
         </div>
@@ -318,7 +319,7 @@ const GroupDetail = () => {
           <GroupPosts groupId={groupId} />
         </div>
         <div className="group-intro">
-          <span className="title">Giới thiệu</span>
+          <span className="title">{trl("Giới thiệu")}</span>
           {introContent}
         </div>
       </div>

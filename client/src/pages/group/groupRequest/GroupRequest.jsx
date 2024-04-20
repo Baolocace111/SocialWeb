@@ -7,8 +7,10 @@ import MemberRequest from '../../../components/groups/MemberRequest/MemberReques
 import NineCube from '../../../components/loadingComponent/nineCube/NineCube.jsx';
 import { makeRequest } from '../../../axios';
 import { useState } from 'react';
+import { useLanguage } from "../../../context/languageContext";
 
 const GroupRequest = () => {
+    const { trl } = useLanguage();
     const { groupId } = useParams();
 
     const { data, isLoading } = useQuery(['group-join-requests', groupId], () =>
@@ -22,15 +24,15 @@ const GroupRequest = () => {
     return (
         <div className="group-request">
             <div className="header">
-                <span className="manage-header">Yêu cầu làm thành viên</span>
+                <span className="manage-header">{trl("Yêu cầu làm thành viên")}</span>
                 <div className="sort-info">
-                    <input type="text" placeholder="Tìm kiếm theo tên" className="search-input" />
+                    <input type="text" placeholder={trl("Tìm kiếm theo tên")} className="search-input" />
                     <button className="filter-button" onClick={toggleDropdown}>
-                        <span>Giới tính</span>
+                        <span>{trl("Giới tính")}</span>
                         <FontAwesomeIcon icon={faCaretDown} />
                         <div className={`dropdown-menu ${isDropdownOpen ? 'show' : ''}`}>
-                            <div className="option">Nam</div>
-                            <div className="option">Nữ</div>
+                            <div className="option">{trl("Nam")}</div>
+                            <div className="option">{trl("Nữ")}</div>
                         </div>
                     </button>
                 </div>
@@ -46,7 +48,7 @@ const GroupRequest = () => {
                     ) : (
                         <div className="not-found">
                             <img src="https://www.facebook.com/images/comet/empty_states_icons/people/null_states_people_gray_wash.svg" alt="No request" />
-                            <p>No member request found.</p>
+                            <p>{trl("Không có yêu cầu tham gia nhóm.")}</p>
                         </div>
                     )}
                 </div>

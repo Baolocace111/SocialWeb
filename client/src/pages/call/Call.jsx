@@ -7,7 +7,13 @@ import PopupWindow from "../../components/PopupComponent/PopupWindow";
 import "./call.scss";
 import CountdownTimer from "../../components/CountdownTimer/CountdownTimer";
 import { useLanguage } from "../../context/languageContext";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faMicrophoneAlt,
+  faMicrophoneAltSlash,
+  faEye,
+  faEyeSlash,
+} from "@fortawesome/free-solid-svg-icons";
 const Call = () => {
   const { trl } = useLanguage();
   const { RTCPeerConnection, RTCSessionDescription } = window;
@@ -16,30 +22,52 @@ const Call = () => {
   const wsRef = useRef(null);
   const [callPopup, SetCallingPopup] = useState(false);
   const [localStream, setLocalStream] = useState(null);
-
+  const microphone = useRef(null);
+  const [camera, setCamera] = useState(false);
   const localVideoRef = useRef(null);
   const remoteVideoRef = useRef(null);
   const [remoteStream, setRemoteStream] = useState(null);
   const [peerConnection, setPeerConnection] = useState(null);
   const [popupMessage, setPopupMessage] = useState(null);
   const popupType = useRef(null);
+  const [Audio, setAudio] = useState(true);
+  const [Video, setVideo] = useState(true);
+  const [popupQuestion, setPopupQuestion] = useState(true);
+  const [question, setQuestion] = useState("Bạn có camera không?");
+  const handleAnswerTheQuestion = (answer) => {
+    if (question === "Bạn có camera không?") {
+      if (answer) {
+        setCamera(true);
+      } else setCamera(false);
+      setQuestion("Bạn có Micro không?");
+    } else {
+      if (answer) {
+        microphone.current = true;
+      } else microphone.current = false;
+      navigator.mediaDevices
+        .getUserMedia(
+          camera
+            ? { video: true, audio: microphone.current }
+            : { audio: microphone.current }
+        )
+        .then((stream) => {
+          setLocalStream(stream);
+          if (localVideoRef.current) {
+            localVideoRef.current.srcObject = stream;
+          }
+        })
+        .catch((error) => {
+          alert(trl("Bạn đã không có cả 2 thiết bị"));
+        });
+      //Xử lý luồng
+      const pc = new RTCPeerConnection();
+      pc.onicecandidate = handleIceCandidate;
+      pc.ontrack = handleTrack;
+      setPeerConnection(pc);
+      setPopupQuestion(false);
+    }
+  };
 
-  useEffect(() => {
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
-      .then((stream) => {
-        setLocalStream(stream);
-        if (localVideoRef.current) {
-          localVideoRef.current.srcObject = stream;
-        }
-      })
-      .catch((error) => console.error("Error accessing media devices.", error));
-    //Xử lý luồng
-    const pc = new RTCPeerConnection();
-    pc.onicecandidate = handleIceCandidate;
-    pc.ontrack = handleTrack;
-    setPeerConnection(pc);
-  }, []);
   const onCloseCallPopup = () => {
     if (popupType.current === "call") {
       //wsRef.current.send(JSON.stringify({ type: "cancel" }));
@@ -200,6 +228,25 @@ const Call = () => {
         SetCallingPopup(true);
       });
   };
+  const toggleCamera = () => {
+    if (localStream) {
+      const videoTrack = localStream.getVideoTracks()[0];
+      if (videoTrack) {
+        setVideo(!videoTrack.enabled);
+        videoTrack.enabled = !videoTrack.enabled;
+      }
+    }
+  };
+
+  const toggleMicrophone = () => {
+    if (localStream) {
+      const audioTrack = localStream.getAudioTracks()[0];
+      if (audioTrack) {
+        setAudio(!audioTrack.enabled);
+        audioTrack.enabled = !audioTrack.enabled;
+      }
+    }
+  };
 
   return (
     <div className="video-call">
@@ -217,6 +264,27 @@ const Call = () => {
           <button onClick={onCloseCallPopup}>{trl("Cancel")}</button>
         </div>
       </PopupWindow>
+      <PopupWindow show={popupQuestion}>
+        <div className="popup-content">
+          <h1>{question && trl(question)}</h1>
+        </div>
+        <div>
+          <button
+            onClick={() => {
+              handleAnswerTheQuestion(true);
+            }}
+          >
+            {trl("Yes")}
+          </button>
+          <button
+            onClick={() => {
+              handleAnswerTheQuestion(false);
+            }}
+          >
+            {trl("No")}
+          </button>
+        </div>
+      </PopupWindow>
       <div className="video-container">
         <div className="local-video">
           <video autoPlay ref={localVideoRef} muted></video>
@@ -224,6 +292,20 @@ const Call = () => {
         <div className="remote-video">
           <video autoPlay ref={remoteVideoRef}></video>
         </div>
+      </div>
+      <div className="control-panel">
+        {camera && (
+          <button className="control-button" onClick={toggleCamera}>
+            <FontAwesomeIcon icon={Video ? faEye : faEyeSlash} />
+          </button>
+        )}
+        {microphone.current && (
+          <button className="control-button" onClick={toggleMicrophone}>
+            <FontAwesomeIcon
+              icon={Audio ? faMicrophoneAlt : faMicrophoneAltSlash}
+            />
+          </button>
+        )}
       </div>
 
       {!ws && <button onClick={handleReady}>{trl("Gọi/Nghe")}</button>}

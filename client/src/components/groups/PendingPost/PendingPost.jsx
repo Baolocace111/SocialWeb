@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLanguage } from "../../../context/languageContext";
 import "./pendingPost.scss";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { useParams } from 'react-router-dom';
@@ -7,6 +8,7 @@ import { makeRequest, URL_OF_BACK_END } from "../../../axios";
 import moment from "moment";
 
 const PendingPost = ({ post }) => {
+    const { trl } = useLanguage();
     const { groupId } = useParams();
     const queryClient = useQueryClient();
 
@@ -61,10 +63,10 @@ const PendingPost = ({ post }) => {
             </div>
             <div className="post-action">
                 <button className="accept" onClick={handleApprove} disabled={approveMutation.isLoading}>
-                    Phê duyệt
+                    {trl("Phê duyệt")}
                 </button>
                 <button className="deny" onClick={handleReject} disabled={rejectMutation.isLoading}>
-                    Từ chối
+                    {trl("Từ chối")}
                 </button>
                 <button className="more">
                     <MoreHorizIcon fontSize="small" />

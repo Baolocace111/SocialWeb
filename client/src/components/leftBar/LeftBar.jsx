@@ -46,7 +46,7 @@ const LeftBar = () => {
           <div
             className="item"
             onClick={() => {
-              window.location.href = `/groups/discover`;
+              window.location.href = `/groups/joins`;
             }}
           >
             <img src={Groups} alt="" />

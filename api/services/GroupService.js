@@ -1,4 +1,5 @@
 import * as groupModel from "../models/GroupModel.js";
+import { addNotificationService } from "./NotificationService.js";
 
 export const getGroupById = (groupId, callback) => {
     groupModel.getGroupById(groupId, (err, data) => {
@@ -74,7 +75,33 @@ export const approvePendingGroupPost = (userId, groupId, postId, callback) => {
 
         groupModel.approveGroupPost(postId, groupId, (err, result) => {
             if (err) return callback(err, null);
-            return callback(null, result);
+
+            groupModel.getUserFromGroupPost(postId, (err, postUserId) => {
+                if (err) {
+                    console.error("Failed to get user id for notification.");
+                    return callback(err, null);
+                }
+
+                getGroupById(groupId, (err, group) => {
+                    if (err || !group) {
+                        console.error("Failed to get group info for notification.");
+                        return callback(err, null);
+                    }
+                    addNotificationService(
+                        postUserId,
+                        `Bài viết của bạn trong nhóm ${group[0].group_name} đã được chấp thuận.`,
+                        `/groups/${groupId}/posts/${postId}`,
+                        group[0].group_avatar,
+                        (err, notificationResult) => {
+                            if (err) {
+                                console.error("Failed to send notification.");
+                                return callback(err, null);
+                            }
+                            callback(null, result);
+                        }
+                    );
+                });
+            });
         });
     });
 };
@@ -88,7 +115,33 @@ export const rejectPendingGroupPost = (userId, groupId, postId, callback) => {
 
         groupModel.rejectGroupPost(postId, groupId, (err, result) => {
             if (err) return callback(err, null);
-            return callback(null, result);
+
+            groupModel.getUserFromGroupPost(postId, (err, postUserId) => {
+                if (err) {
+                    console.error("Failed to get user id for notification.");
+                    return callback(err, null);
+                }
+
+                getGroupById(groupId, (err, group) => {
+                    if (err || !group) {
+                        console.error("Failed to get group info for notification.");
+                        return callback(err, null);
+                    }
+                    addNotificationService(
+                        postUserId,
+                        `Bài viết của bạn trong nhóm ${group[0].group_name} đã bị từ chối.`,
+                        `/groups/${groupId}`,
+                        group[0].group_avatar,
+                        (err, notificationResult) => {
+                            if (err) {
+                                console.error("Failed to send notification.");
+                                return callback(err, null);
+                            }
+                            callback(null, result);
+                        }
+                    );
+                });
+            });
         });
     });
 };
