@@ -28,6 +28,7 @@ import ProfileInfo from "../../components/profileComponents/profileInfo/ProfileI
 import Share from "../../components/share/Share";
 import { ChatContext } from "../../components/navbar/ChatContext";
 import { useLanguage } from "../../context/languageContext";
+import UnderContruction from "../../components/loadingComponent/UnderContruction/UnderContruction";
 
 const useStyles = makeStyles({
   root: {
@@ -245,7 +246,7 @@ const Profile = () => {
           )}
           {value === 1 && (
             <div className="profileContainer">
-              <span>{trl("Đang xây dựng")}</span>
+              <UnderContruction />
             </div>
           )}
           {value === 2 && (
@@ -255,12 +256,12 @@ const Profile = () => {
           )}
           {value === 3 && (
             <div className="profileContainer">
-              <span>{trl("Đang xây dựng")}</span>
+              <UnderContruction />
             </div>
           )}
           {value === 4 && (
             <div className="profileContainer">
-              <span>{trl("Đang xây dựng")}</span>
+              <UnderContruction />
             </div>
           )}
         </>
