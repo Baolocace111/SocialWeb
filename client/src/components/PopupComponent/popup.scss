@@ -1,4 +1,6 @@
 /* Modal Styles */
+@import "../../style.scss";
+
 .modal {
   display: block;
   /* Ẩn ban đầu */
@@ -9,7 +11,9 @@
   left: 0;
   width: 100%;
   height: 100%;
+
   background-color: rgba(0, 0, 0, 0.5);
+
   /* Màu nền với độ trong suốt */
   z-index: 1000;
   /* Chắc chắn hiển thị trên các phần khác */
@@ -18,7 +22,9 @@
   /* Phần cửa sổ popup */
   .modal-main {
     position: fixed;
-    background-color: #fff;
+    @include themify($themes) {
+      background-color: themed("bg");
+    }
     width: 35%;
     top: 50%;
     left: 50%;

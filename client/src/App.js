@@ -54,6 +54,9 @@ import Gameindex from "./pages/games/Gameindex";
 import Carogames from "./pages/games/Carogame";
 import Call from "./pages/call/Call";
 import AdminLanguageManagement from "./pages/admin/adminLanguageManagement/AdminLanguageManagement";
+import FriendDashBoard from "./pages/friend/friendDashboard/FriendDashboard";
+import UnderContructionPage from "./pages/Error/UnderContruction";
+import UnderContruction from "./components/loadingComponent/UnderContruction/UnderContruction";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -127,7 +130,12 @@ function App() {
           <div style={{ flex: "25%" }}>
             <FriendsBar />
           </div>
-          <div style={{ flex: "75%", backgroundColor: "#f6f3f3" }}>
+          <div
+            style={{
+              flex: "75%",
+              backgroundColor: darkMode ? "#222" : "white",
+            }}
+          >
             <Outlet />
           </div>
         </div>
@@ -272,6 +280,46 @@ function App() {
           path: "/",
           element: <Home />,
         },
+        {
+          path: "/market",
+          element: <UnderContructionPage></UnderContructionPage>,
+        },
+        {
+          path: "/watch",
+          element: <UnderContructionPage></UnderContructionPage>,
+        },
+        {
+          path: "/memories",
+          element: <UnderContructionPage></UnderContructionPage>,
+        },
+        {
+          path: "/event",
+          element: <UnderContructionPage></UnderContructionPage>,
+        },
+        {
+          path: "/gallery",
+          element: <UnderContructionPage></UnderContructionPage>,
+        },
+        {
+          path: "/video",
+          element: <UnderContructionPage></UnderContructionPage>,
+        },
+        {
+          path: "/messages",
+          element: <UnderContructionPage></UnderContructionPage>,
+        },
+        {
+          path: "/fund",
+          element: <UnderContructionPage></UnderContructionPage>,
+        },
+        {
+          path: "/tutorial",
+          element: <UnderContructionPage></UnderContructionPage>,
+        },
+        {
+          path: "/course",
+          element: <UnderContructionPage></UnderContructionPage>,
+        },
       ],
     },
     {
@@ -290,6 +338,7 @@ function App() {
       path: "/stories/:userId",
       element: <StoryLayout />,
     },
+
     {
       path: "/friends",
       element: <FriendsLayout />,
@@ -301,6 +350,10 @@ function App() {
         {
           path: "/friends/suggestions",
           element: <FriendSuggest />,
+        },
+        {
+          path: "/friends/dashboard",
+          element: <FriendDashBoard />,
         },
       ],
     },
