@@ -223,9 +223,10 @@
   "Không có yêu cầu tham gia nhóm.": "No member request found.",
   "Không có bài viết đang chờ.": "No pending post found.",
   "Xem nhóm": "View group",
-  "Bạn có camera không?":"Do you have a Camera?",
-  "Bạn có Micro không?":"Do you have a Micro?",
-  "Yes":"Yes",
-  "No":"No",
-  "Bạn đã không có cả 2 thiết bị":"You didn't have both devices"
+  "Bạn có camera không?": "Do you have a Camera?",
+  "Bạn có Micro không?": "Do you have a Micro?",
+  "Yes": "Yes",
+  "No": "No",
+  "Bạn đã không có cả 2 thiết bị": "You didn't have both devices",
+  "Xem hồ sơ": "See profile"
 }
