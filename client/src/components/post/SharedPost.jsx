@@ -50,10 +50,14 @@ const SharedPost = ({ post }) => {
   const [desc, setDesc] = useState(post.desc);
   const { trl, language } = useLanguage();
   useEffect(() => {
-    if (language === "jp") moment.locale("ja");
-    if (language === "vn") moment.locale("vi");
-    else moment.locale("en");
-  }, []);
+    if (language === "jp") {
+      moment.locale("ja");
+    } else if (language === "vn") {
+      moment.locale("vi");
+    } else {
+      moment.locale("en");
+    }
+  }, [language]);
   const { currentUser } = useContext(AuthContext);
   const queryClient = useQueryClient();
 
