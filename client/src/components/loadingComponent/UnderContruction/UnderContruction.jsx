@@ -4,9 +4,8 @@ const UnderContruction = () => {
   const { trl } = useLanguage();
   return (
     <div className="contruction-site">
-      <div className="overlay"></div>
       <div className="stars" aria-hidden="true"></div>
-      <div className="starts2" aria-hidden="true"></div>
+      <div className="stars2" aria-hidden="true"></div>
       <div className="stars3" aria-hidden="true"></div>
       <div className="main">
         <section className="contact">

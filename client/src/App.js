@@ -8,7 +8,9 @@ import {
   Navigate,
   Link,
   useLocation,
+  useNavigate
 } from "react-router-dom";
+import { useEffect } from "react";
 import Navbar from "./components/navbar/Navbar";
 import LeftBar from "./components/leftBar/LeftBar";
 import RightBar from "./components/rightBar/RightBar";
@@ -56,7 +58,6 @@ import Call from "./pages/call/Call";
 import AdminLanguageManagement from "./pages/admin/adminLanguageManagement/AdminLanguageManagement";
 import FriendDashBoard from "./pages/friend/friendDashboard/FriendDashboard";
 import UnderContructionPage from "./pages/Error/UnderContruction";
-import UnderContruction from "./components/loadingComponent/UnderContruction/UnderContruction";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -123,6 +124,15 @@ function App() {
   };
 
   const FriendsLayout = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+      if (location.pathname === "/friends") {
+        navigate('/friends/dashboard');
+      }
+    }, [location.pathname, navigate]);
+
     return (
       <div className={`theme-${darkMode ? "dark" : "light"}`}>
         <Navbar />
@@ -133,7 +143,7 @@ function App() {
           <div
             style={{
               flex: "75%",
-              backgroundColor: darkMode ? "#222" : "white",
+              backgroundColor: darkMode ? "#333" : "#f6f3f3",
             }}
           >
             <Outlet />
@@ -144,6 +154,15 @@ function App() {
   };
 
   const GroupsLayout = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+      if (location.pathname === "/groups") {
+        navigate('/groups/joins');
+      }
+    }, [location.pathname, navigate]);
+
     return (
       <div className={`theme-${darkMode ? "dark" : "light"}`}>
         <Navbar />
@@ -338,7 +357,6 @@ function App() {
       path: "/stories/:userId",
       element: <StoryLayout />,
     },
-
     {
       path: "/friends",
       element: <FriendsLayout />,

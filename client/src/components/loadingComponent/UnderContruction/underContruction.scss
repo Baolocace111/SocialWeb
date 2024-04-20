@@ -9,6 +9,7 @@
   top: 0;
   left: 0;
   overflow: hidden;
+
   .main {
     position: relative;
     height: 100%;
@@ -16,25 +17,25 @@
     display: flex;
     justify-content: center;
     align-items: center;
-  }
 
-  .contact {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
+    .contact {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
 
-  .title {
-    font-size: 4rem;
-    margin-bottom: 0.5rem;
-    width: 100%;
-  }
+      .title {
+        font-size: 4rem;
+        margin-bottom: 0.5rem;
+        width: 100%;
+      }
 
-  .sub-title {
-    border-top: 0.1rem solid #fff;
-    padding: 1rem 4rem;
-    text-align: center;
+      .sub-title {
+        border-top: 0.1rem solid #fff;
+        padding: 1rem 4rem;
+        text-align: center;
+      }
+    }
   }
 
   /* CSS hack using multiple box-shadows to get them **Stars** */
@@ -639,6 +640,7 @@
     from {
       transform: translateY(0px);
     }
+
     to {
       transform: translateY(-2000px);
     }
