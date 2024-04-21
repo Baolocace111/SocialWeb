@@ -21,7 +21,7 @@ const MyGroup = () => {
                 ))}
             </div>
             {isLoading && <NineCube />}
-            {!isLoading && data.length !== 0 && <button>Show More</button>}
+            {/* {!isLoading && data.length !== 0 && <button>Show More</button>} */}
         </div>
     );
 }

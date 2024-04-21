@@ -177,3 +177,44 @@
         z-index: 99;
     }
 }
+
+.popup-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    @include themify($themes) {
+        .notification {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+
+            span {
+                color: themed("textColorSoft");
+                font-size: 16px;
+            }
+        }
+
+        .close-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #3498db;
+            color: #ffffff;
+            font-weight: 600;
+            border: none;
+            width: 40%;
+            padding: 10px 20px;
+            margin: 20px auto 0 auto;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+
+            &:hover {
+                background-color: #2980b9;
+            }
+        }
+    }
+}
