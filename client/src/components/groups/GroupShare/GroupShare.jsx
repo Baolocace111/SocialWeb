@@ -1,10 +1,12 @@
 import "./groupShare.scss";
+import PopupWindow from "../../PopupComponent/PopupWindow";
 import { useLanguage } from "../../../context/languageContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faImages,
   faFaceSmileBeam,
   faX,
+  faHeart
 } from "@fortawesome/free-solid-svg-icons";
 import { TextareaAutosize } from "@mui/material";
 import { useContext, useState } from "react";
@@ -21,6 +23,7 @@ const GroupShare = () => {
   const { groupId } = useParams();
   const [file, setFile] = useState(null);
   const [desc, setDesc] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
 
   const [showPicker, setShowPicker] = useState(false);
   const [clickedInside, setClickedInside] = useState(false);
@@ -43,6 +46,18 @@ const GroupShare = () => {
 
   const queryClient = useQueryClient();
 
+  const checkOwnerAndShowPopup = async () => {
+    try {
+      const response = await makeRequest.get(`/groups/${groupId}`);
+      const groupData = response.data[0];
+      if (groupData.created_by !== currentUser.id) {
+        setShowPopup(true);
+      }
+    } catch (error) {
+      console.error("Error fetching group data:", error);
+    }
+  };
+
   const groupVideoPost_mutation = useMutation(
     async (newPost) => {
       try {
@@ -54,6 +69,7 @@ const GroupShare = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["group-posts"]);
+        checkOwnerAndShowPopup();
       },
     }
   );
@@ -69,6 +85,7 @@ const GroupShare = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["group-posts"]);
+        checkOwnerAndShowPopup();
       },
     }
   );
@@ -196,6 +213,19 @@ const GroupShare = () => {
           </div>
         )}
       </div>
+      {showPopup && (
+        <PopupWindow show={showPopup} handleClose={() => setShowPopup(false)}>
+          <div className="popup-content">
+            <div className="notification">
+              <span>Cảm ơn bạn vì đã đăng bài <FontAwesomeIcon style={{ color: "red" }} icon={faHeart} /></span>
+              <span>Hệ thống đã gửi bài viết cho quản trị viên duyệt.</span>
+            </div>
+            <button className="close-button" onClick={() => setShowPopup(false)}>
+              <span>Đã hiểu</span>
+            </button>
+          </div>
+        </PopupWindow>
+      )}
     </>
   );
 };
