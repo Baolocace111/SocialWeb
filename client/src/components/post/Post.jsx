@@ -44,7 +44,7 @@ import Description from "./desc";
 import MiniPost from "./MiniPost";
 import Private from "./Private";
 import { Link } from "react-router-dom";
-import ReactPlayer from "react-player";
+import ReactPlayer from "react-player/lazy";
 import { useLanguage } from "../../context/languageContext";
 const Post = ({ post }) => {
   const { trl, language } = useLanguage();
@@ -677,8 +677,9 @@ const Post = ({ post }) => {
           <Link to={`/seepost/${post.id}`}>
             {post.type === 2 && isVideoContent ? (
               <ReactPlayer
+                key={post.id}
                 url={URL_OF_BACK_END + `posts/videopost/` + post.id}
-                playing={true}
+                playing={false}
                 controls={true}
                 className="react-player"
               />

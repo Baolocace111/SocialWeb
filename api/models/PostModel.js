@@ -129,8 +129,8 @@ export const addPost = (post, callback) => {
   });
 };
 export const addVideoPost = (userId, desc, url, callback) => {
-  const q = "INSERT INTO posts(`desc`, `img`, `type`, `userId`) VALUES (?)";
-  const values = [desc, url, 2, userId];
+  const q = "INSERT INTO posts(`desc`, `img`, `createdAt`, `type`, `userId`) VALUES (?)";
+  const values = [desc, url, moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"), 2, userId];
   db.query(q, [values], (err, data) => {
     if (err) return callback(err, null);
     return callback(null, "Post has been created.");

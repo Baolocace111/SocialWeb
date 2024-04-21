@@ -41,7 +41,7 @@ import { AuthContext } from "../../../context/authContext";
 import Description from "../../post/desc";
 import Private from "../../post/Private";
 import { Link } from "react-router-dom";
-import ReactPlayer from "react-player";
+import ReactPlayer from "react-player/lazy";
 import { useLanguage } from "../../../context/languageContext";
 
 const GroupPost = ({ post }) => {
@@ -642,10 +642,11 @@ const GroupPost = ({ post }) => {
         <div className="content">
           <Description text={post.desc}></Description>
           <Link to={`/seepost/${post.id}`}>
-            {post.type === 2 && isVideoContent ? (
+            {isVideoContent ? (
               <ReactPlayer
+                key={post.id}
                 url={URL_OF_BACK_END + `posts/videopost/` + post.id}
-                playing={true}
+                playing={false}
                 controls={true}
                 className="react-player"
               />
