@@ -412,26 +412,28 @@ export const deleteImageOfPost = (postId, userId, callback) => {
 export const addGroupPost = (post, callback) => {
   checkGroupMembership(post.userId, post.groupId, (err, isMember) => {
     if (err) return callback(err);
-    // Nếu không phải thành viên, không cho phép tạo post
     if (!isMember) return callback("This user is not a member of the group");
 
-    // Tiếp tục thêm post như bình thường
-    const query = "INSERT INTO posts(`desc`, `img`, `userId`, `type`) VALUES (?)";
-    const values = [
-      post.desc,
-      post.img,
-      post.userId,
-      post.type,
-    ];
-
-    db.query(query, [values], (err, postResult) => {
+    // Kiểm tra xem người dùng có phải là chủ nhóm không
+    checkIfUserIsGroupOwner(post.userId, post.groupId, (err, isOwner) => {
       if (err) return callback(err);
 
-      const postId = postResult.insertId;
-      const groupPostQuery = "INSERT INTO group_posts(`post_id`, `group_id`, `user_id`) VALUES (?, ?, ?)";
-      db.query(groupPostQuery, [postId, post.groupId, post.userId], (err, groupPostResult) => {
+      const status = isOwner ? 1 : 0; // Nếu là chủ nhóm thì status = 1, ngược lại status = 0
+
+      // Tiếp tục thêm post như bình thường
+      const query = "INSERT INTO posts(`desc`, `img`, `userId`, `type`) VALUES (?)";
+      const values = [post.desc, post.img, post.userId, post.type];
+
+      db.query(query, [values], (err, postResult) => {
         if (err) return callback(err);
-        return callback(null, "Group post has been created.");
+
+        const postId = postResult.insertId;
+        // Thêm status vào query
+        const groupPostQuery = "INSERT INTO group_posts(`post_id`, `group_id`, `user_id`, `status`) VALUES (?, ?, ?, ?)";
+        db.query(groupPostQuery, [postId, post.groupId, post.userId, status], (err, groupPostResult) => {
+          if (err) return callback(err);
+          return callback(null, "Group post has been created.");
+        });
       });
     });
   });
@@ -464,5 +466,14 @@ export const checkGroupMembership = (userId, groupId, callback) => {
     if (err) return callback(err);
     const isMember = results.length > 0 && results[0].status === 1;
     return callback(null, isMember);
+  });
+};
+
+export const checkIfUserIsGroupOwner = (userId, groupId, callback) => {
+  const query = "SELECT * FROM teams WHERE id = ? AND created_by = ?";
+  db.query(query, [groupId, userId], (err, results) => {
+    if (err) return callback(err);
+    const isOwner = results.length > 0;
+    callback(null, isOwner);
   });
 };
