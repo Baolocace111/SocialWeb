@@ -86,14 +86,14 @@
       .info {
         display: flex;
         align-items: center;
-        gap: 20px;
+        gap: 30px;
 
         .item {
           display: flex;
           align-items: center;
           gap: 10px;
           cursor: pointer;
-          font-size: 14px;
+          font-size: 15px;
 
           .shake-heart:hover {
             animation: tilt-shaking 0.25s;
@@ -138,6 +138,15 @@
                 font-size: 18px;
                 font-weight: 600;
               }
+            }
+
+            .text-input {
+              width: 100%;
+              border: none;
+              resize: none;
+              outline: none;
+              font-size: 20px;
+              margin: 10px 0 10px 0;
             }
 
             &::-webkit-scrollbar {
@@ -195,65 +204,97 @@
             }
           }
         }
+
         .report-popup {
           display: flex;
           flex-direction: column;
-          max-width: 500px; // Giới hạn kích thước tối đa
-          width: 100%;
-          background: #ffffff; // Màu nền cho popup
-          border-radius: 8px; // Bo góc cho popup
-          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1); // Đổ bóng cho popup
-          overflow: hidden; // Ẩn các phần tử nằm ngoài biên
+          height: fit-content;
 
           .title {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
             padding: 15px 20px;
-            border-bottom: solid 1px #e0e0e0; // Màu border nhẹ hơn
+            border-bottom: solid 1px lightgray;
             display: flex;
             align-items: center;
-            background: #f7f7f7; // Màu nền cho tiêu đề
+
           }
 
-          .content {
-            height: 300px;
-            overflow-x: hidden;
-            overflow-y: scroll;
-            padding: 20px; // Thêm padding cho nội dung
+          .popup-content {
+            flex-grow: 1;
+            overflow-y: auto;
+
             .text-input {
               width: 100%;
               border: none;
               resize: none;
               outline: none;
               font-size: 20px;
-              margin: 15px 0 -10px 0; // Tạo khoảng cách dưới textarea
+              margin-bottom: 15px;
             }
+
+            .file-input {
+              label {
+                font-size: 22px;
+                width: fit-content;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+              }
+
+              input {
+                display: none;
+              }
+            }
+
             .file-preview {
               margin-top: 15px;
-              position: relative;
 
-              img,
-              video {
-                max-width: 100%;
-                height: auto;
-                border-radius: 4px;
-              }
+              .file-selected {
+                margin: 0 auto;
+                width: fit-content;
+                position: relative;
 
-              button {
-                position: absolute;
-                top: 0;
-                right: 0;
-                padding: 5px 10px;
-                background-color: #ff4d4f;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-              }
+                img,
+                video {
+                  max-height: 150px;
+                  border-radius: 4px;
+                  position: relative;
+                }
 
-              button:hover {
-                background-color: #ff7875;
+                button {
+                  position: absolute;
+                  top: 0;
+                  right: 0;
+                  padding: 5px 10px;
+                  background-color: #ff4d4f;
+                  color: white;
+                  border: none;
+                  border-radius: 50%;
+                  cursor: pointer;
+
+                  &:hover {
+                    background-color: #ff7875;
+                  }
+                }
               }
             }
-            // Các cải tiến khác cho .user-info nếu cần
+
+            &::-webkit-scrollbar {
+              width: 6px;
+            }
+
+            &::-webkit-scrollbar-track {
+              background-color: transparent;
+            }
+
+            &::-webkit-scrollbar-thumb {
+              background-color: rgba(0, 0, 0, 0.4);
+              border-radius: 4px;
+            }
+
+            &::-webkit-scrollbar-thumb:hover {
+              background-color: rgba(0, 0, 0, 0.6);
+            }
           }
 
           .popup-action {
@@ -263,23 +304,33 @@
             gap: 30px;
             padding: 15px 0;
             box-shadow: 0px -4px 8px rgba(0, 0, 0, 0.1);
-            button {
-              padding: 10px 20px; // Tăng padding cho nút
-              font-weight: bold; // Tăng độ đậm cho chữ
-              //border-radius: 20px; // Bo góc tròn cho nút
-              transition: background-color 0.3s; // Hiệu ứng chuyển màu nền
-            }
 
             button.report {
-              background-color: #007bff; // Màu nền cho nút report
+              padding: 8px 16px;
+              border: none;
+              color: white;
+              background-color: lightskyblue;
+              cursor: pointer;
+              border-radius: 4px;
+              margin: 0;
+            }
+
+            button.report:hover {
+              background-color: blue;
             }
 
             button.cancel {
-              background-color: #6c757d; // Màu nền cho nút cancel
+              padding: 8px 16px;
+              border: none;
+              color: white;
+              background-color: lightcoral;
+              cursor: pointer;
+              border-radius: 4px;
+              margin: 0;
             }
 
-            button:hover {
-              opacity: 0.8; // Làm mờ nút khi hover
+            button.cancel:hover {
+              background-color: red;
             }
           }
         }

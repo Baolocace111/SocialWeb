@@ -217,8 +217,8 @@ const GroupShare = () => {
         <PopupWindow show={showPopup} handleClose={() => setShowPopup(false)}>
           <div className="popup-content">
             <div className="notification">
-              <span>Cảm ơn bạn vì đã đăng bài <FontAwesomeIcon style={{ color: "red" }} icon={faHeart} /></span>
-              <span>Hệ thống đã gửi bài viết cho quản trị viên duyệt.</span>
+              <span>{trl("Cảm ơn bạn vì đã đăng bài")} <FontAwesomeIcon style={{ color: "red" }} icon={faHeart} /></span>
+              <span>{trl("Hệ thống đã gửi bài viết cho quản trị viên duyệt.")}</span>
             </div>
             <button className="close-button" onClick={() => setShowPopup(false)}>
               <span>Đã hiểu</span>
