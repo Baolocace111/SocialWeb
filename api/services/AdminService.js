@@ -3,6 +3,8 @@ import {
   getPostCountPerUserInMonth,
   getPostsByUserWithPagination,
   deletePostbyAdmin,
+  getPostById,
+  getPostByIdAdmin,
 } from "../models/PostModel.js";
 import { plusReputation } from "../models/UserModel.js";
 export const getUserPostingByAdminService = (year, month, page, callback) => {
@@ -59,5 +61,11 @@ export const deletePostByAdminService = (postId, callback) => {
       );
       return callback(null, "Delete successfully");
     });
+  });
+};
+export const getPostByIdAdminService = (postId, callback) => {
+  getPostByIdAdmin(postId, (error, data) => {
+    if (error) return callback(error, null);
+    return callback(null, data);
   });
 };
