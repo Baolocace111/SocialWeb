@@ -12,16 +12,19 @@ const Posts = ({ userId }) => {
     ['posts', userId],
     ({ pageParam = 1 }) => makeRequest.get(`/posts?userId=${userId}&offset=${pageParam}`).then((res) => res.data),
     {
-      getNextPageParam: (lastPage) => (lastPage && lastPage.next !== undefined && lastPage.next !== -1) ? lastPage.next + 1 : undefined,
+      getNextPageParam: (lastPage) => {
+        if (lastPage.data.length === 0 || lastPage.next === -1) {
+          return undefined;
+        }
+        return lastPage.next;
+      },
       refetchOnWindowFocus: false,
-      refetchOnMount: false,
+      refetchOnMount: true,
       onSuccess: (newData) => {
         setisLoadingMore(false);
       },
       onSettled: (data, error) => {
-        if (!error) {
-          // Cập nhật state hoặc thực hiện các bước khác sau khi query hoàn thành mà không có lỗi.
-        } else {
+        if (error) {
           console.error("Query failed:", error);
         }
       },
@@ -31,12 +34,7 @@ const Posts = ({ userId }) => {
   const handleWaypointEnter = () => {
     if (hasNextPage && !isLoadingMore) {
       setisLoadingMore(true);
-      const lastPage = data?.pages[data.pages.length - 1];
-      if (lastPage && lastPage.next !== undefined && lastPage.next !== -1) {
-        fetchNextPage({
-          pageParam: lastPage.next,
-        });
-      }
+      fetchNextPage();
     }
   }
 

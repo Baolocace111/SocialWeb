@@ -3,7 +3,7 @@ import { URL_OF_BACK_END } from "../../axios";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import Description from "./desc";
-import ReactPlayer from "react-player";
+import ReactPlayer from "react-player/lazy";
 import { useEffect } from "react";
 import { useLanguage } from "../../context/languageContext";
 const MiniPost = ({ post }) => {
@@ -30,8 +30,9 @@ const MiniPost = ({ post }) => {
           <Link to={`/seepost/${post.id}`}>
             {post.type === 2 && isVideoContent ? (
               <ReactPlayer
+                key={post.id}
                 url={URL_OF_BACK_END + "posts/videopost/" + post.id}
-                playing={true}
+                playing={false}
                 controls={true}
                 width="100%"
                 height="auto"

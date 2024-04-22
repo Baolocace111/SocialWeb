@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { useLanguage } from "../../../context/languageContext";
 import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { makeRequest } from "../../../axios.js";
 import { AuthContext } from "../../../context/authContext.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -24,10 +25,6 @@ const GroupDetail = () => {
   const { trl } = useLanguage();
   const { currentUser } = useContext(AuthContext);
   const { groupId } = useParams();
-  const [groupData, setGroupData] = useState(null);
-  const [members, setMembers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedImageFile, setSelectedImageFile] = useState(null);
   const [activeTab, setActiveTab] = useState("discussion");
@@ -37,22 +34,13 @@ const GroupDetail = () => {
     setShowPopover(!showPopover);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const groupDetailsResponse = await makeRequest.get(`/groups/${groupId}`);
-        const groupUsersResponse = await makeRequest.get(`/joins/groups/${groupId}/users`);
-        setGroupData(groupDetailsResponse.data[0]);
-        setMembers(groupUsersResponse.data);
-        setLoading(false);
-      }
-      catch (error) {
-        setError(error);
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [groupId]);
+  const { data: groupData, isLoading: isGroupLoading, error: groupError } = useQuery(['group-details', groupId], () =>
+    makeRequest.get(`/groups/${groupId}`).then(res => res.data[0])
+  );
+
+  const { data: members, isLoading: isMembersLoading, error: membersError } = useQuery(['group-members', groupId], () =>
+    makeRequest.get(`/joins/groups/${groupId}/users`).then(res => res.data)
+  );
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -101,9 +89,9 @@ const GroupDetail = () => {
     setSelectedImage(null);
   };
 
-  if (loading) return <NineCube />;
-  if (error) return <div className="error-message">Lỗi: {error.message}</div>;
-  if (!groupData) return <div>Không tìm thấy thông tin nhóm.</div>;
+  if (isGroupLoading || isMembersLoading) return <NineCube />;
+  if (groupError) return <div className="error-message">Lỗi: {groupError.message}</div>;
+  if (membersError) return <div className="error-message">Lỗi: {membersError.message}</div>;
 
   let introContent;
   if (groupData.privacy_level === 0) {

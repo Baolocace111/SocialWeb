@@ -45,7 +45,7 @@ import Description from "./desc";
 import MiniPost from "./MiniPost";
 import Private from "./Private";
 import { Link } from "react-router-dom";
-import ReactPlayer from "react-player";
+import ReactPlayer from "react-player/lazy";
 import { useLanguage } from "../../context/languageContext";
 const Post = ({ post }) => {
   const { trl, language } = useLanguage();
@@ -678,8 +678,9 @@ const Post = ({ post }) => {
           <Link to={`/seepost/${post.id}`}>
             {post.type === 2 && isVideoContent ? (
               <ReactPlayer
+                key={post.id}
                 url={URL_OF_BACK_END + `posts/videopost/` + post.id}
-                playing={true}
+                playing={false}
                 controls={true}
                 className="react-player"
               />
@@ -731,94 +732,55 @@ const Post = ({ post }) => {
               {trl("Report")}
             </div>
             <PopupWindow handleClose={handleShare} show={showSharePopup}>
-              <div>
-                <EditIcon sx={{ marginRight: "8px", fontSize: "20px" }} />
-                <span style={{ fontSize: "22px", fontWeight: "700" }}>
-                  {trl("Share this post")}
-                </span>
-              </div>
-              <hr />
-              <div className="popup-content">
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-start",
-                    alignItems: "center",
-                    margin: "10px 0 15px 10px",
-                  }}
-                >
-                  <div
-                    style={{
-                      paddingRight: "15px",
-                      display: "flex",
-                      flex: "0 0 auto",
-                      gap: "10px",
-                    }}
-                  >
-                    <img
-                      src={
-                        URL_OF_BACK_END + `users/profilePic/` + currentUser.id
-                      }
-                      style={{
-                        borderRadius: "50%",
-                        width: "45px",
-                        height: "45px",
-                      }}
+              <div className="share-popup">
+                <div className="title">
+                  <EditIcon sx={{ marginRight: "8px", fontSize: "20px" }} />
+                  <span style={{ fontSize: "22px", fontWeight: "700" }}>
+                    {trl("Share this post")}
+                  </span>
+                </div>
+                <div className="popup-content">
+                  <div className="user-info">
+                    <img src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id}
                       onError={(e) => {
                         e.target.onerror = null;
                         e.target.src = "/upload/errorImage.png";
                       }}
                       alt={""}
                     />
-                    <div
-                      style={{
-                        fontWeight: "700",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      {currentUser.name}
-                    </div>
+                    <span>{currentUser.name}</span>
+                  </div>
+                  <TextareaAutosize
+                    minRows={2}
+                    placeholder="Nhập nội mô tả của bạn"
+                    defaultValue={shareDesc}
+                    onChange={(e) => setShareDesc(e.target.value)}
+                    style={{
+                      width: "100%",
+                      border: "none",
+                      resize: "none",
+                      outline: "none",
+                      fontSize: "20px",
+                      margin: "15px 0 -10px 0"
+                    }}
+                  />
+                  <div
+                    style={{
+                      pointerEvents: "none",
+                      height: "300px"
+                    }}
+                  >
+                    <MiniPost post={post} />
                   </div>
                 </div>
-                <TextareaAutosize
-                  minRows={2}
-                  placeholder="Nhập nội mô tả của bạn"
-                  defaultValue={shareDesc}
-                  onChange={(e) => setShareDesc(e.target.value)}
-                  style={{
-                    width: "100%",
-                    border: "none",
-                    resize: "none",
-                    outline: "none",
-                    fontSize: "20px",
-                    marginBottom: "-10px",
-                  }}
-                />
-                <div
-                  style={{
-                    pointerEvents: "none",
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
-                  <MiniPost post={post}></MiniPost>
+                <div className="popup-action">
+                  <button className="share" onClick={handleShareApi}>
+                    {trl("SHARE")}
+                  </button>
+                  <button className="cancel" onClick={handleShare}>
+                    {trl("CANCEL")}
+                  </button>
                 </div>
-              </div>
-              <hr />
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  gap: "20px",
-                }}
-              >
-                <button className="share" onClick={handleShareApi}>
-                  {trl("SHARE")}
-                </button>
-                <button className="cancel" onClick={handleShare}>
-                  {trl("CANCEL")}
-                </button>
               </div>
             </PopupWindow>
           </div>

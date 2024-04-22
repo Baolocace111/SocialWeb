@@ -18,6 +18,7 @@ import StoriesBar from "./components/stories/StoriesBar/storiesBar";
 import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
 import GroupDetail from "./pages/group/groupDetail/GroupDetail";
+import GroupPostDetail from "./pages/group/groupPostDetail/GroupPostDetail";
 import GroupRequest from "./pages/group/groupRequest/GroupRequest";
 import GroupPendingPost from "./pages/group/groupPendingPost/GroupPendingPost";
 import Search from "./pages/search/searchUser/Search";
@@ -412,6 +413,10 @@ function App() {
         {
           path: "/groups/:groupId/pending_posts",
           element: <GroupPendingPost />,
+        },
+        {
+          path: "/groups/:groupId/posts/:postId",
+          element: <GroupPostDetail />,
         },
       ],
     },
