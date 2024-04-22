@@ -20,6 +20,24 @@ export const getPostById = (userId, postId, callback) => {
     return callback(null, data[0]);
   });
 };
+export const getPostByIdAdmin = (postid, callback) => {
+  const q = `p.*, u.id AS userid, u.name, u.profilePic
+  FROM posts p 
+  LEFT JOIN users u ON (p.userId = u.id)
+  WHERE (p.id=?)`;
+  db.query(q, [postid], (err, data) => {
+    if (err) return callback(err, null);
+    if (data.length === 0)
+      return callback(null, {
+        error: true,
+        desc: "Bài viết không còn nữa",
+        profilePic: "deadskull.png",
+        createAt: 0,
+      });
+
+    return callback(null, data[0]);
+  });
+};
 export const getPosts = (userId, userInfo, callback) => {
   const q =
     userId !== "undefined"
@@ -129,8 +147,15 @@ export const addPost = (post, callback) => {
   });
 };
 export const addVideoPost = (userId, desc, url, callback) => {
-  const q = "INSERT INTO posts(`desc`, `img`, `createdAt`, `type`, `userId`) VALUES (?)";
-  const values = [desc, url, moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"), 2, userId];
+  const q =
+    "INSERT INTO posts(`desc`, `img`, `createdAt`, `type`, `userId`) VALUES (?)";
+  const values = [
+    desc,
+    url,
+    moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+    2,
+    userId,
+  ];
   db.query(q, [values], (err, data) => {
     if (err) return callback(err, null);
     return callback(null, "Post has been created.");
@@ -151,7 +176,8 @@ export const getVideoFromPost = (userId, postId, callback) => {
   });
 };
 export const sharePost = (post, callback) => {
-  const checkQuery = "SELECT * FROM posts WHERE id = ? AND (type = ? OR type = ?)";
+  const checkQuery =
+    "SELECT * FROM posts WHERE id = ? AND (type = ? OR type = ?)";
   db.query(checkQuery, [post.shareId, 1, 3], (checkErr, checkData) => {
     if (checkErr) {
       return callback(checkErr, null);
@@ -282,10 +308,10 @@ export const addListPostPrivate = (userIDs, postID, userID, callback) => {
     const deleteAndInsertQuery =
       userIDs.length > 0
         ? "" +
-        "DELETE FROM post_private WHERE post_id = ?;" +
-        "INSERT INTO post_private(`post_id`, `user_id`) VALUES" +
-        userIDs.map((id) => `(${postID}, ${id})`).join(", ") +
-        `;`
+          "DELETE FROM post_private WHERE post_id = ?;" +
+          "INSERT INTO post_private(`post_id`, `user_id`) VALUES" +
+          userIDs.map((id) => `(${postID}, ${id})`).join(", ") +
+          `;`
         : `DELETE FROM post_private WHERE post_id = ?`;
 
     db.query(deleteAndInsertQuery, Number(postID), (error, results) => {
@@ -421,7 +447,8 @@ export const addGroupPost = (post, callback) => {
       const status = isOwner ? 1 : 0; // Nếu là chủ nhóm thì status = 1, ngược lại status = 0
 
       // Tiếp tục thêm post như bình thường
-      const query = "INSERT INTO posts(`desc`, `img`, `userId`, `type`) VALUES (?)";
+      const query =
+        "INSERT INTO posts(`desc`, `img`, `userId`, `type`) VALUES (?)";
       const values = [post.desc, post.img, post.userId, post.type];
 
       db.query(query, [values], (err, postResult) => {
@@ -429,11 +456,16 @@ export const addGroupPost = (post, callback) => {
 
         const postId = postResult.insertId;
         // Thêm status vào query
-        const groupPostQuery = "INSERT INTO group_posts(`post_id`, `group_id`, `user_id`, `status`) VALUES (?, ?, ?, ?)";
-        db.query(groupPostQuery, [postId, post.groupId, post.userId, status], (err, groupPostResult) => {
-          if (err) return callback(err);
-          return callback(null, "Group post has been created.");
-        });
+        const groupPostQuery =
+          "INSERT INTO group_posts(`post_id`, `group_id`, `user_id`, `status`) VALUES (?, ?, ?, ?)";
+        db.query(
+          groupPostQuery,
+          [postId, post.groupId, post.userId, status],
+          (err, groupPostResult) => {
+            if (err) return callback(err);
+            return callback(null, "Group post has been created.");
+          }
+        );
       });
     });
   });

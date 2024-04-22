@@ -22,6 +22,7 @@ import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import ReportOutlinedIcon from "@mui/icons-material/ReportOutlined";
 
 import { TextareaAutosize } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
@@ -69,8 +70,8 @@ const Post = ({ post }) => {
 
   const isVideoContent = post.img
     ? post.img.endsWith(".mp4") ||
-    post.img.endsWith(".avi") ||
-    post.img.endsWith(".mov")
+      post.img.endsWith(".avi") ||
+      post.img.endsWith(".mov")
     : false;
 
   useEffect(() => {
@@ -684,8 +685,8 @@ const Post = ({ post }) => {
                 className="react-player"
               />
             ) : (
-              (
-                post.img && <img
+              post.img && (
+                <img
                   src={URL_OF_BACK_END + `posts/videopost/` + post.id}
                   onError={(e) => {
                     e.target.onerror = null;
@@ -725,6 +726,10 @@ const Post = ({ post }) => {
             <div className="item" onClick={() => handleShare()}>
               <ShareOutlinedIcon />
               {trl("Share")}
+            </div>
+            <div className="item" onClick={() => {}}>
+              <ReportOutlinedIcon />
+              {trl("Report")}
             </div>
             <PopupWindow handleClose={handleShare} show={showSharePopup}>
               <div className="share-popup">
