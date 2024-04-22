@@ -16,6 +16,7 @@ import {
   faEarthAmericas,
   faUserGroup,
   faUserNinja,
+  faImages
 } from "@fortawesome/free-solid-svg-icons";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
@@ -74,8 +75,8 @@ const Post = ({ post }) => {
 
   const isVideoContent = post.img
     ? post.img.endsWith(".mp4") ||
-      post.img.endsWith(".avi") ||
-      post.img.endsWith(".mov")
+    post.img.endsWith(".avi") ||
+    post.img.endsWith(".mov")
     : false;
 
   useEffect(() => {
@@ -123,7 +124,7 @@ const Post = ({ post }) => {
   const handleSeeDialogClose = () => {
     setOpenSeeEdit(false);
   };
-  const handleReportApi = () => {};
+  const handleReportApi = () => { };
 
   const [file, setFile] = useState(null);
   const [selectedImage, setSelectedImage] = useState(
@@ -747,17 +748,17 @@ const Post = ({ post }) => {
               <ShareOutlinedIcon />
               {trl("Share")}
             </div>
-            <div className="item" onClick={() => handleReport()}>
-              <ReportOutlinedIcon />
-              {trl("Report")}
-            </div>
+            {post.userId !== currentUser.id &&
+              <div className="item" onClick={() => handleReport()}>
+                <ReportOutlinedIcon />
+                {trl("Report")}
+              </div>
+            }
             <PopupWindow handleClose={handleShare} show={showSharePopup}>
               <div className="share-popup">
                 <div className="title">
                   <EditIcon sx={{ marginRight: "8px", fontSize: "20px" }} />
-                  <span style={{ fontSize: "22px", fontWeight: "700" }}>
-                    {trl("Share this post")}
-                  </span>
+                  <span style={{ fontSize: "22px", fontWeight: "700" }}>{trl("Share this post")}</span>
                 </div>
                 <div className="popup-content">
                   <div className="user-info">
@@ -774,23 +775,16 @@ const Post = ({ post }) => {
                     <span>{currentUser.name}</span>
                   </div>
                   <TextareaAutosize
-                    minRows={2}
+                    minRows={1}
                     placeholder={trl("Nhập nội mô tả của bạn")}
                     defaultValue={shareDesc}
                     onChange={(e) => setShareDesc(e.target.value)}
-                    style={{
-                      width: "100%",
-                      border: "none",
-                      resize: "none",
-                      outline: "none",
-                      fontSize: "20px",
-                      margin: "15px 0 -10px 0",
-                    }}
+                    className="text-input"
                   />
                   <div
                     style={{
                       pointerEvents: "none",
-                      height: "300px",
+                      maxHeight: "300px"
                     }}
                   >
                     <MiniPost post={post} />
@@ -809,34 +803,46 @@ const Post = ({ post }) => {
             <PopupWindow show={showReportPopup} handleClose={handleReport}>
               <div className="report-popup">
                 <div className="title">
-                  <ReportOutlinedIcon />
-                  <span>{trl("Report")}</span>
+                  <ReportOutlinedIcon sx={{ marginRight: "8px", fontSize: "22px" }} />
+                  <span style={{ fontSize: "22px", fontWeight: "700" }}>{trl("Report")}</span>
                 </div>
-                <div className="content">
+                <div className="popup-content">
                   <TextareaAutosize
                     className="text-input"
-                    minRows={2}
+                    minRows={1}
                     placeholder={trl("Mô tả báo cáo của bạn")}
                     defaultValue={reportDesc}
                     onChange={(e) => setReportDesc(e.target.value)}
-                  ></TextareaAutosize>
-                  <input
-                    type="file"
-                    accept="image/*,video/*"
-                    onChange={handleReportFileChange}
                   />
+                  <div className="file-input">
+                    <input
+                      id="reportInput" type="file"
+                      accept="image/*,video/*"
+                      onChange={handleReportFileChange}
+                    />
+                    <label htmlFor="reportInput">
+                      <FontAwesomeIcon icon={faImages} />
+                    </label>
+                  </div>
                   {previewReport && (
                     <div className="file-preview">
-                      {selectedReportFile &&
-                      selectedReportFile.type.startsWith("image") ? (
-                        <img src={previewReport} alt="Preview" />
-                      ) : (
-                        <video src={previewReport} controls />
-                      )}
-                      <button onClick={handleRemoveReportFile}>X</button>
+                      <div className="file-selected">
+                        {selectedReportFile &&
+                          selectedReportFile.type.startsWith("image") ? (
+                          <img src={previewReport} alt="Preview" />
+                        ) : (
+                          <video src={previewReport} controls />
+                        )}
+                        <button onClick={handleRemoveReportFile}>X</button>
+                      </div>
                     </div>
                   )}
-                  <MiniPost post={post} />
+                  <div style={{
+                    pointerEvents: "none",
+                    maxHeight: "250px"
+                  }}>
+                    <MiniPost post={post} />
+                  </div>
                 </div>
                 <div className="popup-action">
                   <button className="report" onClick={handleReportApi}>
