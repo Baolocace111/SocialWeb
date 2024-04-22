@@ -195,6 +195,94 @@
             }
           }
         }
+        .report-popup {
+          display: flex;
+          flex-direction: column;
+          max-width: 500px; // Giới hạn kích thước tối đa
+          width: 100%;
+          background: #ffffff; // Màu nền cho popup
+          border-radius: 8px; // Bo góc cho popup
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1); // Đổ bóng cho popup
+          overflow: hidden; // Ẩn các phần tử nằm ngoài biên
+
+          .title {
+            padding: 15px 20px;
+            border-bottom: solid 1px #e0e0e0; // Màu border nhẹ hơn
+            display: flex;
+            align-items: center;
+            background: #f7f7f7; // Màu nền cho tiêu đề
+          }
+
+          .content {
+            height: 300px;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            padding: 20px; // Thêm padding cho nội dung
+            .text-input {
+              width: 100%;
+              border: none;
+              resize: none;
+              outline: none;
+              font-size: 20px;
+              margin: 15px 0 -10px 0; // Tạo khoảng cách dưới textarea
+            }
+            .file-preview {
+              margin-top: 15px;
+              position: relative;
+
+              img,
+              video {
+                max-width: 100%;
+                height: auto;
+                border-radius: 4px;
+              }
+
+              button {
+                position: absolute;
+                top: 0;
+                right: 0;
+                padding: 5px 10px;
+                background-color: #ff4d4f;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+              }
+
+              button:hover {
+                background-color: #ff7875;
+              }
+            }
+            // Các cải tiến khác cho .user-info nếu cần
+          }
+
+          .popup-action {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            padding: 15px 0;
+            box-shadow: 0px -4px 8px rgba(0, 0, 0, 0.1);
+            button {
+              padding: 10px 20px; // Tăng padding cho nút
+              font-weight: bold; // Tăng độ đậm cho chữ
+              //border-radius: 20px; // Bo góc tròn cho nút
+              transition: background-color 0.3s; // Hiệu ứng chuyển màu nền
+            }
+
+            button.report {
+              background-color: #007bff; // Màu nền cho nút report
+            }
+
+            button.cancel {
+              background-color: #6c757d; // Màu nền cho nút cancel
+            }
+
+            button:hover {
+              opacity: 0.8; // Làm mờ nút khi hover
+            }
+          }
+        }
       }
     }
   }
