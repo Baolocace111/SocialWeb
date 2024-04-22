@@ -63,10 +63,14 @@ const Post = ({ post }) => {
   const [deleteImage, setDeleteImage] = useState(false);
   const [shareDesc, setShareDesc] = useState("");
   const [showSharePopup, setShowSharePopup] = useState(false);
+  const [reportDesc, setReportDesc] = useState("");
+  const [showReportPopup, setShowReportPopup] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openSeeEdit, setOpenSeeEdit] = useState(false);
   const [selectedValue, setSelectedValue] = useState(0); // State để lưu giá trị của Radio được chọn
   const privateRef = useRef(null);
+  const [selectedReportFile, setSelectedReportFile] = useState(null);
+  const [previewReport, setPreviewReport] = useState("");
 
   const isVideoContent = post.img
     ? post.img.endsWith(".mp4") ||
@@ -82,6 +86,17 @@ const Post = ({ post }) => {
   }, [openEdit, post]);
 
   //Handle openMenu
+  const handleReportFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedReportFile(file);
+      setPreviewReport(URL.createObjectURL(file));
+    }
+  };
+  const handleRemoveReportFile = () => {
+    setSelectedReportFile(null);
+    setPreviewReport("");
+  };
   const handleMenuClick = (event) => {
     if (post.userId === currentUser.id) {
       setMenuAnchor(event.currentTarget);
@@ -108,6 +123,7 @@ const Post = ({ post }) => {
   const handleSeeDialogClose = () => {
     setOpenSeeEdit(false);
   };
+  const handleReportApi = () => {};
 
   const [file, setFile] = useState(null);
   const [selectedImage, setSelectedImage] = useState(
@@ -212,6 +228,10 @@ const Post = ({ post }) => {
     setShareDesc("");
     setShowSharePopup(!showSharePopup);
     setMenuAnchor(null);
+  };
+  const handleReport = () => {
+    setReportDesc("");
+    setShowReportPopup(!showReportPopup);
   };
   const handleShareApi = () => {
     shareMutation.mutate({
@@ -727,7 +747,7 @@ const Post = ({ post }) => {
               <ShareOutlinedIcon />
               {trl("Share")}
             </div>
-            <div className="item" onClick={() => {}}>
+            <div className="item" onClick={() => handleReport()}>
               <ReportOutlinedIcon />
               {trl("Report")}
             </div>
@@ -741,7 +761,10 @@ const Post = ({ post }) => {
                 </div>
                 <div className="popup-content">
                   <div className="user-info">
-                    <img src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id}
+                    <img
+                      src={
+                        URL_OF_BACK_END + `users/profilePic/` + currentUser.id
+                      }
                       onError={(e) => {
                         e.target.onerror = null;
                         e.target.src = "/upload/errorImage.png";
@@ -752,7 +775,7 @@ const Post = ({ post }) => {
                   </div>
                   <TextareaAutosize
                     minRows={2}
-                    placeholder="Nhập nội mô tả của bạn"
+                    placeholder={trl("Nhập nội mô tả của bạn")}
                     defaultValue={shareDesc}
                     onChange={(e) => setShareDesc(e.target.value)}
                     style={{
@@ -761,13 +784,13 @@ const Post = ({ post }) => {
                       resize: "none",
                       outline: "none",
                       fontSize: "20px",
-                      margin: "15px 0 -10px 0"
+                      margin: "15px 0 -10px 0",
                     }}
                   />
                   <div
                     style={{
                       pointerEvents: "none",
-                      height: "300px"
+                      height: "300px",
                     }}
                   >
                     <MiniPost post={post} />
@@ -778,6 +801,48 @@ const Post = ({ post }) => {
                     {trl("SHARE")}
                   </button>
                   <button className="cancel" onClick={handleShare}>
+                    {trl("CANCEL")}
+                  </button>
+                </div>
+              </div>
+            </PopupWindow>
+            <PopupWindow show={showReportPopup} handleClose={handleReport}>
+              <div className="report-popup">
+                <div className="title">
+                  <ReportOutlinedIcon />
+                  <span>{trl("Report")}</span>
+                </div>
+                <div className="content">
+                  <TextareaAutosize
+                    className="text-input"
+                    minRows={2}
+                    placeholder={trl("Mô tả báo cáo của bạn")}
+                    defaultValue={reportDesc}
+                    onChange={(e) => setReportDesc(e.target.value)}
+                  ></TextareaAutosize>
+                  <input
+                    type="file"
+                    accept="image/*,video/*"
+                    onChange={handleReportFileChange}
+                  />
+                  {previewReport && (
+                    <div className="file-preview">
+                      {selectedReportFile &&
+                      selectedReportFile.type.startsWith("image") ? (
+                        <img src={previewReport} alt="Preview" />
+                      ) : (
+                        <video src={previewReport} controls />
+                      )}
+                      <button onClick={handleRemoveReportFile}>X</button>
+                    </div>
+                  )}
+                  <MiniPost post={post} />
+                </div>
+                <div className="popup-action">
+                  <button className="report" onClick={handleReportApi}>
+                    {trl("REPORT")}
+                  </button>
+                  <button className="cancel" onClick={handleReport}>
                     {trl("CANCEL")}
                   </button>
                 </div>
