@@ -12,4 +12,5 @@ router.post("/user", getUserPostingAdminController);
 router.post("/post", getPostByAdminController);
 //User management
 router.post("/users/getuser", searchUserBykeyController);
+//Feedback management
 export default router;

@@ -1,4 +1,3 @@
-import { months } from "moment/moment";
 import {
   addFeedback,
   deleteFeedbackById,
@@ -68,7 +67,7 @@ export const addCommentFeedbackService = (
     }
   );
 };
-export const addCommentService = (
+export const addPostFeedbackService = (
   desc,
   userId,
   postId,
@@ -93,7 +92,14 @@ export const addCommentService = (
   );
 };
 
-export const addPostService = (desc, userId, teamId, rate, img, callback) => {
+export const addTeamFeedbackService = (
+  desc,
+  userId,
+  teamId,
+  rate,
+  img,
+  callback
+) => {
   addFeedback(
     desc,
     userId,
@@ -111,7 +117,7 @@ export const addPostService = (desc, userId, teamId, rate, img, callback) => {
   );
 };
 
-export const addUserReportedService = (
+export const addUserReportedFeedbackService = (
   desc,
   userId,
   userReportedUserId,
@@ -135,48 +141,6 @@ export const addUserReportedService = (
   );
 };
 
-export const addTeamService = (desc, userId, teamId, rate, callback) => {
-  addFeedback(
-    desc,
-    userId,
-    rate,
-    null, // Không cần truyền commentId, postId, userReportedUserId, storiesId vào hàm này
-    null,
-    null,
-    teamId,
-    null,
-    null,
-    (error, data) => {
-      if (error) return callback(error, null);
-      return callback(null, data);
-    }
-  );
-};
-
-export const addStoriesService = (
-  desc,
-  userId,
-  storiesId,
-  rate,
-  img,
-  callback
-) => {
-  addFeedback(
-    desc,
-    userId,
-    rate,
-    null, // Không cần truyền commentId, postId, userReportedUserId, teamId vào hàm này
-    null,
-    null,
-    null,
-    storiesId,
-    img,
-    (error, data) => {
-      if (error) return callback(error, null);
-      return callback(null, data);
-    }
-  );
-};
 export const getImgByFeedbackIdService = (fbid, callback) => {
   getImgByFeedbackId(fbid, (error, data) => {
     if (error) return callback(error, null);

@@ -14,6 +14,7 @@ import groupRoutes from "./routes/group.js";
 import joinRoutes from "./routes/join.js";
 import fileRoutes from "./routes/files.js";
 import adminRoutes from "./routes/admin.js";
+import feedbackRoutes from "./routes/feedback.js";
 import cors from "cors";
 import multer from "multer";
 import cookieParser from "cookie-parser";
@@ -69,6 +70,7 @@ app.use("/api/groups", groupRoutes);
 app.use("/api/joins", joinRoutes);
 app.use("/api/file/", fileRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/feedback", feedbackRoutes);
 app.listen(8800, () => {
   console.log("API working!");
 });

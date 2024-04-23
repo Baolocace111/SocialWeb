@@ -1,9 +1,6 @@
-/* Modal Styles */
 @import "../../style.scss";
-
-.modal {
+.timemodal {
   display: block;
-  /* Ẩn ban đầu */
   visibility: hidden;
   opacity: 0;
   position: fixed;
@@ -14,14 +11,17 @@
   display: flex;
   background-color: rgba(0, 0, 0, 0.5);
 
-  /* Màu nền với độ trong suốt */
   z-index: 1000;
-  /* Chắc chắn hiển thị trên các phần khác */
+
   transition: opacity 0.3s ease-in-out;
   justify-content: center;
   align-items: center;
-  /* Phần cửa sổ popup */
-  .modal-main {
+  .timer-progress-bar {
+    height: 5px; // Đặt độ cao của thanh tiến trình
+    background-color: #4caf50; // Màu sắc của thanh tiến trình
+    transition: width 1s linear; // Hiệu ứng chuyển đổi mượt mà cho độ rộng
+  }
+  .timemodal-main {
     position: relative;
 
     width: 35%;
@@ -34,7 +34,6 @@
     }
   }
 }
-
 /* Hiển thị cửa sổ popup */
 .display-block {
   visibility: visible;

@@ -216,7 +216,6 @@
             border-bottom: solid 1px lightgray;
             display: flex;
             align-items: center;
-
           }
 
           .popup-content {
@@ -230,6 +229,8 @@
               outline: none;
               font-size: 20px;
               margin-bottom: 15px;
+              background-color: themed("bg");
+              color: themed("textColor");
             }
 
             .file-input {

@@ -16,7 +16,7 @@ import {
   faEarthAmericas,
   faUserGroup,
   faUserNinja,
-  faImages
+  faImages,
 } from "@fortawesome/free-solid-svg-icons";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
@@ -48,6 +48,7 @@ import Private from "./Private";
 import { Link } from "react-router-dom";
 import ReactPlayer from "react-player/lazy";
 import { useLanguage } from "../../context/languageContext";
+import RateStarInput from "../inputComponent/rateInput/RateStarInput";
 const Post = ({ post }) => {
   const { trl, language } = useLanguage();
   useEffect(() => {
@@ -72,11 +73,11 @@ const Post = ({ post }) => {
   const privateRef = useRef(null);
   const [selectedReportFile, setSelectedReportFile] = useState(null);
   const [previewReport, setPreviewReport] = useState("");
-
+  const [rate, setRate] = useState(1);
   const isVideoContent = post.img
     ? post.img.endsWith(".mp4") ||
-    post.img.endsWith(".avi") ||
-    post.img.endsWith(".mov")
+      post.img.endsWith(".avi") ||
+      post.img.endsWith(".mov")
     : false;
 
   useEffect(() => {
@@ -124,7 +125,7 @@ const Post = ({ post }) => {
   const handleSeeDialogClose = () => {
     setOpenSeeEdit(false);
   };
-  const handleReportApi = () => { };
+  const handleReportApi = () => {};
 
   const [file, setFile] = useState(null);
   const [selectedImage, setSelectedImage] = useState(
@@ -748,17 +749,19 @@ const Post = ({ post }) => {
               <ShareOutlinedIcon />
               {trl("Share")}
             </div>
-            {post.userId !== currentUser.id &&
+            {post.userId !== currentUser.id && (
               <div className="item" onClick={() => handleReport()}>
                 <ReportOutlinedIcon />
                 {trl("Report")}
               </div>
-            }
+            )}
             <PopupWindow handleClose={handleShare} show={showSharePopup}>
               <div className="share-popup">
                 <div className="title">
                   <EditIcon sx={{ marginRight: "8px", fontSize: "20px" }} />
-                  <span style={{ fontSize: "22px", fontWeight: "700" }}>{trl("Share this post")}</span>
+                  <span style={{ fontSize: "22px", fontWeight: "700" }}>
+                    {trl("Share this post")}
+                  </span>
                 </div>
                 <div className="popup-content">
                   <div className="user-info">
@@ -784,7 +787,7 @@ const Post = ({ post }) => {
                   <div
                     style={{
                       pointerEvents: "none",
-                      maxHeight: "300px"
+                      maxHeight: "300px",
                     }}
                   >
                     <MiniPost post={post} />
@@ -803,10 +806,16 @@ const Post = ({ post }) => {
             <PopupWindow show={showReportPopup} handleClose={handleReport}>
               <div className="report-popup">
                 <div className="title">
-                  <ReportOutlinedIcon sx={{ marginRight: "8px", fontSize: "22px" }} />
-                  <span style={{ fontSize: "22px", fontWeight: "700" }}>{trl("Report")}</span>
+                  <ReportOutlinedIcon
+                    sx={{ marginRight: "8px", fontSize: "22px" }}
+                  />
+                  <span style={{ fontSize: "22px", fontWeight: "700" }}>
+                    {trl("Report")}
+                  </span>
                 </div>
                 <div className="popup-content">
+                  <RateStarInput onHandle={setRate}></RateStarInput>
+
                   <TextareaAutosize
                     className="text-input"
                     minRows={1}
@@ -816,7 +825,8 @@ const Post = ({ post }) => {
                   />
                   <div className="file-input">
                     <input
-                      id="reportInput" type="file"
+                      id="reportInput"
+                      type="file"
                       accept="image/*,video/*"
                       onChange={handleReportFileChange}
                     />
@@ -828,7 +838,7 @@ const Post = ({ post }) => {
                     <div className="file-preview">
                       <div className="file-selected">
                         {selectedReportFile &&
-                          selectedReportFile.type.startsWith("image") ? (
+                        selectedReportFile.type.startsWith("image") ? (
                           <img src={previewReport} alt="Preview" />
                         ) : (
                           <video src={previewReport} controls />
@@ -837,10 +847,12 @@ const Post = ({ post }) => {
                       </div>
                     </div>
                   )}
-                  <div style={{
-                    pointerEvents: "none",
-                    maxHeight: "250px"
-                  }}>
+                  <div
+                    style={{
+                      pointerEvents: "none",
+                      maxHeight: "250px",
+                    }}
+                  >
                     <MiniPost post={post} />
                   </div>
                 </div>
