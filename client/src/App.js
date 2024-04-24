@@ -39,7 +39,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import FriendInvite from "./pages/friend/friendinvite/FriendInvite";
 import FriendSuggest from "./pages/friend/friendSuggest/FriendSuggest";
 import SearchPost from "./pages/search/searchPost/SearchPost";
-import PostPage from "./pages/postPage/PostPage";
+import PostPage from "./pages/post/PostPage";
 import Error from "./pages/Error/Error";
 import AdminOnly from "./pages/Error/AdminOnly";
 import AdminHome from "./pages/admin/adminHome/AdminHome";

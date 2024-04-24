@@ -45,9 +45,6 @@ import moment from "moment";
 import { useLanguage } from "../../../context/languageContext";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
-import "moment/locale/vi";
-//import "moment/locale/en";
-import "moment/locale/ja";
 const MPost = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
@@ -60,15 +57,19 @@ const MPost = ({ post }) => {
   const privateRef = useRef(null);
   const { trl, language } = useLanguage();
   useEffect(() => {
-    if (language === "jp") moment.locale("ja");
-    if (language === "vn") moment.locale("vi");
-    else moment.locale("en");
-  }, []);
+    if (language === "jp") {
+      moment.locale("ja");
+    } else if (language === "vn") {
+      moment.locale("vi");
+    } else {
+      moment.locale("en");
+    }
+  }, [language]);
 
   const isVideoContent = post.img
     ? post.img.endsWith(".mp4") ||
-      post.img.endsWith(".avi") ||
-      post.img.endsWith(".mov")
+    post.img.endsWith(".avi") ||
+    post.img.endsWith(".mov")
     : false;
 
   useEffect(() => {
@@ -282,7 +283,7 @@ const MPost = ({ post }) => {
                 <TextareaAutosize
                   minRows={2}
                   placeholder={trl("Nhập nội mô tả của bạn")}
-                  defaultValue={post.desc}
+                  defaultValue={desc}
                   onChange={(e) => setDesc(e.target.value)}
                   style={{
                     width: "550px",
@@ -549,26 +550,28 @@ const MPost = ({ post }) => {
           </Popover>
         </div>
         <div className="content">
-          <Description text={post.desc}></Description>
-          <Link to={`/seepost/${post.id}`}>
-            {post.type === 2 && isVideoContent ? (
-              <ReactPlayer
-                url={URL_OF_BACK_END + `posts/videopost/` + post.id}
-                playing={true}
-                controls={true}
-                className="react-player"
-              />
-            ) : (
-              <img
-                src={URL_OF_BACK_END + `posts/videopost/` + post.id}
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = "/upload/errorImage.png";
-                }}
-                alt={""}
-              />
-            )}
-          </Link>
+          <Description text={post.desc} />
+          {post.img &&
+            <Link to={`/seepost/${post.id}`}>
+              {isVideoContent ? (
+                <ReactPlayer
+                  url={URL_OF_BACK_END + `posts/videopost/` + post.id}
+                  playing={true}
+                  controls={true}
+                  className="react-player"
+                />
+              ) : (
+                <img
+                  src={URL_OF_BACK_END + `posts/videopost/` + post.id}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "/upload/errorImage.png";
+                  }}
+                  alt={""}
+                />
+              )}
+            </Link>
+          }
         </div>
         {!post.error && (
           <div className="info">

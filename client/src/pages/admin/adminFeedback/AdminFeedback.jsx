@@ -1,20 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { makeRequest } from "../../../axios";
 import { URL_OF_BACK_END } from "../../../axios";
 import "./adminFeedback.scss";
 import { useLanguage } from "../../../context/languageContext";
-import StarRating from "../../../components/displayComponet/StarRating";
+import StarRating from "../../../components/adminComponent/display/StarRating";
 const AdminFeedback = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [selectedFeedback, setSelectedFeedback] = useState(null);
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState("all");
   const { trl } = useLanguage();
-  useEffect(() => {
-    getFeedbacks();
-  }, [page, status]);
 
-  const getFeedbacks = async () => {
+  const getFeedbacks = useCallback(async () => {
     try {
       let url;
       if (status === "all") {
@@ -27,7 +24,11 @@ const AdminFeedback = () => {
     } catch (error) {
       console.error(`Error getting feedbacks: ${error}`);
     }
-  };
+  }, [page, status]);
+
+  useEffect(() => {
+    getFeedbacks();
+  }, [getFeedbacks]);
 
   const handleRowClick = (feedback) => {
     setSelectedFeedback(feedback);

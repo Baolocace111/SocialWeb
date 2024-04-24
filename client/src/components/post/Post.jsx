@@ -42,12 +42,13 @@ import { makeRequest, URL_OF_BACK_END } from "../../axios";
 import { useContext, useEffect, useState, useRef } from "react";
 import { AuthContext } from "../../context/authContext";
 import Description from "./desc";
-import MiniPost from "./MiniPost";
 import Private from "./Private";
 import { Link } from "react-router-dom";
 import ReactPlayer from "react-player/lazy";
 import { useLanguage } from "../../context/languageContext";
-import PostReporter from "../reportComponent/postReporter/PostReporter";
+import PostReporter from "../postPopup/reportComponent/postReporter/PostReporter";
+import PostShare from "../postPopup/shareComponent/PostShare";
+
 const Post = ({ post }) => {
   const { trl, language } = useLanguage();
   useEffect(() => {
@@ -62,7 +63,7 @@ const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [deleteImage, setDeleteImage] = useState(false);
-  const [shareDesc, setShareDesc] = useState("");
+  // const [shareDesc, setShareDesc] = useState("");
   const [showSharePopup, setShowSharePopup] = useState(false);
 
   const [showReportPopup, setShowReportPopup] = useState(false);
@@ -73,8 +74,8 @@ const Post = ({ post }) => {
 
   const isVideoContent = post.img
     ? post.img.endsWith(".mp4") ||
-      post.img.endsWith(".avi") ||
-      post.img.endsWith(".mov")
+    post.img.endsWith(".avi") ||
+    post.img.endsWith(".mov")
     : false;
 
   useEffect(() => {
@@ -86,6 +87,10 @@ const Post = ({ post }) => {
 
   const handleReport = () => {
     setShowReportPopup(!showReportPopup);
+  };
+
+  const handleShare = () => {
+    setShowSharePopup(!showSharePopup);
   };
 
   const handleMenuClick = (event) => {
@@ -138,17 +143,17 @@ const Post = ({ post }) => {
 
   const queryClient = useQueryClient();
   //Use Mutation
-  const shareMutation = useMutation(
-    (data) => {
-      return makeRequest.post("/posts/share", { post: data });
-    },
-    {
-      onSuccess: () => {
-        // Invalidate and refetch
-        queryClient.invalidateQueries(["posts"]);
-      },
-    }
-  );
+  // const shareMutation = useMutation(
+  //   (data) => {
+  //     return makeRequest.post("/posts/share", { post: data });
+  //   },
+  //   {
+  //     onSuccess: () => {
+  //       // Invalidate and refetch
+  //       queryClient.invalidateQueries(["posts"]);
+  //     },
+  //   }
+  // );
   const mutation = useMutation(
     (liked) => {
       if (liked) return makeRequest.delete("/likes?postId=" + post.id);
@@ -214,19 +219,13 @@ const Post = ({ post }) => {
   );
   //End Use Mutation
 
-  const handleShare = () => {
-    setShareDesc("");
-    setShowSharePopup(!showSharePopup);
-    setMenuAnchor(null);
-  };
-
-  const handleShareApi = () => {
-    shareMutation.mutate({
-      desc: shareDesc,
-      shareId: post.id,
-    });
-    handleShare();
-  };
+  // const handleShareApi = () => {
+  //   shareMutation.mutate({
+  //     desc: shareDesc,
+  //     shareId: post.id,
+  //   });
+  //   handleShare();
+  // };
 
   const handleUpdate = async (e) => {
     updateMutation.mutate({ postId: post.id, desc: desc });
@@ -741,59 +740,16 @@ const Post = ({ post }) => {
               </div>
             )}
             <PopupWindow handleClose={handleShare} show={showSharePopup}>
-              <div className="share-popup">
-                <div className="title">
-                  <EditIcon sx={{ marginRight: "8px", fontSize: "20px" }} />
-                  <span style={{ fontSize: "22px", fontWeight: "700" }}>
-                    {trl("Share this post")}
-                  </span>
-                </div>
-                <div className="popup-content">
-                  <div className="user-info">
-                    <img
-                      src={
-                        URL_OF_BACK_END + `users/profilePic/` + currentUser.id
-                      }
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = "/upload/errorImage.png";
-                      }}
-                      alt={""}
-                    />
-                    <span>{currentUser.name}</span>
-                  </div>
-                  <TextareaAutosize
-                    minRows={1}
-                    placeholder={trl("Nhập nội mô tả của bạn")}
-                    defaultValue={shareDesc}
-                    onChange={(e) => setShareDesc(e.target.value)}
-                    className="text-input"
-                  />
-                  <div
-                    style={{
-                      pointerEvents: "none",
-                      maxHeight: "300px",
-                    }}
-                  >
-                    <MiniPost post={post} />
-                  </div>
-                </div>
-                <div className="popup-action">
-                  <button className="share" onClick={handleShareApi}>
-                    {trl("SHARE")}
-                  </button>
-                  <button className="cancel" onClick={handleShare}>
-                    {trl("CANCEL")}
-                  </button>
-                </div>
-              </div>
+              <PostShare
+                post={post}
+                setShowSharePopup={setShowSharePopup}
+                showSharePopup={showSharePopup} />
             </PopupWindow>
             <PopupWindow show={showReportPopup} handleClose={handleReport}>
               <PostReporter
                 post={post}
                 setShowReportPopup={setShowReportPopup}
-                showReportPopup={showReportPopup}
-              ></PostReporter>
+                showReportPopup={showReportPopup} />
             </PopupWindow>
           </div>
         )}
