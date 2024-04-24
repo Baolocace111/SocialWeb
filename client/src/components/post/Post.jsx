@@ -63,9 +63,8 @@ const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [deleteImage, setDeleteImage] = useState(false);
-  // const [shareDesc, setShareDesc] = useState("");
-  const [showSharePopup, setShowSharePopup] = useState(false);
 
+  const [showSharePopup, setShowSharePopup] = useState(false);
   const [showReportPopup, setShowReportPopup] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openSeeEdit, setOpenSeeEdit] = useState(false);
@@ -132,7 +131,6 @@ const Post = ({ post }) => {
       console.log(selectedImage);
     }
   };
-  //End handleOpenMenu
 
   const { currentUser } = useContext(AuthContext);
   const { isLoading, data } = useQuery(["likes", post.id], () =>
@@ -143,17 +141,6 @@ const Post = ({ post }) => {
 
   const queryClient = useQueryClient();
   //Use Mutation
-  // const shareMutation = useMutation(
-  //   (data) => {
-  //     return makeRequest.post("/posts/share", { post: data });
-  //   },
-  //   {
-  //     onSuccess: () => {
-  //       // Invalidate and refetch
-  //       queryClient.invalidateQueries(["posts"]);
-  //     },
-  //   }
-  // );
   const mutation = useMutation(
     (liked) => {
       if (liked) return makeRequest.delete("/likes?postId=" + post.id);
@@ -218,14 +205,6 @@ const Post = ({ post }) => {
     }
   );
   //End Use Mutation
-
-  // const handleShareApi = () => {
-  //   shareMutation.mutate({
-  //     desc: shareDesc,
-  //     shareId: post.id,
-  //   });
-  //   handleShare();
-  // };
 
   const handleUpdate = async (e) => {
     updateMutation.mutate({ postId: post.id, desc: desc });

@@ -72,11 +72,7 @@ const AdminFeedback = () => {
               <td>
                 <img
                   className="userimg"
-                  src={
-                    URL_OF_BACK_END +
-                    `users/profilePic/` +
-                    selectedFeedback.userid
-                  }
+                  src={URL_OF_BACK_END + `users/profilePic/` + feedback.userid}
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = "/upload/errorImage.png";
@@ -103,9 +99,7 @@ const AdminFeedback = () => {
           <p>User ID: {selectedFeedback.userid}</p>
           <p>Rate: {selectedFeedback.rate}</p>
           <img
-            src={
-              URL_OF_BACK_END + `users/profilePic/` + selectedFeedback.userid
-            }
+            src={URL_OF_BACK_END + `users/profilePic/` + selectedFeedback.userid}
             onError={(e) => {
               e.target.onerror = null;
               e.target.src = "/upload/errorImage.png";
