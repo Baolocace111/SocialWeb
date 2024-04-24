@@ -4,6 +4,7 @@ import { makeRequest } from "../../../axios";
 import { useLanguage } from "../../../context/languageContext";
 const CircleProgressBar = ({ handleClose }) => {
   const { trl } = useLanguage();
+  const [error, setError] = useState(null);
   const handleOnClick = () => {
     if (percentage >= 100) handleClose();
   };
@@ -27,6 +28,7 @@ const CircleProgressBar = ({ handleClose }) => {
         setPercentage(100);
       })
       .catch((error) => {
+        setError(JSON.stringify(error));
         setPercentage(-100);
       })
       .finally(() => {
@@ -65,6 +67,7 @@ const CircleProgressBar = ({ handleClose }) => {
               </div>
             </div>
             <h2 className="text">TinySocial</h2>
+            {/* <h2>{error && error}</h2> */}
           </div>
         </div>
       </div>

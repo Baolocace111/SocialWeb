@@ -6,7 +6,7 @@ const StarRating = ({ rate }) => {
       {Array(rate)
         .fill()
         .map((_, i) => (
-          <FontAwesomeIcon icon={faStar} />
+          <FontAwesomeIcon key={i} icon={faStar} />
         ))}
     </div>
   );
