@@ -1,13 +1,13 @@
-import { useLanguage } from "../../../context/languageContext";
+import { useLanguage } from "../../../../context/languageContext";
 import "./postReporter.scss";
 import ReportOutlinedIcon from "@mui/icons-material/ReportOutlined";
-import RateStarInput from "../../inputComponent/rateInput/RateStarInput";
+import RateStarInput from "../../reportComponent/inputComponent/rateInput/RateStarInput";
 import { useState } from "react";
 import { TextareaAutosize } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImages } from "@fortawesome/free-solid-svg-icons";
-import MiniPost from "../../post/MiniPost";
-import { makeRequest } from "../../../axios";
+import MiniPost from "../../../post/MiniPost";
+import { makeRequest } from "../../../../axios";
 const PostReporter = ({ post, setShowReportPopup, showReportPopup }) => {
   const { trl } = useLanguage();
   const [rate, setRate] = useState(1);
@@ -81,7 +81,7 @@ const PostReporter = ({ post, setShowReportPopup, showReportPopup }) => {
           <div className="file-preview">
             <div className="file-selected">
               {selectedReportFile &&
-              selectedReportFile.type.startsWith("image") ? (
+                selectedReportFile.type.startsWith("image") ? (
                 <img src={previewReport} alt="Preview" />
               ) : (
                 <video src={previewReport} controls />
