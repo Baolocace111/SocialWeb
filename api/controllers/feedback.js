@@ -1,14 +1,12 @@
-import { upload } from "../Multer.js";
-import { AuthService } from "../services/AuthService.js";
 import { addPostFeedbackService } from "../services/FeedbackService.js";
 import { ValidateInputAllowNull } from "../services/ValidateService.js";
 import { uploadBackgroundUser } from "./backgroundController.js";
-//export const
+
 export const addPostFeedbackController = async (req, res) => {
   uploadBackgroundUser(req, res, (err, userid, path) => {
     if (err) return res.status(500).json(err);
     ValidateInputAllowNull(req.body.desc, req.body.rate, req.body.id)
-      .then((res) => {
+      .then(() => {
         addPostFeedbackService(
           req.body.desc,
           userid,
