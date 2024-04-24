@@ -8,7 +8,7 @@ import {
   Navigate,
   Link,
   useLocation,
-  useNavigate
+  useNavigate,
 } from "react-router-dom";
 import { useEffect } from "react";
 import Navbar from "./components/navbar/Navbar";
@@ -59,6 +59,7 @@ import Call from "./pages/call/Call";
 import AdminLanguageManagement from "./pages/admin/adminLanguageManagement/AdminLanguageManagement";
 import FriendDashBoard from "./pages/friend/friendDashboard/FriendDashboard";
 import UnderContructionPage from "./pages/Error/UnderContruction";
+import AdminFeedback from "./pages/admin/adminFeedback/AdminFeedback";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -130,7 +131,7 @@ function App() {
 
     useEffect(() => {
       if (location.pathname === "/friends") {
-        navigate('/friends/dashboard');
+        navigate("/friends/dashboard");
       }
     }, [location.pathname, navigate]);
 
@@ -160,7 +161,7 @@ function App() {
 
     useEffect(() => {
       if (location.pathname === "/groups") {
-        navigate('/groups/joins');
+        navigate("/groups/joins");
       }
     }, [location.pathname, navigate]);
 
@@ -473,6 +474,10 @@ function App() {
         {
           path: "/admin/language",
           element: <AdminLanguageManagement />,
+        },
+        {
+          path: "/admin/feedback",
+          element: <AdminFeedback></AdminFeedback>,
         },
       ],
     },

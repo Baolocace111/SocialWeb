@@ -234,5 +234,11 @@
   "REPORT": "BÁO CÁO",
   "Mô tả báo cáo của bạn": "Mô tả báo cáo của bạn",
   "Cảm ơn bạn vì đã đăng bài": "Cảm ơn bạn vì đã đăng bài",
-  "Hệ thống đã gửi bài viết cho quản trị viên duyệt.": "Hệ thống đã gửi bài viết cho quản trị viên duyệt."
+  "Hệ thống đã gửi bài viết cho quản trị viên duyệt.": "Hệ thống đã gửi bài viết cho quản trị viên duyệt.",
+  "Feedback Management":"Quản Lý Báo Cáo",
+  "Feedbacks":"Báo cáo",
+  "All":"Tất cả",
+  "Description":"Mô tả",
+  "User Name":"Tên người dùng",
+  "Rate":"Đánh giá"
 }

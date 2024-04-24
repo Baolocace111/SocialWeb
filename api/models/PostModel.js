@@ -1,7 +1,7 @@
 import { db } from "../connect.js";
 import moment from "moment";
 export const getPostById = (userId, postId, callback) => {
-  const q = `SELECT DISTINCT p.*, u.id AS userid, u.name, u.profilePic, f.user_id
+  const q = `SELECT DISTINCT p.*, u.id AS userid, u.name,  f.user_id
     FROM posts p
     LEFT JOIN friendships f ON (p.userId=f.friend_id AND f.user_id = ? AND f.status = 1)
     LEFT JOIN users u ON (p.userId = u.id)
@@ -21,7 +21,7 @@ export const getPostById = (userId, postId, callback) => {
   });
 };
 export const getPostByIdAdmin = (postid, callback) => {
-  const q = `p.*, u.id AS userid, u.name, u.profilePic
+  const q = `p.*, u.id AS userid, u.name
   FROM posts p 
   LEFT JOIN users u ON (p.userId = u.id)
   WHERE (p.id=?)`;
@@ -41,8 +41,8 @@ export const getPostByIdAdmin = (postid, callback) => {
 export const getPosts = (userId, userInfo, callback) => {
   const q =
     userId !== "undefined"
-      ? `SELECT p.*, u.id AS userId, name, profilePic FROM posts AS p JOIN users AS u ON (u.id = p.userId) WHERE p.userId = ? ORDER BY p.createdAt DESC`
-      : `SELECT DISTINCT p.*, u.id AS userId, name, profilePic FROM posts AS p JOIN users 
+      ? `SELECT p.*, u.id AS userId, name FROM posts AS p JOIN users AS u ON (u.id = p.userId) WHERE p.userId = ? ORDER BY p.createdAt DESC`
+      : `SELECT DISTINCT p.*, u.id AS userId, name FROM posts AS p JOIN users 
       AS u ON (u.id = p.userId) 
       LEFT JOIN relationships AS r ON (p.userId = r.followedUserId) WHERE r.followerUserId = ? OR p.userId = ? ORDER BY p.createdAt DESC`;
 
