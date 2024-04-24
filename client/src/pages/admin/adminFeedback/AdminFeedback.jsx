@@ -4,6 +4,9 @@ import { URL_OF_BACK_END } from "../../../axios";
 import "./adminFeedback.scss";
 import { useLanguage } from "../../../context/languageContext";
 import StarRating from "../../../components/displayComponet/StarRating";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowCircleRight } from "@fortawesome/free-solid-svg-icons";
+import FeedbackInformation from "../../../components/feedbackComponent/feedbackInformation/FeedbackInformation";
 const AdminFeedback = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [selectedFeedback, setSelectedFeedback] = useState(null);
@@ -13,7 +16,8 @@ const AdminFeedback = () => {
   useEffect(() => {
     getFeedbacks();
   }, [page, status]);
-
+  // const SELECTEDTAB = `-selectedtab`;
+  // const NULLSTRING = "";
   const getFeedbacks = async () => {
     try {
       let url;
@@ -53,6 +57,7 @@ const AdminFeedback = () => {
       <table>
         <thead>
           <tr>
+            <th> </th>
             <th>ID</th>
             <th>{trl("Description")}</th>
             <th>{trl("User Name")}</th>
@@ -66,16 +71,19 @@ const AdminFeedback = () => {
               onClick={() => handleRowClick(feedback)}
               className={`status-${feedback.status}`}
             >
+              <td>
+                {selectedFeedback?.id === feedback.id ? (
+                  <FontAwesomeIcon icon={faArrowCircleRight} />
+                ) : (
+                  ""
+                )}
+              </td>
               <td>{feedback.id}</td>
               <td>{feedback.desc}</td>
               <td>
                 <img
                   className="userimg"
-                  src={
-                    URL_OF_BACK_END +
-                    `users/profilePic/` +
-                    selectedFeedback.userid
-                  }
+                  src={URL_OF_BACK_END + `users/profilePic/` + feedback.userid}
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = "/upload/errorImage.png";
@@ -95,23 +103,7 @@ const AdminFeedback = () => {
       <span>{page && page}</span>
       <button onClick={() => handlePageChange(page + 1)}>Next</button>
       {selectedFeedback && (
-        <div>
-          <h2>Feedback Details</h2>
-          <p>ID: {selectedFeedback.id}</p>
-          <p>Description: {selectedFeedback.desc}</p>
-          <p>User ID: {selectedFeedback.userid}</p>
-          <p>Rate: {selectedFeedback.rate}</p>
-          <img
-            src={
-              URL_OF_BACK_END + `users/profilePic/` + selectedFeedback.userid
-            }
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = "/upload/errorImage.png";
-            }}
-            alt={""}
-          />
-        </div>
+        <FeedbackInformation feedback={selectedFeedback}></FeedbackInformation>
       )}
     </div>
   );

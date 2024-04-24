@@ -6,13 +6,7 @@ import {
   getUserPostingByAdminService,
 } from "../../services/AdminService.js";
 import { ValidateInputs } from "../../services/ValidateService.js";
-export const getPostByIdAdminController = async (req, res) => {
-  try {
-    await AuthService.verifyAdminToken(req.cookies.accessToken);
-  } catch (error) {
-    return res.status(500).json(error);
-  }
-};
+
 export const getUserPostingAdminController = async (req, res) => {
   try {
     await AuthService.verifyAdminToken(req.cookies.accessToken);
