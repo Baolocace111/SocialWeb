@@ -16,7 +16,6 @@ import {
   faEarthAmericas,
   faUserGroup,
   faUserNinja,
-  faImages,
 } from "@fortawesome/free-solid-svg-icons";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
@@ -48,7 +47,7 @@ import Private from "./Private";
 import { Link } from "react-router-dom";
 import ReactPlayer from "react-player/lazy";
 import { useLanguage } from "../../context/languageContext";
-import RateStarInput from "../inputComponent/rateInput/RateStarInput";
+import PostReporter from "../reportComponent/postReporter/PostReporter";
 const Post = ({ post }) => {
   const { trl, language } = useLanguage();
   useEffect(() => {
@@ -65,15 +64,13 @@ const Post = ({ post }) => {
   const [deleteImage, setDeleteImage] = useState(false);
   const [shareDesc, setShareDesc] = useState("");
   const [showSharePopup, setShowSharePopup] = useState(false);
-  const [reportDesc, setReportDesc] = useState("");
+
   const [showReportPopup, setShowReportPopup] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openSeeEdit, setOpenSeeEdit] = useState(false);
   const [selectedValue, setSelectedValue] = useState(0); // State để lưu giá trị của Radio được chọn
   const privateRef = useRef(null);
-  const [selectedReportFile, setSelectedReportFile] = useState(null);
-  const [previewReport, setPreviewReport] = useState("");
-  const [rate, setRate] = useState(1);
+
   const isVideoContent = post.img
     ? post.img.endsWith(".mp4") ||
       post.img.endsWith(".avi") ||
@@ -87,18 +84,10 @@ const Post = ({ post }) => {
     }
   }, [openEdit, post]);
 
-  //Handle openMenu
-  const handleReportFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedReportFile(file);
-      setPreviewReport(URL.createObjectURL(file));
-    }
+  const handleReport = () => {
+    setShowReportPopup(!showReportPopup);
   };
-  const handleRemoveReportFile = () => {
-    setSelectedReportFile(null);
-    setPreviewReport("");
-  };
+
   const handleMenuClick = (event) => {
     if (post.userId === currentUser.id) {
       setMenuAnchor(event.currentTarget);
@@ -125,7 +114,6 @@ const Post = ({ post }) => {
   const handleSeeDialogClose = () => {
     setOpenSeeEdit(false);
   };
-  const handleReportApi = () => {};
 
   const [file, setFile] = useState(null);
   const [selectedImage, setSelectedImage] = useState(
@@ -231,10 +219,7 @@ const Post = ({ post }) => {
     setShowSharePopup(!showSharePopup);
     setMenuAnchor(null);
   };
-  const handleReport = () => {
-    setReportDesc("");
-    setShowReportPopup(!showReportPopup);
-  };
+
   const handleShareApi = () => {
     shareMutation.mutate({
       desc: shareDesc,
@@ -804,67 +789,11 @@ const Post = ({ post }) => {
               </div>
             </PopupWindow>
             <PopupWindow show={showReportPopup} handleClose={handleReport}>
-              <div className="report-popup">
-                <div className="title">
-                  <ReportOutlinedIcon
-                    sx={{ marginRight: "8px", fontSize: "22px" }}
-                  />
-                  <span style={{ fontSize: "22px", fontWeight: "700" }}>
-                    {trl("Report")}
-                  </span>
-                </div>
-                <div className="popup-content">
-                  <RateStarInput onHandle={setRate}></RateStarInput>
-
-                  <TextareaAutosize
-                    className="text-input"
-                    minRows={1}
-                    placeholder={trl("Mô tả báo cáo của bạn")}
-                    defaultValue={reportDesc}
-                    onChange={(e) => setReportDesc(e.target.value)}
-                  />
-                  <div className="file-input">
-                    <input
-                      id="reportInput"
-                      type="file"
-                      accept="image/*,video/*"
-                      onChange={handleReportFileChange}
-                    />
-                    <label htmlFor="reportInput">
-                      <FontAwesomeIcon icon={faImages} />
-                    </label>
-                  </div>
-                  {previewReport && (
-                    <div className="file-preview">
-                      <div className="file-selected">
-                        {selectedReportFile &&
-                        selectedReportFile.type.startsWith("image") ? (
-                          <img src={previewReport} alt="Preview" />
-                        ) : (
-                          <video src={previewReport} controls />
-                        )}
-                        <button onClick={handleRemoveReportFile}>X</button>
-                      </div>
-                    </div>
-                  )}
-                  <div
-                    style={{
-                      pointerEvents: "none",
-                      maxHeight: "250px",
-                    }}
-                  >
-                    <MiniPost post={post} />
-                  </div>
-                </div>
-                <div className="popup-action">
-                  <button className="report" onClick={handleReportApi}>
-                    {trl("REPORT")}
-                  </button>
-                  <button className="cancel" onClick={handleReport}>
-                    {trl("CANCEL")}
-                  </button>
-                </div>
-              </div>
+              <PostReporter
+                post={post}
+                setShowReportPopup={setShowReportPopup}
+                showReportPopup={showReportPopup}
+              ></PostReporter>
             </PopupWindow>
           </div>
         )}

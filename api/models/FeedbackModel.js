@@ -1,7 +1,8 @@
 import { db } from "../connect.js";
 export const getFeedbacks = (page, pageSize, callback) => {
   const offset = (page - 1) * pageSize;
-  const q = "SELECT * FROM feedbacks LIMIT ?, ? ORDER BY createdAt";
+  const q =
+    "SELECT feedbacks.*,u.id AS userid, u.name FROM feedbacks LEFT JOIN users u ON (feedbacks.userid = u.id) ORDER BY createdAt DESC LIMIT ?, ? ";
   const values = [offset, pageSize];
 
   db.query(q, values, (err, data) => {
@@ -25,7 +26,7 @@ export const getFeedbacksByMonthAndYear = (
 ) => {
   const offset = (page - 1) * pageSize;
   const q =
-    "SELECT * FROM feedbacks WHERE MONTH(createdAt) = ? AND YEAR(createdAt) = ? LIMIT ?, ?";
+    "SELECT feedbacks.*,u.id AS userid, u.name FROM feedbacks LEFT JOIN users u ON (feedbacks.userid = u.id) WHERE MONTH(createdAt) = ? AND YEAR(createdAt) = ? ORDER BY createdAt DESC LIMIT ?, ?";
   const values = [month, year, offset, pageSize];
 
   db.query(q, values, (err, data) => {
@@ -101,7 +102,8 @@ export const updateFeedbackStatusById = (feedbackId, newStatus, callback) => {
 };
 
 export const getFeedbackById = (feedbackId, callback) => {
-  const q = "SELECT * FROM feedbacks WHERE id = ?";
+  const q =
+    "SELECT feedbacks.*,u.id AS userid, u.name FROM feedbacks LEFT JOIN users u ON (feedbacks.userid = u.id) WHERE id = ?";
   const values = [feedbackId];
 
   db.query(q, values, (err, data) => {
@@ -117,7 +119,8 @@ export const getFeedbackById = (feedbackId, callback) => {
 
 export const getFeedbacksByStatus = (status, page, pageSize, callback) => {
   const offset = (page - 1) * pageSize;
-  const q = "SELECT * FROM feedbacks WHERE status = ? LIMIT ?, ?";
+  const q =
+    "SELECT feedbacks.*,u.id AS userid, u.name FROM feedbacks LEFT JOIN users u ON (feedbacks.userid = u.id) WHERE status = ? ORDER BY createdAt DESC LIMIT ?, ?";
   const values = [status, offset, pageSize];
 
   db.query(q, values, (err, data) => {

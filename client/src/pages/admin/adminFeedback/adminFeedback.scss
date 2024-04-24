@@ -1,0 +1,75 @@
+.adminfeedback {
+  display: block;
+  margin: 0 auto;
+  max-width: 90%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 8px;
+
+  select,
+  button {
+    margin: 10px 0;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: #f7f7f7;
+    cursor: pointer;
+    &:hover {
+      background-color: #e7e7e7;
+    }
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    th {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
+
+    tr {
+      transition: background-color 0.3s ease;
+      &:hover {
+        background-color: #f7f7f7;
+      }
+      &.status-0 {
+        background-color: #ffcccc;
+        &:hover {
+          background-color: #ff7474;
+        }
+      }
+      &.status-1 {
+        background-color: #ccf7ff;
+        &:hover {
+          background-color: #7febfe;
+        }
+      }
+      &.status-2 {
+        background-color: #cdffcc;
+        &:hover {
+          background-color: #86ff84;
+        }
+      }
+    }
+  }
+
+  .userimg {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-right: 8px;
+  }
+
+  .rate {
+    display: flex;
+    img {
+      width: 20px;
+      height: 20px;
+      margin-right: 4px;
+    }
+  }
+}

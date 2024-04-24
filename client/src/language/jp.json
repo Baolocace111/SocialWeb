@@ -232,7 +232,13 @@
   "mục mới": "新情報",
   "Report": "報告",
   "REPORT": "報告",
+  "Feedback Management":"フィードバック管理",
   "Mô tả báo cáo của bạn": "レポートについて説明してください",
   "Cảm ơn bạn vì đã đăng bài": "「投稿してくれてありがとう」",
-  "Hệ thống đã gửi bài viết cho quản trị viên duyệt.": "「システムは承認のために記事を管理者に送信しました。」"
+  "Hệ thống đã gửi bài viết cho quản trị viên duyệt.": "「システムは承認のために記事を管理者に送信しました。」",
+  "Feedbacks":"フィードバック",
+  "All":"全て",
+  "Description":"説明",
+  "User Name":"ユーザーの名前",
+  "Rate":"評価する"
 }
