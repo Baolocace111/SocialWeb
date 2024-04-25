@@ -1,7 +1,7 @@
 import { db } from "../connect.js";
 import moment from "moment";
 export const getPostById = (userId, postId, callback) => {
-  const q = `SELECT DISTINCT p.*, u.id AS userid, u.name, u.profilePic, f.user_id
+  const q = `SELECT DISTINCT p.*, u.id AS userid, u.name,  f.user_id
     FROM posts p
     LEFT JOIN friendships f ON (p.userId=f.friend_id AND f.user_id = ? AND f.status = 1)
     LEFT JOIN users u ON (p.userId = u.id)
@@ -20,11 +20,30 @@ export const getPostById = (userId, postId, callback) => {
     return callback(null, data[0]);
   });
 };
+export const getPostByIdAdmin = (postid, callback) => {
+  const q = `SELECT p.*, u.id AS userid, u.name AS username
+  FROM posts p 
+  LEFT JOIN users u ON (p.userId = u.id)
+  WHERE (p.id = ?);
+`;
+  db.query(q, [postid], (err, data) => {
+    if (err) return callback(err, null);
+    if (data.length === 0)
+      return callback(null, {
+        error: true,
+        desc: "Bài viết không còn nữa",
+        profilePic: "deadskull.png",
+        createAt: 0,
+      });
+
+    return callback(null, data[0]);
+  });
+};
 export const getPosts = (userId, userInfo, callback) => {
   const q =
     userId !== "undefined"
-      ? `SELECT p.*, u.id AS userId, name, profilePic FROM posts AS p JOIN users AS u ON (u.id = p.userId) WHERE p.userId = ? ORDER BY p.createdAt DESC`
-      : `SELECT DISTINCT p.*, u.id AS userId, name, profilePic FROM posts AS p JOIN users 
+      ? `SELECT p.*, u.id AS userId, name FROM posts AS p JOIN users AS u ON (u.id = p.userId) WHERE p.userId = ? ORDER BY p.createdAt DESC`
+      : `SELECT DISTINCT p.*, u.id AS userId, name FROM posts AS p JOIN users 
       AS u ON (u.id = p.userId) 
       LEFT JOIN relationships AS r ON (p.userId = r.followedUserId) WHERE r.followerUserId = ? OR p.userId = ? ORDER BY p.createdAt DESC`;
 
@@ -129,8 +148,15 @@ export const addPost = (post, callback) => {
   });
 };
 export const addVideoPost = (userId, desc, url, callback) => {
-  const q = "INSERT INTO posts(`desc`, `img`, `type`, `userId`) VALUES (?)";
-  const values = [desc, url, 2, userId];
+  const q =
+    "INSERT INTO posts(`desc`, `img`, `createdAt`, `type`, `userId`) VALUES (?)";
+  const values = [
+    desc,
+    url,
+    moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+    2,
+    userId,
+  ];
   db.query(q, [values], (err, data) => {
     if (err) return callback(err, null);
     return callback(null, "Post has been created.");
@@ -151,7 +177,8 @@ export const getVideoFromPost = (userId, postId, callback) => {
   });
 };
 export const sharePost = (post, callback) => {
-  const checkQuery = "SELECT * FROM posts WHERE id = ? AND (type = ? OR type = ?)";
+  const checkQuery =
+    "SELECT * FROM posts WHERE id = ? AND (type = ? OR type = ?)";
   db.query(checkQuery, [post.shareId, 1, 3], (checkErr, checkData) => {
     if (checkErr) {
       return callback(checkErr, null);
@@ -282,10 +309,10 @@ export const addListPostPrivate = (userIDs, postID, userID, callback) => {
     const deleteAndInsertQuery =
       userIDs.length > 0
         ? "" +
-        "DELETE FROM post_private WHERE post_id = ?;" +
-        "INSERT INTO post_private(`post_id`, `user_id`) VALUES" +
-        userIDs.map((id) => `(${postID}, ${id})`).join(", ") +
-        `;`
+          "DELETE FROM post_private WHERE post_id = ?;" +
+          "INSERT INTO post_private(`post_id`, `user_id`) VALUES" +
+          userIDs.map((id) => `(${postID}, ${id})`).join(", ") +
+          `;`
         : `DELETE FROM post_private WHERE post_id = ?`;
 
     db.query(deleteAndInsertQuery, Number(postID), (error, results) => {
@@ -412,26 +439,34 @@ export const deleteImageOfPost = (postId, userId, callback) => {
 export const addGroupPost = (post, callback) => {
   checkGroupMembership(post.userId, post.groupId, (err, isMember) => {
     if (err) return callback(err);
-    // Nếu không phải thành viên, không cho phép tạo post
     if (!isMember) return callback("This user is not a member of the group");
 
-    // Tiếp tục thêm post như bình thường
-    const query = "INSERT INTO posts(`desc`, `img`, `userId`, `type`) VALUES (?)";
-    const values = [
-      post.desc,
-      post.img,
-      post.userId,
-      post.type,
-    ];
-
-    db.query(query, [values], (err, postResult) => {
+    // Kiểm tra xem người dùng có phải là chủ nhóm không
+    checkIfUserIsGroupOwner(post.userId, post.groupId, (err, isOwner) => {
       if (err) return callback(err);
 
-      const postId = postResult.insertId;
-      const groupPostQuery = "INSERT INTO group_posts(`post_id`, `group_id`, `user_id`) VALUES (?, ?, ?)";
-      db.query(groupPostQuery, [postId, post.groupId, post.userId], (err, groupPostResult) => {
+      const status = isOwner ? 1 : 0; // Nếu là chủ nhóm thì status = 1, ngược lại status = 0
+
+      // Tiếp tục thêm post như bình thường
+      const query =
+        "INSERT INTO posts(`desc`, `img`, `userId`, `type`) VALUES (?)";
+      const values = [post.desc, post.img, post.userId, post.type];
+
+      db.query(query, [values], (err, postResult) => {
         if (err) return callback(err);
-        return callback(null, "Group post has been created.");
+
+        const postId = postResult.insertId;
+        // Thêm status vào query
+        const groupPostQuery =
+          "INSERT INTO group_posts(`post_id`, `group_id`, `user_id`, `status`) VALUES (?, ?, ?, ?)";
+        db.query(
+          groupPostQuery,
+          [postId, post.groupId, post.userId, status],
+          (err, groupPostResult) => {
+            if (err) return callback(err);
+            return callback(null, "Group post has been created.");
+          }
+        );
       });
     });
   });
@@ -464,5 +499,14 @@ export const checkGroupMembership = (userId, groupId, callback) => {
     if (err) return callback(err);
     const isMember = results.length > 0 && results[0].status === 1;
     return callback(null, isMember);
+  });
+};
+
+export const checkIfUserIsGroupOwner = (userId, groupId, callback) => {
+  const query = "SELECT * FROM teams WHERE id = ? AND created_by = ?";
+  db.query(query, [groupId, userId], (err, results) => {
+    if (err) return callback(err);
+    const isOwner = results.length > 0;
+    callback(null, isOwner);
   });
 };

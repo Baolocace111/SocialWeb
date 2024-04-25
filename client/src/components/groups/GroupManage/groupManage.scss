@@ -70,6 +70,9 @@
                     border-bottom: 1px solid #ccd0d5;
 
                     .menu-item {
+                        display: flex;
+                        align-items: center;
+                        gap: 5px;
                         padding: 15px 10px;
                         border-radius: 5px;
                         font-weight: 500;
@@ -114,11 +117,57 @@
                             }
 
                             .dropdown-item {
+                                display: flex;
+                                align-items: center;
+                                gap: 5px;
                                 padding: 15px 10px;
                                 border-radius: 5px;
                                 font-weight: 500;
                                 cursor: pointer;
                                 transition: background-color 0.3s ease;
+
+                                .item-section {
+                                    display: flex;
+                                    flex-direction: column;
+                                    margin: -5px 0;
+                                    gap: 5px;
+
+                                    .count {
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 5px;
+
+                                        .new {
+                                            width: 8px;
+                                            height: 8px;
+                                            border-radius: 50%;
+                                            background-color: #1877F2;
+                                        }
+
+                                        span {
+                                            font-size: 13px;
+                                            font-weight: 400;
+                                            color: gray;
+                                        }
+                                    }
+                                }
+
+                                .pending-num {
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    background-color: #ECF3FF;
+                                    margin-left: auto;
+                                    width: 22px;
+                                    height: 22px;
+                                    border-radius: 50%;
+
+                                    span {
+                                        font-weight: 700;
+                                        font-size: 12px;
+                                        color: #1877F2;
+                                    }
+                                }
 
                                 &:hover {
                                     background-color: themed("bgSoft");

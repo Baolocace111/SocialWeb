@@ -14,7 +14,7 @@ const GroupPosts = ({ groupId }) => {
         {
             getNextPageParam: (lastPage) => lastPage.next !== -1 ? lastPage.next : undefined,
             refetchOnWindowFocus: false,
-            refetchOnMount: false,
+            refetchOnMount: true,
             onSuccess: (newData) => {
                 setIsLoadingMore(false);
             },

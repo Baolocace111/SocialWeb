@@ -1,6 +1,7 @@
 import { AuthService } from "../../services/AuthService.js";
 import {
   deletePostByAdminService,
+  getPostByIdAdminService,
   getPostByUserAdminService,
   getUserPostingByAdminService,
 } from "../../services/AdminService.js";
@@ -49,6 +50,17 @@ export const deletePostAdminController = async (req, res) => {
   try {
     await AuthService.verifyAdminToken(req.cookies.accessToken);
     deletePostByAdminService(req.query.postid, (err, data) => {
+      if (err) return res.status(500).json(err);
+      return res.status(200).json(data);
+    });
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+export const getPostByIdAdmin = async (req, res) => {
+  try {
+    await AuthService.verifyAdminToken(req.cookies.accessToken);
+    getPostByIdAdminService(req.params.id, (err, data) => {
       if (err) return res.status(500).json(err);
       return res.status(200).json(data);
     });

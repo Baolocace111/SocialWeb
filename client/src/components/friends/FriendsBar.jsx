@@ -6,6 +6,7 @@ import {
   faUserPlus,
   faLightbulb,
   faGear,
+  faAddressCard
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../../context/languageContext";
@@ -46,9 +47,8 @@ const FriendsBar = () => {
               onClick={() => handleItemClick("requests")}
             >
               <div
-                className={`icon-button ${
-                  isItemSelected("requests") ? "selected" : ""
-                }`}
+                className={`icon-button ${isItemSelected("requests") ? "selected" : ""
+                  }`}
               >
                 <FontAwesomeIcon icon={faUserPlus} size="lg" />
               </div>
@@ -60,19 +60,35 @@ const FriendsBar = () => {
             style={{ textDecoration: "none", color: "inherit" }}
           >
             <div
-              className={`item ${
-                isItemSelected("suggestions") ? "selected" : ""
-              }`}
+              className={`item ${isItemSelected("suggestions") ? "selected" : ""
+                }`}
               onClick={() => handleItemClick("suggestions")}
             >
               <div
-                className={`icon-button ${
-                  isItemSelected("suggestions") ? "selected" : ""
-                }`}
+                className={`icon-button ${isItemSelected("suggestions") ? "selected" : ""
+                  }`}
               >
                 <FontAwesomeIcon icon={faLightbulb} size="lg" />
               </div>
               <span>{trl("Gợi ý")}</span>
+            </div>
+          </Link>
+          <Link
+            to={`/friends/dashboard`}
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            <div
+              className={`item ${isItemSelected("dashboard") ? "selected" : ""
+                }`}
+              onClick={() => handleItemClick("dashboard")}
+            >
+              <div
+                className={`icon-button ${isItemSelected("dashboard") ? "selected" : ""
+                  }`}
+              >
+                <FontAwesomeIcon icon={faAddressCard} size="lg" />
+              </div>
+              <span>{trl("Bạn bè")}</span>
             </div>
           </Link>
         </div>

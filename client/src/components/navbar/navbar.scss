@@ -15,6 +15,56 @@
     color: themed("textColor");
     z-index: 999;
 
+    .callingPopup {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      border-radius: 8px 8px 0 0;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      background-color: themed("bg");
+
+      img {
+        position: absolute;
+        top: -30%;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 20px;
+        border: 10px solid themed("bg");
+      }
+
+      h1 {
+        margin-top: 50px;
+
+        color: themed("textColor");
+        font-size: 1.5em;
+        text-align: center;
+      }
+    }
+
+    .callingButton {
+      display: flex;
+      justify-content: space-around;
+
+      background-color: themed("bg");
+      button {
+        padding: 10px 20px;
+        font-size: 1em;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        color: themed("buttonTextColor");
+        background-color: themed("buttonBackgroundColor");
+        transition: background-color 0.3s, transform 0.2s;
+
+        &:hover {
+          transform: scale(1.05);
+        }
+      }
+    }
+
     .left {
       display: flex;
       align-items: center;

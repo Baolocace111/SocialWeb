@@ -12,5 +12,7 @@ router.post('/search', groupController.searchGroupsController);
 router.get('/:groupId/pending-posts', groupController.getPendingGroupPosts);
 router.put('/:groupId/approve-post', groupController.approveGroupPost);
 router.put('/:groupId/reject-post', groupController.rejectGroupPost);
+router.get('/:groupId/pending-posts-count', groupController.getPendingPostsCount);
+router.get('/:groupId/pending-requests-count', groupController.getJoinRequestsCount);
 
 export default router;

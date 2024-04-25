@@ -1,0 +1,133 @@
+@import "../../../../style.scss";
+
+.report-popup {
+  display: flex;
+  flex-direction: column;
+
+  @include themify($themes) {
+    .title {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      padding: 15px 20px;
+      border-bottom: solid 1px lightgray;
+      display: flex;
+      align-items: center;
+    }
+
+    .popup-content {
+      flex-grow: 1;
+      overflow-y: auto;
+
+      .text-input {
+        width: 100%;
+        border: none;
+        resize: none;
+        outline: none;
+        font-size: 20px;
+        margin-bottom: 15px;
+        background-color: themed("bg");
+        color: themed("textColor");
+      }
+
+      .file-input {
+        label {
+          font-size: 22px;
+          width: fit-content;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+        }
+
+        input {
+          display: none;
+        }
+      }
+
+      .file-preview {
+        margin-top: 15px;
+
+        .file-selected {
+          margin: 0 auto;
+          width: fit-content;
+          position: relative;
+
+          img,
+          video {
+            max-height: 150px;
+            border-radius: 4px;
+            position: relative;
+          }
+
+          button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 5px 10px;
+            background-color: #ff4d4f;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+
+            &:hover {
+              background-color: #ff7875;
+            }
+          }
+        }
+      }
+
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background-color: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.4);
+        border-radius: 4px;
+      }
+
+      &::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(0, 0, 0, 0.6);
+      }
+    }
+  }
+
+  .popup-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    padding: 15px 0;
+    box-shadow: 0px -4px 8px rgba(0, 0, 0, 0.1);
+
+    button.report {
+      padding: 8px 16px;
+      border: none;
+      color: white;
+      background-color: lightskyblue;
+      cursor: pointer;
+      border-radius: 4px;
+      margin: 0;
+    }
+
+    button.report:hover {
+      background-color: blue;
+    }
+
+    button.cancel {
+      padding: 8px 16px;
+      border: none;
+      color: white;
+      background-color: lightcoral;
+      cursor: pointer;
+      border-radius: 4px;
+      margin: 0;
+    }
+
+    button.cancel:hover {
+      background-color: red;
+    }
+  }
+}

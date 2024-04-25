@@ -161,3 +161,21 @@ export const getUserFromGroupPost = (postId, callback) => {
         return callback(null, rows[0].user_id);
     });
 };
+
+export const getPendingPostsCount = (groupId, callback) => {
+    const q = "SELECT COUNT(*) as pendingPostsCount FROM group_posts WHERE group_id = ? AND status = 0";
+
+    db.query(q, [groupId], (err, data) => {
+        if (err) return callback(err);
+        return callback(null, data);
+    });
+};
+
+export const getJoinRequestsCount = (groupId, callback) => {
+    const q = "SELECT COUNT(*) as joinRequestsCount FROM joins WHERE group_id = ? AND status = 0";
+
+    db.query(q, [groupId], (err, data) => {
+        if (err) return callback(err);
+        return callback(null, data);
+    });
+};

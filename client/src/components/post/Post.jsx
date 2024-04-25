@@ -22,6 +22,7 @@ import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import ReportOutlinedIcon from "@mui/icons-material/ReportOutlined";
 
 import { TextareaAutosize } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
@@ -41,11 +42,13 @@ import { makeRequest, URL_OF_BACK_END } from "../../axios";
 import { useContext, useEffect, useState, useRef } from "react";
 import { AuthContext } from "../../context/authContext";
 import Description from "./desc";
-import MiniPost from "./MiniPost";
 import Private from "./Private";
 import { Link } from "react-router-dom";
-import ReactPlayer from "react-player";
+import ReactPlayer from "react-player/lazy";
 import { useLanguage } from "../../context/languageContext";
+import PostReporter from "../postPopup/reportComponent/postReporter/PostReporter";
+import PostShare from "../postPopup/shareComponent/PostShare";
+
 const Post = ({ post }) => {
   const { trl, language } = useLanguage();
   useEffect(() => {
@@ -60,8 +63,9 @@ const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [deleteImage, setDeleteImage] = useState(false);
-  const [shareDesc, setShareDesc] = useState("");
+
   const [showSharePopup, setShowSharePopup] = useState(false);
+  const [showReportPopup, setShowReportPopup] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openSeeEdit, setOpenSeeEdit] = useState(false);
   const [selectedValue, setSelectedValue] = useState(0); // State để lưu giá trị của Radio được chọn
@@ -80,7 +84,14 @@ const Post = ({ post }) => {
     }
   }, [openEdit, post]);
 
-  //Handle openMenu
+  const handleReport = () => {
+    setShowReportPopup(!showReportPopup);
+  };
+
+  const handleShare = () => {
+    setShowSharePopup(!showSharePopup);
+  };
+
   const handleMenuClick = (event) => {
     if (post.userId === currentUser.id) {
       setMenuAnchor(event.currentTarget);
@@ -120,7 +131,6 @@ const Post = ({ post }) => {
       console.log(selectedImage);
     }
   };
-  //End handleOpenMenu
 
   const { currentUser } = useContext(AuthContext);
   const { isLoading, data } = useQuery(["likes", post.id], () =>
@@ -131,17 +141,6 @@ const Post = ({ post }) => {
 
   const queryClient = useQueryClient();
   //Use Mutation
-  const shareMutation = useMutation(
-    (data) => {
-      return makeRequest.post("/posts/share", { post: data });
-    },
-    {
-      onSuccess: () => {
-        // Invalidate and refetch
-        queryClient.invalidateQueries(["posts"]);
-      },
-    }
-  );
   const mutation = useMutation(
     (liked) => {
       if (liked) return makeRequest.delete("/likes?postId=" + post.id);
@@ -206,19 +205,6 @@ const Post = ({ post }) => {
     }
   );
   //End Use Mutation
-
-  const handleShare = () => {
-    setShareDesc("");
-    setShowSharePopup(!showSharePopup);
-    setMenuAnchor(null);
-  };
-  const handleShareApi = () => {
-    shareMutation.mutate({
-      desc: shareDesc,
-      shareId: post.id,
-    });
-    handleShare();
-  };
 
   const handleUpdate = async (e) => {
     updateMutation.mutate({ postId: post.id, desc: desc });
@@ -677,14 +663,15 @@ const Post = ({ post }) => {
           <Link to={`/seepost/${post.id}`}>
             {post.type === 2 && isVideoContent ? (
               <ReactPlayer
+                key={post.id}
                 url={URL_OF_BACK_END + `posts/videopost/` + post.id}
-                playing={true}
+                playing={false}
                 controls={true}
                 className="react-player"
               />
             ) : (
-              (
-                post.img && <img
+              post.img && (
+                <img
                   src={URL_OF_BACK_END + `posts/videopost/` + post.id}
                   onError={(e) => {
                     e.target.onerror = null;
@@ -725,96 +712,23 @@ const Post = ({ post }) => {
               <ShareOutlinedIcon />
               {trl("Share")}
             </div>
+            {post.userId !== currentUser.id && (
+              <div className="item" onClick={() => handleReport()}>
+                <ReportOutlinedIcon />
+                {trl("Report")}
+              </div>
+            )}
             <PopupWindow handleClose={handleShare} show={showSharePopup}>
-              <div>
-                <EditIcon sx={{ marginRight: "8px", fontSize: "20px" }} />
-                <span style={{ fontSize: "22px", fontWeight: "700" }}>
-                  {trl("Share this post")}
-                </span>
-              </div>
-              <hr />
-              <div className="popup-content">
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-start",
-                    alignItems: "center",
-                    margin: "10px 0 15px 10px",
-                  }}
-                >
-                  <div
-                    style={{
-                      paddingRight: "15px",
-                      display: "flex",
-                      flex: "0 0 auto",
-                      gap: "10px",
-                    }}
-                  >
-                    <img
-                      src={
-                        URL_OF_BACK_END + `users/profilePic/` + currentUser.id
-                      }
-                      style={{
-                        borderRadius: "50%",
-                        width: "45px",
-                        height: "45px",
-                      }}
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = "/upload/errorImage.png";
-                      }}
-                      alt={""}
-                    />
-                    <div
-                      style={{
-                        fontWeight: "700",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      {currentUser.name}
-                    </div>
-                  </div>
-                </div>
-                <TextareaAutosize
-                  minRows={2}
-                  placeholder="Nhập nội mô tả của bạn"
-                  defaultValue={shareDesc}
-                  onChange={(e) => setShareDesc(e.target.value)}
-                  style={{
-                    width: "100%",
-                    border: "none",
-                    resize: "none",
-                    outline: "none",
-                    fontSize: "20px",
-                    marginBottom: "-10px",
-                  }}
-                />
-                <div
-                  style={{
-                    pointerEvents: "none",
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
-                  <MiniPost post={post}></MiniPost>
-                </div>
-              </div>
-              <hr />
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  gap: "20px",
-                }}
-              >
-                <button className="share" onClick={handleShareApi}>
-                  {trl("SHARE")}
-                </button>
-                <button className="cancel" onClick={handleShare}>
-                  {trl("CANCEL")}
-                </button>
-              </div>
+              <PostShare
+                post={post}
+                setShowSharePopup={setShowSharePopup}
+                showSharePopup={showSharePopup} />
+            </PopupWindow>
+            <PopupWindow show={showReportPopup} handleClose={handleReport}>
+              <PostReporter
+                post={post}
+                setShowReportPopup={setShowReportPopup}
+                showReportPopup={showReportPopup} />
             </PopupWindow>
           </div>
         )}

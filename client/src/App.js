@@ -8,7 +8,9 @@ import {
   Navigate,
   Link,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
+import { useEffect } from "react";
 import Navbar from "./components/navbar/Navbar";
 import LeftBar from "./components/leftBar/LeftBar";
 import RightBar from "./components/rightBar/RightBar";
@@ -16,6 +18,7 @@ import StoriesBar from "./components/stories/StoriesBar/storiesBar";
 import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
 import GroupDetail from "./pages/group/groupDetail/GroupDetail";
+import GroupPostDetail from "./pages/group/groupPostDetail/GroupPostDetail";
 import GroupRequest from "./pages/group/groupRequest/GroupRequest";
 import GroupPendingPost from "./pages/group/groupPendingPost/GroupPendingPost";
 import Search from "./pages/search/searchUser/Search";
@@ -36,7 +39,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import FriendInvite from "./pages/friend/friendinvite/FriendInvite";
 import FriendSuggest from "./pages/friend/friendSuggest/FriendSuggest";
 import SearchPost from "./pages/search/searchPost/SearchPost";
-import PostPage from "./pages/postPage/PostPage";
+import PostPage from "./pages/post/PostPage";
 import Error from "./pages/Error/Error";
 import AdminOnly from "./pages/Error/AdminOnly";
 import AdminHome from "./pages/admin/adminHome/AdminHome";
@@ -54,6 +57,10 @@ import Gameindex from "./pages/games/Gameindex";
 import Carogames from "./pages/games/Carogame";
 import Call from "./pages/call/Call";
 import AdminLanguageManagement from "./pages/admin/adminLanguageManagement/AdminLanguageManagement";
+import FriendDashBoard from "./pages/friend/friendDashboard/FriendDashboard";
+import UnderContructionPage from "./pages/Error/UnderContruction";
+import AdminFeedback from "./pages/admin/adminFeedback/AdminFeedback";
+import OnlyFanPage from "./pages/home/onlyFan/OnlyFan";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -120,6 +127,15 @@ function App() {
   };
 
   const FriendsLayout = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+      if (location.pathname === "/friends") {
+        navigate("/friends/dashboard");
+      }
+    }, [location.pathname, navigate]);
+
     return (
       <div className={`theme-${darkMode ? "dark" : "light"}`}>
         <Navbar />
@@ -127,7 +143,12 @@ function App() {
           <div style={{ flex: "25%" }}>
             <FriendsBar />
           </div>
-          <div style={{ flex: "75%", backgroundColor: "#f6f3f3" }}>
+          <div
+            style={{
+              flex: "75%",
+              backgroundColor: darkMode ? "#333" : "#f6f3f3",
+            }}
+          >
             <Outlet />
           </div>
         </div>
@@ -136,6 +157,15 @@ function App() {
   };
 
   const GroupsLayout = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+      if (location.pathname === "/groups") {
+        navigate("/groups/joins");
+      }
+    }, [location.pathname, navigate]);
+
     return (
       <div className={`theme-${darkMode ? "dark" : "light"}`}>
         <Navbar />
@@ -272,6 +302,46 @@ function App() {
           path: "/",
           element: <Home />,
         },
+        {
+          path: "/market",
+          element: <UnderContructionPage></UnderContructionPage>,
+        },
+        {
+          path: "/watch",
+          element: <UnderContructionPage></UnderContructionPage>,
+        },
+        {
+          path: "/memories",
+          element: <UnderContructionPage></UnderContructionPage>,
+        },
+        {
+          path: "/event",
+          element: <UnderContructionPage></UnderContructionPage>,
+        },
+        {
+          path: "/gallery",
+          element: <UnderContructionPage></UnderContructionPage>,
+        },
+        {
+          path: "/video",
+          element: <UnderContructionPage></UnderContructionPage>,
+        },
+        {
+          path: "/messages",
+          element: <UnderContructionPage></UnderContructionPage>,
+        },
+        {
+          path: "/fund",
+          element: <UnderContructionPage></UnderContructionPage>,
+        },
+        {
+          path: "/tutorial",
+          element: <UnderContructionPage></UnderContructionPage>,
+        },
+        {
+          path: "/course",
+          element: <UnderContructionPage></UnderContructionPage>,
+        },
       ],
     },
     {
@@ -281,6 +351,10 @@ function App() {
     {
       path: "/register",
       element: <Register />,
+    },
+    {
+      path: "/onlyfan",
+      element: <OnlyFanPage></OnlyFanPage>,
     },
     {
       path: "/profile/:userId",
@@ -301,6 +375,10 @@ function App() {
         {
           path: "/friends/suggestions",
           element: <FriendSuggest />,
+        },
+        {
+          path: "/friends/dashboard",
+          element: <FriendDashBoard />,
         },
       ],
     },
@@ -341,6 +419,10 @@ function App() {
         {
           path: "/groups/:groupId/pending_posts",
           element: <GroupPendingPost />,
+        },
+        {
+          path: "/groups/:groupId/posts/:postId",
+          element: <GroupPostDetail />,
         },
       ],
     },
@@ -397,6 +479,10 @@ function App() {
         {
           path: "/admin/language",
           element: <AdminLanguageManagement />,
+        },
+        {
+          path: "/admin/feedback",
+          element: <AdminFeedback></AdminFeedback>,
         },
       ],
     },

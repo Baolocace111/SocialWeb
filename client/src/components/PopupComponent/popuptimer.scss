@@ -1,0 +1,47 @@
+@import "../../style.scss";
+.timemodal {
+  display: block;
+  visibility: hidden;
+  opacity: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.5);
+
+  z-index: 1000;
+
+  transition: opacity 0.3s ease-in-out;
+  justify-content: center;
+  align-items: center;
+  .timer-progress-bar {
+    height: 5px; // Đặt độ cao của thanh tiến trình
+    background-color: #4caf50; // Màu sắc của thanh tiến trình
+    transition: width 1s linear; // Hiệu ứng chuyển đổi mượt mà cho độ rộng
+  }
+  .timemodal-main {
+    position: relative;
+
+    width: 35%;
+    @include themify($themes) {
+      background-color: themed("bg");
+
+      border-radius: 8px;
+      box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+      z-index: 1001;
+    }
+  }
+}
+/* Hiển thị cửa sổ popup */
+.display-block {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Ẩn cửa sổ popup */
+.display-none {
+  visibility: hidden;
+  opacity: 0;
+}

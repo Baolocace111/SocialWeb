@@ -2,8 +2,6 @@ import "./share.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faImages,
-  faLocationDot,
-  faTags,
   faFaceSmileBeam,
   faX,
 } from "@fortawesome/free-solid-svg-icons";

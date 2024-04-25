@@ -202,3 +202,43 @@ export const rejectGroupPost = async (req, res) => {
         return res.status(500).json({ error: error.message });
     }
 };
+
+export const getPendingPostsCount = async (req, res) => {
+    try {
+        const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+
+        AuthService.IsAccountBanned(userId, async (err) => {
+            if (err) {
+                return res.status(500).json({ error: "This account is banned" });
+            }
+
+            const groupId = req.params.groupId;
+            groupService.getPendingPostsCount(userId, groupId, (err, data) => {
+                if (err) return res.status(500).json({ error: err.message });
+                return res.status(200).json({ count: data[0].pendingPostsCount });
+            });
+        });
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+};
+
+export const getJoinRequestsCount = async (req, res) => {
+    try {
+        const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+
+        AuthService.IsAccountBanned(userId, async (err) => {
+            if (err) {
+                return res.status(500).json({ error: "This account is banned" });
+            }
+
+            const groupId = req.params.groupId;
+            groupService.getJoinRequestsCount(userId, groupId, (err, data) => {
+                if (err) return res.status(500).json({ error: err.message });
+                return res.status(200).json({ count: data[0].joinRequestsCount });
+            });
+        });
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+};
