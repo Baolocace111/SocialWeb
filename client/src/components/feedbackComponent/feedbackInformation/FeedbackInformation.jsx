@@ -3,7 +3,7 @@ import { URL_OF_BACK_END, makeRequest } from "../../../axios";
 import { useLanguage } from "../../../context/languageContext";
 import { useEffect, useState } from "react";
 import moment from "moment";
-import StarRating from "../../displayComponet/StarRating";
+import StarRating from "../../adminComponent/display/StarRating";
 import ShowPosts from "../../posts/ShowPosts";
 const FeedbackInformation = ({ feedback }) => {
   const { trl, language } = useLanguage();

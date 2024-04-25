@@ -3,7 +3,7 @@ import { makeRequest } from "../../../axios";
 import { URL_OF_BACK_END } from "../../../axios";
 import "./adminFeedback.scss";
 import { useLanguage } from "../../../context/languageContext";
-import StarRating from "../../../components/displayComponet/StarRating";
+import StarRating from "../../../components/adminComponent/display/StarRating";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowCircleRight } from "@fortawesome/free-solid-svg-icons";
 import FeedbackInformation from "../../../components/feedbackComponent/feedbackInformation/FeedbackInformation";
