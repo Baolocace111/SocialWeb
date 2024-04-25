@@ -243,5 +243,6 @@
   "Rate":"Rate",
   "chưa xử lý":"not yet in progress",
   "đang xử lý":"processing",
-  "đã xử lý":"processed"
+  "đã xử lý":"processed",
+  "sure1-8":"Are you over 18"
 }
