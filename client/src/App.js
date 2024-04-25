@@ -60,6 +60,7 @@ import AdminLanguageManagement from "./pages/admin/adminLanguageManagement/Admin
 import FriendDashBoard from "./pages/friend/friendDashboard/FriendDashboard";
 import UnderContructionPage from "./pages/Error/UnderContruction";
 import AdminFeedback from "./pages/admin/adminFeedback/AdminFeedback";
+import OnlyFanPage from "./pages/home/onlyFan/OnlyFan";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -350,6 +351,10 @@ function App() {
     {
       path: "/register",
       element: <Register />,
+    },
+    {
+      path: "/onlyfan",
+      element: <OnlyFanPage></OnlyFanPage>,
     },
     {
       path: "/profile/:userId",
