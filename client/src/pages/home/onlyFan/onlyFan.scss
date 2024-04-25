@@ -1,0 +1,279 @@
+.fanpage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+
+  .popup-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    h1 {
+      margin: 20px 0;
+    }
+
+    .acbutton {
+      button {
+        margin: 0 10px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: #f0f0f0;
+        }
+      }
+    }
+  }
+
+  .fan {
+    width: 500px;
+    height: 500px;
+    position: relative;
+    z-index: 1;
+
+    .speed-controls {
+      position: absolute;
+      bottom: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+
+      button {
+        padding: 5px 10px;
+        margin: 0 5px;
+        background-color: #eee;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #ddd;
+        }
+      }
+    }
+  }
+
+  .fan-main {
+    position: absolute;
+    width: 200px;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .fan-main .bottom {
+    width: 200px;
+    height: 55px;
+    position: relative;
+    background: black;
+    display: flex;
+    .btn-0 {
+      position: absolute;
+      width: 30px;
+      height: 20px;
+      border-radius: 5px;
+      left: 10%;
+      top: -30%;
+      background-color: #fff345;
+      cursor: pointer;
+      z-index: -5;
+    }
+    .btn-1 {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      width: 30px;
+      height: 20px;
+      border-radius: 5px;
+      left: 30%;
+      top: -30%;
+      background-color: #32ba7c;
+      cursor: pointer;
+      z-index: -5;
+      h1 {
+        position: absolute;
+        top: -200%;
+      }
+    }
+    .btn-2 {
+      display: flex;
+      position: absolute;
+      justify-content: center;
+      align-items: center;
+      width: 30px;
+      height: 20px;
+      top: -30%;
+      border-radius: 5px;
+      left: 50%;
+      background-color: #32ba7c;
+      cursor: pointer;
+      z-index: -5;
+      h1 {
+        position: absolute;
+        top: -200%;
+      }
+    }
+    .btn-3 {
+      display: flex;
+      position: absolute;
+      justify-content: center;
+      align-items: center;
+      width: 30px;
+      height: 20px;
+      top: -30%;
+      border-radius: 5px;
+      left: 70%;
+      background-color: #32ba7c;
+      cursor: pointer;
+      z-index: -5;
+      h1 {
+        position: absolute;
+        top: -200%;
+      }
+    }
+    .down {
+      top: -10%;
+    }
+  }
+
+  .fan-stand {
+    position: absolute;
+    bottom: 60px;
+    background: #111;
+    height: 270px;
+    width: 15px;
+    left: 50%;
+    z-index: -1;
+    transform: translateX(-50%);
+  }
+
+  .fan-blades {
+    width: 220px;
+    height: 220px;
+    position: absolute;
+    top: 13%;
+    left: calc(50% - 115px);
+    z-index: 1;
+    transition: transform 0.5s ease;
+    animation: start infinite linear;
+    animation-play-state: running;
+    transform-origin: center center;
+
+    &.speed-0 {
+      animation-play-state: paused;
+    }
+
+    &.speed-1 {
+      animation-duration: 4s; // Quay chậm
+    }
+
+    &.speed-2 {
+      animation-duration: 2s; // Quay nhanh hơn
+    }
+
+    &.speed-3 {
+      animation-duration: 1s; // Quay rất nhanh
+    }
+  }
+
+  .fan-blades .blade {
+    position: absolute;
+    width: 40px;
+    height: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    perspective: 500px;
+    transform-style: preserve-3d;
+  }
+
+  .fan-blades .blade:nth-child(2) {
+    transform: translateX(-50%) rotate(90deg);
+  }
+  .fan-blades .blade:nth-child(3) {
+    transform: translateX(-50%) rotate(180deg);
+  }
+  .fan-blades .blade:nth-child(4) {
+    transform: translateX(-50%) rotate(270deg);
+  }
+
+  .fan-blades .blade span {
+    width: 100%;
+    height: 200%;
+    border-radius: 44px;
+    background: #222;
+    position: absolute;
+    top: -66px;
+    display: block;
+    transform-style: preserve-3d;
+    transform: rotateX(78deg);
+    overflow: hidden;
+  }
+
+  .fan-blades .blade span::after {
+    width: 50%;
+    height: 100%;
+    content: "";
+    display: block;
+    background: #333;
+    transform: rotateX(0deg);
+  }
+
+  .fan-blades .center {
+    position: absolute;
+    overflow: hidden;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    background: #ccc;
+    z-index: 2;
+  }
+  .fan-blades .center::after {
+    content: "";
+    width: 40px;
+    height: 20px;
+    background: #888;
+    display: block;
+  }
+
+  #start:checked + div > .fan-blades {
+    animation: off 0.5s ease-out forwards;
+  }
+  #start:checked + div > .green {
+    bottom: -36%;
+  }
+  #start:checked + div > .green:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 4px;
+    width: 100%;
+    background: #666;
+  }
+
+  @keyframes start {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}

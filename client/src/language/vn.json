@@ -240,5 +240,10 @@
   "All":"Tất cả",
   "Description":"Mô tả",
   "User Name":"Tên người dùng",
-  "Rate":"Đánh giá"
+  "Rate":"Đánh giá",
+  "chưa xử lý":"chưa xử lý",
+  "đang xử lý":"đang xử lý",
+  "đã xử lý":"đã xử lý",
+  "sure1-8":"Bạn hơn 18 tuổi chưa",
+  "Enter your response":"Nhập phản hồi của bạn"
 }

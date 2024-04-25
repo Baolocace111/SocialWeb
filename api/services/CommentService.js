@@ -4,6 +4,7 @@ import {
   getCommentsByPostId,
   addComment,
   deleteComment,
+  getCommentByCommentId,
 } from "../models/CommentModel.js";
 import { SECRET_KEY } from "./AuthService.js";
 export const getCommentsService = (postId, callback) => {
@@ -27,7 +28,12 @@ export const addCommentWithTokenService = (token, desc, postId, callback) => {
     });
   });
 };
-
+export const getCommentByIdService = (commentId, callback) => {
+  getCommentByCommentId(commentId, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data);
+  });
+};
 export const deleteCommentWithTokenService = (token, commentId, callback) => {
   if (!token) return callback("Not authenticated!", null);
 

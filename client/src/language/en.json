@@ -240,5 +240,10 @@
   "All": "All",
   "Description": "Description",
   "User Name": "User's name",
-  "Rate":"Rate"
+  "Rate":"Rate",
+  "chưa xử lý":"not yet in progress",
+  "đang xử lý":"processing",
+  "đã xử lý":"processed",
+  "sure1-8":"Are you over 18",
+  "Enter your response":"Enter your response"
 }
