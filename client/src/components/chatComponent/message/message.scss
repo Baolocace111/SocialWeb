@@ -31,13 +31,21 @@
 
   .messageis_friends {
     display: flex;
-    align-items: center; // Căn giữa theo chiều dọc
+    align-items: center;
     gap: 10px;
 
-    img {
+    .avatar {
+      display: flex;
       width: 30px;
       height: 30px;
-      border-radius: 50%;
+
+      img {
+        border-radius: 50%;
+      }
+
+      &.placeholder {
+        background: transparent;
+      }
     }
 
     .content-and-date {

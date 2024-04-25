@@ -6,7 +6,7 @@ import {
 } from "../../../axios";
 import Message from "../message/Message";
 import "./chat.scss";
-import { useLanguage } from "../../../context/languageContext";
+import { Waypoint } from "react-waypoint";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import NineCube from "../../loadingComponent/nineCube/NineCube";
 import { faVideo, faX, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
@@ -18,10 +18,34 @@ const Chat = ({ friend, onRemoveChatBox }) => {
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(true);
   const friendId = friend.id;
-
-  const { trl } = useLanguage();
-
   const messageContainerRef = useRef(null);
+
+  // useEffect(() => {
+  //   if (!loading) {
+  //     const messageContainer = messageContainerRef.current;
+  //     messageContainer.scrollTop = messageContainer.scrollHeight;
+  //   }
+  // }, [loading]);
+
+  // useEffect(() => {
+  //   const messageContainer = messageContainerRef.current;
+  //   const isAtTop = messageContainer.scrollTop === 0;
+  //   if (isAtTop) {
+  //     messageContainer.scrollTop = 200;
+  //   }
+  // }, [messages]);
+
+  // useEffect(() => {
+  //   const messageContainer = messageContainerRef.current;
+  //   const isAtBottom =
+  //     messageContainer.scrollHeight - messageContainer.clientHeight <=
+  //     messageContainer.scrollTop + 1;
+
+  //   // Nếu container đang ở cuối cùng hoặc người dùng đã cuộn lên trước đó, thì tự động cuộn xuống dưới cùng để hiển thị tin nhắn mới nhất
+  //   if (isAtBottom || !loading) {
+  //     messageContainer.scrollTop = messageContainer.scrollHeight;
+  //   }
+  // }, [messages, loading]);
 
   useEffect(() => {
     if (messageContainerRef.current) {
@@ -140,11 +164,6 @@ const Chat = ({ friend, onRemoveChatBox }) => {
               <FontAwesomeIcon icon={faVideo} onClick={handleClickToCall} />
             </span>
           </button>
-          {/* <button>
-            <span>
-              <FontAwesomeIcon icon={faPhone} />
-            </span>
-          </button> */}
           <button onClick={onRemoveChatBox}>
             <span>
               <FontAwesomeIcon icon={faX} />
@@ -153,20 +172,29 @@ const Chat = ({ friend, onRemoveChatBox }) => {
         </div>
       </div>
       <div className="messages" ref={messageContainerRef}>
-        {!loading && (
-          <div className="showMore" onClick={handleShowMore}>
-            {trl("Show More")}
-          </div>
+        {!loading && messages.length > 0 && (
+          <Waypoint
+            onEnter={handleShowMore}
+          />
         )}
         {messages &&
-          messages.map((message) => (
-            <Message
-              key={message.id}
-              messageShow={message}
-              friendProfilePic={friend.id}
-            ></Message>
-          ))}
-        {loading && <NineCube></NineCube>}
+          messages.map((message, index) => {
+            const isLastInSequence =
+              index === messages.length - 1 ||
+              messages[index + 1].is_yours !== message.is_yours;
+
+            const showAvatarForFriend = isLastInSequence && !message.is_yours;
+
+            return (
+              <Message
+                key={message.id}
+                messageShow={message}
+                friendProfilePic={friend.id}
+                showAvatar={showAvatarForFriend}
+              />
+            );
+          })}
+        {loading && <NineCube />}
       </div>
       <div className="new-message">
         <input

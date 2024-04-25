@@ -3,14 +3,18 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { URL_OF_BACK_END } from "../../../axios";
 import { useLanguage } from "../../../context/languageContext";
-const Message = ({ messageShow, friendProfilePic }) => {
+const Message = ({ messageShow, friendProfilePic, showAvatar }) => {
   const [show, setShow] = useState(false);
-  const { trl, language } = useLanguage();
+  const { language } = useLanguage();
   useEffect(() => {
-    if (language === "jp") moment.locale("ja");
-    if (language === "vn") moment.locale("vi");
-    else moment.locale("en");
-  }, []);
+    if (language === "jp") {
+      moment.locale("ja");
+    } else if (language === "vn") {
+      moment.locale("vi");
+    } else {
+      moment.locale("en");
+    }
+  }, [language]);
   useEffect(() => {
     let timeoutId;
 
@@ -34,7 +38,6 @@ const Message = ({ messageShow, friendProfilePic }) => {
         <div className="messageis_yours">
           <div className="mess-content">{messageShow.message}</div>
           {show && (
-            // <span className="date">{moment(messageShow.created_at).fromNow()}</span>
             <span className="date">
               {moment
                 .utc(messageShow.created_at)
@@ -46,14 +49,18 @@ const Message = ({ messageShow, friendProfilePic }) => {
         </div>
       ) : (
         <div className="messageis_friends">
-          <img
-            src={URL_OF_BACK_END + `users/profilePic/` + friendProfilePic}
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = "/upload/errorImage.png";
-            }}
-            alt={""}
-          />
+          <div className={showAvatar ? "avatar" : "avatar placeholder"}>
+            {showAvatar ? (
+              <img
+                src={URL_OF_BACK_END + `users/profilePic/` + friendProfilePic}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "/upload/errorImage.png";
+                }}
+                alt={""}
+              />
+            ) : null}
+          </div>
           <div className="content-and-date">
             <div className="mess-content">{messageShow.message}</div>
             {show && (
