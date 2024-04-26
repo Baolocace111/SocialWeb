@@ -171,3 +171,10 @@ export const getJoinRequestsCount = (userId, groupId, callback) => {
         });
     });
 };
+
+export const getPostCountsForUser = (groupId, userId, callback) => {
+    groupModel.getPostCountByStatusForUser(groupId, userId, (err, data) => {
+        if (err) return callback(err, null);
+        return callback(null, data);
+    });
+}

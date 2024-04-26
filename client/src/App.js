@@ -213,7 +213,7 @@ function App() {
           <div style={{ flex: "25%" }}>
             <GroupManage />
           </div>
-          <div style={{ flex: "75%", backgroundColor: "#f6f3f3" }}>
+          <div style={{ flex: "75%", backgroundColor: darkMode ? "#333" : "#f6f3f3" }}>
             <Outlet />
           </div>
         </div>
