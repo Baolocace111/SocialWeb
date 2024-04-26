@@ -1,9 +1,14 @@
 import { db } from "../connect.js";
 
-export const getGroupById = (groupId, callback) => {
-    const q = "SELECT * FROM teams WHERE id = ?";
+export const getGroupById = (groupId, userId, callback) => {
+    const q = `
+        SELECT t.*, j.status AS join_status
+        FROM teams t
+        LEFT JOIN joins j ON t.id = j.group_id AND j.user_id = ?
+        WHERE t.id = ?;
+    `;
 
-    db.query(q, [groupId], (err, data) => {
+    db.query(q, [userId, groupId], (err, data) => {
         if (err) return callback(err);
         return callback(null, data);
     });
