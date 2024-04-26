@@ -13,7 +13,7 @@ export const getGroupById = async (req, res) => {
             }
 
             const groupId = req.params.groupId;
-            groupService.getGroupById(groupId, (err, data) => {
+            groupService.getGroupById(groupId, userId, (err, data) => {
                 if (err) return res.status(500).json({ error: err });
                 return res.status(200).json(data);
             });

@@ -54,7 +54,7 @@ export const approveJoinRequest = (adminUserId, joinRequestId, callback) => {
             joinModel.approveJoinRequest(joinRequestId, (err, response) => {
                 if (err) return callback(err);
 
-                getGroupById(joinRequest.group_id, (err, group) => {
+                getGroupById(joinRequest.group_id, adminUserId, (err, group) => {
                     if (err || !group) {
                         console.error("Failed to get group info for notification.");
                     } else {
@@ -96,7 +96,7 @@ export const rejectJoinRequest = (adminUserId, joinRequestId, callback) => {
             joinModel.rejectJoinRequest(joinRequestId, (err, response) => {
                 if (err) return callback(err);
 
-                getGroupById(joinRequest.group_id, (err, group) => {
+                getGroupById(joinRequest.group_id, adminUserId, (err, group) => {
                     if (err || !group) {
                         console.error("Failed to get group info for notification.");
                     } else {
