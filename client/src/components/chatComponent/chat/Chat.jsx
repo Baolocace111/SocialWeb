@@ -18,47 +18,25 @@ const Chat = ({ friend, onRemoveChatBox }) => {
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(true);
   const friendId = friend.id;
+  const [autoScrollToBottom, setAutoScrollToBottom] = useState(true);
+  const [hasMoreOldMessages, setHasMoreOldMessages] = useState(true);
   const messageContainerRef = useRef(null);
 
-  // useEffect(() => {
-  //   if (!loading) {
-  //     const messageContainer = messageContainerRef.current;
-  //     messageContainer.scrollTop = messageContainer.scrollHeight;
-  //   }
-  // }, [loading]);
-
-  // useEffect(() => {
-  //   const messageContainer = messageContainerRef.current;
-  //   const isAtTop = messageContainer.scrollTop === 0;
-  //   if (isAtTop) {
-  //     messageContainer.scrollTop = 200;
-  //   }
-  // }, [messages]);
-
-  // useEffect(() => {
-  //   const messageContainer = messageContainerRef.current;
-  //   const isAtBottom =
-  //     messageContainer.scrollHeight - messageContainer.clientHeight <=
-  //     messageContainer.scrollTop + 1;
-
-  //   // Nếu container đang ở cuối cùng hoặc người dùng đã cuộn lên trước đó, thì tự động cuộn xuống dưới cùng để hiển thị tin nhắn mới nhất
-  //   if (isAtBottom || !loading) {
-  //     messageContainer.scrollTop = messageContainer.scrollHeight;
-  //   }
-  // }, [messages, loading]);
+  useEffect(() => {
+    if (messageContainerRef.current && autoScrollToBottom) {
+      messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+      setAutoScrollToBottom(false);
+    }
+  }, [messages, autoScrollToBottom]);
 
   useEffect(() => {
-    if (messageContainerRef.current) {
-      messageContainerRef.current.scrollTop =
-        messageContainerRef.current.scrollHeight;
-    }
-  }, [messages]);
+    fetchMessages();
+    // eslint-disable-next-line
+  }, []);
 
   if (!ws) {
-    // Lấy cookies từ document.cookie hoặc từ các nguồn khác nếu cần
-    //const token = document.cookie.accessToken;
     // Tạo kết nối WebSocket khi component được mount
-    const socket = new WebSocket(WEBSOCKET_BACK_END + `/chat/${friendId}`); // Đặt URL của WebSocket server của bạn ở đây
+    const socket = new WebSocket(WEBSOCKET_BACK_END + `/chat/${friendId}`);
 
     // Xử lý sự kiện khi mở kết nối
     socket.onopen = () => {
@@ -72,9 +50,11 @@ const Chat = ({ friend, onRemoveChatBox }) => {
           friend_id: friendId,
           offset: 0,
         });
-        await setMessages(
-          removeDuplicateUnits([...messages, ...response.data])
-        );
+        await setMessages((prevMessages) => {
+          const updatedMessages = removeDuplicateUnits([...prevMessages, ...response.data]);
+          return updatedMessages;
+        });
+        setAutoScrollToBottom(true); // Tự động cuộn xuống dưới cùng cho tin nhắn mới
       } catch (error) {
         console.error("Failed to fetch messages:", error);
       }
@@ -93,25 +73,40 @@ const Chat = ({ friend, onRemoveChatBox }) => {
       socket.close();
     };
   }
+
   const handleClickToCall = () => {
     window.open(`/call/${friendId}`, "_blank");
   };
+
   const fetchMessages = async () => {
     try {
       const response = await makeRequest.post("/messages", {
         friend_id: friendId,
         offset: offset,
       });
+      const newMessages = response.data;
+      setMessages((prevMessages) => {
+        const updatedMessages = removeDuplicateUnits([...prevMessages, ...newMessages]);
+        const newOffset = offset + 10;
+        setOffset(newOffset);
 
-      await setMessages(removeDuplicateUnits([...messages, ...response.data]));
-
-      if (response.data.length !== 0) setOffset(offset + 10);
-      setLoading(false);
+        if (newMessages.length === 0) {
+          setHasMoreOldMessages(false);
+        }
+        setLoading(false);
+        if (!autoScrollToBottom && messageContainerRef.current && hasMoreOldMessages) {
+          const newScrollPosition = 200; // Scroll down 200 pixels
+          messageContainerRef.current.scrollTop = newScrollPosition;
+        }
+        return updatedMessages;
+      });
     } catch (error) {
       console.error("Failed to fetch messages:", error);
     }
   };
+
   const handleShowMore = () => {
+    setAutoScrollToBottom(false);
     fetchMessages();
   };
 
@@ -128,9 +123,11 @@ const Chat = ({ friend, onRemoveChatBox }) => {
             friend_id: friendId,
             offset: 0,
           });
-          await setMessages(
-            removeDuplicateUnits([...messages, ...response.data])
-          );
+          await setMessages((prevMessages) => {
+            const updatedMessages = removeDuplicateUnits([...prevMessages, ...response.data]);
+            return updatedMessages;
+          });
+          setAutoScrollToBottom(true); // Tự động cuộn xuống dưới cùng cho tin nhắn mới
         } catch (error) {
           console.error("Failed to fetch messages:", error);
         }
@@ -138,13 +135,12 @@ const Chat = ({ friend, onRemoveChatBox }) => {
         console.error("Failed to send message:", error);
       }
   };
+
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       sendMessage();
     }
   };
-
-  if (loading) fetchMessages();
 
   return (
     <div className="parent-container">
@@ -215,6 +211,7 @@ const Chat = ({ friend, onRemoveChatBox }) => {
 };
 
 export default Chat;
+
 function removeDuplicateUnits(arr) {
   // Loại bỏ các phần tử trùng lặp dựa trên id
   const uniqueUnits = new Map();
