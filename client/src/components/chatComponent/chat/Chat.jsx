@@ -6,7 +6,7 @@ import {
 } from "../../../axios";
 import Message from "../message/Message";
 import "./chat.scss";
-import { useLanguage } from "../../../context/languageContext";
+import { Waypoint } from "react-waypoint";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import NineCube from "../../loadingComponent/nineCube/NineCube";
 import { faVideo, faX, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
@@ -18,23 +18,25 @@ const Chat = ({ friend, onRemoveChatBox }) => {
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(true);
   const friendId = friend.id;
-
-  const { trl } = useLanguage();
-
+  const [autoScrollToBottom, setAutoScrollToBottom] = useState(true);
+  const [hasMoreOldMessages, setHasMoreOldMessages] = useState(true);
   const messageContainerRef = useRef(null);
 
   useEffect(() => {
-    if (messageContainerRef.current) {
-      messageContainerRef.current.scrollTop =
-        messageContainerRef.current.scrollHeight;
+    if (messageContainerRef.current && autoScrollToBottom) {
+      messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+      setAutoScrollToBottom(false);
     }
-  }, [messages]);
+  }, [messages, autoScrollToBottom]);
+
+  useEffect(() => {
+    fetchMessages();
+    // eslint-disable-next-line
+  }, []);
 
   if (!ws) {
-    // Lấy cookies từ document.cookie hoặc từ các nguồn khác nếu cần
-    //const token = document.cookie.accessToken;
     // Tạo kết nối WebSocket khi component được mount
-    const socket = new WebSocket(WEBSOCKET_BACK_END + `/chat/${friendId}`); // Đặt URL của WebSocket server của bạn ở đây
+    const socket = new WebSocket(WEBSOCKET_BACK_END + `/chat/${friendId}`);
 
     // Xử lý sự kiện khi mở kết nối
     socket.onopen = () => {
@@ -48,9 +50,11 @@ const Chat = ({ friend, onRemoveChatBox }) => {
           friend_id: friendId,
           offset: 0,
         });
-        await setMessages(
-          removeDuplicateUnits([...messages, ...response.data])
-        );
+        await setMessages((prevMessages) => {
+          const updatedMessages = removeDuplicateUnits([...prevMessages, ...response.data]);
+          return updatedMessages;
+        });
+        setAutoScrollToBottom(true); // Tự động cuộn xuống dưới cùng cho tin nhắn mới
       } catch (error) {
         console.error("Failed to fetch messages:", error);
       }
@@ -69,25 +73,40 @@ const Chat = ({ friend, onRemoveChatBox }) => {
       socket.close();
     };
   }
+
   const handleClickToCall = () => {
     window.open(`/call/${friendId}`, "_blank");
   };
+
   const fetchMessages = async () => {
     try {
       const response = await makeRequest.post("/messages", {
         friend_id: friendId,
         offset: offset,
       });
+      const newMessages = response.data;
+      setMessages((prevMessages) => {
+        const updatedMessages = removeDuplicateUnits([...prevMessages, ...newMessages]);
+        const newOffset = offset + 10;
+        setOffset(newOffset);
 
-      await setMessages(removeDuplicateUnits([...messages, ...response.data]));
-
-      if (response.data.length !== 0) setOffset(offset + 10);
-      setLoading(false);
+        if (newMessages.length === 0) {
+          setHasMoreOldMessages(false);
+        }
+        setLoading(false);
+        if (!autoScrollToBottom && messageContainerRef.current && hasMoreOldMessages) {
+          const newScrollPosition = 200; // Scroll down 200 pixels
+          messageContainerRef.current.scrollTop = newScrollPosition;
+        }
+        return updatedMessages;
+      });
     } catch (error) {
       console.error("Failed to fetch messages:", error);
     }
   };
+
   const handleShowMore = () => {
+    setAutoScrollToBottom(false);
     fetchMessages();
   };
 
@@ -104,9 +123,11 @@ const Chat = ({ friend, onRemoveChatBox }) => {
             friend_id: friendId,
             offset: 0,
           });
-          await setMessages(
-            removeDuplicateUnits([...messages, ...response.data])
-          );
+          await setMessages((prevMessages) => {
+            const updatedMessages = removeDuplicateUnits([...prevMessages, ...response.data]);
+            return updatedMessages;
+          });
+          setAutoScrollToBottom(true); // Tự động cuộn xuống dưới cùng cho tin nhắn mới
         } catch (error) {
           console.error("Failed to fetch messages:", error);
         }
@@ -114,13 +135,12 @@ const Chat = ({ friend, onRemoveChatBox }) => {
         console.error("Failed to send message:", error);
       }
   };
+
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       sendMessage();
     }
   };
-
-  if (loading) fetchMessages();
 
   return (
     <div className="parent-container">
@@ -140,11 +160,6 @@ const Chat = ({ friend, onRemoveChatBox }) => {
               <FontAwesomeIcon icon={faVideo} onClick={handleClickToCall} />
             </span>
           </button>
-          {/* <button>
-            <span>
-              <FontAwesomeIcon icon={faPhone} />
-            </span>
-          </button> */}
           <button onClick={onRemoveChatBox}>
             <span>
               <FontAwesomeIcon icon={faX} />
@@ -153,20 +168,29 @@ const Chat = ({ friend, onRemoveChatBox }) => {
         </div>
       </div>
       <div className="messages" ref={messageContainerRef}>
-        {!loading && (
-          <div className="showMore" onClick={handleShowMore}>
-            {trl("Show More")}
-          </div>
+        {!loading && messages.length > 0 && (
+          <Waypoint
+            onEnter={handleShowMore}
+          />
         )}
         {messages &&
-          messages.map((message) => (
-            <Message
-              key={message.id}
-              messageShow={message}
-              friendProfilePic={friend.id}
-            ></Message>
-          ))}
-        {loading && <NineCube></NineCube>}
+          messages.map((message, index) => {
+            const isLastInSequence =
+              index === messages.length - 1 ||
+              messages[index + 1].is_yours !== message.is_yours;
+
+            const showAvatarForFriend = isLastInSequence && !message.is_yours;
+
+            return (
+              <Message
+                key={message.id}
+                messageShow={message}
+                friendProfilePic={friend.id}
+                showAvatar={showAvatarForFriend}
+              />
+            );
+          })}
+        {loading && <NineCube />}
       </div>
       <div className="new-message">
         <input
@@ -187,6 +211,7 @@ const Chat = ({ friend, onRemoveChatBox }) => {
 };
 
 export default Chat;
+
 function removeDuplicateUnits(arr) {
   // Loại bỏ các phần tử trùng lặp dựa trên id
   const uniqueUnits = new Map();
