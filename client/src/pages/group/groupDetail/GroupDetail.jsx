@@ -38,6 +38,10 @@ const GroupDetail = () => {
     }
   }, [groupData]);
 
+  const { data: postCounts, isLoading: isLoadingPostCounts } = useQuery(['group-post-counts', groupId], () =>
+    makeRequest.get(`/groups/${groupId}/post-counts`).then(res => res.data)
+  );
+
   const { data: members, isLoading: isMembersLoading, error: membersError } = useQuery(['group-members', groupId], () =>
     makeRequest.get(`/joins/groups/${groupId}/users`).then(res => res.data)
   );
@@ -100,7 +104,7 @@ const GroupDetail = () => {
     setSelectedImage(null);
   };
 
-  if (isGroupLoading || isMembersLoading) return <NineCube />;
+  if (isGroupLoading || isMembersLoading || isLoadingPostCounts) return <NineCube />;
   if (groupError) return <div className="error-message">Lỗi: {groupError.message}</div>;
   if (membersError) return <div className="error-message">Lỗi: {membersError.message}</div>;
   if ((!groupData.join_status || groupData.join_status !== 1) && groupData.privacy_level !== 1) {
@@ -289,6 +293,17 @@ const GroupDetail = () => {
             )}
           </div>
         </div>
+        {postCounts?.pending > 0 && (
+          <div className="post-info">
+            <div className="count-posts">
+              <span className="title">{trl("Bài viết đang chờ")}</span>
+              <span className="count">{postCounts.pending + trl(" bài viết")}</span>
+            </div>
+            <div className="post-manage">
+              <span>{trl("Quản lý bài viết")}</span>
+            </div>
+          </div>
+        )}
         <div className="group-tabs">
           <div className="tab-container">
             <button

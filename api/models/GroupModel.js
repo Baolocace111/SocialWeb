@@ -184,3 +184,34 @@ export const getJoinRequestsCount = (groupId, callback) => {
         return callback(null, data);
     });
 };
+
+export const getPostCountByStatusForUser = (groupId, userId, callback) => {
+    const query = `
+        SELECT status, COUNT(*) as count
+        FROM group_posts
+        WHERE group_id = ? AND user_id = ?
+        GROUP BY status
+    `;
+    db.query(query, [groupId, userId], (err, results) => {
+        if (err) return callback(err);
+        const counts = {
+            pending: 0,
+            rejected: 0,
+            approved: 0
+        };
+        results.forEach(row => {
+            switch (row.status) {
+                case 0:
+                    counts.pending = row.count;
+                    break;
+                case -1:
+                    counts.rejected = row.count;
+                    break;
+                case 1:
+                    counts.approved = row.count;
+                    break;
+            }
+        });
+        callback(null, counts);
+    });
+}
