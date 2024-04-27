@@ -196,6 +196,10 @@ const Stories = () => {
               <video
                 src={selectedImage}
                 preload="metadata"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "/upload/errorImage.png";
+                }}
                 style={{ marginTop: "8px", maxWidth: "300px" }}
               />
             ) : (

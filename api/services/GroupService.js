@@ -1,8 +1,8 @@
 import * as groupModel from "../models/GroupModel.js";
 import { addNotificationService } from "./NotificationService.js";
 
-export const getGroupById = (groupId, callback) => {
-    groupModel.getGroupById(groupId, (err, data) => {
+export const getGroupById = (groupId, userId, callback) => {
+    groupModel.getGroupById(groupId, userId, (err, data) => {
         if (err) return callback(err, null);
         return callback(null, data);
     });
@@ -82,7 +82,7 @@ export const approvePendingGroupPost = (userId, groupId, postId, callback) => {
                     return callback(err, null);
                 }
 
-                getGroupById(groupId, (err, group) => {
+                getGroupById(groupId, userId, (err, group) => {
                     if (err || !group) {
                         console.error("Failed to get group info for notification.");
                         return callback(err, null);
@@ -122,7 +122,7 @@ export const rejectPendingGroupPost = (userId, groupId, postId, callback) => {
                     return callback(err, null);
                 }
 
-                getGroupById(groupId, (err, group) => {
+                getGroupById(groupId, userId, (err, group) => {
                     if (err || !group) {
                         console.error("Failed to get group info for notification.");
                         return callback(err, null);
@@ -171,3 +171,10 @@ export const getJoinRequestsCount = (userId, groupId, callback) => {
         });
     });
 };
+
+export const getPostCountsForUser = (groupId, userId, callback) => {
+    groupModel.getPostCountByStatusForUser(groupId, userId, (err, data) => {
+        if (err) return callback(err, null);
+        return callback(null, data);
+    });
+}

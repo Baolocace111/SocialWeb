@@ -2,6 +2,7 @@ import * as groupService from "../services/GroupService.js";
 import { AuthService } from "../services/AuthService.js";
 import { upload } from "../Multer.js";
 import path from "path";
+import { normalBackgroundUser } from "./backgroundController.js";
 
 export const getGroupById = async (req, res) => {
     try {
@@ -13,7 +14,7 @@ export const getGroupById = async (req, res) => {
             }
 
             const groupId = req.params.groupId;
-            groupService.getGroupById(groupId, (err, data) => {
+            groupService.getGroupById(groupId, userId, (err, data) => {
                 if (err) return res.status(500).json({ error: err });
                 return res.status(200).json(data);
             });
@@ -242,3 +243,19 @@ export const getJoinRequestsCount = async (req, res) => {
         return res.status(500).json(error);
     }
 };
+
+export const getPostCounts = (req, res) => {
+    normalBackgroundUser(req, res, async (error, userId) => {
+        if (error) {
+            return res.status(500).json({ error: error.message });
+        }
+        const groupId = req.params.groupId;
+
+        groupService.getPostCountsForUser(groupId, userId, (err, counts) => {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+            return res.status(200).json(counts);
+        });
+    });
+}

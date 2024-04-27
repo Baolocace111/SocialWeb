@@ -120,8 +120,8 @@ const Navbar = () => {
     iconId === "profile"
       ? setAnchorEl(event.currentTarget.parentElement.parentElement)
       : setAnchorEl(
-        event.currentTarget.parentElement.parentElement.parentElement
-      );
+          event.currentTarget.parentElement.parentElement.parentElement
+        );
     setContent(contentType);
   };
 
@@ -193,7 +193,7 @@ const Navbar = () => {
               } else if (data.type === "quit") {
                 setIsCalling(false);
               }
-            } catch (error) { }
+            } catch (error) {}
           }
         } else {
         }
@@ -210,7 +210,7 @@ const Navbar = () => {
       <ListBoxChat></ListBoxChat>
       <PopupWindow show={isCalling} handleClose={handleDenyCall}>
         <div className="callingPopup">
-          {callId > 0 &&
+          {callId > 0 && (
             <img
               src={URL_OF_BACK_END + `users/profilePic/` + callId}
               onError={(e) => {
@@ -219,7 +219,7 @@ const Navbar = () => {
               }}
               alt={""}
             />
-          }
+          )}
           <h1>
             {callName} {trl("đang gọi bạn")}
           </h1>
@@ -234,6 +234,13 @@ const Navbar = () => {
           style={{ cursor: "pointer" }}
           onClick={() => (window.location.href = "/")}
         >
+          <img
+            src="/upload/socialicon.png"
+            alt=""
+            onError={(e) => {
+              //console.error(e);
+            }}
+          ></img>{" "}
           TinySocial
         </span>
         <HomeOutlinedIcon />

@@ -7,6 +7,7 @@ import {
 import { searchUserBykeyController } from "../controllers/admin/adminUser.js";
 import {
   getFeedbackController,
+  getFeedbackImageAdminController,
   getFeedbackbyStatusController,
 } from "../controllers/admin/adminFeedback.js";
 import { getCommentByCommentIdController } from "../controllers/admin/adminComment.js";
@@ -22,6 +23,7 @@ router.post("/users/getuser", searchUserBykeyController);
 //Feedback management
 router.get("/feedback/get/:page", getFeedbackController);
 router.get("/feedback/getbystatus", getFeedbackbyStatusController);
+router.get("/feedback/getimage/:id", getFeedbackImageAdminController);
 //Comment management
 router.get("/comment/get/:id", getCommentByCommentIdController);
 export default router;

@@ -1,24 +1,17 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useLanguage } from "../../../context/languageContext";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { makeRequest } from "../../../axios.js";
 import { AuthContext } from "../../../context/authContext.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCircle,
-  faEye,
-  faLock,
-  faEarthAmericas,
-  faPen,
-  faUpload,
-  faImage,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCircle, faEye, faLock, faEarthAmericas, faPen, faUpload, faImage, faUsersLine } from "@fortawesome/free-solid-svg-icons";
 import NineCube from "../../../components/loadingComponent/nineCube/NineCube.jsx";
 import GroupShare from "../../../components/groups/GroupShare/GroupShare.jsx";
 import { URL_OF_BACK_END } from "../../../axios.js";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import "./groupDetail.scss";
+import GroupAbout from "../groupAbout/GroupAbout.jsx";
 import GroupPosts from "../../../components/groups/GroupPosts/GroupPosts.jsx";
 
 const GroupDetail = () => {
@@ -28,6 +21,7 @@ const GroupDetail = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedImageFile, setSelectedImageFile] = useState(null);
   const [activeTab, setActiveTab] = useState("discussion");
+  const [joinStatus, setJoinStatus] = useState(null);
 
   const [showPopover, setShowPopover] = useState(false);
   const togglePopover = () => {
@@ -38,9 +32,30 @@ const GroupDetail = () => {
     makeRequest.get(`/groups/${groupId}`).then(res => res.data[0])
   );
 
+  useEffect(() => {
+    if (groupData) {
+      setJoinStatus(groupData.join_status);
+    }
+  }, [groupData]);
+
+  const { data: postCounts, isLoading: isLoadingPostCounts } = useQuery(['group-post-counts', groupId], () =>
+    makeRequest.get(`/groups/${groupId}/post-counts`).then(res => res.data)
+  );
+
   const { data: members, isLoading: isMembersLoading, error: membersError } = useQuery(['group-members', groupId], () =>
     makeRequest.get(`/joins/groups/${groupId}/users`).then(res => res.data)
   );
+
+  const handleJoinGroup = async () => {
+    try {
+      await makeRequest.post("/joins/join", {
+        groupId: groupId,
+      });
+      setJoinStatus(0);
+    } catch (error) {
+      console.error("Error joining group:", error.response ? error.response.data : error.message);
+    }
+  };
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -89,9 +104,12 @@ const GroupDetail = () => {
     setSelectedImage(null);
   };
 
-  if (isGroupLoading || isMembersLoading) return <NineCube />;
+  if (isGroupLoading || isMembersLoading || isLoadingPostCounts) return <NineCube />;
   if (groupError) return <div className="error-message">Lỗi: {groupError.message}</div>;
   if (membersError) return <div className="error-message">Lỗi: {membersError.message}</div>;
+  if ((!groupData.join_status || groupData.join_status !== 1) && groupData.privacy_level !== 1) {
+    return <GroupAbout />
+  }
 
   let introContent;
   if (groupData.privacy_level === 0) {
@@ -107,7 +125,7 @@ const GroupDetail = () => {
           </div>
         </div>
         <div className="intro-privacy">
-          <FontAwesomeIcon icon={faEye} style={{ marginTop: "4px" }} />
+          <FontAwesomeIcon icon={faEye} style={{ marginTop: "4px", marginRight: "-4px" }} />
           <div className="content">
             <span className="intro-title">{trl("Hiển thị")}</span>
             <span className="intro-content">
@@ -133,7 +151,7 @@ const GroupDetail = () => {
           </div>
         </div>
         <div className="intro-privacy">
-          <FontAwesomeIcon icon={faEye} style={{ marginTop: "4px" }} />
+          <FontAwesomeIcon icon={faEye} style={{ marginTop: "4px", marginRight: "-4px" }} />
           <div className="content">
             <span className="intro-title">{trl("Hiển thị")}</span>
             <span className="intro-content">
@@ -258,10 +276,34 @@ const GroupDetail = () => {
               />
             ))}
           </div>
-          <div className="invite">
-            <span>{trl("+ Mời")}</span>
+          <div className="activity">
+            {joinStatus === 1 ? (
+              <div className="invite">
+                <span>{trl("+ Mời")}</span>
+              </div>
+            ) : joinStatus === 0 ? (
+              <div className="invite">
+                <span>{trl("Chờ duyệt")}</span>
+              </div>
+            ) : (
+              <div className="invite" onClick={handleJoinGroup}>
+                <FontAwesomeIcon icon={faUsersLine} />
+                <span>{trl("Tham gia")}</span>
+              </div>
+            )}
           </div>
         </div>
+        {postCounts?.pending > 0 && (
+          <div className="post-info">
+            <div className="count-posts">
+              <span className="title">{trl("Bài viết đang chờ")}</span>
+              <span className="count">{postCounts.pending + trl(" bài viết")}</span>
+            </div>
+            <div className="post-manage">
+              <span>{trl("Quản lý bài viết")}</span>
+            </div>
+          </div>
+        )}
         <div className="group-tabs">
           <div className="tab-container">
             <button
@@ -293,11 +335,12 @@ const GroupDetail = () => {
       </div>
       <div className="group-body">
         <div className="post-block">
-          <GroupShare />
+          {groupData.join_status === 1 && <GroupShare />}
           <GroupPosts groupId={groupId} />
         </div>
         <div className="group-intro">
           <span className="title">{trl("Giới thiệu")}</span>
+          <span className="intro">{groupData.group_intro}</span>
           {introContent}
         </div>
       </div>

@@ -10,11 +10,13 @@
     .top-box {
       width: inherit;
       padding: 8px;
-      background: themed("bgSoft");
+      background: themed("bg");
       justify-content: flex-start;
       align-items: center;
       gap: 10px;
       display: flex;
+      z-index: 2;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
       img {
         width: 35px;
@@ -35,17 +37,19 @@
       .actionButton {
         margin-left: auto;
         display: flex;
-        gap: 12px;
+        gap: 10px;
 
         button {
           cursor: pointer;
+          display: flex;
+          padding: 15px;
           width: 25px;
           height: 25px;
           border: none;
           border-radius: 50%;
           align-items: center;
           justify-content: center;
-          background-color: themed("bgSoft");
+          background-color: themed("bg");
 
           span {
             color: themed("textColor");
@@ -90,9 +94,7 @@
       background: themed("bg");
       display: flex;
       padding: 8px;
-      border: solid;
-      border-width: 2px 0 0 0;
-      border-color: themed("border");
+      border-top: solid 1px lightgray;
       justify-content: flex-start;
       align-items: center;
 
@@ -112,11 +114,13 @@
       .send-button {
         width: 30px;
         height: 30px;
+        padding: 15px;
         border-radius: 50%;
+        display: flex;
         align-items: center;
         justify-content: center;
         border: none;
-        background-color: themed("bgSoft");
+        background-color: themed("bg");
 
         span {
           font-size: 20px;

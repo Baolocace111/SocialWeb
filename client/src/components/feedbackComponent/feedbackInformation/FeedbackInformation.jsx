@@ -12,6 +12,7 @@ const FeedbackInformation = ({ feedback }) => {
   const [comment, setComment] = useState(null);
   const [team, setTeam] = useState(null);
   const [stories, setStories] = useState(null);
+  const [imageFeedback, setImageFeedback] = useState(true);
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,8 +24,9 @@ const FeedbackInformation = ({ feedback }) => {
     } else {
       moment.locale("en");
     }
-  }, [language]);
+  }, []);
   useEffect(() => {
+    setImageFeedback(true);
     if (feedback.comment_id) {
     } else if (feedback.post_id) {
       makeRequest
@@ -72,6 +74,15 @@ const FeedbackInformation = ({ feedback }) => {
       </div>
       <div className="feedbackinfor">
         <div className="desc">{feedback?.desc}</div>
+        {imageFeedback && (
+          <img
+            src={URL_OF_BACK_END + "admin/feedback/getimage/" + feedback.id}
+            onError={(e) => {
+              setImageFeedback(false);
+            }}
+            alt=""
+          ></img>
+        )}
         <div className="rate">
           <StarRating rate={feedback.rate}></StarRating>
         </div>
@@ -79,7 +90,11 @@ const FeedbackInformation = ({ feedback }) => {
           {trl("State")}: {progressType(feedback.status)}
         </div>
         <div className="response">
-          <input value={feedback.response}></input>
+          <input
+            placeholder={trl("Enter your response")}
+            value={!(feedback.response === null) ? feedback.response : ""}
+            onChange={() => {}}
+          ></input>
         </div>
       </div>
       {feedback.post_id && (

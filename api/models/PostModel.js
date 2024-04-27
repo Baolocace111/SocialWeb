@@ -21,7 +21,7 @@ export const getPostById = (userId, postId, callback) => {
   });
 };
 export const getPostByIdAdmin = (postid, callback) => {
-  const q = `SELECT p.*, u.id AS userid, u.name AS username
+  const q = `SELECT p.*, u.id AS userid, u.name AS name
   FROM posts p 
   LEFT JOIN users u ON (p.userId = u.id)
   WHERE (p.id = ?);

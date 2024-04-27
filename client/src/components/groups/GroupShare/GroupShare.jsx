@@ -188,14 +188,6 @@ const GroupShare = () => {
                   <span>{trl("Image")}/{trl("Video")}</span>
                 </div>
               </label>
-              {/* <div className="item">
-                <FontAwesomeIcon icon={faLocationDot} color="red" size="xl" />
-                <span>Add Place</span>
-              </div>
-              <div className="item">
-                <FontAwesomeIcon icon={faTags} color="orange" size="xl" />
-                <span>Tag Friends</span>
-              </div> */}
             </div>
             <div className="right">
               <button onClick={handleClick}>{trl("Share")}</button>
@@ -221,7 +213,7 @@ const GroupShare = () => {
               <span>{trl("Hệ thống đã gửi bài viết cho quản trị viên duyệt.")}</span>
             </div>
             <button className="close-button" onClick={() => setShowPopup(false)}>
-              <span>Đã hiểu</span>
+              <span>{trl("Đã hiểu")}</span>
             </button>
           </div>
         </PopupWindow>
