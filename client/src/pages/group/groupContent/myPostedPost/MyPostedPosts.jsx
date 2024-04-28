@@ -1,4 +1,4 @@
-import "./myPendingPosts.scss";
+import "./myPostedPosts.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
@@ -6,13 +6,13 @@ import { useEffect } from "react";
 import moment from "moment";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { makeRequest } from "../../../../axios";
-import MyPendingPost from "../../../../components/groups/GroupContent/myPendingPost/MyPendingPost.jsx";
+import MyPostedPost from "../../../../components/groups/GroupContent/myPostedPost/MyPostedPost.jsx";
 import NineCube from "../../../../components/loadingComponent/nineCube/NineCube.jsx";
 import { Waypoint } from "react-waypoint";
 import { useState } from "react";
 import { useLanguage } from "../../../../context/languageContext";
 
-const MyPendingPosts = () => {
+const MyPostedPosts = () => {
    const { groupId } = useParams();
    const { trl, language } = useLanguage();
    useEffect(() => {
@@ -37,7 +37,7 @@ const MyPendingPosts = () => {
       ({ pageParam = 1 }) =>
          makeRequest
             .post(`/groups/${groupId}/my-group-contents?offset=${pageParam}`, {
-               status: 0,
+               status: 1,
             })
             .then((res) => res.data),
       {
@@ -57,9 +57,9 @@ const MyPendingPosts = () => {
    const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
    return (
-      <div className="my-pending-posts">
+      <div className="my-posted-posts">
          <div className="header">
-            <span className="manage-header">{trl("Đang chờ phê duyệt")}</span>
+            <span className="manage-header">{trl("Đã đăng")}</span>
             <div className="sort-info">
                <input
                   type="text"
@@ -83,7 +83,7 @@ const MyPendingPosts = () => {
                {data?.pages.flatMap((page) => page.data).length > 0 ? (
                   data.pages
                      .flatMap((page) => page.data)
-                     .map((post) => <MyPendingPost post={post} key={post.id} />)
+                     .map((post) => <MyPostedPost post={post} key={post.id} />)
                ) : (
                   <div className="not-found">
                      <img
@@ -106,4 +106,4 @@ const MyPendingPosts = () => {
    );
 };
 
-export default MyPendingPosts;
+export default MyPostedPosts;
