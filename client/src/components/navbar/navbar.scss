@@ -5,7 +5,6 @@
     box-shadow: 0px 10px 10px -10px rgba(0, 0, 0, 0.2);
     display: flex;
     align-items: center;
-    justify-content: space-between;
     padding: 10px 20px;
     height: 50px;
     border-bottom: 1px solid themed("border");
@@ -49,6 +48,7 @@
       justify-content: space-around;
 
       background-color: themed("bg");
+
       button {
         padding: 10px 20px;
         font-size: 1em;
@@ -68,6 +68,7 @@
     .left {
       display: flex;
       align-items: center;
+      margin-right: auto;
       gap: 30px;
 
       span {
@@ -75,6 +76,7 @@
           width: 30px;
           height: 30px;
         }
+
         gap: 10px;
         align-items: center;
         justify-content: space-between;

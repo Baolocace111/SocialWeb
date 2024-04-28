@@ -26,10 +26,14 @@ import { useEffect } from "react";
 const DetailedPost = ({ post }) => {
   const { trl, language } = useLanguage();
   useEffect(() => {
-    if (language === "jp") moment.locale("ja");
-    if (language === "vn") moment.locale("vi");
-    else moment.locale("en");
-  }, []);
+    if (language === "jp") {
+      moment.locale("ja");
+    } else if (language === "vn") {
+      moment.locale("vi");
+    } else {
+      moment.locale("en");
+    }
+  }, [language]);
   const { currentUser } = useContext(AuthContext);
   const { isLoading, data } = useQuery(["likes", post.id], () =>
     makeRequest.get("/likes?postId=" + post.id).then((res) => {
