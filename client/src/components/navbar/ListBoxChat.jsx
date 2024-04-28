@@ -17,7 +17,7 @@ const ListBoxChat = () => {
     // Điều này đảm bảo tính không thay đổi bằng cách spread các user đã lọc vào một mảng mới trước khi cập nhật trạng thái của context.
   };
   return (
-    <>
+    <div>
       {chattingUser && chattingUser.length === 0 ? (
         <div className="chat-boxes"></div>
       ) : (
@@ -32,7 +32,7 @@ const ListBoxChat = () => {
           ))}
         </div>
       )}
-    </>
+    </div>
   );
 };
 export default ListBoxChat;

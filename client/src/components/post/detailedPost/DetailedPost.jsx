@@ -71,7 +71,7 @@ const DetailedPost = ({ post }) => {
               <FontAwesomeIcon icon={faDownLeftAndUpRightToCenter} />
             </div>
           ) : (
-            <></>
+            <div></div>
           )}
         </div>
         {isVideo(post.img) ? (

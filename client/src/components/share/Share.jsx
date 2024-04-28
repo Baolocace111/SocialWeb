@@ -67,7 +67,7 @@ const Share = () => {
   };
 
   return (
-    <>
+    <div>
       <div className="share">
         <div className="container">
           <div className="top">
@@ -172,7 +172,7 @@ const Share = () => {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

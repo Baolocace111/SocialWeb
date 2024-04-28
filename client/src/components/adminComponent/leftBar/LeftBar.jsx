@@ -21,74 +21,72 @@ const AdminLeftBar = () => {
     }
   };
   return (
-    <>
-      <div className={"admin-leftBar" + (showBar ? " admin-showbar" : "")}>
-        <div
-          className="show-btn"
-          onClick={() => {
-            setShowBar(!showBar);
-          }}
-        >
-          <FontAwesomeIcon icon={faRightToBracket} />
-        </div>
-        <div className="admin-user-info">
-          <img
-            src={"/upload/" + currentUser.profilePic}
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = "/upload/errorImage.png";
-            }}
-            alt={""}
-          />
-          {currentUser.name}
-        </div>
-        <div
-          className="click-tag"
-          onClick={() => {
-            window.location.href = "/admin/home";
-          }}
-        >
-          {" "}
-          {trl("Post Management")}{" "}
-        </div>
-        <div
-          className="click-tag"
-          onClick={() => {
-            window.location.href = "/admin/user";
-          }}
-        >
-          {" "}
-          {trl("User Management")}{" "}
-        </div>
-        <div
-          className="click-tag"
-          onClick={() => {
-            window.location.href = "/admin/feedback";
-          }}
-        >
-          {" "}
-          {trl("Feedback Management")}{" "}
-        </div>
-        {false && (
-          <div
-            className="click-tag"
-            onClick={() => {
-              window.location.href = "/admin/language";
-            }}
-          >
-            {" "}
-            Language Management{" "}
-          </div>
-        )}
-        <div>
-          {" "}
-          <LanguageSwitcher text={true}></LanguageSwitcher>
-        </div>
-        <div className="click-tag" onClick={handleLogout}>
-          {trl("Logout")}
-        </div>
+    <div className={"admin-leftBar" + (showBar ? " admin-showbar" : "")}>
+      <div
+        className="show-btn"
+        onClick={() => {
+          setShowBar(!showBar);
+        }}
+      >
+        <FontAwesomeIcon icon={faRightToBracket} />
       </div>
-    </>
+      <div className="admin-user-info">
+        <img
+          src={"/upload/" + currentUser.profilePic}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "/upload/errorImage.png";
+          }}
+          alt={""}
+        />
+        {currentUser.name}
+      </div>
+      <div
+        className="click-tag"
+        onClick={() => {
+          window.location.href = "/admin/home";
+        }}
+      >
+        {" "}
+        {trl("Post Management")}{" "}
+      </div>
+      <div
+        className="click-tag"
+        onClick={() => {
+          window.location.href = "/admin/user";
+        }}
+      >
+        {" "}
+        {trl("User Management")}{" "}
+      </div>
+      <div
+        className="click-tag"
+        onClick={() => {
+          window.location.href = "/admin/feedback";
+        }}
+      >
+        {" "}
+        {trl("Feedback Management")}{" "}
+      </div>
+      {false && (
+        <div
+          className="click-tag"
+          onClick={() => {
+            window.location.href = "/admin/language";
+          }}
+        >
+          {" "}
+          Language Management{" "}
+        </div>
+      )}
+      <div>
+        {" "}
+        <LanguageSwitcher text={true}></LanguageSwitcher>
+      </div>
+      <div className="click-tag" onClick={handleLogout}>
+        {trl("Logout")}
+      </div>
+    </div>
   );
 };
 export default AdminLeftBar;
