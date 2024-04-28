@@ -43,7 +43,7 @@ const Posts = ({ userId }) => {
   };
 
   return (
-    <>
+    <div>
       <ShowPosts
         isLoading={isFetchingNextPage || isLoadingMore}
         error={error}
@@ -54,7 +54,7 @@ const Posts = ({ userId }) => {
         }
       />
       {hasNextPage && <Waypoint onEnter={handleWaypointEnter} />}
-    </>
+    </div>
   );
 };
 
