@@ -179,6 +179,7 @@ export const denyRequest = async (req, res) => {
 
 export const listFriendUser = async (req, res) => {
   try {
+    await AuthService.verifyUserToken(req.cookies.accessToken);
     const userId = await req.body.user_id;
 
     // Kiểm tra xem tài khoản có bị cấm không
