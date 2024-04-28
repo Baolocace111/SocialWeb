@@ -98,7 +98,7 @@ const Private = forwardRef((props, ref) => {
       ) : eFriends ? (
         <div className="error-message">Error loading friends list!</div>
       ) : (
-        <>
+        <div>
           <input
             className="search-user-input"
             type="text"
@@ -157,7 +157,7 @@ const Private = forwardRef((props, ref) => {
               </div>
             )}
           </div>
-        </>
+        </div>
       )}
     </div>
   );

@@ -102,7 +102,7 @@ const Profile = () => {
       {isLoading ? (
         <FlipCube />
       ) : (
-        <>
+        <div>
           <div className="images">
             <img
               src={URL_OF_BACK_END + `users/coverPic/` + data.id}
@@ -151,15 +151,15 @@ const Profile = () => {
               <div className="action">
                 <button className="follow" onClick={handleFollow}>
                   {relationshipData.includes(currentUser.id) ? (
-                    <>
+                    <div>
                       <FontAwesomeIcon icon={faUserMinus} />
                       <span>{trl("Unfollow")}</span>
-                    </>
+                    </div>
                   ) : (
-                    <>
+                    <div>
                       <FontAwesomeIcon icon={faUserPlus} />
                       <span>{trl("Follow")}</span>
-                    </>
+                    </div>
                   )}
                 </button>
                 <button className="chat" onClick={() => handleAddChatBox(data)}>
@@ -264,7 +264,7 @@ const Profile = () => {
               <UnderContruction />
             </div>
           )}
-        </>
+        </div>
       )}
       {openUpdate && <Update setOpenUpdate={setOpenUpdate} user={data} />}
     </div>

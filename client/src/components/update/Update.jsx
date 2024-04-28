@@ -204,7 +204,7 @@ const Update = ({ setOpenUpdate, user }) => {
         </div>
 
         {value === 0 && (
-          <>
+          <div>
             <span className="title-update">
               {trl("Update Your Information")}
             </span>
@@ -250,11 +250,11 @@ const Update = ({ setOpenUpdate, user }) => {
                 {trl("Save")}
               </button>
             </FormThemeProvider>
-          </>
+          </div>
         )}
 
         {value === 1 && (
-          <>
+          <div>
             <div className="form-image">
               <div className="update-profile">
                 <span className="avatar">{trl("Ảnh đại diện")}</span>
@@ -334,11 +334,11 @@ const Update = ({ setOpenUpdate, user }) => {
             <button className="btn-save" onClick={handleUpdate}>
               {trl("Save")}
             </button>
-          </>
+          </div>
         )}
 
         {value === 2 && (
-          <>
+          <div>
             <span className="title-update">{trl("Change Your Password")}</span>
             <FormThemeProvider>
               <Form
@@ -372,7 +372,7 @@ const Update = ({ setOpenUpdate, user }) => {
                 {trl("Save")}
               </button>
             </FormThemeProvider>
-          </>
+          </div>
         )}
 
         <button className="close" onClick={() => setOpenUpdate(false)}>
