@@ -80,7 +80,7 @@ const UserTab = ({ user }) => {
   };
 
   return (
-    <>
+    <div>
       <div className="userTab">
         <img
           onClick={handleClicktoProfile}
@@ -101,7 +101,7 @@ const UserTab = ({ user }) => {
               <span>{trl("Thêm bạn bè")}</span>
             </Button>
           ) : (
-            <></>
+            <div></div>
           )}
           {status === 1 ? (
             <Button onClick={CancelRequest}>
@@ -109,10 +109,10 @@ const UserTab = ({ user }) => {
               <span>{trl("Hủy lời mời")}</span>
             </Button>
           ) : (
-            <></>
+            <div></div>
           )}
           {status === 2 ? (
-            <>
+            <div>
               <Button onClick={AcceptRequest}>
                 <FontAwesomeIcon icon={faHeartCircleCheck} />
                 <span>{trl("Chấp nhận")}</span>
@@ -121,9 +121,9 @@ const UserTab = ({ user }) => {
                 <FontAwesomeIcon icon={faBan} />
                 <span>{trl("Từ chối")}</span>
               </Button>
-            </>
+            </div>
           ) : (
-            <></>
+            <div></div>
           )}
           {status === 3 ? (
             <Button className="delete-friend" onClick={Unfriend}>
@@ -131,13 +131,13 @@ const UserTab = ({ user }) => {
               <span>{trl("Xóa bạn")}</span>
             </Button>
           ) : (
-            <></>
+            <div></div>
           )}
-          {status === -2 ? `${trl("Có lỗi xảy ra")}...` : <></>}
-          {status === -3 ? `${trl("Loading")}...` : <></>}
+          {status === -2 ? `${trl("Có lỗi xảy ra")}...` : <div></div>}
+          {status === -3 ? `${trl("Loading")}...` : <div></div>}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 export default UserTab;

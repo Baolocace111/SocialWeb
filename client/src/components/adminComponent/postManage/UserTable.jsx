@@ -114,9 +114,9 @@ const UserTable = ({ year, month }) => {
           {trl("Admin User Page")} {month} - {year}
         </h1>
         {error && (
-          <>
+          <div>
             <h2>{error}</h2>
-          </>
+          </div>
         )}
         <table>
           <thead>

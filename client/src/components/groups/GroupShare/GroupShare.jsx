@@ -6,7 +6,7 @@ import {
   faImages,
   faFaceSmileBeam,
   faX,
-  faHeart
+  faHeart,
 } from "@fortawesome/free-solid-svg-icons";
 import { TextareaAutosize } from "@mui/material";
 import { useContext, useState } from "react";
@@ -112,7 +112,7 @@ const GroupShare = () => {
   };
 
   return (
-    <>
+    <div>
       <div className="group-share">
         <div className="container">
           <div className="top">
@@ -126,7 +126,9 @@ const GroupShare = () => {
                 alt={""}
               />
               <TextareaAutosize
-                placeholder={`${trl("What's on your mind")} ${currentUser.name + trl("san")}?`}
+                placeholder={`${trl("What's on your mind")} ${
+                  currentUser.name + trl("san")
+                }?`}
                 onChange={(e) => setDesc(e.target.value)}
                 value={desc}
                 className="text-input"
@@ -185,7 +187,9 @@ const GroupShare = () => {
               <label htmlFor="file">
                 <div className="item">
                   <FontAwesomeIcon icon={faImages} color="green" size="xl" />
-                  <span>{trl("Image")}/{trl("Video")}</span>
+                  <span>
+                    {trl("Image")}/{trl("Video")}
+                  </span>
                 </div>
               </label>
             </div>
@@ -209,16 +213,24 @@ const GroupShare = () => {
         <PopupWindow show={showPopup} handleClose={() => setShowPopup(false)}>
           <div className="popup-content">
             <div className="notification">
-              <span>{trl("Cảm ơn bạn vì đã đăng bài")} <FontAwesomeIcon style={{ color: "red" }} icon={faHeart} /></span>
-              <span>{trl("Hệ thống đã gửi bài viết cho quản trị viên duyệt.")}</span>
+              <span>
+                {trl("Cảm ơn bạn vì đã đăng bài")}{" "}
+                <FontAwesomeIcon style={{ color: "red" }} icon={faHeart} />
+              </span>
+              <span>
+                {trl("Hệ thống đã gửi bài viết cho quản trị viên duyệt.")}
+              </span>
             </div>
-            <button className="close-button" onClick={() => setShowPopup(false)}>
+            <button
+              className="close-button"
+              onClick={() => setShowPopup(false)}
+            >
               <span>{trl("Đã hiểu")}</span>
             </button>
           </div>
         </PopupWindow>
       )}
-    </>
+    </div>
   );
 };
 

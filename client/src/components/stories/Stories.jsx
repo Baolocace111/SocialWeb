@@ -203,7 +203,7 @@ const Stories = () => {
                 style={{ marginTop: "8px", maxWidth: "300px" }}
               />
             ) : (
-              <></>
+              <div></div>
             )}
           </Box>
         </DialogContent>

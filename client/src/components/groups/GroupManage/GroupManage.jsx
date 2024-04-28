@@ -69,19 +69,40 @@ const GroupManage = () => {
       : `${URL_OF_BACK_END}groups/${groupId}/avatar`;
   };
 
-  const groupDetailsQuery = useQuery(['groupDetails', groupId], () => makeRequest.get(`/groups/${groupId}`));
-  const groupUsersQuery = useQuery(['groupUsers', groupId], () => makeRequest.get(`/joins/groups/${groupId}/users`));
+  const groupDetailsQuery = useQuery(["groupDetails", groupId], () =>
+    makeRequest.get(`/groups/${groupId}`)
+  );
+  const groupUsersQuery = useQuery(["groupUsers", groupId], () =>
+    makeRequest.get(`/joins/groups/${groupId}/users`)
+  );
 
-  const isGroupLeader = groupDetailsQuery.data?.data[0]?.created_by === currentUser.id;
-  const pendingRequestsQuery = useQuery(['pendingRequestsCount', groupId], () => makeRequest.get(`/groups/${groupId}/pending-requests-count`), {
-    enabled: !!groupDetailsQuery.data && isGroupLeader
-  });
-  const pendingPostsQuery = useQuery(['pendingPostsCount', groupId], () => makeRequest.get(`/groups/${groupId}/pending-posts-count`), {
-    enabled: !!groupDetailsQuery.data && isGroupLeader
-  });
+  const isGroupLeader =
+    groupDetailsQuery.data?.data[0]?.created_by === currentUser.id;
+  const pendingRequestsQuery = useQuery(
+    ["pendingRequestsCount", groupId],
+    () => makeRequest.get(`/groups/${groupId}/pending-requests-count`),
+    {
+      enabled: !!groupDetailsQuery.data && isGroupLeader,
+    }
+  );
+  const pendingPostsQuery = useQuery(
+    ["pendingPostsCount", groupId],
+    () => makeRequest.get(`/groups/${groupId}/pending-posts-count`),
+    {
+      enabled: !!groupDetailsQuery.data && isGroupLeader,
+    }
+  );
 
-  const isLoading = groupDetailsQuery.isLoading || groupUsersQuery.isLoading || (isGroupLeader && (pendingRequestsQuery.isLoading || pendingPostsQuery.isLoading));
-  const error = groupDetailsQuery.error || groupUsersQuery.error || pendingRequestsQuery.error || pendingPostsQuery.error;
+  const isLoading =
+    groupDetailsQuery.isLoading ||
+    groupUsersQuery.isLoading ||
+    (isGroupLeader &&
+      (pendingRequestsQuery.isLoading || pendingPostsQuery.isLoading));
+  const error =
+    groupDetailsQuery.error ||
+    groupUsersQuery.error ||
+    pendingRequestsQuery.error ||
+    pendingPostsQuery.error;
 
   if (isLoading) {
     return <NineCube />;
@@ -93,8 +114,12 @@ const GroupManage = () => {
 
   const groupDetails = groupDetailsQuery.data?.data[0];
   const groupUsers = groupUsersQuery.data?.data;
-  const pendingPostCount = isGroupLeader ? pendingPostsQuery.data?.data.count : 0;
-  const pendingRequestCount = isGroupLeader ? pendingRequestsQuery.data?.data.count : 0;
+  const pendingPostCount = isGroupLeader
+    ? pendingPostsQuery.data?.data.count
+    : 0;
+  const pendingRequestCount = isGroupLeader
+    ? pendingRequestsQuery.data?.data.count
+    : 0;
 
   return (
     <div className="group-manage">
@@ -142,17 +167,18 @@ const GroupManage = () => {
         )}
         <div className="manage-section">
           {currentUser.id === groupDetails.created_by && (
-            <>
+            <div>
               <div className="menu-box">
                 <Link
                   to={`/groups/${groupId}`}
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
                   <div
-                    className={`menu-item ${isItemSelected("main-page") || isItemSelected(null)
-                      ? "selected"
-                      : ""
-                      }`}
+                    className={`menu-item ${
+                      isItemSelected("main-page") || isItemSelected(null)
+                        ? "selected"
+                        : ""
+                    }`}
                     onClick={() => handleItemClick("main-page")}
                   >
                     <FontAwesomeIcon
@@ -167,8 +193,9 @@ const GroupManage = () => {
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
                   <div
-                    className={`menu-item ${isItemSelected("overview") ? "selected" : ""
-                      }`}
+                    className={`menu-item ${
+                      isItemSelected("overview") ? "selected" : ""
+                    }`}
                     onClick={() => handleItemClick("overview")}
                   >
                     <FontAwesomeIcon
@@ -193,16 +220,18 @@ const GroupManage = () => {
                     )}
                   </div>
                   <div
-                    className={`dropdown-content ${activeDropdown_1 === "adminTools_1" ? "show" : ""
-                      }`}
+                    className={`dropdown-content ${
+                      activeDropdown_1 === "adminTools_1" ? "show" : ""
+                    }`}
                   >
                     <Link
                       to={`/groups/${groupId}/member-requests`}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
                       <div
-                        className={`dropdown-item ${isItemSelected("member-requests") ? "selected" : ""
-                          }`}
+                        className={`dropdown-item ${
+                          isItemSelected("member-requests") ? "selected" : ""
+                        }`}
                         onClick={() => handleItemClick("member-requests")}
                       >
                         <FontAwesomeIcon
@@ -212,15 +241,19 @@ const GroupManage = () => {
                         <div className="item-section">
                           <span>{trl("Yêu cầu làm thành viên")}</span>
                           <div className="count">
-                            {pendingRequestCount > 0 && <div className="new"></div>}
-                            <span>{pendingRequestCount} {trl("mục mới")}</span>
+                            {pendingRequestCount > 0 && (
+                              <div className="new"></div>
+                            )}
+                            <span>
+                              {pendingRequestCount} {trl("mục mới")}
+                            </span>
                           </div>
                         </div>
-                        {pendingRequestCount > 0 &&
+                        {pendingRequestCount > 0 && (
                           <div className="pending-num">
                             <span>{pendingRequestCount}</span>
                           </div>
-                        }
+                        )}
                       </div>
                     </Link>
                     <Link
@@ -228,8 +261,9 @@ const GroupManage = () => {
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
                       <div
-                        className={`dropdown-item ${isItemSelected("pending_posts") ? "selected" : ""
-                          }`}
+                        className={`dropdown-item ${
+                          isItemSelected("pending_posts") ? "selected" : ""
+                        }`}
                         onClick={() => handleItemClick("pending_posts")}
                       >
                         <FontAwesomeIcon
@@ -239,15 +273,19 @@ const GroupManage = () => {
                         <div className="item-section">
                           <span>{trl("Bài viết đang chờ")}</span>
                           <div className="count">
-                            {pendingPostCount > 0 && <div className="new"></div>}
-                            <span>{pendingPostCount} {trl("mục mới")}</span>
+                            {pendingPostCount > 0 && (
+                              <div className="new"></div>
+                            )}
+                            <span>
+                              {pendingPostCount} {trl("mục mới")}
+                            </span>
                           </div>
                         </div>
-                        {pendingPostCount > 0 &&
+                        {pendingPostCount > 0 && (
                           <div className="pending-num">
                             <span>{pendingPostCount}</span>
                           </div>
-                        }
+                        )}
                       </div>
                     </Link>
                   </div>
@@ -265,12 +303,14 @@ const GroupManage = () => {
                     )}
                   </div>
                   <div
-                    className={`dropdown-content ${activeDropdown_2 === "adminTools_2" ? "show" : ""
-                      }`}
+                    className={`dropdown-content ${
+                      activeDropdown_2 === "adminTools_2" ? "show" : ""
+                    }`}
                   >
                     <div
-                      className={`dropdown-item ${isItemSelected("support") ? "selected" : ""
-                        }`}
+                      className={`dropdown-item ${
+                        isItemSelected("support") ? "selected" : ""
+                      }`}
                       onClick={() => handleItemClick("support")}
                     >
                       <FontAwesomeIcon
@@ -282,7 +322,7 @@ const GroupManage = () => {
                   </div>
                 </div>
               </div>
-            </>
+            </div>
           )}
         </div>
         <div className="finish-manage"></div>

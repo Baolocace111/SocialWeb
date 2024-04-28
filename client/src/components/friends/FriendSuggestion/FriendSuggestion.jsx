@@ -44,14 +44,14 @@ const FriendSuggestion = ({ suggest }) => {
           {trl("Thêm bạn bè")}
         </button>
       ) : (
-        <></>
+        <div></div>
       )}
       {status === 1 ? (
         <button className="accept" onClick={() => CancelRequest(suggest.id)}>
           {trl("Hủy lời mời")}
         </button>
       ) : (
-        <></>
+        <div></div>
       )}
     </div>
   );

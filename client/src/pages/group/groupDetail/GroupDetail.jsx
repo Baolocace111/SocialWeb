@@ -5,7 +5,16 @@ import { useQuery } from "@tanstack/react-query";
 import { makeRequest } from "../../../axios.js";
 import { AuthContext } from "../../../context/authContext.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircle, faEye, faLock, faEarthAmericas, faPen, faUpload, faImage, faUsersLine } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircle,
+  faEye,
+  faLock,
+  faEarthAmericas,
+  faPen,
+  faUpload,
+  faImage,
+  faUsersLine,
+} from "@fortawesome/free-solid-svg-icons";
 import NineCube from "../../../components/loadingComponent/nineCube/NineCube.jsx";
 import GroupShare from "../../../components/groups/GroupShare/GroupShare.jsx";
 import { URL_OF_BACK_END } from "../../../axios.js";
@@ -28,8 +37,12 @@ const GroupDetail = () => {
     setShowPopover(!showPopover);
   };
 
-  const { data: groupData, isLoading: isGroupLoading, error: groupError } = useQuery(['group-details', groupId], () =>
-    makeRequest.get(`/groups/${groupId}`).then(res => res.data[0])
+  const {
+    data: groupData,
+    isLoading: isGroupLoading,
+    error: groupError,
+  } = useQuery(["group-details", groupId], () =>
+    makeRequest.get(`/groups/${groupId}`).then((res) => res.data[0])
   );
 
   useEffect(() => {
@@ -38,12 +51,18 @@ const GroupDetail = () => {
     }
   }, [groupData]);
 
-  const { data: postCounts, isLoading: isLoadingPostCounts } = useQuery(['group-post-counts', groupId], () =>
-    makeRequest.get(`/groups/${groupId}/post-counts`).then(res => res.data)
+  const { data: postCounts, isLoading: isLoadingPostCounts } = useQuery(
+    ["group-post-counts", groupId],
+    () =>
+      makeRequest.get(`/groups/${groupId}/post-counts`).then((res) => res.data)
   );
 
-  const { data: members, isLoading: isMembersLoading, error: membersError } = useQuery(['group-members', groupId], () =>
-    makeRequest.get(`/joins/groups/${groupId}/users`).then(res => res.data)
+  const {
+    data: members,
+    isLoading: isMembersLoading,
+    error: membersError,
+  } = useQuery(["group-members", groupId], () =>
+    makeRequest.get(`/joins/groups/${groupId}/users`).then((res) => res.data)
   );
 
   const handleJoinGroup = async () => {
@@ -53,7 +72,10 @@ const GroupDetail = () => {
       });
       setJoinStatus(0);
     } catch (error) {
-      console.error("Error joining group:", error.response ? error.response.data : error.message);
+      console.error(
+        "Error joining group:",
+        error.response ? error.response.data : error.message
+      );
     }
   };
 
@@ -104,28 +126,39 @@ const GroupDetail = () => {
     setSelectedImage(null);
   };
 
-  if (isGroupLoading || isMembersLoading || isLoadingPostCounts) return <NineCube />;
-  if (groupError) return <div className="error-message">Lỗi: {groupError.message}</div>;
-  if (membersError) return <div className="error-message">Lỗi: {membersError.message}</div>;
-  if ((!groupData.join_status || groupData.join_status !== 1) && groupData.privacy_level !== 1) {
-    return <GroupAbout />
+  if (isGroupLoading || isMembersLoading || isLoadingPostCounts)
+    return <NineCube />;
+  if (groupError)
+    return <div className="error-message">Lỗi: {groupError.message}</div>;
+  if (membersError)
+    return <div className="error-message">Lỗi: {membersError.message}</div>;
+  if (
+    (!groupData.join_status || groupData.join_status !== 1) &&
+    groupData.privacy_level !== 1
+  ) {
+    return <GroupAbout />;
   }
 
   let introContent;
   if (groupData.privacy_level === 0) {
     introContent = (
-      <>
+      <div>
         <div className="intro-privacy">
           <FontAwesomeIcon icon={faLock} style={{ marginTop: "4px" }} />
           <div className="content">
             <span className="intro-title">{trl("Riêng tư")}</span>
             <span className="intro-content">
-              {trl("Chỉ thành viên mới nhìn thấy mọi người trong nhóm và những gì họ đăng.")}
+              {trl(
+                "Chỉ thành viên mới nhìn thấy mọi người trong nhóm và những gì họ đăng."
+              )}
             </span>
           </div>
         </div>
         <div className="intro-privacy">
-          <FontAwesomeIcon icon={faEye} style={{ marginTop: "4px", marginRight: "-4px" }} />
+          <FontAwesomeIcon
+            icon={faEye}
+            style={{ marginTop: "4px", marginRight: "-4px" }}
+          />
           <div className="content">
             <span className="intro-title">{trl("Hiển thị")}</span>
             <span className="intro-content">
@@ -133,11 +166,11 @@ const GroupDetail = () => {
             </span>
           </div>
         </div>
-      </>
+      </div>
     );
   } else if (groupData.privacy_level === 1) {
     introContent = (
-      <>
+      <div>
         <div className="intro-privacy">
           <FontAwesomeIcon
             icon={faEarthAmericas}
@@ -146,12 +179,17 @@ const GroupDetail = () => {
           <div className="content">
             <span className="intro-title">{trl("Công khai")}</span>
             <span className="intro-content">
-              {trl("Ai cũng nhìn thấy mọi người trong nhóm và những gì họ đăng.")}
+              {trl(
+                "Ai cũng nhìn thấy mọi người trong nhóm và những gì họ đăng."
+              )}
             </span>
           </div>
         </div>
         <div className="intro-privacy">
-          <FontAwesomeIcon icon={faEye} style={{ marginTop: "4px", marginRight: "-4px" }} />
+          <FontAwesomeIcon
+            icon={faEye}
+            style={{ marginTop: "4px", marginRight: "-4px" }}
+          />
           <div className="content">
             <span className="intro-title">{trl("Hiển thị")}</span>
             <span className="intro-content">
@@ -159,7 +197,7 @@ const GroupDetail = () => {
             </span>
           </div>
         </div>
-      </>
+      </div>
     );
   } else {
     introContent = null;
@@ -254,12 +292,16 @@ const GroupDetail = () => {
                 style={{ marginRight: "5px" }}
               />
             )}
-            {groupData.privacy_level === 0 ? trl("Nhóm Riêng tư") : trl("Nhóm Công khai")}
+            {groupData.privacy_level === 0
+              ? trl("Nhóm Riêng tư")
+              : trl("Nhóm Công khai")}
             <FontAwesomeIcon
               icon={faCircle}
               style={{ fontSize: "2px", margin: "0 5px" }}
             />
-            <span className="member">{members.length + trl(" thành viên")}</span>
+            <span className="member">
+              {members.length + trl(" thành viên")}
+            </span>
           </p>
         </div>
         <div className="group-members">
@@ -297,7 +339,9 @@ const GroupDetail = () => {
           <div className="post-info">
             <div className="count-posts">
               <span className="title">{trl("Bài viết đang chờ")}</span>
-              <span className="count">{postCounts.pending + trl(" bài viết")}</span>
+              <span className="count">
+                {postCounts.pending + trl(" bài viết")}
+              </span>
             </div>
             <div className="post-manage">
               <span>{trl("Quản lý bài viết")}</span>
