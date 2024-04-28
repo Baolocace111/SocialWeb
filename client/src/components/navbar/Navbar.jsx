@@ -120,8 +120,8 @@ const Navbar = () => {
     iconId === "profile"
       ? setAnchorEl(event.currentTarget.parentElement.parentElement)
       : setAnchorEl(
-          event.currentTarget.parentElement.parentElement.parentElement
-        );
+        event.currentTarget.parentElement.parentElement.parentElement
+      );
     setContent(contentType);
   };
 
@@ -193,7 +193,7 @@ const Navbar = () => {
               } else if (data.type === "quit") {
                 setIsCalling(false);
               }
-            } catch (error) {}
+            } catch (error) { }
           }
         } else {
         }
@@ -270,7 +270,7 @@ const Navbar = () => {
           <PersonOutlinedIcon
             className="icon"
             onClick={handlePopover}
-            style={{ cursor: "pointer", fontSize: "28px" }}
+            style={{ cursor: "pointer", fontSize: "25px" }}
             id="friend-icon"
           />
         </div>
@@ -287,7 +287,7 @@ const Navbar = () => {
           <EmailOutlinedIcon
             className="icon"
             onClick={handlePopover}
-            style={{ cursor: "pointer", fontSize: "28px" }}
+            style={{ cursor: "pointer", fontSize: "25px" }}
             id="chat-icon"
           />
         </div>
@@ -298,7 +298,7 @@ const Navbar = () => {
           <NotificationsOutlinedIcon
             className="icon"
             onClick={handlePopover}
-            style={{ cursor: "pointer", fontSize: "28px" }}
+            style={{ cursor: "pointer", fontSize: "25px" }}
             id="noti-icon"
           />
         </div>
