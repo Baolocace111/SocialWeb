@@ -2,6 +2,7 @@ import * as userService from "../services/UserService.js";
 import { AuthService } from "../services/AuthService.js";
 import path from "path";
 import { upload } from "../Multer.js";
+import { normalBackgroundUser } from "./backgroundController.js";
 export const getUser = (req, res) => {
   userService.getUser(req, res);
 };
@@ -20,7 +21,10 @@ export const getUsers = async (req, res) => {
 };
 
 export const getFollowedUsers = (req, res) => {
-  userService.getFollowedUsers(req, res);
+  normalBackgroundUser(req, res, (error, userid) => {
+    if (error) return res.status(500).json(error);
+    userService.getFollowedUsers(req, res);
+  });
 };
 
 export const updateUser = async (req, res) => {
@@ -128,8 +132,7 @@ export const getProfilePicController = async (req, res) => {
       if (error) return res.status(500).json(error);
       try {
         return res.sendFile(data);
-      }
-      catch (err) {
+      } catch (err) {
         return res.status(500).json(err);
       }
     });
@@ -144,8 +147,7 @@ export const getCoverPicController = async (req, res) => {
       if (error) return res.status(500).json(error);
       try {
         return res.sendFile(data);
-      }
-      catch (err) {
+      } catch (err) {
         return res.status(500).json(err);
       }
     });

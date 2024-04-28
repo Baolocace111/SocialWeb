@@ -9,23 +9,15 @@ import path from "path";
 import { AuthService } from "../services/AuthService.js";
 import { getStory } from "../models/StoryModel.js";
 import { SECRET_KEY } from "../services/AuthService.js";
+import { normalBackgroundUser } from "./backgroundController.js";
 export const getStories = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in!");
-
-  jwt.verify(token, SECRET_KEY, (err, userInfo) => {
-    if (err) return res.status(403).json("Token is not valid!");
-    AuthService.IsAccountBanned(userInfo.id, async (err, data) => {
-      if (err) {
-        return res.status(500).json({ error: "This account is banned" });
-      }
-
-      const userId = userInfo.id;
-
-      getStoriesService(userId, (err, data) => {
-        if (err) return res.status(500).json(err);
-        return res.status(200).json(data);
-      });
+  normalBackgroundUser(req, res, (error, userid) => {
+    if (error) return res.status(500).json(error);
+    getStoriesService(userid, (err, data) => {
+      if (err) return res.status(500).json(err);
+      return res.status(200).json(data);
     });
   });
 };
@@ -33,27 +25,21 @@ export const getStories = (req, res) => {
 export const addStory = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in!");
-
-  jwt.verify(token, SECRET_KEY, (err, userInfo) => {
-    if (err) return res.status(403).json("Token is not valid!");
-    AuthService.IsAccountBanned(userInfo.id, async (err, data) => {
-      if (err) {
-        return res.status(500).json({ error: "This account is banned" });
+  normalBackgroundUser(req, res, (err, userid) => {
+    if (err) return res.status(500).json(err);
+    upload(req, res, (err) => {
+      if (err) return res.status(500).json(err);
+      if (!req.file) return res.status(500).json("image not found");
+      const userId = userid;
+      try {
+        const absolutePath = path.resolve(req.file.path);
+        addStoryService(absolutePath, userId, (err, data) => {
+          if (err) return res.status(500).json(err);
+          return res.status(200).json(data);
+        });
+      } catch (error) {
+        return res.status(500).json(error);
       }
-      upload(req, res, (err) => {
-        if (err) return res.status(500).json(err);
-        if (!req.file) return res.status(500).json("image not found");
-        const userId = userInfo.id;
-        try {
-          const absolutePath = path.resolve(req.file.path);
-          addStoryService(absolutePath, userId, (err, data) => {
-            if (err) return res.status(500).json(err);
-            return res.status(200).json(data);
-          });
-        } catch (error) {
-          return res.status(500).json(error);
-        }
-      });
     });
   });
 };
