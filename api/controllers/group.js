@@ -41,27 +41,36 @@ export const getGroups = async (req, res) => {
    } catch (error) {
       return res.status(500).json(error);
    }
-}
+};
 
 export const createGroup = async (req, res) => {
    try {
       const { group_name, privacy_level } = req.body;
-      const createdBy = await AuthService.verifyUserToken(req.cookies.accessToken);
+      const createdBy = await AuthService.verifyUserToken(
+         req.cookies.accessToken
+      );
 
       AuthService.IsAccountBanned(createdBy, async (err, data) => {
          if (err) {
             return res.status(500).json({ error: "This account is banned" });
          }
 
-         groupService.createGroup(group_name, privacy_level, createdBy, (err, data) => {
-            if (err) return res.status(500).json({ error: err.message });
-            return res.status(201).json({ message: 'Group created successfully', group: data });
-         });
+         groupService.createGroup(
+            group_name,
+            privacy_level,
+            createdBy,
+            (err, data) => {
+               if (err) return res.status(500).json({ error: err.message });
+               return res
+                  .status(201)
+                  .json({ message: "Group created successfully", group: data });
+            }
+         );
       });
    } catch (error) {
       return res.status(500).json({ error: error.message });
    }
-}
+};
 
 export const updateGroupAvatarController = async (req, res) => {
    try {
@@ -83,29 +92,39 @@ export const updateGroupAvatarController = async (req, res) => {
             }
 
             const absolutePath = path.resolve(req.file.path);
-            groupService.updateGroupAvatarService(userId, groupId, absolutePath, (err, data) => {
-               if (err) {
-                  return res.status(500).json({ message: err });
+            groupService.updateGroupAvatarService(
+               userId,
+               groupId,
+               absolutePath,
+               (err, data) => {
+                  if (err) {
+                     return res.status(500).json({ message: err });
+                  }
+                  return res.status(200).json({ message: data });
                }
-               return res.status(200).json({ message: data });
-            });
+            );
          });
       });
    } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: "Error updating group avatar.", error: error });
+      return res
+         .status(500)
+         .json({ message: "Error updating group avatar.", error: error });
    }
 };
 
 export const getGroupAvatarController = async (req, res) => {
    try {
-      groupService.getGroupAvatar(req.params.groupId, (error, data) => {
+      normalBackgroundUser(req, res, (error, userid) => {
          if (error) return res.status(500).json(error);
-         try {
-            return res.sendFile(data);
-         } catch (err) {
-            return res.status(500).json(err);
-         }
+         groupService.getGroupAvatar(req.params.groupId, (error, data) => {
+            if (error) return res.status(500).json(error);
+            try {
+               return res.sendFile(data);
+            } catch (err) {
+               return res.status(500).json(err);
+            }
+         });
       });
    } catch (error) {
       return res.status(500).json(error);
@@ -128,7 +147,7 @@ export const searchGroupsController = async (req, res) => {
    } catch (error) {
       return res.status(500).json(error);
    }
-}
+};
 
 export const getPendingGroupPosts = async (req, res) => {
    try {
@@ -141,13 +160,18 @@ export const getPendingGroupPosts = async (req, res) => {
             return res.status(500).json({ error: "This account is banned" });
          }
 
-         groupService.getPendingGroupPosts(userId, groupId, offset, (err, data) => {
-            if (err) return res.status(500).json({ error: err.message });
+         groupService.getPendingGroupPosts(
+            userId,
+            groupId,
+            offset,
+            (err, data) => {
+               if (err) return res.status(500).json({ error: err.message });
 
-            const next = data.length < 3 ? -1 : offset + 1;
+               const next = data.length < 3 ? -1 : offset + 1;
 
-            return res.status(200).json({ data, next });
-         });
+               return res.status(200).json({ data, next });
+            }
+         );
       });
    } catch (error) {
       return res.status(500).json({ error: error.message });
@@ -169,10 +193,15 @@ export const approveGroupPost = async (req, res) => {
             return res.status(500).json({ error: "This account is banned" });
          }
 
-         groupService.approvePendingGroupPost(userId, groupId, postId, (err, result) => {
-            if (err) return res.status(500).json({ error: err.message });
-            return res.status(200).json(result);
-         });
+         groupService.approvePendingGroupPost(
+            userId,
+            groupId,
+            postId,
+            (err, result) => {
+               if (err) return res.status(500).json({ error: err.message });
+               return res.status(200).json(result);
+            }
+         );
       });
    } catch (error) {
       return res.status(500).json({ error: error.message });
@@ -194,10 +223,15 @@ export const rejectGroupPost = async (req, res) => {
             return res.status(500).json({ error: "This account is banned" });
          }
 
-         groupService.rejectPendingGroupPost(userId, groupId, postId, (err, result) => {
-            if (err) return res.status(500).json({ error: err.message });
-            return res.status(200).json(result);
-         });
+         groupService.rejectPendingGroupPost(
+            userId,
+            groupId,
+            postId,
+            (err, result) => {
+               if (err) return res.status(500).json({ error: err.message });
+               return res.status(200).json(result);
+            }
+         );
       });
    } catch (error) {
       return res.status(500).json({ error: error.message });
@@ -258,7 +292,7 @@ export const getPostCounts = (req, res) => {
          return res.status(200).json(counts);
       });
    });
-}
+};
 
 export const getGroupPostsByStatus = (req, res) => {
    const { groupId } = req.params;
@@ -279,3 +313,4 @@ export const getGroupPostsByStatus = (req, res) => {
       });
    });
 };
+
