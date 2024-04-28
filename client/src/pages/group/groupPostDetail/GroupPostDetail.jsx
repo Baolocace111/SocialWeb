@@ -266,16 +266,12 @@ const GroupPostDetail = () => {
                 style={{ marginRight: "5px" }}
               />
             )}
-            {groupData.privacy_level === 0
-              ? trl("Nhóm Riêng tư")
-              : trl("Nhóm Công khai")}
+            {groupData.privacy_level === 0 ? trl("Nhóm Riêng tư") : trl("Nhóm Công khai")}
             <FontAwesomeIcon
               icon={faCircle}
               style={{ fontSize: "2px", margin: "0 5px" }}
             />
-            <span className="member">
-              {members.length + trl(" thành viên")}
-            </span>
+            <span className="member">{members.length + trl(" thành viên")}</span>
           </p>
         </div>
         <div className="group-members">
@@ -298,30 +294,26 @@ const GroupPostDetail = () => {
         </div>
         <div className="group-tabs">
           <div className="tab-container">
-            <button
-              className={`tab ${activeTab === "discussion" ? "active" : ""}`}
-              onClick={() => handleTabChange("discussion")}
-            >
-              {trl("Thảo luận")}
-            </button>
-            <button
-              className={`tab ${activeTab === "members" ? "active" : ""}`}
-              onClick={() => handleTabChange("members")}
-            >
-              {trl("Thành viên")}
-            </button>
-            <button
-              className={`tab ${activeTab === "events" ? "active" : ""}`}
-              onClick={() => handleTabChange("events")}
-            >
-              {trl("Sự kiện")}
-            </button>
-            <button
-              className={`tab ${activeTab === "files" ? "active" : ""}`}
-              onClick={() => handleTabChange("files")}
-            >
-              {trl("File")}
-            </button>
+            <div className={`tab ${activeTab === "discussion" ? "active" : ""}`} onClick={() => handleTabChange("discussion")}>
+              <div className="tab-title">
+                <span>{trl("Thảo luận")}</span>
+              </div>
+            </div>
+            <div className={`tab ${activeTab === "members" ? "active" : ""}`} onClick={() => handleTabChange("members")}>
+              <div className="tab-title">
+                <span>{trl("Thành viên")}</span>
+              </div>
+            </div>
+            <div className={`tab ${activeTab === "events" ? "active" : ""}`} onClick={() => handleTabChange("events")}>
+              <div className="tab-title">
+                <span>{trl("Sự kiện")}</span>
+              </div>
+            </div>
+            <div className={`tab ${activeTab === "files" ? "active" : ""}`} onClick={() => handleTabChange("files")}>
+              <div className="tab-title">
+                <span>{trl("File")}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -335,7 +327,7 @@ const GroupPostDetail = () => {
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 export default GroupPostDetail;
