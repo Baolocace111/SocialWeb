@@ -5,10 +5,8 @@
     box-shadow: 0px 10px 10px -10px rgba(0, 0, 0, 0.2);
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 10px 20px;
+    padding: 6px 20px;
     height: 50px;
-    border-bottom: 1px solid themed("border");
     position: sticky;
     top: 0;
     background-color: themed("bg");
@@ -49,6 +47,7 @@
       justify-content: space-around;
 
       background-color: themed("bg");
+
       button {
         padding: 10px 20px;
         font-size: 1em;
@@ -68,6 +67,7 @@
     .left {
       display: flex;
       align-items: center;
+      margin-right: auto;
       gap: 30px;
 
       span {
@@ -75,6 +75,7 @@
           width: 30px;
           height: 30px;
         }
+
         gap: 10px;
         align-items: center;
         justify-content: space-between;
@@ -117,15 +118,17 @@
       gap: 15px;
 
       .icon-container {
-        width: 48px;
-        height: 48px;
+        width: 45px;
+        height: 45px;
         border-radius: 50%;
         background-color: themed("bgSoft");
         position: relative;
         display: flex;
         justify-content: center;
         align-items: center;
-
+        &:hover {
+          background-color: themed("border");
+        }
         .number {
           display: flex;
           align-items: center;
@@ -169,11 +172,10 @@
         }
 
         img {
-          width: 48px;
-          height: 48px;
+          width: 45px;
+          height: 45px;
           border-radius: 50%;
-          object-fit: cover;
-          object-position: center;
+          object-fit: contain;
         }
 
         span {

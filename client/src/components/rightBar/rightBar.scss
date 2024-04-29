@@ -3,8 +3,8 @@
 .rightBar {
   @include themify($themes) {
     position: sticky;
-    top: 70px;
-    height: calc(100vh - 70px);
+    top: 62px;
+    height: calc(100vh - 62px);
     overflow: scroll;
     background-color: themed("bgSoft");
 

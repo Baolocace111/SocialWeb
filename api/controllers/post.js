@@ -24,22 +24,16 @@ import { upload } from "../Multer.js";
 import path from "path";
 import fs from "fs";
 import { SECRET_KEY } from "../services/AuthService.js";
+import { normalBackgroundUser } from "./backgroundController.js";
 export const getPostByIdController = (req, res) => {
   const postId = req.params.postId;
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in!");
-
-  jwt.verify(token, SECRET_KEY, (err, userInfo) => {
-    if (err) return res.status(403).json("Token is not valid!");
-    const userId = userInfo.id;
-    AuthService.IsAccountBanned(userId, async (err, data) => {
-      if (err) {
-        return res.status(500).json({ error: "This account is banned" });
-      }
-      getPostByIdService(userId, postId, (err, data) => {
-        if (err) return res.status(500).json(err);
-        return res.status(200).json(data);
-      });
+  normalBackgroundUser(req, res, (error, userid) => {
+    if (error) return res.status(500).json(error);
+    getPostByIdService(userid, postId, (err, data) => {
+      if (err) return res.status(500).json(err);
+      return res.status(200).json(data);
     });
   });
 };
@@ -48,21 +42,16 @@ export const getPosts = (req, res) => {
   const userId = req.query.userId;
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in!");
+  normalBackgroundUser(req, res, (error, jwtid) => {
+    if (error) return res.status(500).json(error);
 
-  jwt.verify(token, SECRET_KEY, (err, userInfo) => {
-    if (err) return res.status(403).json("Token is not valid!");
-    AuthService.IsAccountBanned(userInfo.id, async (err, data) => {
-      if (err) {
-        return res.status(500).json({ error: "This account is banned" });
-      }
-      const offset = Number(req.query.offset);
-      //console.log(offset);
-      getPostsService(userId, userInfo.id, offset, (err, data) => {
-        if (err) return res.status(500).json(err);
-        return res
-          .status(200)
-          .json({ data, next: data.length < 3 ? -1 : offset + 1 });
-      });
+    const offset = Number(req.query.offset);
+
+    getPostsService(userId, jwtid, offset, (err, data) => {
+      if (err) return res.status(500).json(err);
+      return res
+        .status(200)
+        .json({ data, next: data.length < 3 ? -1 : offset + 1 });
     });
   });
 };
@@ -142,55 +131,36 @@ export const deletePost = (req, res) => {
   const postId = req.params.postId;
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in!");
+  normalBackgroundUser(req, res, (error, jwtid) => {
+    if (error) {
+      return res.status(500).json(error);
+    }
 
-  jwt.verify(token, SECRET_KEY, (err, userInfo) => {
-    if (err) return res.status(403).json("Token is not valid!");
-    AuthService.IsAccountBanned(userInfo.id, async (err, data) => {
-      if (err) {
-        return res.status(500).json({ error: "This account is banned" });
-      }
-      const userId = userInfo.id;
-
-      deletePostService(postId, userId, (err, data) => {
-        if (err) return res.status(500).json(err);
-        return res.status(200).json(data);
-      });
+    deletePostService(postId, jwtid, (err, data) => {
+      if (err) return res.status(500).json(err);
+      return res.status(200).json(data);
     });
   });
 };
 export const searchPostsbyContentController = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in!");
-
-  jwt.verify(token, SECRET_KEY, (err, userInfo) => {
-    if (err) return res.status(403).json("Token is not valid!");
-    AuthService.IsAccountBanned(userInfo.id, async (err, data) => {
-      if (err) {
-        return res.status(500).json({ error: "This account is banned" });
-      }
-      const userId = userInfo.id;
-      getPostbyContentService(req.body.content, userId, (e, data) => {
-        if (e) return res.status(500).json(e);
-        return res.status(200).json(data);
-      });
+  normalBackgroundUser(req, res, (error, userid) => {
+    if (error) return res.status(500).json(error);
+    getPostbyContentService(req.body.content, userid, (e, data) => {
+      if (e) return res.status(500).json(e);
+      return res.status(200).json(data);
     });
   });
 };
 export const searchPostsbyHashtagController = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in!");
-
-  jwt.verify(token, SECRET_KEY, (err, userInfo) => {
-    if (err) return res.status(403).json("Token is not valid!");
-    AuthService.IsAccountBanned(userInfo.id, async (err, data) => {
-      if (err) {
-        return res.status(500).json({ error: "This account is banned" });
-      }
-      const userId = userInfo.id;
-      getPostbyHashtagService(req.body.hashtag, userId, (e, data) => {
-        if (e) return res.status(500).json(e);
-        return res.status(200).json(data);
-      });
+  normalBackgroundUser(req, res, (error, userid) => {
+    if (error) return res.status(500).json(error);
+    getPostbyHashtagService(req.body.hashtag, userid, (e, data) => {
+      if (e) return res.status(500).json(e);
+      return res.status(200).json(data);
     });
   });
 };
@@ -361,26 +331,20 @@ export const getVideoFromPostController = async (req, res) => {
 export const addGroupPostController = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in!");
-
-  jwt.verify(token, SECRET_KEY, (err, userInfo) => {
-    if (err) return res.status(403).json("Token is not valid!");
-    AuthService.IsAccountBanned(userInfo.id, async (err, data) => {
-      if (err) {
-        return res.status(500).json({ error: "This account is banned" });
-      }
-      const post = {
-        desc: req.body.desc,
-        img: "",
-        userId: userInfo.id,
-        groupId: req.body.groupId,
-        type: 3,
-      };
-      if (!post.desc)
-        return res.status(400).json("Your post description is required");
-      addGroupPostService(post, (err, data) => {
-        if (err) return res.status(500).json(err);
-        return res.status(200).json(data);
-      });
+  normalBackgroundUser(req, res, (error, userid) => {
+    if (error) return res.status(500).json(error);
+    const post = {
+      desc: req.body.desc,
+      img: "",
+      userId: userid,
+      groupId: req.body.groupId,
+      type: 3,
+    };
+    if (!post.desc)
+      return res.status(400).json("Your post description is required");
+    addGroupPostService(post, (err, data) => {
+      if (err) return res.status(500).json(err);
+      return res.status(200).json(data);
     });
   });
 };

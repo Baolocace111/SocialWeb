@@ -1,77 +1,77 @@
 import { db } from "../connect.js";
 
 export const getGroupById = (groupId, userId, callback) => {
-    const q = `
+   const q = `
         SELECT t.*, j.status AS join_status
         FROM teams t
         LEFT JOIN joins j ON t.id = j.group_id AND j.user_id = ?
         WHERE t.id = ?;
     `;
 
-    db.query(q, [userId, groupId], (err, data) => {
-        if (err) return callback(err);
-        return callback(null, data);
-    });
+   db.query(q, [userId, groupId], (err, data) => {
+      if (err) return callback(err);
+      return callback(null, data);
+   });
 }
 
 export const getGroupAvatarById = (groupId, callback) => {
-    const q = "SELECT group_avatar FROM teams WHERE id = ?";
+   const q = "SELECT group_avatar FROM teams WHERE id = ?";
 
-    db.query(q, [groupId], (err, data) => {
-        if (err) return callback(err);
-        if (data.length === 0) return callback(new Error('No avatar found for the provided group ID'));
-        return callback(null, data);
-    });
+   db.query(q, [groupId], (err, data) => {
+      if (err) return callback(err);
+      if (data.length === 0) return callback(new Error('No avatar found for the provided group ID'));
+      return callback(null, data);
+   });
 };
 
 export const getGroupsByUserId = (userId, callback) => {
-    const q = "SELECT * FROM teams INNER JOIN joins ON teams.id = joins.group_id WHERE joins.user_id = ? AND joins.status = 1";
+   const q = "SELECT * FROM teams INNER JOIN joins ON teams.id = joins.group_id WHERE joins.user_id = ? AND joins.status = 1";
 
-    db.query(q, [userId], (err, data) => {
-        if (err) return callback(err);
-        return callback(null, data);
-    });
+   db.query(q, [userId], (err, data) => {
+      if (err) return callback(err);
+      return callback(null, data);
+   });
 }
 
 export const createGroup = (groupName, privacyLevel, createdBy, callback) => {
-    const q = "INSERT INTO teams(group_name, created_by, creation_at, group_avatar, privacy_level) VALUES (?, ?, NOW(), 'https://hoanghamobile.com/tin-tuc/wp-content/uploads/2023/08/hinh-nen-anime-dep.jpg', ?)";
+   const q = "INSERT INTO teams(group_name, created_by, creation_at, group_avatar, privacy_level) VALUES (?, ?, NOW(), 'https://hoanghamobile.com/tin-tuc/wp-content/uploads/2023/08/hinh-nen-anime-dep.jpg', ?)";
 
-    db.query(q, [groupName, createdBy, privacyLevel], (err, result) => {
-        if (err) return callback(err);
+   db.query(q, [groupName, createdBy, privacyLevel], (err, result) => {
+      if (err) return callback(err);
 
-        // Nhận ID của nhóm mới được tạo
-        const groupId = result.insertId;
+      // Nhận ID của nhóm mới được tạo
+      const groupId = result.insertId;
 
-        // Thêm người dùng vào nhóm mới với role là quản trị viên
-        const addToJoinsQuery = "INSERT INTO joins(user_id, group_id, joined_date, role, status) VALUES (?, ?, NOW(), ?, ?)";
+      // Thêm người dùng vào nhóm mới với role là quản trị viên
+      const addToJoinsQuery = "INSERT INTO joins(user_id, group_id, joined_date, role, status) VALUES (?, ?, NOW(), ?, ?)";
 
-        db.query(addToJoinsQuery, [createdBy, groupId, 1, 1], (err, result) => {
-            if (err) return callback(err);
-            return callback(null, { groupId: groupId, ...result });
-        });
-    });
+      db.query(addToJoinsQuery, [createdBy, groupId, 1, 1], (err, result) => {
+         if (err) return callback(err);
+         return callback(null, { groupId: groupId, ...result });
+      });
+   });
 }
 
 export const checkIfUserIsGroupLeader = (userId, groupId, callback) => {
-    const query = "SELECT * FROM joins WHERE user_id = ? AND group_id = ? AND role = 1";
-    db.query(query, [userId, groupId], (err, results) => {
-        if (err) return callback(err);
-        if (results.length > 0) return callback(null, true); // Người dùng là trưởng nhóm
-        return callback(null, false); // Người dùng không phải là trưởng nhóm
-    });
+   const query = "SELECT * FROM joins WHERE user_id = ? AND group_id = ? AND role = 1";
+   db.query(query, [userId, groupId], (err, results) => {
+      if (err) return callback(err);
+      if (results.length > 0) return callback(null, true); // Người dùng là trưởng nhóm
+      return callback(null, false); // Người dùng không phải là trưởng nhóm
+   });
 };
 export const updateGroupAvatar = (groupId, avatar, callback) => {
-    const q = "UPDATE teams SET `group_avatar`=? WHERE id=? ";
+   const q = "UPDATE teams SET `group_avatar`=? WHERE id=? ";
 
-    db.query(q, [avatar, groupId], (err, data) => {
-        if (err) return callback(err);
-        if (data.affectedRows > 0) return callback(null, "Updated!");
-        return callback("You can update only your group!");
-    });
+   db.query(q, [avatar, groupId], (err, data) => {
+      if (err) return callback(err);
+      if (data.affectedRows > 0) return callback(null, "Updated!");
+      return callback("You can update only your group!");
+   });
 };
 
 export const searchGroupsBySearchText = (searchText, userId, callback) => {
-    const sqlQuery = `
+   const sqlQuery = `
         SELECT 
             teams.*, 
             (
@@ -101,16 +101,16 @@ export const searchGroupsBySearchText = (searchText, userId, callback) => {
             teams.creation_at DESC
     `;
 
-    const likeSearchText = `%${searchText}%`;
-    db.query(sqlQuery, [userId, userId, likeSearchText, likeSearchText], (err, results) => {
-        if (err) return callback(err, null);
-        return callback(null, results);
-    });
+   const likeSearchText = `%${searchText}%`;
+   db.query(sqlQuery, [userId, userId, likeSearchText, likeSearchText], (err, results) => {
+      if (err) return callback(err, null);
+      return callback(null, results);
+   });
 };
 
 export const getPendingPostsByGroupId = (groupId, offset, limit, callback) => {
-    const sqlOffset = (offset - 1) * limit;
-    const query = `
+   const sqlOffset = (offset - 1) * limit;
+   const query = `
         SELECT posts.id, posts.desc, posts.img, posts.createdAt, group_posts.user_id, group_posts.status,
                users.name, users.profilePic
         FROM group_posts
@@ -120,98 +120,116 @@ export const getPendingPostsByGroupId = (groupId, offset, limit, callback) => {
         ORDER BY posts.createdAt DESC
         LIMIT ? OFFSET ?`;
 
-    db.query(query, [groupId, limit, sqlOffset], (err, data) => {
-        if (err) return callback(err);
-        return callback(null, data);
-    });
+   db.query(query, [groupId, limit, sqlOffset], (err, data) => {
+      if (err) return callback(err);
+      return callback(null, data);
+   });
 };
 
 export const approveGroupPost = (postId, groupId, callback) => {
-    const query = `
+   const query = `
         UPDATE group_posts
         SET status = 1
         WHERE post_id = ? AND group_id = ?`;
 
-    db.query(query, [postId, groupId], (err, result) => {
-        if (err) return callback(err);
-        if (result.affectedRows === 0) {
-            return callback(new Error("No post found or you don't have the permission."));
-        }
-        return callback(null, { message: "Post approved successfully." });
-    });
+   db.query(query, [postId, groupId], (err, result) => {
+      if (err) return callback(err);
+      if (result.affectedRows === 0) {
+         return callback(new Error("No post found or you don't have the permission."));
+      }
+      return callback(null, { message: "Post approved successfully." });
+   });
 };
 
 export const rejectGroupPost = (postId, groupId, callback) => {
-    const query = `
+   const query = `
         UPDATE group_posts
         SET status = -1
         WHERE post_id = ? AND group_id = ?`;
 
-    db.query(query, [postId, groupId], (err, result) => {
-        if (err) return callback(err);
-        if (result.affectedRows === 0) {
-            return callback(new Error("No post found or you don't have the permission."));
-        }
-        return callback(null, { message: "Post rejected successfully." });
-    });
+   db.query(query, [postId, groupId], (err, result) => {
+      if (err) return callback(err);
+      if (result.affectedRows === 0) {
+         return callback(new Error("No post found or you don't have the permission."));
+      }
+      return callback(null, { message: "Post rejected successfully." });
+   });
 };
 
 export const getUserFromGroupPost = (postId, callback) => {
-    const query = `SELECT user_id FROM group_posts WHERE post_id = ? LIMIT 1`;
-    db.query(query, [postId], (err, rows) => {
-        if (err) return callback(err);
-        if (rows.length === 0) {
-            return callback(new Error("No post found in assigned group!"));
-        }
-        return callback(null, rows[0].user_id);
-    });
+   const query = `SELECT user_id FROM group_posts WHERE post_id = ? LIMIT 1`;
+   db.query(query, [postId], (err, rows) => {
+      if (err) return callback(err);
+      if (rows.length === 0) {
+         return callback(new Error("No post found in assigned group!"));
+      }
+      return callback(null, rows[0].user_id);
+   });
 };
 
 export const getPendingPostsCount = (groupId, callback) => {
-    const q = "SELECT COUNT(*) as pendingPostsCount FROM group_posts WHERE group_id = ? AND status = 0";
+   const q = "SELECT COUNT(*) as pendingPostsCount FROM group_posts WHERE group_id = ? AND status = 0";
 
-    db.query(q, [groupId], (err, data) => {
-        if (err) return callback(err);
-        return callback(null, data);
-    });
+   db.query(q, [groupId], (err, data) => {
+      if (err) return callback(err);
+      return callback(null, data);
+   });
 };
 
 export const getJoinRequestsCount = (groupId, callback) => {
-    const q = "SELECT COUNT(*) as joinRequestsCount FROM joins WHERE group_id = ? AND status = 0";
+   const q = "SELECT COUNT(*) as joinRequestsCount FROM joins WHERE group_id = ? AND status = 0";
 
-    db.query(q, [groupId], (err, data) => {
-        if (err) return callback(err);
-        return callback(null, data);
-    });
+   db.query(q, [groupId], (err, data) => {
+      if (err) return callback(err);
+      return callback(null, data);
+   });
 };
 
 export const getPostCountByStatusForUser = (groupId, userId, callback) => {
-    const query = `
+   const query = `
         SELECT status, COUNT(*) as count
         FROM group_posts
         WHERE group_id = ? AND user_id = ?
         GROUP BY status
     `;
-    db.query(query, [groupId, userId], (err, results) => {
-        if (err) return callback(err);
-        const counts = {
-            pending: 0,
-            rejected: 0,
-            approved: 0
-        };
-        results.forEach(row => {
-            switch (row.status) {
-                case 0:
-                    counts.pending = row.count;
-                    break;
-                case -1:
-                    counts.rejected = row.count;
-                    break;
-                case 1:
-                    counts.approved = row.count;
-                    break;
-            }
-        });
-        callback(null, counts);
-    });
+   db.query(query, [groupId, userId], (err, results) => {
+      if (err) return callback(err);
+      const counts = {
+         pending: 0,
+         rejected: 0,
+         approved: 0
+      };
+      results.forEach(row => {
+         switch (row.status) {
+            case 0:
+               counts.pending = row.count;
+               break;
+            case -1:
+               counts.rejected = row.count;
+               break;
+            case 1:
+               counts.approved = row.count;
+               break;
+         }
+      });
+      callback(null, counts);
+   });
 }
+
+export const getUserPostsByGroupIdAndStatus = (userId, groupId, status, offset, limit, callback) => {
+   const sqlOffset = (offset - 1) * limit;
+   const query = `
+       SELECT posts.id, posts.desc, posts.img, posts.createdAt, group_posts.user_id, group_posts.status,
+              users.name, users.profilePic
+       FROM group_posts
+       INNER JOIN posts ON group_posts.post_id = posts.id
+       INNER JOIN users ON group_posts.user_id = users.id
+       WHERE group_posts.group_id = ? AND group_posts.status = ? AND group_posts.user_id = ?
+       ORDER BY posts.createdAt DESC
+       LIMIT ? OFFSET ?`;
+
+   db.query(query, [groupId, status, userId, limit, sqlOffset], (err, data) => {
+      if (err) return callback(err);
+      return callback(null, data);
+   });
+};

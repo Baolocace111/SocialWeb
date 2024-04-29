@@ -15,5 +15,6 @@ router.put('/:groupId/reject-post', groupController.rejectGroupPost);
 router.get('/:groupId/pending-posts-count', groupController.getPendingPostsCount);
 router.get('/:groupId/pending-requests-count', groupController.getJoinRequestsCount);
 router.get('/:groupId/post-counts', groupController.getPostCounts);
+router.post('/:groupId/my-group-contents', groupController.getGroupPostsByStatus);
 
 export default router;

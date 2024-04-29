@@ -1,0 +1,116 @@
+@import "../../../../style.scss";
+
+.my-posted-posts {
+   @include themify($themes) {
+      background-color: themed("bgSoft");
+      color: themed("textColor");
+      margin: 0px auto;
+
+      .header {
+         position: sticky;
+         background-color: themed("bg");
+         padding: 20px 200px;
+         border-bottom: 1px solid gainsboro;
+         box-shadow: -8px 0 10px -5px rgba(0, 0, 0, 0.2);
+         z-index: 0;
+         top: 62px;
+         display: flex;
+         flex-direction: column;
+         gap: 20px;
+
+         .manage-header {
+            font-size: 23px;
+            font-weight: 700;
+         }
+
+         .sort-info {
+            display: flex;
+
+            .search-input {
+               padding: 10px 15px;
+               border: none;
+               outline: none;
+               border-radius: 10px;
+               width: 70%;
+               background-color: #EBEDF0;
+            }
+
+            .filter-button {
+               position: relative;
+               display: flex;
+               align-items: center;
+               gap: 10px;
+               margin-left: auto;
+               padding: 10px 15px;
+               border: none;
+               outline: none;
+               border-radius: 10px;
+               background-color: #EBEDF0;
+               cursor: pointer;
+               font-size: 15px;
+               font-weight: 600;
+
+               &:hover {
+                  background-color: #CCD0D5;
+               }
+
+               .dropdown-menu {
+                  display: none;
+                  position: absolute;
+                  top: 100%;
+                  right: 0;
+                  box-shadow: -8px 0 10px -5px rgba(0, 0, 0, 0.2);
+                  background-color: #fff;
+                  width: 150px;
+                  border: none;
+                  outline: none;
+                  border-radius: 10px;
+                  padding: 10px;
+
+                  .option {
+                     padding: 5px 10px;
+                     border-radius: 5px;
+                     display: flex;
+                     justify-content: flex-start;
+
+                     &:hover {
+                        background-color: themed("bgSoft");
+                     }
+                  }
+
+                  &.show {
+                     display: block;
+                  }
+               }
+            }
+         }
+      }
+
+      .row {
+         width: 60%;
+         margin: 30px auto;
+         display: flex;
+         flex-wrap: wrap;
+         justify-content: flex-start;
+         gap: 15px;
+
+         .not-found {
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+
+            img {
+               width: 120px;
+               height: 120px;
+            }
+
+            p {
+               font-weight: 600;
+               font-size: 18px;
+            }
+         }
+      }
+   }
+}

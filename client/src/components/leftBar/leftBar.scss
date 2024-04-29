@@ -3,8 +3,8 @@
 .leftBar {
   @include themify($themes) {
     position: sticky;
-    top: 70px;
-    height: calc(100vh - 70px);
+    top: 62px;
+    height: calc(100vh - 62px);
     overflow: hidden; // Ẩn thanh cuộn khi không rê chuột vào
     background-color: themed("bgSoft");
     color: themed("textColor");

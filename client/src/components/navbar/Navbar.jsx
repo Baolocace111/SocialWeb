@@ -182,6 +182,7 @@ const Navbar = () => {
           } else if (event.data === "New notification") {
             update_notification_number();
           } else if (event.data === "New message or seen") {
+            //console.log("event.data");
             updateMessage();
           } else {
             try {
@@ -270,7 +271,7 @@ const Navbar = () => {
           <PersonOutlinedIcon
             className="icon"
             onClick={handlePopover}
-            style={{ cursor: "pointer", fontSize: "28px" }}
+            style={{ cursor: "pointer", fontSize: "25px" }}
             id="friend-icon"
           />
         </div>
@@ -287,7 +288,7 @@ const Navbar = () => {
           <EmailOutlinedIcon
             className="icon"
             onClick={handlePopover}
-            style={{ cursor: "pointer", fontSize: "28px" }}
+            style={{ cursor: "pointer", fontSize: "25px" }}
             id="chat-icon"
           />
         </div>
@@ -298,7 +299,7 @@ const Navbar = () => {
           <NotificationsOutlinedIcon
             className="icon"
             onClick={handlePopover}
-            style={{ cursor: "pointer", fontSize: "28px" }}
+            style={{ cursor: "pointer", fontSize: "25px" }}
             id="noti-icon"
           />
         </div>
@@ -335,6 +336,33 @@ const Navbar = () => {
         >
           {content === "profile" && (
             <List>
+              <ListItemButton>
+                <ListItemIcon
+                  style={{ fontSize: "20px", marginRight: "-25px" }}
+                >
+                  <div style={{ display: "flex" }}>
+                    <img
+                      style={{
+                        width: "20px",
+                        height: "20px",
+                        borderRadius: "50%",
+                      }}
+                      src={
+                        URL_OF_BACK_END + `users/profilePic/` + currentUser.id
+                      }
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "/upload/errorImage.png";
+                      }}
+                      alt={""}
+                    />
+                  </div>
+                </ListItemIcon>
+                <ListItemText
+                  primary={currentUser.name}
+                  style={{ marginRight: "100px" }}
+                />
+              </ListItemButton>
               <ListItemButton>
                 <ListItemIcon
                   style={{ fontSize: "20px", marginRight: "-25px" }}
