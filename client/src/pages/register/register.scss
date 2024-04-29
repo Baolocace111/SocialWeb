@@ -128,14 +128,22 @@
 @media (max-width: 768px) {
   .register {
     .card {
+      width: 100%;
       flex-wrap: wrap;
       .left {
-        display: none;
+        height: 0px;
+        h1 {
+          display: none;
+        }
+        p {
+          display: none;
+        }
+        span {
+          display: none;
+        }
       }
       .right {
-        width: fit-content;
         form {
-          width: 100%;
         }
       }
     }
