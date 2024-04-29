@@ -120,8 +120,8 @@ const Navbar = () => {
     iconId === "profile"
       ? setAnchorEl(event.currentTarget.parentElement.parentElement)
       : setAnchorEl(
-        event.currentTarget.parentElement.parentElement.parentElement
-      );
+          event.currentTarget.parentElement.parentElement.parentElement
+        );
     setContent(contentType);
   };
 
@@ -182,6 +182,7 @@ const Navbar = () => {
           } else if (event.data === "New notification") {
             update_notification_number();
           } else if (event.data === "New message or seen") {
+            //console.log("event.data");
             updateMessage();
           } else {
             try {
@@ -193,7 +194,7 @@ const Navbar = () => {
               } else if (data.type === "quit") {
                 setIsCalling(false);
               }
-            } catch (error) { }
+            } catch (error) {}
           }
         } else {
         }
@@ -335,6 +336,33 @@ const Navbar = () => {
         >
           {content === "profile" && (
             <List>
+              <ListItemButton>
+                <ListItemIcon
+                  style={{ fontSize: "20px", marginRight: "-25px" }}
+                >
+                  <div style={{ display: "flex" }}>
+                    <img
+                      style={{
+                        width: "20px",
+                        height: "20px",
+                        borderRadius: "50%",
+                      }}
+                      src={
+                        URL_OF_BACK_END + `users/profilePic/` + currentUser.id
+                      }
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "/upload/errorImage.png";
+                      }}
+                      alt={""}
+                    />
+                  </div>
+                </ListItemIcon>
+                <ListItemText
+                  primary={currentUser.name}
+                  style={{ marginRight: "100px" }}
+                />
+              </ListItemButton>
               <ListItemButton>
                 <ListItemIcon
                   style={{ fontSize: "20px", marginRight: "-25px" }}
