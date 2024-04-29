@@ -9,11 +9,18 @@ import "./chat.scss";
 import { Waypoint } from "react-waypoint";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import NineCube from "../../loadingComponent/nineCube/NineCube";
-import { faVideo, faX, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import {
+  faVideo,
+  faX,
+  faMinimize,
+  faPaperPlane,
+  faMaximize,
+} from "@fortawesome/free-solid-svg-icons";
 
 const Chat = ({ friend, onRemoveChatBox }) => {
   const [messages, setMessages] = useState([]);
-  const [ws, setWs] = useState(null);
+  const [isFull, setIsFull] = useState(true);
+  const wsRef = useRef(null);
   const [newMessage, setNewMessage] = useState("");
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -21,10 +28,15 @@ const Chat = ({ friend, onRemoveChatBox }) => {
   const [autoScrollToBottom, setAutoScrollToBottom] = useState(true);
   const [hasMoreOldMessages, setHasMoreOldMessages] = useState(true);
   const messageContainerRef = useRef(null);
+  const handleCloseChatBox = () => {
+    if (wsRef.current) wsRef.current.close();
+    if (onRemoveChatBox) onRemoveChatBox();
+  };
 
   useEffect(() => {
     if (messageContainerRef.current && autoScrollToBottom) {
-      messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+      messageContainerRef.current.scrollTop =
+        messageContainerRef.current.scrollHeight;
       setAutoScrollToBottom(false);
     }
   }, [messages, autoScrollToBottom]);
@@ -34,45 +46,36 @@ const Chat = ({ friend, onRemoveChatBox }) => {
     // eslint-disable-next-line
   }, []);
 
-  if (!ws) {
-    // Tạo kết nối WebSocket khi component được mount
-    const socket = new WebSocket(WEBSOCKET_BACK_END + `/chat/${friendId}`);
+  useEffect(() => {
+    if (!wsRef.current) {
+      const socket = new WebSocket(WEBSOCKET_BACK_END + `/chat/${friendId}`);
 
-    // Xử lý sự kiện khi mở kết nối
-    socket.onopen = () => {
-      //console.log("WebSocket connected");
-    };
+      socket.onopen = () => {};
 
-    // Xử lý sự kiện khi nhận tin nhắn từ server
-    socket.onmessage = async (event) => {
-      try {
-        const response = await makeRequest.post("/messages", {
-          friend_id: friendId,
-          offset: 0,
-        });
-        await setMessages((prevMessages) => {
-          const updatedMessages = removeDuplicateUnits([...prevMessages, ...response.data]);
-          return updatedMessages;
-        });
-        setAutoScrollToBottom(true); // Tự động cuộn xuống dưới cùng cho tin nhắn mới
-      } catch (error) {
-        console.error("Failed to fetch messages:", error);
-      }
-    };
+      socket.onmessage = async (event) => {
+        try {
+          const response = await makeRequest.post("/messages", {
+            friend_id: friendId,
+            offset: 0,
+          });
+          await setMessages((prevMessages) => {
+            const updatedMessages = removeDuplicateUnits([
+              ...prevMessages,
+              ...response.data,
+            ]);
+            return updatedMessages;
+          });
+          setAutoScrollToBottom(true);
+        } catch (error) {
+          console.error("Failed to fetch messages:", error);
+        }
+      };
 
-    // Xử lý sự kiện khi đóng kết nối
-    socket.onclose = () => {
-      console.log("WebSocket disconnected");
-    };
+      socket.onclose = () => {};
 
-    // Lưu đối tượng WebSocket vào state để sử dụng ở các phương thức khác
-    setWs(socket);
-
-    // Clear up effect khi component unmount
-    return () => {
-      socket.close();
-    };
-  }
+      wsRef.current = socket;
+    }
+  }, [friendId]);
 
   const handleClickToCall = () => {
     window.open(`/call/${friendId}`, "_blank");
@@ -86,7 +89,10 @@ const Chat = ({ friend, onRemoveChatBox }) => {
       });
       const newMessages = response.data;
       setMessages((prevMessages) => {
-        const updatedMessages = removeDuplicateUnits([...prevMessages, ...newMessages]);
+        const updatedMessages = removeDuplicateUnits([
+          ...prevMessages,
+          ...newMessages,
+        ]);
         const newOffset = offset + 10;
         setOffset(newOffset);
 
@@ -94,8 +100,12 @@ const Chat = ({ friend, onRemoveChatBox }) => {
           setHasMoreOldMessages(false);
         }
         setLoading(false);
-        if (!autoScrollToBottom && messageContainerRef.current && hasMoreOldMessages) {
-          const newScrollPosition = 200; // Scroll down 200 pixels
+        if (
+          !autoScrollToBottom &&
+          messageContainerRef.current &&
+          hasMoreOldMessages
+        ) {
+          const newScrollPosition = 200;
           messageContainerRef.current.scrollTop = newScrollPosition;
         }
         return updatedMessages;
@@ -124,10 +134,13 @@ const Chat = ({ friend, onRemoveChatBox }) => {
             offset: 0,
           });
           await setMessages((prevMessages) => {
-            const updatedMessages = removeDuplicateUnits([...prevMessages, ...response.data]);
+            const updatedMessages = removeDuplicateUnits([
+              ...prevMessages,
+              ...response.data,
+            ]);
             return updatedMessages;
           });
-          setAutoScrollToBottom(true); // Tự động cuộn xuống dưới cùng cho tin nhắn mới
+          setAutoScrollToBottom(true);
         } catch (error) {
           console.error("Failed to fetch messages:", error);
         }
@@ -143,7 +156,7 @@ const Chat = ({ friend, onRemoveChatBox }) => {
   };
 
   return (
-    <div className="parent-container">
+    <div className={`parent-container ${isFull ? "full" : ""}`}>
       <div className="top-box">
         <img
           src={URL_OF_BACK_END + `users/profilePic/` + friend.id}
@@ -160,7 +173,16 @@ const Chat = ({ friend, onRemoveChatBox }) => {
               <FontAwesomeIcon icon={faVideo} onClick={handleClickToCall} />
             </span>
           </button>
-          <button onClick={onRemoveChatBox}>
+          <button
+            onClick={() => {
+              setIsFull(!isFull);
+            }}
+          >
+            <span>
+              <FontAwesomeIcon icon={isFull ? faMinimize : faMaximize} />
+            </span>
+          </button>
+          <button onClick={handleCloseChatBox}>
             <span>
               <FontAwesomeIcon icon={faX} />
             </span>
@@ -169,9 +191,7 @@ const Chat = ({ friend, onRemoveChatBox }) => {
       </div>
       <div className="messages" ref={messageContainerRef}>
         {!loading && messages.length > 0 && (
-          <Waypoint
-            onEnter={handleShowMore}
-          />
+          <Waypoint onEnter={handleShowMore} />
         )}
         {messages &&
           messages.map((message, index) => {
@@ -213,18 +233,15 @@ const Chat = ({ friend, onRemoveChatBox }) => {
 export default Chat;
 
 function removeDuplicateUnits(arr) {
-  // Loại bỏ các phần tử trùng lặp dựa trên id
   const uniqueUnits = new Map();
 
   for (const unit of arr) {
     uniqueUnits.set(unit.id, unit);
   }
 
-  // Chuyển mảng set thành mảng thông thường và sắp xếp theo createdAt tăng dần
   const sortedArr = Array.from(uniqueUnits.values()).sort(
     (a, b) => new Date(a.created_at) - new Date(b.created_at)
   );
 
-  // Trả về mảng đã sắp xếp và không có phần tử trùng lặp
   return sortedArr;
 }

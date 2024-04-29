@@ -1,10 +1,14 @@
 @import "../../../style.scss"; // Make sure you import where your themes and mixins are defined.
 
 .parent-container {
-  height: 400px;
+  max-height: 50px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  transition: max-height 0.3s ease-in-out;
+  &.full {
+    max-height: 400px; /* Đặt giá trị này để đảm bảo nó lớn hơn chiều cao tối đa mà container có thể đạt được */
+  }
 
   @include themify($themes) {
     .top-box {
@@ -75,6 +79,7 @@
       min-height: 250px;
       max-height: 290px;
       scroll-behavior: smooth;
+      transition: max-height 0.5s ease;
 
       .showMore {
         width: 100%;
@@ -97,7 +102,7 @@
       border-top: solid 1px lightgray;
       justify-content: flex-start;
       align-items: center;
-
+      transition: max-height 0.5s ease;
       input {
         max-width: 220px;
         height: 22px;
@@ -130,6 +135,17 @@
 
       button:hover {
         background-color: themed("border");
+      }
+    }
+    &.notFull {
+      .messages {
+        overflow: hidden;
+        max-height: 0; // Thu nhỏ messages khi isFull là false
+      }
+      .new-message {
+        overflow: hidden;
+        max-height: 0; // Thu nhỏ phần new-message khi isFull là false
+        padding: 0 8px; // Chia nhỏ padding khi không hiển thị (nếu cần)
       }
     }
   }
