@@ -120,5 +120,5 @@ export const checkAdmin = async (req, res) => {
   }
 };
 export const checkConnectionController = (req, res) => {
-  return res.status(200).json("Successfully");
+  return res.status(200).json({ webversion: "1.0.0", appversion: "1.0.0" });
 };
