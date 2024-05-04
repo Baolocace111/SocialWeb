@@ -7,6 +7,7 @@ import { URL_OF_BACK_END, makeRequest } from "../../axios";
 import moment from "moment";
 import { useEffect } from "react";
 import { useLanguage } from "../../context/languageContext";
+import Comment from "./Comment";
 const Comments = ({ postId }) => {
   const [desc, setDesc] = useState("");
   const { currentUser } = useContext(AuthContext);
@@ -21,7 +22,7 @@ const Comments = ({ postId }) => {
     }
   }, [language]);
 
-  const { isLoading, error, data } = useQuery(["comments"], () =>
+  const { isLoading, error, data } = useQuery(["comments" + postId], () =>
     makeRequest.get("/comments?postId=" + postId).then((res) => {
       return res.data;
     })
@@ -38,7 +39,7 @@ const Comments = ({ postId }) => {
     {
       onSuccess: () => {
         // Invalidate and refetch
-        queryClient.invalidateQueries(["comments"]);
+        queryClient.invalidateQueries(["comments" + postId]);
       },
     }
   );
@@ -74,21 +75,7 @@ const Comments = ({ postId }) => {
         <ThreePointLoading />
       ) : (
         data.map((comment) => (
-          <div className="comment" key={comment.id}>
-            <img
-              src={URL_OF_BACK_END + `users/profilePic/` + comment.userId}
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = "/upload/errorImage.png";
-              }}
-              alt={""}
-            />
-            <div className="info">
-              <span>{comment.name}</span>
-              <p>{comment.desc}</p>
-            </div>
-            <span className="date">{moment(comment.createdAt).fromNow()}</span>
-          </div>
+          <Comment key={comment.id} comment={comment}></Comment>
         ))
       )}
     </div>

@@ -108,14 +108,14 @@ const UserTable = ({ year, month }) => {
   );
   return (
     <div className="manage_layout">
-      {error && <h2>{error}</h2>}
+      {error && <h2>{error.toString()}</h2>}
       <div className="m_postusertable">
         <h1>
           {trl("Admin User Page")} {month} - {year}
         </h1>
         {error && (
           <div>
-            <h2>{error}</h2>
+            <h2>{error.toString()}</h2>
           </div>
         )}
         <table>

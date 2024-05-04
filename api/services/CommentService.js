@@ -34,15 +34,10 @@ export const getCommentByIdService = (commentId, callback) => {
     return callback(null, data);
   });
 };
-export const deleteCommentWithTokenService = (token, commentId, callback) => {
-  if (!token) return callback("Not authenticated!", null);
 
-  jwt.verify(token, SECRET_KEY, (err, userInfo) => {
-    if (err) return callback("Token is not valid!", null);
-
-    deleteComment(commentId, userInfo.id, (err, data) => {
-      if (err) return callback(err, null);
-      return callback(null, data);
-    });
+export const deleteCommentByUser = (user_id, commentId, callback) => {
+  deleteComment(commentId, user_id, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data);
   });
 };
