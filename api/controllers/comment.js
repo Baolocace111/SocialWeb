@@ -2,8 +2,9 @@ import { AuthService } from "../services/AuthService.js";
 import {
   getCommentsService,
   addCommentWithTokenService,
-  deleteCommentWithTokenService,
+  deleteCommentByUser,
 } from "../services/CommentService.js";
+import { normalBackgroundUser } from "./backgroundController.js";
 
 export const getComments = async (req, res) => {
   try {
@@ -57,10 +58,11 @@ export const addComment = async (req, res) => {
 };
 
 export const deleteComment = (req, res) => {
-  const token = req.cookies.access_token;
-  const commentId = req.params.id;
-  deleteCommentWithTokenService(token, commentId, (err, data) => {
-    if (err) return res.status(500).json(err);
-    return res.status(200).json(data);
+  normalBackgroundUser(req, res, (error, userid) => {
+    if (error) return req.status(500).json(error);
+    deleteCommentByUser(userid, req.params.id, (e, d) => {
+      if (e) return res.status(500).json(e);
+      return res.status(200).json(d);
+    });
   });
 };
