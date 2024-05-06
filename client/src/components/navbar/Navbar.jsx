@@ -244,13 +244,6 @@ const Navbar = () => {
           ></img>{" "}
           TinySocial
         </span>
-        <HomeOutlinedIcon />
-        {darkMode ? (
-          <WbSunnyOutlinedIcon onClick={toggle} />
-        ) : (
-          <DarkModeOutlinedIcon onClick={toggle} />
-        )}
-        <GridViewOutlinedIcon />
         <div className="search">
           <SearchOutlinedIcon onClick={handleSearch} />
           <input
@@ -261,6 +254,14 @@ const Navbar = () => {
             onKeyPress={handleKeyPress}
           />
         </div>
+        <HomeOutlinedIcon />
+        {darkMode ? (
+          <WbSunnyOutlinedIcon onClick={toggle} />
+        ) : (
+          <DarkModeOutlinedIcon onClick={toggle} />
+        )}
+        <GridViewOutlinedIcon />
+
         <LanguageSwitcher></LanguageSwitcher>
       </div>
       <div className="right">

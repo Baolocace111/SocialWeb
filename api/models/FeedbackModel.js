@@ -103,7 +103,8 @@ export const updateFeedbackStatusById = (feedbackId, newStatus, callback) => {
 
 export const getFeedbackById = (feedbackId, callback) => {
   const q =
-    "SELECT feedbacks.*,u.id AS userid, u.name FROM feedbacks LEFT JOIN users u ON (feedbacks.userid = u.id) WHERE id = ?";
+    "SELECT feedbacks.*, u.id AS userid, u.name FROM feedbacks LEFT JOIN users u ON (feedbacks.userid = u.id) WHERE feedbacks.id = ?";
+
   const values = [feedbackId];
 
   db.query(q, values, (err, data) => {

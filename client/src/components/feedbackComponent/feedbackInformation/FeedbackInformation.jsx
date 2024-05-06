@@ -12,10 +12,26 @@ const FeedbackInformation = ({ feedback }) => {
   const [comment, setComment] = useState(null);
   const [team, setTeam] = useState(null);
   const [stories, setStories] = useState(null);
+  const [action, setAction] = useState(feedback.status);
+  const [response, setResponse] = useState(feedback.response);
   const [imageFeedback, setImageFeedback] = useState(true);
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const handleClickDO = () => {
+    makeRequest
+      .post("admin/feedback/handle", {
+        type: parseInt(action),
+        feedback: { id: feedback.id, response: response },
+      })
+      .then((response) => {
+        window.location.reload();
+      })
+      .catch((e) => {
+        console.log(e.response);
+        alert(e.response.data);
+      });
+  };
   useEffect(() => {
     if (language === "jp") {
       moment.locale("ja");
@@ -92,9 +108,23 @@ const FeedbackInformation = ({ feedback }) => {
         <div className="response">
           <input
             placeholder={trl("Enter your response")}
-            value={!(feedback.response === null) ? feedback.response : ""}
-            onChange={() => {}}
+            value={!(response === null) ? response : ""}
+            onChange={(e) => {
+              setResponse(e.target.value);
+            }}
           ></input>
+          <select
+            value={action}
+            onChange={(e) => {
+              setAction(e.target.value);
+            }}
+          >
+            <option value="0">{trl("chưa xử lý")}</option>
+            <option value="1">{trl("đang xử lý")}</option>
+            <option value="2">{trl("đã xử lý")}</option>
+            <option value="3">{trl("delete")}</option>
+          </select>
+          <button onClick={handleClickDO}>{trl("DO")}</button>
         </div>
       </div>
       {feedback.post_id && (
