@@ -51,9 +51,9 @@ const AdminFeedback = () => {
       <h1>{trl("Feedbacks")}</h1>
       <select value={status} onChange={handleStatusChange}>
         <option value="all">{trl("All")}</option>
-        <option value="0">0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
+        <option value="0">{trl("chưa xử lý")}</option>
+        <option value="1">{trl("đang xử lý")}</option>
+        <option value="2">{trl("đã xử lý")}</option>
       </select>
       <table>
         <thead>

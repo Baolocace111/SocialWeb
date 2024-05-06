@@ -246,3 +246,11 @@ export const plusReputation = (userid, numberReputation, callback) => {
     return callback("Not found", null);
   });
 };
+export const setReputation = (userid, numberReputation, callback) => {
+  const q = "update users SET reputation=? where id=?";
+  db.query(q, [numberReputation, userid], (err, data) => {
+    if (err) return callback(err, null);
+    if (data.affectedRows > 0) return callback(null, "Updated!");
+    return callback("Not found", null);
+  });
+};

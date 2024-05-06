@@ -82,3 +82,23 @@ export const deleteComment = (commentId, userId, callback) => {
     return callback("You can delete only your comment!", null);
   });
 };
+export const deleteCommentByAdmin = (commentId, callback) => {
+  const q = `
+    START TRANSACTION;
+    SELECT * FROM comments WHERE id = ? FOR UPDATE;
+    UPDATE users
+    SET reputation = reputation - 1
+    WHERE id = (SELECT userId FROM comments WHERE id = ?);
+    DELETE FROM comments WHERE id = ?;
+    COMMIT;
+  `;
+
+  db.query(q, [commentId, commentId, commentId], (err, results) => {
+    if (err) {
+      return callback(err, null);
+    }
+
+    // Trả về dữ liệu của comment bị xóa
+    return callback(null, results[1][0]);
+  });
+};

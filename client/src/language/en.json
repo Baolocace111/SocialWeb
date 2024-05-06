@@ -25,6 +25,9 @@
   "Chỉnh sửa bài viết": "Edit your post",
   "Chỉnh sửa đối tượng": "Change the privacy settings",
   "Xóa bài viết": "Delete this post",
+  "Delete":"Delete",
+  "delete":"delete",
+
   "a": "a",
   "Name": "Name",
   "Email": "Email",
@@ -172,6 +175,7 @@
   "Suggestion": "Suggestion",
   "Đang xây dựng": "Developing",
   "GO": "GO",
+  "DO":"DO",
   "Khám phá": "Explore",
   "Nhóm của bạn": "Your groups",
   "+ Tạo nhóm mới": "+ Create a new group",

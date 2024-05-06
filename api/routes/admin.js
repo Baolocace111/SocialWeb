@@ -9,6 +9,7 @@ import {
   getFeedbackController,
   getFeedbackImageAdminController,
   getFeedbackbyStatusController,
+  handleFeedbackController,
 } from "../controllers/admin/adminFeedback.js";
 import { getCommentByCommentIdController } from "../controllers/admin/adminComment.js";
 import { getPostByIdAdminController } from "../controllers/admin/adminPost.js";
@@ -24,6 +25,7 @@ router.post("/users/getuser", searchUserBykeyController);
 router.get("/feedback/get/:page", getFeedbackController);
 router.get("/feedback/getbystatus", getFeedbackbyStatusController);
 router.get("/feedback/getimage/:id", getFeedbackImageAdminController);
+router.post("/feedback/handle", handleFeedbackController);
 //Comment management
 router.get("/comment/get/:id", getCommentByCommentIdController);
 export default router;
