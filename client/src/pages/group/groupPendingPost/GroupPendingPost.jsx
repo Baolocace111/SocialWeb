@@ -11,7 +11,8 @@ import NineCube from "../../../components/loadingComponent/nineCube/NineCube.jsx
 import { Waypoint } from "react-waypoint";
 import { useState } from "react";
 import { useLanguage } from "../../../context/languageContext";
-
+import "moment/locale/ja"; // Import locale for Japanese
+import "moment/locale/vi"; // Import locale for Vietnamese
 const GroupPendingPost = () => {
   const { groupId } = useParams();
   const { trl, language } = useLanguage();

@@ -8,7 +8,8 @@ import { AuthContext } from "../../../context/authContext";
 import { URL_OF_BACK_END } from "../../../axios";
 import { makeRequest } from "../../../axios";
 import { useNavigate } from "react-router-dom";
-
+import "moment/locale/ja"; // Import locale for Japanese
+import "moment/locale/vi"; // Import locale for Vietnamese
 const GroupCreate = ({
   setGroupPrivacy,
   groupPrivacy,
@@ -110,8 +111,9 @@ const GroupCreate = ({
                   </button>
                   {showDropdown && (
                     <div
-                      className={`dropdown-content ${showDropdown ? "show" : ""
-                        }`}
+                      className={`dropdown-content ${
+                        showDropdown ? "show" : ""
+                      }`}
                     >
                       <div
                         className="dropdown-item"

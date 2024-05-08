@@ -5,6 +5,8 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import Comments from "../comments/Comments";
+import "moment/locale/ja"; // Import locale for Japanese
+import "moment/locale/vi"; // Import locale for Vietnamese
 import {
   Popover,
   List,

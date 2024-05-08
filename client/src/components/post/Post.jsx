@@ -23,7 +23,8 @@ import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ReportOutlinedIcon from "@mui/icons-material/ReportOutlined";
-
+import "moment/locale/ja"; // Import locale for Japanese
+import "moment/locale/vi"; // Import locale for Vietnamese
 import { TextareaAutosize } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -73,8 +74,8 @@ const Post = ({ post }) => {
 
   const isVideoContent = post.img
     ? post.img.endsWith(".mp4") ||
-    post.img.endsWith(".avi") ||
-    post.img.endsWith(".mov")
+      post.img.endsWith(".avi") ||
+      post.img.endsWith(".mov")
     : false;
 
   useEffect(() => {
@@ -722,13 +723,15 @@ const Post = ({ post }) => {
               <PostShare
                 post={post}
                 setShowSharePopup={setShowSharePopup}
-                showSharePopup={showSharePopup} />
+                showSharePopup={showSharePopup}
+              />
             </PopupWindow>
             <PopupWindow show={showReportPopup} handleClose={handleReport}>
               <PostReporter
                 post={post}
                 setShowReportPopup={setShowReportPopup}
-                showReportPopup={showReportPopup} />
+                showReportPopup={showReportPopup}
+              />
             </PopupWindow>
           </div>
         )}
