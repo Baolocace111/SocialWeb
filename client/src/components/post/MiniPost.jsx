@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import Description from "./desc";
 import ReactPlayer from "react-player/lazy";
+import "moment/locale/ja"; // Import locale for Japanese
+import "moment/locale/vi"; // Import locale for Vietnamese
 import { useEffect } from "react";
 import { useLanguage } from "../../context/languageContext";
 const MiniPost = ({ post }) => {
@@ -19,8 +21,8 @@ const MiniPost = ({ post }) => {
   }, [language]);
   const isVideoContent = post.img
     ? post.img.endsWith(".mp4") ||
-    post.img.endsWith(".avi") ||
-    post.img.endsWith(".mov")
+      post.img.endsWith(".avi") ||
+      post.img.endsWith(".mov")
     : false;
 
   return (

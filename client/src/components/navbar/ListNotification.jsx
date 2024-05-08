@@ -9,17 +9,53 @@ import { Link } from "react-router-dom";
 import NineCube from "../loadingComponent/nineCube/NineCube";
 import { useLanguage } from "../../context/languageContext";
 import { useEffect } from "react";
+import { useRef } from "react";
+import "moment/locale/ja"; // Import locale for Japanese
+import "moment/locale/vi"; // Import locale for Vietnamese
 const ListNotification = () => {
   const { trl, language } = useLanguage();
   useEffect(() => {
     if (language === "jp") moment.locale("ja");
     if (language === "vn") moment.locale("vi");
     else moment.locale("en");
+  }, [language]);
+  useEffect(() => {
+    if (!wsRef.current) {
+      const socket = new WebSocket(`ws://localhost:3030/index`);
+      socket.onopen = () => {
+        console.log("Connected");
+        wsRef.current = socket;
+      };
+      socket.onmessage = async (event) => {
+        if (wsRef.current) {
+          if (event.data === "New notification") {
+            try {
+              const res = await makeRequest.get(`/notifications/see/1`);
+              setNotifications(
+                removeDuplicateUnits([...notifications, ...res.data])
+              );
+            } catch (error) {
+              console.error("Failed to fetch friends:", error);
+            }
+          }
+        }
+      };
+      socket.onclose = () => {
+        wsRef.current = null;
+        console.log("Closed");
+      };
+    }
+    return () => {
+      if (wsRef.current) {
+        wsRef.current.close();
+      }
+    };
   }, []);
   const [notifications, setNotifications] = useState([]);
   const [offset, setOffset] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [ws, setWS] = useState(null);
+  //const [ws, setWS] = useState(null);
+  const wsRef = useRef(null);
   const fetchNotifications = useCallback(async () => {
     try {
       const res = await makeRequest.get(`/notifications/see/${offset}`);
@@ -49,28 +85,7 @@ const ListNotification = () => {
       });
   };
   if (loading) fetchNotifications();
-  if (!ws) {
-    const socket = new WebSocket(`ws://localhost:3030/index`);
-    socket.onopen = () => {
-      console.log("Connected");
-    };
-    socket.onmessage = async (event) => {
-      if (event.data === "New notification") {
-        try {
-          const res = await makeRequest.get(`/notifications/see/1`);
-          setNotifications(
-            removeDuplicateUnits([...notifications, ...res.data])
-          );
-        } catch (error) {
-          console.error("Failed to fetch friends:", error);
-        }
-      }
-    };
-    socket.onclose = () => {
-      console.log("Closed");
-    };
-    setWS(socket);
-  }
+
   return (
     <div className="list-notification">
       <div className="title-notification">
@@ -84,11 +99,12 @@ const ListNotification = () => {
           <Link to={notification.link} style={{ cursor: "pointer" }}>
             <img
               src={
-                (notification.link.includes('/seepost/') || notification.link.includes('/profile/'))
+                notification.link.includes("/seepost/") ||
+                notification.link.includes("/profile/")
                   ? `${URL_OF_BACK_END}users/profilePic/${notification.interactionId}`
-                  : notification.link.includes('/groups/')
-                    ? `${URL_OF_BACK_END}groups/${notification.interactionId}/avatar`
-                    : "/notificationtype/null.jpg"
+                  : notification.link.includes("/groups/")
+                  ? `${URL_OF_BACK_END}groups/${notification.interactionId}/avatar`
+                  : "/notificationtype/null.jpg"
               }
               onError={(e) => {
                 e.target.onerror = null;

@@ -1,5 +1,7 @@
 import { useContext, useState } from "react";
 import "./comments.scss";
+import "moment/locale/ja"; // Import locale for Japanese
+import "moment/locale/vi"; // Import locale for Vietnamese
 import ThreePointLoading from "../loadingComponent/threepointLoading/ThreePointLoading";
 import { AuthContext } from "../../context/authContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";

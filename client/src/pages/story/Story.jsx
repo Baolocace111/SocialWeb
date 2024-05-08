@@ -5,7 +5,8 @@ import { useLocation } from "react-router-dom";
 import moment from "moment";
 import Stories from "react-insta-stories";
 import FlipCube from "../../components/loadingComponent/flipCube/FlipCube";
-
+import "moment/locale/ja"; // Import locale for Japanese
+import "moment/locale/vi"; // Import locale for Vietnamese
 const UserStoryPage = () => {
   const userId = parseInt(useLocation().pathname.split("/")[2]);
 

@@ -7,11 +7,7 @@ import {
   ListItemIcon,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTrashCan,
-  faPen,
-  faX
-} from "@fortawesome/free-solid-svg-icons";
+import { faTrashCan, faPen, faX } from "@fortawesome/free-solid-svg-icons";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
@@ -37,7 +33,8 @@ import Description from "../../post/desc";
 import { Link } from "react-router-dom";
 import ReactPlayer from "react-player/lazy";
 import { useLanguage } from "../../../context/languageContext";
-
+import "moment/locale/ja"; // Import locale for Japanese
+import "moment/locale/vi"; // Import locale for Vietnamese
 const GroupPost = ({ post }) => {
   const { trl, language } = useLanguage();
   useEffect(() => {
@@ -56,8 +53,8 @@ const GroupPost = ({ post }) => {
 
   const isVideoContent = post.img
     ? post.img.endsWith(".mp4") ||
-    post.img.endsWith(".avi") ||
-    post.img.endsWith(".mov")
+      post.img.endsWith(".avi") ||
+      post.img.endsWith(".mov")
     : false;
 
   useEffect(() => {
@@ -405,8 +402,8 @@ const GroupPost = ({ post }) => {
                 className="react-player"
               />
             ) : (
-              (
-                post.img && <img
+              post.img && (
+                <img
                   src={URL_OF_BACK_END + `posts/videopost/` + post.id}
                   onError={(e) => {
                     e.target.onerror = null;

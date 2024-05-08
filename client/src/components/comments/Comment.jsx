@@ -1,6 +1,8 @@
 import { URL_OF_BACK_END } from "../../axios";
 import moment from "moment";
 import { AuthContext } from "../../context/authContext";
+import "moment/locale/ja"; // Import locale for Japanese
+import "moment/locale/vi"; // Import locale for Vietnamese
 import { useContext, useEffect, useState } from "react";
 import { useLanguage } from "../../context/languageContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

@@ -12,6 +12,8 @@ import { ChatContext } from "./ChatContext";
 import { URL_OF_BACK_END } from "../../axios";
 import { useLanguage } from "../../context/languageContext";
 import { useEffect } from "react";
+import "moment/locale/ja"; // Import locale for Japanese
+import "moment/locale/vi"; // Import locale for Vietnamese
 const ListMessages = ({ handleClose, ListMessages }) => {
   const { trl } = useLanguage();
 

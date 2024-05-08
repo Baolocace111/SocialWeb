@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { URL_OF_BACK_END, makeRequest } from "../../../axios";
 import moment from "moment";
+import "moment/locale/ja"; // Import locale for Japanese
+import "moment/locale/vi"; // Import locale for Vietnamese
 import FlipCube from "../../loadingComponent/flipCube/FlipCube";
 import { useLanguage } from "../../../context/languageContext";
 const StoriesBar = () => {

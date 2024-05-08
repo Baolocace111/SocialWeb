@@ -1,6 +1,8 @@
 import "./message.scss";
 import React, { useState, useEffect } from "react";
 import moment from "moment";
+import "moment/locale/ja"; // Import locale for Japanese
+import "moment/locale/vi"; // Import locale for Vietnamese
 import { URL_OF_BACK_END } from "../../../axios";
 import { useLanguage } from "../../../context/languageContext";
 const Message = ({ messageShow, friendProfilePic, showAvatar }) => {
