@@ -119,12 +119,8 @@
           }
         }
 
-        /* Tùy chỉnh thanh cuộn */
-        scrollbar-width: thin;
-        scrollbar-color: rgba(0, 0, 0, 0.4) transparent;
-
         &::-webkit-scrollbar {
-          width: 8px;
+          width: 6px;
         }
 
         &::-webkit-scrollbar-track {
