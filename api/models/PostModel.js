@@ -210,34 +210,45 @@ export const deletePost = (postId, userId, callback) => {
   });
 };
 export const searchPostsbyContent = (content, userId, callback) => {
-  const tuTimKiem = content;
   const sqlQuery = `
   SELECT DISTINCT p.*, u.id as userId, u.name, u.profilePic
-    FROM posts p
-    LEFT JOIN friendships f ON (p.userId=f.friend_id AND f.user_id = ? AND f.status = 1)
-    LEFT JOIN users u ON (p.userId = u.id)
-    WHERE (p.\`desc\` LIKE '%${tuTimKiem}%') AND (p.status = 0 OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?)))) ORDER BY p.createdAt DESC
+  FROM posts p
+  LEFT JOIN friendships f ON (p.userId=f.friend_id AND f.user_id = ? AND f.status = 1)
+  LEFT JOIN users u ON (p.userId = u.id)
+  WHERE (p.\`desc\` LIKE ?) AND (p.status = 0 OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?)))) ORDER BY p.createdAt DESC
   `;
 
-  db.query(sqlQuery, [userId, userId, userId, userId], (err, results) => {
-    if (err) return callback(err, null);
-    return callback(null, results);
-  });
+  const searchPattern = `%${content}%`; // Tạo mẫu tìm kiếm với ký tự wildcard %
+
+  db.query(
+    sqlQuery,
+    [userId, searchPattern, userId, userId, userId],
+    (err, results) => {
+      if (err) return callback(err, null);
+      return callback(null, results);
+    }
+  );
 };
+
 export const searchPostsbyHashtag = (hashtag, userId, callback) => {
-  const hashtagh = hashtag;
-  //console.log(hashtagh);
   const sqlQuery = `
   SELECT DISTINCT p.*, u.id AS userId, u.name, u.profilePic
   FROM posts p
   LEFT JOIN friendships f ON (p.userId=f.friend_id AND f.user_id = ? AND f.status = 1)
   LEFT JOIN users u ON (p.userId = u.id)
-  WHERE (p.\`desc\` REGEXP '\\\\b${hashtagh}\\\\b') AND (p.status = 0 OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?)))) ORDER BY p.createdAt DESC
+  WHERE (p.\`desc\` REGEXP ?) AND (p.status = 0 OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?)))) ORDER BY p.createdAt DESC
   `;
-  db.query(sqlQuery, [userId, userId, userId, userId], (err, results) => {
-    if (err) return callback(err, null);
-    return callback(null, results);
-  });
+
+  const regexHashtag = `\\b${hashtag}\\b`; // Đảm bảo thoát đúng cách để sử dụng trong REGEXP
+
+  db.query(
+    sqlQuery,
+    [userId, regexHashtag, userId, userId, userId],
+    (err, results) => {
+      if (err) return callback(err, null);
+      return callback(null, results);
+    }
+  );
 };
 
 export const updatePost = (postId, updatedPost, callback) => {
@@ -311,7 +322,7 @@ export const addListPostPrivate = (userIDs, postID, userID, callback) => {
         ? "" +
           "DELETE FROM post_private WHERE post_id = ?;" +
           "INSERT INTO post_private(`post_id`, `user_id`) VALUES" +
-          userIDs.map((id) => `(${postID}, ${id})`).join(", ") +
+          userIDs.map((id) => `(${Number(postID)}, ${Number(id)})`).join(", ") +
           `;`
         : `DELETE FROM post_private WHERE post_id = ?`;
 
