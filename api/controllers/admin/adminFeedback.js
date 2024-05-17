@@ -124,9 +124,9 @@ export const handleFeedbackController = async (req, res) => {
           );
           break;
         case 3:
-          handleDeleteDataFeedbackService(datafb, (e, resdata) => {
+          getAvatarFeedbackService(datafb, (e, data) => {
             if (e) return res.status(500).json(e);
-            getAvatarFeedbackService(datafb, (e, data) => {
+            handleDeleteDataFeedbackService(datafb, (e, resdata) => {
               if (e) return res.status(500).json(e);
               addNotificationService(
                 datafb.userid,

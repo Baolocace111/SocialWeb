@@ -73,15 +73,24 @@ export const addComment = (desc, createdAt, userId, postId, callback) => {
 };
 
 export const deleteComment = (commentId, userId, callback) => {
-  const q = "DELETE FROM comments WHERE `id` = ? AND `userId` = ?";
+  const q = `
+    DELETE comments
+    FROM comments
+    JOIN posts ON comments.postId = posts.id
+    WHERE comments.id = ? AND (comments.userId = ? OR posts.userId = ?)
+  `;
 
-  db.query(q, [commentId, userId], (err, data) => {
+  db.query(q, [commentId, userId, userId], (err, data) => {
     if (err) return callback(err, null);
     if (data.affectedRows > 0)
       return callback(null, "Comment has been deleted!");
-    return callback("You can delete only your comment!", null);
+    return callback(
+      "You can delete only your comment or comments on your posts!",
+      null
+    );
   });
 };
+
 export const deleteCommentByAdmin = (commentId, callback) => {
   const q = `
     START TRANSACTION;
