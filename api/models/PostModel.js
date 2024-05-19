@@ -133,12 +133,13 @@ export const getPostsWithPrivate = (userId, callback) => {
 
 export const addPost = (post, callback) => {
   const q =
-    "INSERT INTO posts(`desc`, `img`, `createdAt`, `userId`,`status`) VALUES (?)";
+    "INSERT INTO posts(`desc`, `img`, `createdAt`, `userId`,`status`,`type`) VALUES (?)";
   const values = [
     post.desc,
     post.img,
     moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
     post.userId,
+    post.private,
     0,
   ];
 
@@ -147,15 +148,16 @@ export const addPost = (post, callback) => {
     return callback(null, "Post has been created.");
   });
 };
-export const addVideoPost = (userId, desc, url, callback) => {
+export const addVideoPost = (userId, desc, url, pvt, callback) => {
   const q =
-    "INSERT INTO posts(`desc`, `img`, `createdAt`, `type`, `userId`) VALUES (?)";
+    "INSERT INTO posts(`desc`, `img`, `createdAt`, `type`, `userId`,`status`) VALUES (?)";
   const values = [
     desc,
     url,
     moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
     2,
     userId,
+    pvt,
   ];
   db.query(q, [values], (err, data) => {
     if (err) return callback(err, null);

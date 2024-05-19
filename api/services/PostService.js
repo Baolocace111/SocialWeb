@@ -74,8 +74,8 @@ export const sharePostService = (userId, post, callback) => {
     return callback(null, data);
   });
 };
-export const addVideoPostService = (userId, desc, url, callback) => {
-  addVideoPost(userId, desc, url, (err, data) => {
+export const addVideoPostService = (userId, desc, url, pvt, callback) => {
+  addVideoPost(userId, desc, url, pvt, (err, data) => {
     if (err) return callback(err, null);
     return callback(null, data);
   });
