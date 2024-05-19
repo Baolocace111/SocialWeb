@@ -14,6 +14,7 @@ const FeedbackInformation = ({ feedback }) => {
   const [post, setPost] = useState(null);
   const [user, setUser] = useState(null);
   const [comment, setComment] = useState(null);
+
   const [team, setTeam] = useState(null);
   const [stories, setStories] = useState(null);
   const [action, setAction] = useState(feedback.status);
@@ -59,6 +60,16 @@ const FeedbackInformation = ({ feedback }) => {
   useEffect(() => {
     setImageFeedback(true);
     if (feedback.comment_id) {
+      makeRequest
+        .get(`admin/comment/get/${feedback.comment_id}`)
+        .then((res) => {
+          setComment(res.data);
+
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          setError(error.data);
+        });
     } else if (feedback.post_id) {
       makeRequest
         .get(`admin/post/${feedback.post_id}`)
@@ -156,7 +167,47 @@ const FeedbackInformation = ({ feedback }) => {
           ></ShowPosts>
         </div>
       )}
-      <div></div>
+      {feedback.comment_id && !isLoading && comment && (
+        <div className="commentbox">
+          <div className="comment">
+            <img
+              className="avatar"
+              src={URL_OF_BACK_END + `users/profilePic/` + comment.userId}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "/upload/errorImage.png";
+              }}
+              alt={""}
+              onClick={() => {
+                window.location.href = `/profile/${comment.userId}`;
+              }}
+            />
+            <div className="infocomment">
+              <span
+                onClick={() => {
+                  window.location.href = `/profile/${comment.userId}`;
+                }}
+              >
+                {comment.userName}{" "}
+                <span className="date">
+                  {moment(comment.createdAt).fromNow()}
+                </span>
+              </span>
+
+              <p>{comment.desc}</p>
+            </div>
+          </div>
+
+          {
+            <ShowPosts
+              error={error}
+              isLoading={null}
+              posts={[comment.post]}
+              hidden={true}
+            ></ShowPosts>
+          }
+        </div>
+      )}
     </div>
   );
 };

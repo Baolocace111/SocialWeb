@@ -6,7 +6,38 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: 20px;
+    .notification-text {
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 16px;
+      color: themed("textColorSoft");
+    }
+    .buttonbox {
+      text-align: center;
+      padding: 20px;
+      .btnyes,
+      .btnno {
+        padding: 10px 20px;
+        margin: 0 10px;
+        border: none;
+        color: themed("bg");
+        cursor: pointer;
+        border-radius: 5px;
+        font-weight: bold;
+      }
+      .btnyes {
+        background-color: #28a745;
+      }
 
+      .btnno {
+        background-color: #dc3545;
+      }
+
+      button:hover {
+        opacity: 0.8;
+      }
+    }
     .infocomment {
       flex: 5;
       display: flex;

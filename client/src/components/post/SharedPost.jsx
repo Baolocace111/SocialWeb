@@ -13,6 +13,7 @@ import {
   ListItemButton,
   ListItemText,
   ListItemIcon,
+  Hidden,
 } from "@mui/material";
 import Description from "./desc";
 import FlipCube from "../loadingComponent/flipCube/FlipCube";
@@ -43,7 +44,7 @@ import { AuthContext } from "../../context/authContext";
 import MiniPost from "./MiniPost";
 import { useLanguage } from "../../context/languageContext";
 import { useEffect } from "react";
-const SharedPost = ({ post }) => {
+const SharedPost = ({ post, hidden }) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [openEdit, setOpenEdit] = useState(false);
@@ -525,10 +526,12 @@ const SharedPost = ({ post }) => {
               ? trl([data?.length, " ", "Like"])
               : trl([data?.length, " ", "Likes"])}
           </div>
-          <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
-            <TextsmsOutlinedIcon />
-            {trl("See Comments")}
-          </div>
+          {!hidden && (
+            <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
+              <TextsmsOutlinedIcon />
+              {trl("See Comments")}
+            </div>
+          )}
         </div>
         {commentOpen && <Comments postId={post.id} userId={post.userId} />}
       </div>

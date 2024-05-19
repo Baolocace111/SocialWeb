@@ -16,7 +16,7 @@ import {
   faPaperPlane,
   faMaximize,
 } from "@fortawesome/free-solid-svg-icons";
-
+import BallInBar from "../../loadingComponent/ballInBar/BallInBar";
 const Chat = ({ friend, onRemoveChatBox }) => {
   const [messages, setMessages] = useState([]);
   const [isFull, setIsFull] = useState(true);
@@ -24,6 +24,7 @@ const Chat = ({ friend, onRemoveChatBox }) => {
   const [newMessage, setNewMessage] = useState("");
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [sending, setSending] = useState(false);
   const friendId = friend.id;
   const [autoScrollToBottom, setAutoScrollToBottom] = useState(true);
   const [hasMoreOldMessages, setHasMoreOldMessages] = useState(true);
@@ -121,7 +122,8 @@ const Chat = ({ friend, onRemoveChatBox }) => {
   };
 
   const sendMessage = async () => {
-    if (newMessage !== "")
+    if (newMessage !== "" && !sending) {
+      await setSending(true);
       try {
         await makeRequest.post("/messages/send", {
           message: newMessage,
@@ -140,13 +142,17 @@ const Chat = ({ friend, onRemoveChatBox }) => {
             ]);
             return updatedMessages;
           });
+          setSending(false);
           setAutoScrollToBottom(true);
         } catch (error) {
+          setSending(false);
           console.error("Failed to fetch messages:", error);
         }
       } catch (error) {
+        setSending(false);
         console.error("Failed to send message:", error);
       }
+    }
   };
 
   const handleKeyPress = (event) => {
@@ -213,6 +219,11 @@ const Chat = ({ friend, onRemoveChatBox }) => {
         {loading && <NineCube />}
       </div>
       <div className="new-message">
+        {sending && (
+          <div className="loadingpopup">
+            <BallInBar></BallInBar>
+          </div>
+        )}
         <input
           type="text"
           value={newMessage}

@@ -11,11 +11,13 @@ import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import "./comment.scss";
 import PopupWindow from "../PopupComponent/PopupWindow";
 import { useQueryClient } from "@tanstack/react-query";
+import CommentReporter from "../postPopup/reportComponent/commentReporter/CommentReporter";
 const Comment = ({ comment, postUserID }) => {
   const { currentUser } = useContext(AuthContext);
   const { trl, language } = useLanguage();
   const [isDelete, setDelete] = useState(false);
   const queryClient = useQueryClient();
+  const [showReportPopup, setShowReportPopup] = useState(false);
   useEffect(() => {
     if (language === "jp") {
       moment.locale("ja");
@@ -38,6 +40,9 @@ const Comment = ({ comment, postUserID }) => {
         setDelete(false);
       });
   };
+  const handleReport = () => {
+    setShowReportPopup(!showReportPopup);
+  };
   return (
     <div className="comment" key={comment.id}>
       <PopupWindow
@@ -46,10 +51,15 @@ const Comment = ({ comment, postUserID }) => {
           setDelete(false);
         }}
       >
-        <div>{trl("Do you want to DELETE this comment")}</div>
-        <div>
-          <button onClick={handleDeleteComment}>{trl("Yes")}</button>
+        <div className="notification-text">
+          {trl("Do you want to DELETE this comment")}
+        </div>
+        <div className="buttonbox">
+          <button className="btnyes" onClick={handleDeleteComment}>
+            {trl("Yes")}
+          </button>
           <button
+            className="btnno"
             onClick={() => {
               setDelete(false);
             }}
@@ -57,6 +67,13 @@ const Comment = ({ comment, postUserID }) => {
             {trl("No")}
           </button>
         </div>
+      </PopupWindow>
+      <PopupWindow show={showReportPopup} handleClose={handleReport}>
+        <CommentReporter
+          comment={comment}
+          setShowReportPopup={setShowReportPopup}
+          showReportPopup={showReportPopup}
+        />
       </PopupWindow>
       <img
         src={URL_OF_BACK_END + `users/profilePic/` + comment.userId}
@@ -91,7 +108,10 @@ const Comment = ({ comment, postUserID }) => {
             }}
           />
         ) : (
-          <FontAwesomeIcon icon={faTriangleExclamation}></FontAwesomeIcon>
+          <FontAwesomeIcon
+            icon={faTriangleExclamation}
+            onClick={handleReport}
+          ></FontAwesomeIcon>
         )}
       </div>
     </div>

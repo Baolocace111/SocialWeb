@@ -4,7 +4,7 @@ import "./posts.scss";
 import ThreePointLoading from "../loadingComponent/threepointLoading/ThreePointLoading";
 import SharedPost from "../post/SharedPost";
 import { useLanguage } from "../../context/languageContext";
-const ShowPosts = ({ isLoading, error, posts }) => {
+const ShowPosts = ({ isLoading, error, posts, hidden }) => {
   const { trl } = useLanguage();
   return (
     <div className="posts">
@@ -18,9 +18,9 @@ const ShowPosts = ({ isLoading, error, posts }) => {
           .map((post) => (
             <div key={post.id}>
               {post.type === 2 || post.type === 0 ? (
-                <Post post={post} />
+                <Post post={post} hidden={hidden} />
               ) : (
-                <SharedPost post={post} />
+                <SharedPost post={post} hidden={hidden} />
               )}
             </div>
           ))
