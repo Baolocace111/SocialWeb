@@ -1,66 +1,112 @@
-import React from "react";
+import "./story.scss";
+import React, { useContext } from "react";
+import { AuthContext } from "../../context/authContext";
 import { makeRequest, URL_OF_BACK_END } from "../../axios";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
 import moment from "moment";
 import Stories from "react-insta-stories";
 import FlipCube from "../../components/loadingComponent/flipCube/FlipCube";
-import "moment/locale/ja"; // Import locale for Japanese
-import "moment/locale/vi"; // Import locale for Vietnamese
+import "moment/locale/ja";
+import "moment/locale/vi";
+
 const UserStoryPage = () => {
-  const userId = parseInt(useLocation().pathname.split("/")[2]);
+   const userId = parseInt(useLocation().pathname.split("/")[2]);
+   const { currentUser } = useContext(AuthContext);
 
-  // Lấy thông tin người dùng
-  const { data: userData, isLoading: isUserDataLoading } = useQuery(
-    ["users", userId],
-    () => makeRequest.get(`users/find/${userId}`).then((res) => res.data)
-  );
+   const { data: userData, isLoading: isUserDataLoading } = useQuery(
+      ["users", userId],
+      async () => {
+         const res = await makeRequest.get(`users/find/${userId}`);
+         return res.data;
+      }
+   );
 
-  // Lấy danh sách stories của người dùng
-  const { data: storiesData, isLoading: isStoriesLoading } = useQuery(
-    ["stories"],
-    () => makeRequest.get("/stories/story").then((res) => res.data)
-  );
+   const { data: storiesData, isLoading: isStoriesLoading } = useQuery(
+      ["stories"],
+      async () => {
+         const res = await makeRequest.get("/stories/story");
+         return res.data;
+      }
+   );
 
-  // Xử lý khi dữ liệu về người dùng và stories đã sẵn sàng
-  if (isUserDataLoading || isStoriesLoading) {
-    return <FlipCube />;
-  }
+   const deleteStory = async (storyId) => {
+      try {
+         console.log('Deleting story with ID:', storyId);
+         await makeRequest.delete(`/stories/story/${storyId}`);
+      } catch (error) {
+         console.error("Error deleting story:", error);
+      }
+   };
 
-  const name = userData ? userData.name : "??????";
+   const handleDeleteClick = async (storyId) => {
+      console.log(stories);
+      try {
+         await deleteStory(storyId);
+      } catch (error) {
+         console.error("Error handling delete click:", error);
+      }
+   };
 
-  // Lọc các story có userId trùng với userId đã nhận được
-  const userStories = storiesData.filter((story) => story.userId === userId);
+   const isCurrentUserStory = userId === currentUser.id;
 
-  const stories = userStories.map((story) => {
-    const mediaType =
-      story.img.endsWith("mp4") ||
-      story.img.endsWith(".avi") ||
-      story.img.endsWith(".mov")
-        ? "video"
-        : "image";
-    return {
-      header: {
-        heading: name,
-        subheading: moment(story.createdAt).fromNow(),
-        profileImage: URL_OF_BACK_END + `users/profilePic/` + story.userId,
-      },
-      url: URL_OF_BACK_END + `stories/image/${story.id}`,
-      type: mediaType,
-    };
-  });
+   const customHeader = (story) => {
+      return (
+         <div className="custom-header">
+            <img src={story.profileImage} alt="User" />
+            <div className="header-content">
+               <span>{story.heading}</span>
+               <span className="subheading">{story.subheading}</span>
+            </div>
+         </div>
+      );
+   };
 
-  return (
-    <Stories
-      storyContainerStyles={{ borderRadius: "10px" }}
-      stories={stories}
-      height={680}
-      width={380}
-      defaultInterval={9000}
-      loop={true}
-      keyboardNavigation={true}
-    />
-  );
+   if (isUserDataLoading || isStoriesLoading) {
+      return <FlipCube />;
+   }
+
+   const stories = storiesData
+      .filter((story) => story.userId === userId)
+      .map((story) => {
+         const mediaType =
+            story.img.endsWith("mp4") ||
+               story.img.endsWith(".avi") ||
+               story.img.endsWith(".mov")
+               ? "video"
+               : "image";
+         return {
+            id: story.id,
+            header: {
+               heading: userData.name,
+               subheading: moment(story.createdAt).fromNow(),
+               profileImage: URL_OF_BACK_END + `users/profilePic/${story.userId}`,
+            },
+            url: URL_OF_BACK_END + `stories/image/${story.id}`,
+            type: mediaType,
+         };
+      });
+
+
+   return (
+      <div className="story-content">
+         <Stories
+            storyContainerStyles={{ borderRadius: "10px" }}
+            stories={stories}
+            header={customHeader}
+            height={680}
+            width={380}
+            defaultInterval={9000}
+            loop={true}
+            keyboardNavigation={true}
+         />
+         {isCurrentUserStory && stories.map((story, index) => (
+            <div className="delete-button" key={index} onClick={() => handleDeleteClick(story.id)}>
+               <span>Delete</span>
+            </div>
+         ))}
+      </div>
+   );
 };
 
-export default UserStoryPage;
+export default React.memo(UserStoryPage);

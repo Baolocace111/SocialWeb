@@ -1,39 +1,100 @@
 @import "../../style.scss";
 
 .story-page {
-  @include themify($themes) {
-    background-color: themed("bgSoft");
+   @include themify($themes) {
+      background-color: themed("bgSoft");
 
-    @include mobile {
-      padding: 10px;
-    }
+      @include mobile {
+         padding: 10px;
+      }
 
-    @include tablet {
-      padding: 20px;
-    }
-  }
+      @include tablet {
+         padding: 20px;
+      }
+   }
 
-  min-height: 100vh;
+   min-height: 100vh;
 
-  .close-button {
-    position: absolute;
-    top: 3%;
-    right: 28%;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    background: grey;
-    border: none;
-    color: white;
-    font-size: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: background-color 0.4s;
-  }
+   .story-content {
+      position: relative;
 
-  .close-button:hover {
-    background-color: red;
-  }
+      .delete-button {
+         position: absolute;
+         top: 25px;
+         right: 12px;
+         background-color: lightcoral;
+         color: white;
+         padding: 5px 10px;
+         border-radius: 5px;
+         cursor: pointer;
+         z-index: 1000;
+
+         &:hover{
+            background-color: red;
+         }
+      }
+   }
+
+   .custom-header {
+      display: flex;
+      align-items: center;
+      background-color: rgb(17, 17, 17);
+      position: absolute;
+
+      img {
+         width: 40px;
+         height: 40px;
+         border-radius: 50%;
+         margin-right: 10px;
+         filter: drop-shadow(rgba(0, 0, 0, 0.5) 0px 0px 2px);
+         border: 2px solid rgba(255, 255, 255, 0.8);
+      }
+
+      .header-content {
+         display: flex;
+         flex-direction: column;
+         white-space: nowrap;
+
+         span {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+
+            &.subheading {
+               font-size: 0.6rem;
+               color: rgba(255, 255, 255, 0.8);
+            }
+         }
+      }
+
+      button {
+         background: none;
+         border: none;
+         color: red;
+         font-weight: bold;
+         margin-left: auto;
+         cursor: pointer;
+      }
+   }
+
+   .close-button {
+      position: absolute;
+      top: 3%;
+      right: 28%;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      background: grey;
+      border: none;
+      color: white;
+      font-size: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: background-color 0.4s;
+
+      &:hover {
+         background-color: red;
+      }
+   }
 }
