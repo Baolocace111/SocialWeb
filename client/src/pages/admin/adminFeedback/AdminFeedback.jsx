@@ -5,7 +5,7 @@ import "./adminFeedback.scss";
 import { useLanguage } from "../../../context/languageContext";
 import StarRating from "../../../components/adminComponent/display/StarRating";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowCircleRight } from "@fortawesome/free-solid-svg-icons";
+import { faArrowCircleRight, faTrash } from "@fortawesome/free-solid-svg-icons";
 import FeedbackInformation from "../../../components/feedbackComponent/feedbackInformation/FeedbackInformation";
 
 const AdminFeedback = () => {
@@ -39,7 +39,7 @@ const AdminFeedback = () => {
   };
 
   const handlePageChange = (newPage) => {
-    setPage(newPage);
+    if (newPage > 0) setPage(newPage);
   };
 
   const handleStatusChange = (event) => {
@@ -100,9 +100,21 @@ const AdminFeedback = () => {
           ))}
         </tbody>
       </table>
-      <button onClick={() => handlePageChange(page - 1)}>Prev</button>
+      <button
+        onClick={() => {
+          handlePageChange(page - 1);
+        }}
+      >
+        {trl("Previous")}
+      </button>
       <span>{page && page}</span>
-      <button onClick={() => handlePageChange(page + 1)}>Next</button>
+      <button
+        onClick={() => {
+          handlePageChange(page + 1);
+        }}
+      >
+        {trl("Next")}
+      </button>
       {selectedFeedback && (
         <FeedbackInformation feedback={selectedFeedback}></FeedbackInformation>
       )}

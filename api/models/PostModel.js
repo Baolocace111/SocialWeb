@@ -139,7 +139,7 @@ export const addPost = (post, callback) => {
     post.img,
     moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
     post.userId,
-    2,
+    0,
   ];
 
   db.query(q, [values], (err, data) => {

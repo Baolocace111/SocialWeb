@@ -1,4 +1,4 @@
-import { URL_OF_BACK_END } from "../../axios";
+import { URL_OF_BACK_END, makeRequest } from "../../axios";
 import moment from "moment";
 import { AuthContext } from "../../context/authContext";
 import "moment/locale/ja"; // Import locale for Japanese
@@ -11,7 +11,7 @@ import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import "./comment.scss";
 import PopupWindow from "../PopupComponent/PopupWindow";
 import { useQueryClient } from "@tanstack/react-query";
-const Comment = ({ comment }) => {
+const Comment = ({ comment, postUserID }) => {
   const { currentUser } = useContext(AuthContext);
   const { trl, language } = useLanguage();
   const [isDelete, setDelete] = useState(false);
@@ -25,7 +25,19 @@ const Comment = ({ comment }) => {
       moment.locale("en");
     }
   }, [language]);
-  const handleDeleteComment = () => {};
+  const handleDeleteComment = () => {
+    makeRequest
+      .delete(`/comments/${comment.id}`)
+      .then((res) => {
+        queryClient.invalidateQueries(["comments" + comment.postId]);
+      })
+      .catch((e) => {
+        alert(e.response.data);
+      })
+      .finally(() => {
+        setDelete(false);
+      });
+  };
   return (
     <div className="comment" key={comment.id}>
       <PopupWindow
@@ -36,7 +48,7 @@ const Comment = ({ comment }) => {
       >
         <div>{trl("Do you want to DELETE this comment")}</div>
         <div>
-          <button>{trl("Yes")}</button>
+          <button onClick={handleDeleteComment}>{trl("Yes")}</button>
           <button
             onClick={() => {
               setDelete(false);
@@ -71,7 +83,7 @@ const Comment = ({ comment }) => {
       </div>
 
       <div className="editting">
-        {currentUser.id === comment.userId ? (
+        {currentUser.id === comment.userId || currentUser.id === postUserID ? (
           <FontAwesomeIcon
             icon={faTrash}
             onClick={() => {
