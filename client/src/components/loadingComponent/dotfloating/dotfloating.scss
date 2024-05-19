@@ -1,0 +1,39 @@
+.dotfloating {
+  display: flex;
+  flex-wrap: nowrap;
+  .p1,
+  .p3 {
+    content: "";
+
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+
+    top: 0;
+    animation: fill 1s ease-in infinite alternate;
+  }
+  .p2 {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    animation: fill 1s ease-in infinite alternate;
+    animation-delay: 0.5s;
+  }
+  .p3 {
+    left: 48px;
+    animation-delay: 1s;
+  }
+
+  @keyframes fill {
+    0% {
+      box-shadow: 0 0 0 2px inset;
+    }
+    100% {
+      box-shadow: 0 0 0 10px inset;
+    }
+  }
+}

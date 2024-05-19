@@ -10,7 +10,7 @@ import moment from "moment";
 import { useEffect } from "react";
 import { useLanguage } from "../../context/languageContext";
 import Comment from "./Comment";
-const Comments = ({ postId }) => {
+const Comments = ({ postId, userId }) => {
   const [desc, setDesc] = useState("");
   const { currentUser } = useContext(AuthContext);
   const { trl, language } = useLanguage();
@@ -77,7 +77,11 @@ const Comments = ({ postId }) => {
         <ThreePointLoading />
       ) : (
         data.map((comment) => (
-          <Comment key={comment.id} comment={comment}></Comment>
+          <Comment
+            key={comment.id}
+            comment={comment}
+            postUserID={userId}
+          ></Comment>
         ))
       )}
     </div>

@@ -13,13 +13,19 @@ export const addNotificationService = (
   image,
   callback
 ) => {
-  createNotification(userId, message, link, image, (err, data) => {
-    if (err) return callback(err, null);
+  createNotification(
+    userId,
+    message ? message : "",
+    link,
+    image,
+    (err, data) => {
+      if (err) return callback(err, null);
 
-    sendMessageToUser("index" + userId, "New notification");
+      sendMessageToUser("index" + userId, "New notification");
 
-    return callback(null, data);
-  });
+      return callback(null, data);
+    }
+  );
 };
 export const getNotificationsByUserService = (userId, page, callback) => {
   getAndMarkPaginatedNotifications(userId, page, 10, (err, data) => {

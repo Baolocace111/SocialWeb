@@ -498,7 +498,7 @@ const SharedPost = ({ post }) => {
         <div className="content">
           <Description text={post.desc}></Description>
           {errorPost ? (
-            "Something went wrong!!!"
+            trl("Something went wrong!")
           ) : isLoadingPost ? (
             <FlipCube />
           ) : (
@@ -530,7 +530,7 @@ const SharedPost = ({ post }) => {
             {trl("See Comments")}
           </div>
         </div>
-        {commentOpen && <Comments postId={post.id} />}
+        {commentOpen && <Comments postId={post.id} userId={post.userId} />}
       </div>
     </div>
   );

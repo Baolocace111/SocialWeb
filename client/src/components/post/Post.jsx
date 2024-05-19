@@ -688,7 +688,7 @@ const Post = ({ post }) => {
           <div className="info">
             <div className="item">
               {isLoading ? (
-                "loading"
+                trl("Loading")
               ) : data.includes(currentUser.id) ? (
                 <FavoriteOutlinedIcon
                   className="shake-heart"
@@ -735,7 +735,7 @@ const Post = ({ post }) => {
             </PopupWindow>
           </div>
         )}
-        {commentOpen && <Comments postId={post.id} />}
+        {commentOpen && <Comments postId={post.id} userId={post.userId} />}
       </div>
     </div>
   );

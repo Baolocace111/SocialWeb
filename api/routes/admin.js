@@ -6,6 +6,7 @@ import {
 } from "../controllers/admin/admin.js";
 import { searchUserBykeyController } from "../controllers/admin/adminUser.js";
 import {
+  deleteFeedbackController,
   getFeedbackController,
   getFeedbackImageAdminController,
   getFeedbackbyStatusController,
@@ -26,6 +27,7 @@ router.get("/feedback/get/:page", getFeedbackController);
 router.get("/feedback/getbystatus", getFeedbackbyStatusController);
 router.get("/feedback/getimage/:id", getFeedbackImageAdminController);
 router.post("/feedback/handle", handleFeedbackController);
+router.delete("/feedback/delete/:id", deleteFeedbackController);
 //Comment management
 router.get("/comment/get/:id", getCommentByCommentIdController);
 export default router;

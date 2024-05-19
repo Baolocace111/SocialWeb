@@ -69,7 +69,6 @@ export const handleFeedbackController = async (req, res) => {
     if (e) return res.status(500).json(e);
 
     getFeedbackByIdService(req.body.feedback.id, (e, datafb) => {
-      console.log(e);
       if (e) return res.status(500).json(e);
       switch (req.body.type) {
         case 0:
@@ -83,7 +82,6 @@ export const handleFeedbackController = async (req, res) => {
             1,
             req.body.feedback.id,
             (e, setStatusData) => {
-              console.log(e);
               if (e) return res.status(500).json(e);
               getAvatarFeedbackService(datafb, (e, data) => {
                 if (e) return res.status(500).json(e);
@@ -106,16 +104,22 @@ export const handleFeedbackController = async (req, res) => {
             req.body.feedback.id,
             req.body.feedback.response,
             (e, setStatusData) => {
-              if (e) return res.status(500).json(e);
+              if (e) {
+                return res.status(500).json(e);
+              }
               getAvatarFeedbackService(datafb, (e, data) => {
-                if (e) return res.status(500).json(e);
+                if (e) {
+                  return res.status(500).json(e);
+                }
                 addNotificationService(
                   datafb.userid,
-                  req.body.feedback.response,
+                  req.body.feedback.response ? req.body.feedback.response : "",
                   data.link,
                   data.img,
                   (e, data) => {
-                    if (e) return res.status(500).json(e);
+                    if (e) {
+                      return res.status(500).json(e);
+                    }
                     return res.status(200).json(setStatusData);
                   }
                 );
@@ -125,16 +129,23 @@ export const handleFeedbackController = async (req, res) => {
           break;
         case 3:
           getAvatarFeedbackService(datafb, (e, data) => {
-            if (e) return res.status(500).json(e);
+            if (e) {
+              return res.status(500).json(e);
+            }
             handleDeleteDataFeedbackService(datafb, (e, resdata) => {
-              if (e) return res.status(500).json(e);
+              if (e) {
+                return res.status(500).json(e);
+              }
               addNotificationService(
                 datafb.userid,
-                req.body.feedback.response,
+                req.body.feedback.response ? req.body.feedback.response : "",
                 data.link,
                 data.img,
-                (e, data) => {
-                  if (e) return res.status(500).json(e);
+                (e, noti) => {
+                  if (e) {
+                    return res.status(500).json(e);
+                  }
+
                   return res.status(200).json(resdata);
                 }
               );
