@@ -50,7 +50,7 @@ import { useLanguage } from "../../context/languageContext";
 import PostReporter from "../postPopup/reportComponent/postReporter/PostReporter";
 import PostShare from "../postPopup/shareComponent/PostShare";
 
-const Post = ({ post }) => {
+const Post = ({ post, hidden }) => {
   const { trl, language } = useLanguage();
   useEffect(() => {
     if (language === "jp") {
@@ -684,57 +684,85 @@ const Post = ({ post }) => {
             )}
           </Link>
         </div>
-        {!post.error && (
-          <div className="info">
-            <div className="item">
-              {isLoading ? (
-                trl("Loading")
-              ) : data.includes(currentUser.id) ? (
-                <FavoriteOutlinedIcon
-                  className="shake-heart"
-                  style={{ color: "red" }}
-                  onClick={handleLike}
-                />
-              ) : (
-                <FavoriteBorderOutlinedIcon
-                  className="white-color-heart"
-                  onClick={handleLike}
-                />
-              )}
-              {data?.length < 2
-                ? trl([data?.length, " ", "Like"])
-                : trl([data?.length, " ", "Likes"])}
-            </div>
-            <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
-              <TextsmsOutlinedIcon />
-              {trl("See Comments")}
-            </div>
-            <div className="item" onClick={() => handleShare()}>
-              <ShareOutlinedIcon />
-              {trl("Share")}
-            </div>
-            {post.userId !== currentUser.id && (
-              <div className="item" onClick={() => handleReport()}>
-                <ReportOutlinedIcon />
-                {trl("Report")}
+        {!post.error &&
+          (!hidden ? (
+            <div className="info">
+              <div className="item">
+                {isLoading ? (
+                  trl("Loading")
+                ) : data.includes(currentUser.id) ? (
+                  <FavoriteOutlinedIcon
+                    className="shake-heart"
+                    style={{ color: "red" }}
+                    onClick={handleLike}
+                  />
+                ) : (
+                  <FavoriteBorderOutlinedIcon
+                    className="white-color-heart"
+                    onClick={handleLike}
+                  />
+                )}
+                {data?.length < 2
+                  ? trl([data?.length, " ", "Like"])
+                  : trl([data?.length, " ", "Likes"])}
               </div>
-            )}
-            <PopupWindow handleClose={handleShare} show={showSharePopup}>
-              <PostShare
-                post={post}
-                setShowSharePopup={setShowSharePopup}
-                showSharePopup={showSharePopup}
-              />
-            </PopupWindow>
-            <PopupWindow show={showReportPopup} handleClose={handleReport}>
-              <PostReporter
-                post={post}
-                setShowReportPopup={setShowReportPopup}
-                showReportPopup={showReportPopup}
-              />
-            </PopupWindow>
-          </div>
-        )}
+
+              <div
+                className="item"
+                onClick={() => setCommentOpen(!commentOpen)}
+              >
+                <TextsmsOutlinedIcon />
+                {trl("See Comments")}
+              </div>
+              <div className="item" onClick={() => handleShare()}>
+                <ShareOutlinedIcon />
+                {trl("Share")}
+              </div>
+
+              {post.userId !== currentUser.id && (
+                <div className="item" onClick={() => handleReport()}>
+                  <ReportOutlinedIcon />
+                  {trl("Report")}
+                </div>
+              )}
+              <PopupWindow handleClose={handleShare} show={showSharePopup}>
+                <PostShare
+                  post={post}
+                  setShowSharePopup={setShowSharePopup}
+                  showSharePopup={showSharePopup}
+                />
+              </PopupWindow>
+              <PopupWindow show={showReportPopup} handleClose={handleReport}>
+                <PostReporter
+                  post={post}
+                  setShowReportPopup={setShowReportPopup}
+                  showReportPopup={showReportPopup}
+                />
+              </PopupWindow>
+            </div>
+          ) : (
+            <div className="info">
+              <div className="item">
+                {isLoading ? (
+                  trl("Loading")
+                ) : data.includes(currentUser.id) ? (
+                  <FavoriteOutlinedIcon
+                    className="shake-heart"
+                    style={{ color: "red" }}
+                    onClick={handleLike}
+                  />
+                ) : (
+                  <FavoriteBorderOutlinedIcon
+                    className="white-color-heart"
+                    onClick={handleLike}
+                  />
+                )}
+                {data?.length < 2
+                  ? trl([data?.length, " ", "Like"])
+                  : trl([data?.length, " ", "Likes"])}
+              </div>
+            </div>
+          ))}
         {commentOpen && <Comments postId={post.id} userId={post.userId} />}
       </div>
     </div>
