@@ -30,7 +30,9 @@ const MiniPost = ({ post }) => {
       <div className="mini-container">
         <div className="mini-content">
           <Link to={`/seepost/${post.id}`}>
-            {post.type === 2 && isVideoContent ? (
+            {post.type === 0 ? (
+              <div></div>
+            ) : post.type === 2 && isVideoContent ? (
               <ReactPlayer
                 key={post.id}
                 url={URL_OF_BACK_END + "posts/videopost/" + post.id}

@@ -7,6 +7,7 @@ import LanguageSwitcher from "../../components/languageSwitcher/LanguageSwitcher
 import { useLanguage } from "../../context/languageContext";
 import PopupWindow from "../../components/PopupComponent/PopupWindow";
 import CircleProgressBar from "../../components/loadingComponent/CircleProgressBar/CircleProgressBar";
+import Dotfloating from "../../components/loadingComponent/dotfloating/Dotfloating";
 const Login = () => {
   const { trl } = useLanguage();
   const [inputs, setInputs] = useState({
@@ -15,6 +16,7 @@ const Login = () => {
   });
   const [err, setErr] = useState(null);
   const [checkConnection, setCheckConnection] = useState(true);
+  const [loginLoading, setLoginLoading] = useState(false);
   const navigate = useNavigate();
   const closePopup = () => {
     setCheckConnection(false);
@@ -25,14 +27,18 @@ const Login = () => {
   const { login } = useContext(AuthContext);
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      await login(inputs);
-      navigate("/");
-    } catch (err) {
-      console.log(err.response);
+    if (!loginLoading) {
+      await setLoginLoading(true);
+      e.preventDefault();
+      try {
+        await login(inputs);
+        navigate("/");
+      } catch (err) {
+        //console.log(err.response);
 
-      setErr(err.response.data.toString());
+        setErr(err.response.data.toString());
+        setLoginLoading(false);
+      }
     }
   };
 
@@ -71,8 +77,13 @@ const Login = () => {
               required
             />
             {err && <div className="error">{trl(err)}</div>}
+
             <button type="submit" onClick={handleLogin}>
-              {trl("Sign In")}
+              {loginLoading ? (
+                <Dotfloating></Dotfloating>
+              ) : (
+                <h3>{trl("Sign In")}</h3>
+              )}
             </button>
           </form>
         </div>

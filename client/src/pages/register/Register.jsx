@@ -6,9 +6,11 @@ import { makeRequest } from "../../axios";
 import { useLanguage } from "../../context/languageContext";
 import PopupWindow from "../../components/PopupComponent/PopupWindow";
 import CircleProgressBar from "../../components/loadingComponent/CircleProgressBar/CircleProgressBar";
+import Dotfloating from "../../components/loadingComponent/dotfloating/Dotfloating";
 const Register = () => {
   const { trl } = useLanguage();
   const [checkConnection, setCheckConnection] = useState(true);
+  const [registerLoading, setRegisterLoading] = useState(false);
   const closePopup = () => {
     setCheckConnection(false);
   };
@@ -27,17 +29,23 @@ const Register = () => {
 
   const handleClick = (e) => {
     e.preventDefault();
-    try {
-      makeRequest
-        .post("/auth/register", inputs)
-        .then((response) => {
-          setMessage(response.data); // Assuming response has a message field
-        })
-        .catch((error) => {
-          setMessage(error.response.data.message); // Assuming error response has a message field
-        });
-    } catch (err) {
-      setMessage(err.response.data.message); // Assuming error response has a message field
+    if (!registerLoading) {
+      setRegisterLoading(true);
+      try {
+        makeRequest
+          .post("/auth/register", inputs)
+          .then((response) => {
+            setMessage(response.data); // Assuming response has a message field
+            setRegisterLoading(false);
+          })
+          .catch((error) => {
+            setMessage(error.response.data.message); // Assuming error response has a message field
+            setRegisterLoading(false);
+          });
+      } catch (err) {
+        setMessage(err.response.data.message); // Assuming error response has a message field
+        setRegisterLoading(false);
+      }
     }
   };
 
@@ -98,7 +106,10 @@ const Register = () => {
             />
             {message && <div className="message">{trl(message)}</div>}
           </form>
-          <button onClick={handleClick}>{trl("Sign Up")}</button>
+          <button onClick={handleClick}>
+            {" "}
+            {registerLoading ? <Dotfloating /> : <h3>{trl("Sign Up")}</h3>}
+          </button>
         </div>
       </div>
     </div>

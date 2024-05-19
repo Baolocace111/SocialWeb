@@ -7,6 +7,8 @@ import "moment/locale/ja"; // Import locale for Japanese
 import "moment/locale/vi"; // Import locale for Vietnamese
 import StarRating from "../../adminComponent/display/StarRating";
 import ShowPosts from "../../posts/ShowPosts";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 const FeedbackInformation = ({ feedback }) => {
   const { trl, language } = useLanguage();
   const [post, setPost] = useState(null);
@@ -20,6 +22,17 @@ const FeedbackInformation = ({ feedback }) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const handleDeleteFeedback = () => {
+    makeRequest
+      .delete(`admin/feedback/delete/${feedback.id}`)
+      .then((response) => {
+        window.location.reload();
+      })
+      .catch((e) => {
+        console.log(e.response);
+        alert(e.response.data);
+      });
+  };
   const handleClickDO = () => {
     makeRequest
       .post("admin/feedback/handle", {
@@ -69,25 +82,30 @@ const FeedbackInformation = ({ feedback }) => {
   };
   return (
     <div className="feedback">
-      <div className="userinfor">
-        <img
-          src={URL_OF_BACK_END + `users/profilePic/` + feedback.userid}
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = "/upload/errorImage.png";
-          }}
-          alt={""}
-        />
-        <div className="details">
-          <span
-            className="name"
-            onClick={() => {
-              window.location.href = `/profile/${feedback.userid}`;
+      <div className="tabUserInfor">
+        <div className="userinfor">
+          <img
+            src={URL_OF_BACK_END + `users/profilePic/` + feedback.userid}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "/upload/errorImage.png";
             }}
-          >
-            {feedback.name}
-          </span>
-          <span className="date">{moment(feedback.createdAt).fromNow()}</span>
+            alt={""}
+          />
+          <div className="details">
+            <span
+              className="name"
+              onClick={() => {
+                window.location.href = `/profile/${feedback.userid}`;
+              }}
+            >
+              {feedback.name}
+            </span>
+            <span className="date">{moment(feedback.createdAt).fromNow()}</span>
+          </div>
+        </div>
+        <div className="deleteBtn" onClick={handleDeleteFeedback}>
+          <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
         </div>
       </div>
       <div className="feedbackinfor">

@@ -4,6 +4,9 @@ import {
   faImages,
   faFaceSmileBeam,
   faX,
+  faGlobe,
+  faUserGroup,
+  faLock,
 } from "@fortawesome/free-solid-svg-icons";
 import { TextareaAutosize } from "@mui/material";
 import { useContext, useState } from "react";
@@ -14,6 +17,7 @@ import { URL_OF_BACK_END, makeRequest } from "../../axios";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { useLanguage } from "../../context/languageContext";
+import BallInBar from "../loadingComponent/ballInBar/BallInBar";
 
 const Share = () => {
   const [file, setFile] = useState(null);
@@ -21,6 +25,8 @@ const Share = () => {
   const { trl } = useLanguage();
   const [showPicker, setShowPicker] = useState(false);
   const [clickedInside, setClickedInside] = useState(false);
+  const [posting, setPosting] = useState(false);
+  const [privateMode, setPrivateMode] = useState(0);
   const handleClickOutside = () => {
     if (!clickedInside) {
       setShowPicker(false);
@@ -46,40 +52,63 @@ const Share = () => {
         return await makeRequest.post("/posts/videopost", newPost);
       } catch (error) {
         alert(error.response.data);
+        setPosting(false);
       }
     },
     {
       onSuccess: () => {
         // Invalidate and refetch
         queryClient.invalidateQueries(["posts"]);
+        setPosting(false);
       },
     }
   );
 
   const handleClick = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("desc", desc);
-    video_mutation.mutate(formData);
-    setDesc("");
-    setFile(null);
+    if (!posting) {
+      setPosting(true);
+      e.preventDefault();
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("desc", desc);
+      video_mutation.mutate(formData);
+      setDesc("");
+      setFile(null);
+    }
   };
 
   return (
     <div>
       <div className="share">
         <div className="container">
+          {posting && (
+            <div className="loadingpopup">
+              <BallInBar></BallInBar>
+            </div>
+          )}
           <div className="top">
             <div className="text-container">
-              <img
-                src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id}
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = "/upload/errorImage.png";
-                }}
-                alt={""}
-              />
+              <div>
+                <img
+                  src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "/upload/errorImage.png";
+                  }}
+                  alt={""}
+                />
+                <div>
+                  {privateMode === 0 && (
+                    <FontAwesomeIcon icon={faGlobe}></FontAwesomeIcon>
+                  )}
+                  {privateMode === 1 && (
+                    <FontAwesomeIcon icon={faUserGroup}></FontAwesomeIcon>
+                  )}
+                  {privateMode === 2 && (
+                    <FontAwesomeIcon icon={faLock}></FontAwesomeIcon>
+                  )}
+                </div>
+              </div>
               <TextareaAutosize
                 placeholder={`${trl("What's on your mind")} ${
                   currentUser.name + trl("san")
