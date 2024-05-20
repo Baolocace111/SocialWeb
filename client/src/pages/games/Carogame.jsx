@@ -7,6 +7,9 @@ import { AuthContext } from "../../context/authContext";
 import { makeRequest } from "../../axios";
 import PopupWindow from "../../components/PopupComponent/PopupWindow";
 import { useLanguage } from "../../context/languageContext";
+import { useEffect, useRef } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 const Carogame = () => {
   const [ws, setWs] = useState(null);
   const [gameStarted, setGameStarted] = useState(false);
@@ -20,6 +23,72 @@ const Carogame = () => {
   const [losePopup, setLosePopup] = useState(false);
   const [popupMessage, setPopupmessage] = useState(null);
   const { trl } = useLanguage();
+  const [messages, setMessages] = useState([]);
+  const intervalRef = useRef(null);
+  const [oppMessages, setOppMessages] = useState([]);
+  const intervalOppRef = useRef(null);
+
+  // Hàm thêm tin nhắn mới
+  const addMessage = (message) => {
+    setMessages((prevMessages) => {
+      const newMessages = [...prevMessages, message];
+      if (newMessages.length > 5) {
+        newMessages.shift(); // Xóa tin nhắn đầu tiên nếu danh sách có nhiều hơn 5 tin nhắn
+      }
+      return newMessages;
+    });
+  };
+  const addOppMessage = (message) => {
+    setOppMessages((prevMessages) => {
+      const newMessages = [...prevMessages, message];
+      if (newMessages.length > 5) {
+        newMessages.shift(); // Xóa tin nhắn đầu tiên nếu danh sách có nhiều hơn 5 tin nhắn
+      }
+      return newMessages;
+    });
+  };
+
+  // Hàm thiết lập lại interval
+  const resetInterval = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    intervalRef.current = setInterval(() => {
+      setMessages((prevMessages) => {
+        if (prevMessages.length > 0) {
+          const newMessages = prevMessages.slice(1); // Xóa tin nhắn đầu tiên
+          return newMessages;
+        }
+        return prevMessages;
+      });
+    }, 5000);
+  };
+  // Hàm thiết lập lại interval
+  const resetOppInterval = () => {
+    if (intervalOppRef.current) {
+      clearInterval(intervalOppRef.current);
+    }
+    intervalOppRef.current = setInterval(() => {
+      setOppMessages((prevMessages) => {
+        if (prevMessages.length > 0) {
+          const newMessages = prevMessages.slice(1); // Xóa tin nhắn đầu tiên
+          return newMessages;
+        }
+        return prevMessages;
+      });
+    }, 5000);
+  };
+
+  // Mỗi khi messages thay đổi, thiết lập lại interval
+  useEffect(() => {
+    resetOppInterval();
+    return () => clearInterval(intervalOppRef.current);
+  }, [oppMessages]);
+  // Mỗi khi messages thay đổi, thiết lập lại interval
+  useEffect(() => {
+    resetInterval();
+    return () => clearInterval(intervalRef.current);
+  }, [messages]);
 
   const closeFindPopup = () => {
     if (ws && !gameStarted) ws.close();
@@ -71,6 +140,8 @@ const Carogame = () => {
           SetYourTurn(false);
           setSquares(data.board);
           //setSquare(data.row, data.col, player === 2 ? 2 : 1);
+        } else if (data.type === "chat") {
+          if (data.message) addOppMessage(data.message);
         }
       };
       websocket.onclose = () => {
@@ -86,7 +157,7 @@ const Carogame = () => {
 
   const handleSquareClick = (row, col, cell) => {
     if (ws && yourTurn && cell === 0) {
-      ws.send(JSON.stringify({ row, col }));
+      ws.send(JSON.stringify({ type: "move", row, col }));
     }
   };
 
@@ -103,7 +174,7 @@ const Carogame = () => {
   // }, [player]);
 
   return (
-    <div className="app">
+    <div className="caroapp">
       <div className="carotitle">
         <h1>Caro Game</h1>
         <h2>
@@ -114,35 +185,41 @@ const Carogame = () => {
       <PlayerBar
         isleft={true}
         player={{ name: currentUser.name, id: currentUser.id }}
+        ws={ws}
+        addMessage={addMessage}
+        messages={messages}
       ></PlayerBar>
       <PlayerBar
         isleft={false}
         player={opponent ? { name: opponent.name, id: opponent.id } : null}
+        messages={oppMessages}
       ></PlayerBar>
       <PopupWindow show={findPopup} handleClose={closeFindPopup}>
-        {" "}
-        <h1>{trl("Finding your opponent...")}</h1>
-        <button onClick={closeFindPopup}>{trl("Cancel")}</button>
+        <div className="findingPopup">
+          {" "}
+          <h1>{trl("Finding your opponent...")}</h1>
+          <button onClick={closeFindPopup}>{trl("Cancel")}</button>
+        </div>
       </PopupWindow>
       <PopupWindow show={winPopup} handleClose={closeWinPopup}>
-        <div>
+        <div className="titlePopup">
           <h1>{trl("VICTORY")}</h1>
         </div>
-        <div>
-          <h2>{popupMessage && trl("popupMessage")}</h2>
+        <div className="messagePopup">
+          <h2>{popupMessage && trl(popupMessage)}</h2>
         </div>
-        <div>
+        <div className="btnPopup">
           <button onClick={closeWinPopup}>{trl("Tuyệt vời")}</button>
         </div>
       </PopupWindow>
       <PopupWindow show={losePopup} handleClose={closeLosePopup}>
-        <div>
+        <div className="titlePopup">
           <h1>{trl("DEFEAT")}</h1>
         </div>
-        <div>
+        <div className="messagePopup">
           <h2>{popupMessage && trl(popupMessage)}</h2>
         </div>
-        <div>
+        <div className="btnPopup">
           <button onClick={closeLosePopup}>OKAYYY...</button>
         </div>
       </PopupWindow>
@@ -177,32 +254,77 @@ const Carogame = () => {
     </div>
   );
 };
-const PlayerBar = ({ player, isleft }) => {
+const PlayerBar = ({ player, isleft, ws, addMessage, messages }) => {
+  const [newMessage, setNewMessage] = useState("");
+  const sendMessage = () => {
+    const data = {
+      type: "chat",
+      message: newMessage,
+    };
+    setNewMessage("");
+    ws.send(JSON.stringify(data));
+    addMessage(newMessage);
+  };
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      sendMessage();
+    }
+  };
   return (
     <div className={isleft ? "caroplayerbar left" : "caroplayerbar right"}>
       {player ? (
-        <div className="carouserinfo">
-          <img
-            src={URL_OF_BACK_END + `users/profilePic/` + player.id}
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = "/upload/errorImage.png";
-            }}
-            alt={""}
-          />
-          <span>{player.name}</span>
+        <div className="carouserbox">
+          <div className="carouserinfo">
+            <img
+              src={URL_OF_BACK_END + `users/profilePic/` + player.id}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "/upload/errorImage.png";
+              }}
+              alt={""}
+            />
+            <span>{player.name}</span>
+          </div>
+
+          <div className="caroChat">
+            {isleft && (
+              <div className="new-message">
+                <input
+                  type="text"
+                  value={newMessage}
+                  placeholder="Aa"
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                />
+                <button className="send-button" onClick={sendMessage}>
+                  <span>
+                    <FontAwesomeIcon icon={faPaperPlane} />
+                  </span>
+                </button>
+              </div>
+            )}
+            <div className="messages">
+              {messages.map((message, index) => (
+                <div className="message" key={index}>
+                  {message}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       ) : (
-        <div className="carouserinfo">
-          <img
-            src="/upload/unknowplayer.png"
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = "/upload/errorImage.png";
-            }}
-            alt={""}
-          />
-          <span>??????</span>
+        <div className="carouserbox">
+          <div className="carouserinfo">
+            <img
+              src="/upload/unknowplayer.png"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "/upload/errorImage.png";
+              }}
+              alt={""}
+            />
+            <span>??????</span>
+          </div>
         </div>
       )}
     </div>

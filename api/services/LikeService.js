@@ -30,8 +30,14 @@ export const addLikeWithTokenService = (token, postId, callback) => {
               else
                 addNotificationService(
                   post.userId,
-                  `<a target="_blank" href="/profile/${userInfo.id}">${data.name}</a> đã thích bài viết của bạn`,
-                  `/seepost/${post.id}`,
+                  `<a target="_blank" href="/profile/${userInfo.id}">${
+                    data.name
+                  }</a> đã thích bài viết${
+                    post.type === 1 ? " được bạn chia sẻ" : " của bạn"
+                  }`,
+                  post.type === 1
+                    ? `/seepost/${post.img}`
+                    : `/seepost/${post.id}`,
                   `/upload/${post.img}`,
                   (err, data) => {
                     if (err) console.log(err);

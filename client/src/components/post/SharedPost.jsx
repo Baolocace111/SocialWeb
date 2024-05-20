@@ -7,13 +7,15 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import Comments from "../comments/Comments";
 import "moment/locale/ja"; // Import locale for Japanese
 import "moment/locale/vi"; // Import locale for Vietnamese
+import PopupWindow from "../PopupComponent/PopupWindow";
+import PostReporter from "../postPopup/reportComponent/postReporter/PostReporter";
+import ReportOutlinedIcon from "@mui/icons-material/ReportOutlined";
 import {
   Popover,
   List,
   ListItemButton,
   ListItemText,
   ListItemIcon,
-  Hidden,
 } from "@mui/material";
 import Description from "./desc";
 import FlipCube from "../loadingComponent/flipCube/FlipCube";
@@ -51,6 +53,7 @@ const SharedPost = ({ post, hidden }) => {
   const [openSeeEdit, setOpenSeeEdit] = useState(false);
   const [selectedValue, setSelectedValue] = useState(""); // State để lưu giá trị của Radio được chọn
   const [desc, setDesc] = useState(post.desc);
+  const [showReportPopup, setShowReportPopup] = useState(false);
   const { trl, language } = useLanguage();
   useEffect(() => {
     if (language === "jp") {
@@ -63,7 +66,9 @@ const SharedPost = ({ post, hidden }) => {
   }, [language]);
   const { currentUser } = useContext(AuthContext);
   const queryClient = useQueryClient();
-
+  const handleReport = () => {
+    setShowReportPopup(!showReportPopup);
+  };
   const { isLoading, data } = useQuery(["likes", post.id], () =>
     makeRequest.get("/likes?postId=" + post.id).then((res) => {
       return res.data;
@@ -83,9 +88,7 @@ const SharedPost = ({ post, hidden }) => {
     setMenuAnchor(null);
   };
   const handleMenuClick = (event) => {
-    if (post.userId === currentUser.id) {
-      setMenuAnchor(event.currentTarget);
-    }
+    setMenuAnchor(event.currentTarget);
   };
   const handleDialogOpen = () => {
     setOpenEdit(true);
@@ -222,32 +225,33 @@ const SharedPost = ({ post, hidden }) => {
               horizontal: "right",
             }}
           >
-            <List>
-              <ListItemButton onClick={handleDialogOpen}>
-                <ListItemIcon
-                  style={{ fontSize: "18px", marginRight: "-25px" }}
-                >
-                  <FontAwesomeIcon icon={faPen} />
-                </ListItemIcon>
-                <ListItemText
-                  primary={trl("Chỉnh sửa bài viết")}
-                  style={{ fontSize: "14px", marginRight: "50px" }}
-                />
-              </ListItemButton>
-              <Divider />
-              <ListItemButton onClick={handleSeeDialogOpen}>
-                <ListItemIcon
-                  style={{ fontSize: "18px", marginRight: "-25px" }}
-                >
-                  <FontAwesomeIcon icon={faLock} />
-                </ListItemIcon>
-                <ListItemText
-                  primary={trl("Chỉnh sửa đối tượng")}
-                  style={{ fontSize: "14px", marginRight: "50px" }}
-                />
-              </ListItemButton>
-              <Divider />
-              {post.userId === currentUser.id && (
+            {post.userId === currentUser.id ? (
+              <List>
+                <ListItemButton onClick={handleDialogOpen}>
+                  <ListItemIcon
+                    style={{ fontSize: "18px", marginRight: "-25px" }}
+                  >
+                    <FontAwesomeIcon icon={faPen} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={trl("Chỉnh sửa bài viết")}
+                    style={{ fontSize: "14px", marginRight: "50px" }}
+                  />
+                </ListItemButton>
+                <Divider />
+                <ListItemButton onClick={handleSeeDialogOpen}>
+                  <ListItemIcon
+                    style={{ fontSize: "18px", marginRight: "-25px" }}
+                  >
+                    <FontAwesomeIcon icon={faLock} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={trl("Chỉnh sửa đối tượng")}
+                    style={{ fontSize: "14px", marginRight: "50px" }}
+                  />
+                </ListItemButton>
+                <Divider />
+
                 <ListItemButton onClick={handleDelete}>
                   <ListItemIcon
                     style={{ fontSize: "18px", marginRight: "-25px" }}
@@ -259,8 +263,22 @@ const SharedPost = ({ post, hidden }) => {
                     style={{ fontSize: "14px", marginRight: "50px" }}
                   />
                 </ListItemButton>
-              )}
-            </List>
+              </List>
+            ) : (
+              <List>
+                <ListItemButton className="item" onClick={() => handleReport()}>
+                  <ListItemIcon
+                    style={{ fontSize: "18px", marginRight: "-25px" }}
+                  >
+                    <ReportOutlinedIcon />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={trl("Report")}
+                    style={{ fontSize: "14px", marginRight: "50px" }}
+                  />
+                </ListItemButton>
+              </List>
+            )}
 
             <Dialog open={openEdit} onClose={handleDialogClose}>
               <DialogTitle
@@ -532,6 +550,13 @@ const SharedPost = ({ post, hidden }) => {
               {trl("See Comments")}
             </div>
           )}
+          <PopupWindow show={showReportPopup} handleClose={handleReport}>
+            <PostReporter
+              post={post}
+              setShowReportPopup={setShowReportPopup}
+              showReportPopup={showReportPopup}
+            />
+          </PopupWindow>
         </div>
         {commentOpen && <Comments postId={post.id} userId={post.userId} />}
       </div>

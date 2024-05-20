@@ -8,6 +8,7 @@ $themes: (
     border: lightgray,
     buttonTextColor: white,
     buttonBackgroundColor: rgb(169, 37, 160),
+    hoverBgSoft: #bababa,
   ),
   dark: (
     textColor: whitesmoke,
@@ -18,6 +19,7 @@ $themes: (
     border: #444,
     buttonTextColor: black,
     buttonBackgroundColor: rgb(221, 195, 219),
+    hoverBgSoft: #787878,
   ),
 );
 
