@@ -29,50 +29,9 @@
          cursor: pointer;
          z-index: 1000;
 
-         &:hover{
+         &:hover {
             background-color: red;
          }
-      }
-   }
-
-   .custom-header {
-      display: flex;
-      align-items: center;
-      background-color: rgb(17, 17, 17);
-      position: absolute;
-
-      img {
-         width: 40px;
-         height: 40px;
-         border-radius: 50%;
-         margin-right: 10px;
-         filter: drop-shadow(rgba(0, 0, 0, 0.5) 0px 0px 2px);
-         border: 2px solid rgba(255, 255, 255, 0.8);
-      }
-
-      .header-content {
-         display: flex;
-         flex-direction: column;
-         white-space: nowrap;
-
-         span {
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.9);
-
-            &.subheading {
-               font-size: 0.6rem;
-               color: rgba(255, 255, 255, 0.8);
-            }
-         }
-      }
-
-      button {
-         background: none;
-         border: none;
-         color: red;
-         font-weight: bold;
-         margin-left: auto;
-         cursor: pointer;
       }
    }
 
