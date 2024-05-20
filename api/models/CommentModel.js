@@ -32,7 +32,7 @@ export const getCommentByCommentId = (commentId, callback) => {
   db.query(q, [commentId], (err, data) => {
     if (err) return callback(err, null);
     if (data.length === 0) return callback(null, null);
-
+    //console.log(data);
     // Chuyển đổi dữ liệu trả về thành cấu trúc mong muốn
     const result = {
       ...data[0],

@@ -1,14 +1,15 @@
 import { useLanguage } from "../../../../context/languageContext";
-import "./postReporter.scss";
-import ReportOutlinedIcon from "@mui/icons-material/ReportOutlined";
-import RateStarInput from "../../reportComponent/inputComponent/rateInput/RateStarInput";
 import { useState } from "react";
+import { makeRequest } from "../../../../axios";
+import ReportOutlinedIcon from "@mui/icons-material/ReportOutlined";
+import RateStarInput from "../inputComponent/rateInput/RateStarInput";
 import { TextareaAutosize } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImages } from "@fortawesome/free-solid-svg-icons";
-import MiniPost from "../../../post/MiniPost";
-import { makeRequest } from "../../../../axios";
-const PostReporter = ({ post, setShowReportPopup, showReportPopup }) => {
+import { URL_OF_BACK_END } from "../../../../axios";
+import moment from "moment";
+import "./commentReporter.scss";
+const CommentReporter = ({ comment, setShowReportPopup, showReportPopup }) => {
   const { trl } = useLanguage();
   const [rate, setRate] = useState(1);
   const [reportDesc, setReportDesc] = useState("");
@@ -24,6 +25,7 @@ const PostReporter = ({ post, setShowReportPopup, showReportPopup }) => {
   };
   const handleReportFileChange = (event) => {
     const file = event.target.files[0];
+
     if (file) {
       setSelectedReportFile(file);
       setPreviewReport(URL.createObjectURL(file));
@@ -33,10 +35,10 @@ const PostReporter = ({ post, setShowReportPopup, showReportPopup }) => {
     const formData = new FormData();
     formData.append("file", selectedReportFile);
     formData.append("desc", reportDesc);
-    formData.append("id", post.id);
+    formData.append("id", comment.id);
     formData.append("rate", rate);
     makeRequest
-      .post("/feedback/post", formData)
+      .post("/feedback/comment", formData)
       .then((res) => {
         setSelectedReportFile(null);
         setRate(1);
@@ -50,7 +52,7 @@ const PostReporter = ({ post, setShowReportPopup, showReportPopup }) => {
       });
   };
   return (
-    <div className="report-popup">
+    <div className="comment-report-popup">
       <div className="title">
         <ReportOutlinedIcon sx={{ marginRight: "8px", fontSize: "22px" }} />
         <span style={{ fontSize: "22px", fontWeight: "700" }}>
@@ -69,12 +71,15 @@ const PostReporter = ({ post, setShowReportPopup, showReportPopup }) => {
         />
         <div className="file-input">
           <input
-            id={"reportPostInput" + post.id}
+            id={"reportCommentInput" + comment.id}
             type="file"
             accept="image/*,video/*"
-            onChange={handleReportFileChange}
+            onChange={(e) => {
+              console.log(e);
+              handleReportFileChange(e);
+            }}
           />
-          <label htmlFor={"reportPostInput" + post.id}>
+          <label htmlFor={"reportCommentInput" + comment.id}>
             <FontAwesomeIcon icon={faImages} />
           </label>
         </div>
@@ -97,7 +102,33 @@ const PostReporter = ({ post, setShowReportPopup, showReportPopup }) => {
             maxHeight: "250px",
           }}
         >
-          <MiniPost post={post} />
+          <div className="comment">
+            <img
+              src={URL_OF_BACK_END + `users/profilePic/` + comment.userId}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "/upload/errorImage.png";
+              }}
+              alt={""}
+              onClick={() => {
+                window.location.href = `/profile/${comment.userId}`;
+              }}
+            />
+            <div className="infocomment">
+              <span
+                onClick={() => {
+                  window.location.href = `/profile/${comment.userId}`;
+                }}
+              >
+                {comment.name}{" "}
+                <span className="date">
+                  {moment(comment.createdAt).fromNow()}
+                </span>
+              </span>
+
+              <p>{comment.desc}</p>
+            </div>
+          </div>
         </div>
       </div>
       <div className="popup-action">
@@ -111,4 +142,4 @@ const PostReporter = ({ post, setShowReportPopup, showReportPopup }) => {
     </div>
   );
 };
-export default PostReporter;
+export default CommentReporter;

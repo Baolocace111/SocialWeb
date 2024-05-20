@@ -38,24 +38,50 @@
         .text-container {
           display: flex;
           align-items: center;
+          justify-content: center;
           width: 100%;
           gap: 10px;
-          div {
+          .imgbox {
             width: 43px;
             height: 43px;
-            div {
-              width: 26px;
-              height: 26px;
-              right: 0;
-              bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .privatebox {
+              height: 16px;
+              width: 16px;
+              top: 43px;
+              left: 43px;
               cursor: pointer;
-              position: relative;
+              position: absolute;
               padding: 5px;
               display: flex;
               justify-content: center;
               align-items: center;
               border-radius: 50%;
               background-color: rgba(78, 78, 255, 0.806);
+              .changeprivate {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 26px;
+
+                left: 110%;
+                position: absolute;
+                .pribtn {
+                  height: 16px;
+                  width: 16px;
+                  padding: 5px;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  border-radius: 50%;
+                  background-color: rgba(57, 57, 164, 0.806);
+                  &:hover {
+                    background-color: rgba(1, 1, 87, 0.806);
+                  }
+                }
+              }
             }
             img {
               width: 43px;

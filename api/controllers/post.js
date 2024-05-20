@@ -273,6 +273,7 @@ export const addVideoPostController = async (req, res) => {
             desc: req.body.desc,
             img: "",
             userId: userId,
+            private: req.body.private ? req.body.private : 0,
           };
           if (
             (post.desc === "" ||
@@ -292,6 +293,7 @@ export const addVideoPostController = async (req, res) => {
               userId,
               req.body.desc,
               absolutePath,
+              req.body.private ? req.body.private : 0,
               (error, data) => {
                 if (error) return res.status(500).json(error);
                 return res.status(200).json(data);
