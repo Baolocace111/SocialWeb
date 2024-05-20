@@ -1,39 +1,59 @@
 @import "../../style.scss";
 
 .story-page {
-  @include themify($themes) {
-    background-color: themed("bgSoft");
+   @include themify($themes) {
+      background-color: themed("bgSoft");
 
-    @include mobile {
-      padding: 10px;
-    }
+      @include mobile {
+         padding: 10px;
+      }
 
-    @include tablet {
-      padding: 20px;
-    }
-  }
+      @include tablet {
+         padding: 20px;
+      }
+   }
 
-  min-height: 100vh;
+   min-height: 100vh;
 
-  .close-button {
-    position: absolute;
-    top: 3%;
-    right: 28%;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    background: grey;
-    border: none;
-    color: white;
-    font-size: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: background-color 0.4s;
-  }
+   .story-content {
+      position: relative;
 
-  .close-button:hover {
-    background-color: red;
-  }
+      .delete-button {
+         position: absolute;
+         top: 25px;
+         right: 12px;
+         background-color: lightcoral;
+         color: white;
+         padding: 5px 10px;
+         border-radius: 5px;
+         cursor: pointer;
+         z-index: 1000;
+
+         &:hover {
+            background-color: red;
+         }
+      }
+   }
+
+   .close-button {
+      position: absolute;
+      top: 3%;
+      right: 28%;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      background: grey;
+      border: none;
+      color: white;
+      font-size: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: background-color 0.4s;
+
+      &:hover {
+         background-color: red;
+      }
+   }
 }
