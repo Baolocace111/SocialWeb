@@ -178,15 +178,15 @@
     }
 
     &.speed-1 {
-      animation-duration: 4s; // Quay chậm
+      animation-duration: 1s; // Quay chậm
     }
 
     &.speed-2 {
-      animation-duration: 2s; // Quay nhanh hơn
+      animation-duration: 0.5s; // Quay nhanh hơn
     }
 
     &.speed-3 {
-      animation-duration: 1s; // Quay rất nhanh
+      animation-duration: 0.25s; // Quay rất nhanh
     }
   }
 

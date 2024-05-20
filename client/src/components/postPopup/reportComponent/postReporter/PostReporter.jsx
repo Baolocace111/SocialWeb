@@ -69,12 +69,12 @@ const PostReporter = ({ post, setShowReportPopup, showReportPopup }) => {
         />
         <div className="file-input">
           <input
-            id="reportInput"
+            id={"reportPostInput" + post.id}
             type="file"
             accept="image/*,video/*"
             onChange={handleReportFileChange}
           />
-          <label htmlFor="reportInput">
+          <label htmlFor={"reportPostInput" + post.id}>
             <FontAwesomeIcon icon={faImages} />
           </label>
         </div>

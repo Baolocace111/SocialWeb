@@ -25,6 +25,7 @@ const CommentReporter = ({ comment, setShowReportPopup, showReportPopup }) => {
   };
   const handleReportFileChange = (event) => {
     const file = event.target.files[0];
+
     if (file) {
       setSelectedReportFile(file);
       setPreviewReport(URL.createObjectURL(file));
@@ -70,12 +71,15 @@ const CommentReporter = ({ comment, setShowReportPopup, showReportPopup }) => {
         />
         <div className="file-input">
           <input
-            id="reportInput"
+            id={"reportCommentInput" + comment.id}
             type="file"
             accept="image/*,video/*"
-            onChange={handleReportFileChange}
+            onChange={(e) => {
+              console.log(e);
+              handleReportFileChange(e);
+            }}
           />
-          <label htmlFor="reportInput">
+          <label htmlFor={"reportCommentInput" + comment.id}>
             <FontAwesomeIcon icon={faImages} />
           </label>
         </div>
