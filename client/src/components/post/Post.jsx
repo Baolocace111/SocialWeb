@@ -94,9 +94,7 @@ const Post = ({ post, hidden }) => {
   };
 
   const handleMenuClick = (event) => {
-    if (post.userId === currentUser.id) {
-      setMenuAnchor(event.currentTarget);
-    }
+    setMenuAnchor(event.currentTarget);
   };
   const handleMenuClose = () => {
     setMenuAnchor(null);
@@ -267,18 +265,20 @@ const Post = ({ post, hidden }) => {
               <span className="date">{moment(post.createdAt).fromNow()}</span>
             </div>
           </div>
-          <MoreHorizIcon
-            style={{
-              fontSize: "28px",
-              cursor: "pointer",
-              borderRadius: "50%",
-              transition: "background-color 0.3s",
-              alignItems: "center",
-              padding: "3px",
-            }}
-            className="more"
-            onClick={handleMenuClick}
-          />
+          {
+            <MoreHorizIcon
+              style={{
+                fontSize: "28px",
+                cursor: "pointer",
+                borderRadius: "50%",
+                transition: "background-color 0.3s",
+                alignItems: "center",
+                padding: "3px",
+              }}
+              className="more"
+              onClick={handleMenuClick}
+            />
+          }
           <Popover
             open={Boolean(menuAnchor)}
             anchorEl={menuAnchor}
@@ -292,32 +292,33 @@ const Post = ({ post, hidden }) => {
               horizontal: "right",
             }}
           >
-            <List>
-              <ListItemButton onClick={handleDialogOpen}>
-                <ListItemIcon
-                  style={{ fontSize: "18px", marginRight: "-25px" }}
-                >
-                  <FontAwesomeIcon icon={faPen} />
-                </ListItemIcon>
-                <ListItemText
-                  primary={trl("Chỉnh sửa bài viết")}
-                  style={{ fontSize: "14px", marginRight: "50px" }}
-                />
-              </ListItemButton>
-              <Divider />
-              <ListItemButton onClick={handleSeeDialogOpen}>
-                <ListItemIcon
-                  style={{ fontSize: "18px", marginRight: "-25px" }}
-                >
-                  <FontAwesomeIcon icon={faLock} />
-                </ListItemIcon>
-                <ListItemText
-                  primary={trl("Chỉnh sửa đối tượng")}
-                  style={{ fontSize: "14px", marginRight: "50px" }}
-                />
-              </ListItemButton>
-              <Divider />
-              {post.userId === currentUser.id && (
+            {post.userId === currentUser.id ? (
+              <List>
+                <ListItemButton onClick={handleDialogOpen}>
+                  <ListItemIcon
+                    style={{ fontSize: "18px", marginRight: "-25px" }}
+                  >
+                    <FontAwesomeIcon icon={faPen} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={trl("Chỉnh sửa bài viết")}
+                    style={{ fontSize: "14px", marginRight: "50px" }}
+                  />
+                </ListItemButton>
+                <Divider />
+                <ListItemButton onClick={handleSeeDialogOpen}>
+                  <ListItemIcon
+                    style={{ fontSize: "18px", marginRight: "-25px" }}
+                  >
+                    <FontAwesomeIcon icon={faLock} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={trl("Chỉnh sửa đối tượng")}
+                    style={{ fontSize: "14px", marginRight: "50px" }}
+                  />
+                </ListItemButton>
+                <Divider />
+
                 <ListItemButton onClick={handleDelete}>
                   <ListItemIcon
                     style={{ fontSize: "18px", marginRight: "-25px" }}
@@ -329,8 +330,22 @@ const Post = ({ post, hidden }) => {
                     style={{ fontSize: "14px", marginRight: "50px" }}
                   />
                 </ListItemButton>
-              )}
-            </List>
+              </List>
+            ) : (
+              <List>
+                <ListItemButton className="item" onClick={() => handleReport()}>
+                  <ListItemIcon
+                    style={{ fontSize: "18px", marginRight: "-25px" }}
+                  >
+                    <ReportOutlinedIcon />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={trl("Report")}
+                    style={{ fontSize: "14px", marginRight: "50px" }}
+                  />
+                </ListItemButton>
+              </List>
+            )}
 
             <Dialog open={openEdit} onClose={handleDialogClose}>
               <DialogTitle
@@ -719,12 +734,6 @@ const Post = ({ post, hidden }) => {
                 {trl("Share")}
               </div>
 
-              {post.userId !== currentUser.id && (
-                <div className="item" onClick={() => handleReport()}>
-                  <ReportOutlinedIcon />
-                  {trl("Report")}
-                </div>
-              )}
               <PopupWindow handleClose={handleShare} show={showSharePopup}>
                 <PostShare
                   post={post}

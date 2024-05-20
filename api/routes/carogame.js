@@ -110,57 +110,75 @@ export const settingCaroWebsocket = (ws, key) => {
     const data = JSON.parse(message);
     //console.log(data);
     // Kiểm tra xem dữ liệu nhận được là một object và có thuộc tính row và col không
-    if (typeof data !== "object" || !("row" in data) || !("col" in data)) {
-      // Nếu dữ liệu không đúng định dạng mong muốn, gửi tin nhắn lỗi và không làm gì cả
 
-      return;
-    }
+    const type = data.type;
 
-    const { row, col } = data;
+    if (type === "move") {
+      if (typeof data !== "object" || !("row" in data) || !("col" in data)) {
+        // Nếu dữ liệu không đúng định dạng mong muốn, gửi tin nhắn lỗi và không làm gì cả
 
-    // Kiểm tra tính hợp lệ của tọa độ hàng và cột
-    if (
-      isNaN(row) ||
-      isNaN(col) ||
-      row < 0 ||
-      row >= BOARD_SIZE ||
-      col < 0 ||
-      col >= BOARD_SIZE
-    ) {
-      // Nếu tọa độ không hợp lệ, gửi tin nhắn lỗi và không làm gì cả
+        return;
+      }
+      const { row, col } = data;
 
-      return;
-    }
+      // Kiểm tra tính hợp lệ của tọa độ hàng và cột
+      if (
+        isNaN(row) ||
+        isNaN(col) ||
+        row < 0 ||
+        row >= BOARD_SIZE ||
+        col < 0 ||
+        col >= BOARD_SIZE
+      ) {
+        // Nếu tọa độ không hợp lệ, gửi tin nhắn lỗi và không làm gì cả
 
-    if (!currentGames.get(key).turn) {
-      return; // Không phải lượt của người chơi này
-    }
-    // Xử lý nước đi của người chơi
-    const board = currentGames.get(key).board;
-    // Không được điền vào ô đã đánh
-    if (board[row][col] != 0) return;
-    board[row][col] = currentGames.get(key).player;
-    const oppkey = currentGames.get(key).opp;
-    if (checkWin(board, row, col, currentGames.get(key).player)) {
-      currentGames
-        .get(key)
-        .ws.send(JSON.stringify({ type: "win", message: "Out trình đối thủ" }));
+        return;
+      }
+
+      if (!currentGames.get(key).turn) {
+        return; // Không phải lượt của người chơi này
+      }
+      // Xử lý nước đi của người chơi
+      const board = currentGames.get(key).board;
+      // Không được điền vào ô đã đánh
+      if (board[row][col] != 0) return;
+      board[row][col] = currentGames.get(key).player;
+      const oppkey = currentGames.get(key).opp;
+      if (checkWin(board, row, col, currentGames.get(key).player)) {
+        currentGames
+          .get(key)
+          .ws.send(
+            JSON.stringify({ type: "win", message: "Dứt điểm đối thủ" })
+          );
+        currentGames
+          .get(oppkey)
+          .ws.send(
+            JSON.stringify({ type: "lose", message: "Đối thủ quá hay" })
+          );
+        currentGames.delete(key);
+        currentGames.delete(oppkey);
+      } else {
+        currentGames.get(key).turn = false;
+        currentGames.get(oppkey).turn = true;
+        currentGames.get(key).board = board;
+        currentGames.get(oppkey).board = board;
+        currentGames
+          .get(oppkey)
+          .ws.send(JSON.stringify({ type: "opponentMove", row, col, board }));
+        currentGames
+          .get(key)
+          .ws.send(JSON.stringify({ type: "yourmove", row, col, board }));
+      }
+    } else if (type === "chat") {
+      const { message: chatMessage } = data;
+      if (typeof chatMessage !== "string" || chatMessage.trim() === "") {
+        return;
+      }
+
+      const oppkey = currentGames.get(key).opp;
       currentGames
         .get(oppkey)
-        .ws.send(JSON.stringify({ type: "lose", message: "Đối thủ quá hay" }));
-      currentGames.delete(key);
-      currentGames.delete(oppkey);
-    } else {
-      currentGames.get(key).turn = false;
-      currentGames.get(oppkey).turn = true;
-      currentGames.get(key).board = board;
-      currentGames.get(oppkey).board = board;
-      currentGames
-        .get(oppkey)
-        .ws.send(JSON.stringify({ type: "opponentMove", row, col, board }));
-      currentGames
-        .get(key)
-        .ws.send(JSON.stringify({ type: "yourmove", row, col, board }));
+        .ws.send(JSON.stringify({ type: "chat", message: chatMessage }));
     }
   });
   ws.on("close", () => {

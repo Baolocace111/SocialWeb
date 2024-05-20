@@ -1,5 +1,72 @@
-.app {
+.caroapp {
+  .titlePopup {
+    h1 {
+      font-size: 2rem; // Đặt kích thước font chữ lớn
+      color: #4caf50; // Màu sắc cho tiêu đề chiến thắng
+      text-transform: uppercase; // Chữ hoa
+      text-align: center; // Căn giữa
+      margin: 0 0 20px; // Tạo khoảng cách với phần dưới
+      // Thêm các kiểu dáng khác nếu cần
+    }
+  }
 
+  .messagePopup {
+    h2 {
+      font-size: 1.5rem; // Đặt kích thước font chữ
+      color: #bababa; // Màu sắc cho thông điệp
+      text-align: center; // Căn giữa
+      margin: 0 0 20px; // Tạo khoảng cách với phần dưới
+      // Thêm các kiểu dáng khác nếu cần
+    }
+  }
+
+  .btnPopup {
+    display: flex; // Sử dụng flexbox để căn giữa nút
+    justify-content: center; // Căn giữa theo trục ngang
+    margin-top: 20px; // Tạo khoảng cách với phần trên
+
+    button {
+      padding: 10px 20px; // Đệm cho nút
+      font-size: 1rem; // Kích thước font chữ
+      color: white; // Màu chữ
+      background-color: #4caf50; // Màu nền
+      border: none; // Bỏ viền
+      border-radius: 5px; // Bo tròn góc
+      cursor: pointer; // Hiệu ứng con trỏ
+      transition: background-color 0.3s; // Chuyển đổi màu nền khi hover
+
+      &:hover {
+        background-color: darken(#4caf50, 10%); // Làm tối màu nền khi hover
+      }
+    }
+  }
+  .findingPopup {
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+
+    h1 {
+      color: #333333;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: #ffffff;
+      border: none;
+      border-radius: 3px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
+  }
   .start-screen {
     display: flex;
     flex-direction: column;
@@ -22,7 +89,9 @@
   }
 
   .caroplayerbar {
-    background-color: #999;
+    margin-top: 62px;
+    height: 100%;
+
     padding: 10px;
     box-sizing: border-box;
     display: flex;
@@ -32,6 +101,12 @@
     top: 50%;
     transform: translateY(-50%);
     width: 15%;
+    background: linear-gradient(
+      to bottom,
+      #f0f2f5,
+      #dde1e7
+    ); // Màu nền gradient
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
     &.left {
       left: 0;
@@ -40,21 +115,84 @@
     &.right {
       right: 0;
     }
+    .carouserbox {
+      border: 1px solid #ccc; // Thêm viền
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); // Thêm bóng đổ
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+      .carouserinfo {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        img {
+          width: 60px;
+          height: 60px;
+          object-fit: cover;
+          border-radius: 50%;
+          margin-right: 10px;
+        }
 
-    .carouserinfo {
-      display: flex;
-      align-items: center;
-
-      img {
-        width: 60px;
-        height: 60px;
-        object-fit: cover;
-        border-radius: 50%;
-        margin-right: 10px;
+        span {
+          font-weight: bold;
+          font-size: 1.1rem; // Tăng kích thước font chữ
+          color: #333;
+        }
       }
+      .caroChat {
+        .new-message {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 10px;
 
-      span {
-        font-weight: bold;
+          input {
+            width: 100%;
+            flex-grow: 1;
+            margin-right: 10px;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 20px; // Làm tròn input
+          }
+
+          .send-button {
+            padding: 8px 12px;
+            background-color: #5cb85c; // Màu nền cho nút gửi
+            color: white;
+            border: none;
+            border-radius: 20px; // Làm tròn nút
+            cursor: pointer;
+
+            &:hover {
+              background-color: darken(#5cb85c, 10%);
+            }
+          }
+        }
+
+        .messages {
+          max-height: 200px; // Chiều cao tối đa cho phép cuộn
+          overflow-y: auto; // Cho phép cuộn nếu cần
+          overflow-y: auto; // Cho phép cuộn nếu có nhiều tin nhắn
+          display: flex;
+          flex-direction: column-reverse;
+          gap: 8px; // Khoảng cách giữa các tin nhắn
+          padding: 10px; // Đệm xung quanh các tin nhắn
+
+          .message {
+            background-color: #e0e0e0; // Màu nền cho tin nhắn
+            padding: 8px 12px; // Đệm bên trong tin nhắn
+            border-radius: 16px; // Bo góc cho tin nhắn
+            color: #333; // Màu chữ
+            font-size: 0.9rem; // Kích thước chữ
+            max-width: 80%; // Chiều rộng tối đa của tin nhắn
+            word-wrap: break-word; // Ngắt từ nếu quá dài
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1); // Bóng đổ nhẹ
+            align-self: flex-start; // Căn lề trái cho tin nhắn
+
+            &:last-child {
+              margin-bottom: 0; // Bỏ margin dưới cho tin nhắn cuối cùng
+            }
+          }
+        }
       }
     }
   }
@@ -103,7 +241,6 @@
               background-color: lightyellow;
               border: 2px solid #2196f3;
             }
-
           }
 
           &:hover {

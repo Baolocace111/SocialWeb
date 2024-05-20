@@ -254,5 +254,8 @@
   "Tham gia": "Join",
   "Đã hiểu": "See yah",
   "Do you want to DELETE this comment":"Do you want to DELETE this comment?",
-  "Actions":"Actions"
+  "Actions":"Actions",
+  "Đối thủ đã đầu hàng":"Your opponent has surrendered",
+  "Dứt điểm đối thủ":"相手をシャットダウンします",
+  "Đối thủ quá hay":"相手はとても上手です"
 }
