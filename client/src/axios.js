@@ -1,5 +1,5 @@
 import axios from "axios";
-const islocal = false;
+const islocal = true;
 // const url = "192.168.0.108:8800";
 // const url = "localhost:8800";
 const url = islocal ? "localhost:8800" : "social-api-ul9t.onrender.com";

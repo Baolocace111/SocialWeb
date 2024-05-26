@@ -1,0 +1,115 @@
+.item-notification {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  margin: 10px auto;
+  gap: 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #e6e6e6; // Màu nền khi di chuột vào item
+  }
+  .notificationImage {
+    position: relative;
+    img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: contain;
+    }
+    .notiIcon {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      position: absolute;
+
+      right: -5px;
+      bottom: -5px;
+      color: #d9d9d9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-position: 0px -725px;
+      background-size: auto;
+      background-repeat: no-repeat;
+    }
+    $colors: (
+      -1: transparent,
+      0: #ff38b6,
+      // Example color for faHeart
+      1: #78ff78,
+      // Example color for faUserPlus
+      2: #ffff00,
+      // Example color for faExclamation
+      3: #4747ff,
+      // Example color for faUserTie
+      4: #ff37ff,
+      // Example color for faRecycle
+      5: #2cffff,
+      // Example color for faHandshake
+      6: #ff7028,
+      // Example color for faHandshakeSimpleSlash
+      7: #99ccff,
+      // Example color for faNewspaper
+      8: #ff6699,
+      // Example color for faTextSlash
+    );
+
+    // Generate the CSS classes dynamically
+    @each $type, $color in $colors {
+      .color-#{$type} {
+        background-color: $color;
+      }
+    }
+  }
+
+  .content-notification {
+    flex-grow: 1; // Cho phép nội dung mở rộng để lấp đầy không gian
+
+    .message {
+      font-size: 15px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      line-height: 1.5;
+      max-height: calc(1.5 * 3);
+      white-space: pre-line;
+    }
+
+    .date {
+      font-size: 13px;
+      color: #999; // Màu sắc nhẹ cho ngày tháng
+    }
+  }
+
+  .action-notification {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    button {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #ff4d4d; // Màu sắc nổi bật cho nút xóa
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: #e60000; // Đổi màu khi di chuột
+      }
+
+      svg {
+        color: white; // Màu icon
+      }
+    }
+  }
+}

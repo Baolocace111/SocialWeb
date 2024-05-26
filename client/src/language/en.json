@@ -27,7 +27,8 @@
   "Xóa bài viết": "Delete this post",
   "Delete":"Delete",
   "delete":"delete",
-
+  "đã thích bài viết của bạn":"liked your post",
+  "đã thích bài viết bạn đã chia sẻ":"liked your shared post",
   "a": "a",
   "Name": "Name",
   "Email": "Email",
@@ -57,6 +58,7 @@
   "Ai trên TinySocial cũng sẽ nhìn thấy bài viết này": "Anyone on TinySocial will see this post",
   "Công khai": "Publish",
   "SHARE": "SHARE",
+  "đã chấp nhận lời mời kết bạn của bạn":"accepted your friend request",
   "Share": "Share",
   "Nhập tên người dùng...": "Enter a name...",
   "Danh sách người dùng được chọn:": "List of selected users:",
@@ -257,5 +259,12 @@
   "Actions":"Actions",
   "Đối thủ đã đầu hàng":"Your opponent has surrendered",
   "Dứt điểm đối thủ":"相手をシャットダウンします",
-  "Đối thủ quá hay":"相手はとても上手です"
+  "Đối thủ quá hay":"相手はとても上手です",
+  "Cảnh báo: Chúng tôi vừa xóa 1 bài viết vi phạm tiêu chuẩn cộng đồng của bạn":"Warning: We just removed a post that violated your community standards",
+  "Báo cáo của bạn đang được xem xét. Xin cảm ơn vì đã báo cáo":"Your report is under consideration. Thank you for reporting",
+  "Báo cáo của bạn đã được xử lý. Xin cảm ơn":"Your report has been processed. Thank you",
+  "Yêu cầu tham gia của bạn đã được chấp thuận":"Your participation request has been approved",
+  "Yêu cầu tham gia của bạn bị từ chối":"Your request to join was denied",
+  "Bài viết của bạn đã được phê duyệt":"Bài viết của bạn đã được phê duyệt",
+  "Bài viết của bạn đã bị từ chối":"Bài viết của bạn đã bị từ chối"
 }
