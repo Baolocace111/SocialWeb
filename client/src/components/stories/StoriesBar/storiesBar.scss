@@ -1,73 +1,77 @@
 @import "../../../style.scss";
 
 .storiesBar {
-    @include themify($themes) {
-        min-height: 100vh;
-        flex: 2;
-        position: sticky;
-        top: 70px;
-        overflow: scroll;
-        background-color: themed("bg");
-        color: themed("textColor");
+   @include themify($themes) {
+      min-height: 100vh;
+      flex: 2;
+      position: sticky;
+      top: 70px;
+      overflow: scroll;
+      background-color: themed("bg");
+      color: themed("textColor");
 
-        @include mobile {
-            display: none;
-        }
+      @include mobile {
+         display: none;
+      }
 
-        &::-webkit-scrollbar {
-            display: none;
-        }
+      &::-webkit-scrollbar {
+         display: none;
+      }
 
-        .menu {
+      .menu {
+         display: flex;
+         flex-direction: column;
+
+         .title {
+            font-size: 16px;
+            font-weight: 500;
+            margin: 20px 0 20px 0;
+            text-align: center;
+         }
+
+         .user {
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 10px;
 
-            .title {
-                font-size: 16px;
-                font-weight: 500;
-                margin: 20px 0 20px 0;
-                text-align: center;
+            img {
+               width: 50px;
+               height: 50px;
+               border-radius: 50%;
+               object-fit: cover;
+               margin: 0;
             }
 
-            .user {
-                display: flex;
-                align-items: center;
-                gap: 20px;
-                padding: 10px;
+            .details {
+               display: flex;
+               flex-direction: column;
 
-                img {
-                    width: 50px;
-                    height: 50px;
-                    border-radius: 50%;
-                    object-fit: cover;
-                    margin: 0;
-                }
+               .name {
+                  font-size: 15px;
+                  font-weight: 500;
+               }
 
-                .details {
-                    display: flex;
-                    flex-direction: column;
+               .date {
+                  font-size: 13px;
+               }
 
-                    .name {
-                        font-size: 15px;
-                        font-weight: 500;
-                    }
-
-                    .date {
-                        font-size: 13px;
-                    }
-
-                    .count {
-                        font-size: 13px;
-                        color: #1877F2;
-                        font-weight: 500;
-                    }
-                }
+               .count {
+                  font-size: 13px;
+                  color: #1877F2;
+                  font-weight: 500;
+               }
             }
 
-            .user:hover {
-                background-color: themed("bgSoft");
-                cursor: pointer;
+            &.highlight {
+               background-color: #ececec;
             }
-        }
-    }
+         }
+
+         .user:hover {
+            background-color: themed("bgSoft");
+            cursor: pointer;
+         }
+      }
+   }
 }

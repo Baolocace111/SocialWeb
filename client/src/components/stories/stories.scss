@@ -3,151 +3,152 @@
 @import "slick-carousel/slick/slick-theme.css";
 
 .stories {
-  display: flex;
-  height: auto;
-  margin-bottom: 30px;
+   display: flex;
+   height: auto;
+   margin-bottom: 30px;
 
-  @include mobile {
-    height: 50px;
-    margin-bottom: 0;
-    justify-content: space-between;
-  }
-
-  @include tablet {
-    height: 150px;
-    gap: 20px;
-  }
-
-  .slider-container {
-    max-width: 800px;
-    margin: 0 auto; // Để căn giữa slider trong khung màn hình
-
-    // Áp dụng responsive cho slider
-    @include mobile {
-      max-width: 100%; // Đảm bảo slider vẫn hiển thị đúng trên các thiết bị di động
-    }
-  }
-
-  .slider-container .slick-slide {
-    margin: 0 7.5px;
-    /* Thêm khoảng cách 10px giữa các slide */
-    max-width: 180px;
-  }
-
-  .slider-container .slick-track {
-    min-width: 800px;
-  }
-
-  .story {
-    // flex: 1 0 auto;
-    height: 270px;
-    width: 180px;
-    margin-right: 15px;
-    border-radius: 10px;
-    overflow: hidden;
-    position: relative;
-    box-shadow: 1px 1px 2px black;
-    background-color: rgb(156, 156, 156);
-
-    @include mobile {
-      flex: none;
-      width: 50px;
+   @include mobile {
       height: 50px;
-      border-radius: 50%;
-    }
+      margin-bottom: 0;
+      justify-content: space-between;
+   }
 
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+   @include tablet {
+      height: 150px;
+      gap: 20px;
+   }
 
-    span {
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      color: white;
-      font-weight: 500;
+   .slider-container {
+      max-width: 800px;
+      margin: 0 auto; // Để căn giữa slider trong khung màn hình
 
+      // Áp dụng responsive cho slider
       @include mobile {
-        display: none;
+         max-width: 100%; // Đảm bảo slider vẫn hiển thị đúng trên các thiết bị di động
       }
-    }
+   }
 
-    button {
-      font-family: "Open Sans", sans-serif;
-      position: absolute;
-      bottom: 40px;
-      left: 10px;
-      color: white;
-      background-color: #5271ff;
-      border: none;
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      cursor: pointer;
-      font-size: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+   .slider-container .slick-slide {
+      margin: 0 7.5px;
+      /* Thêm khoảng cách 10px giữa các slide */
+      max-width: 180px;
+   }
 
-      @include mobile {
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        margin: auto;
-      }
-    }
+   .slider-container .slick-track {
+      min-width: 800px;
+   }
 
-    //Add avatar
-    .profile-pic {
-      position: absolute;
-      top: 5px;
-      left: 5px;
-      z-index: 2;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
+   .story {
+      // flex: 1 0 auto;
+      height: 270px;
+      width: 180px;
+      margin-right: 15px;
+      border-radius: 10px;
       overflow: hidden;
-    }
+      position: relative;
+      box-shadow: 1px 1px 2px black;
+      background-color: rgb(156, 156, 156);
 
-    .profile-pic img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      box-shadow: inset 2px 2px 4px black;
-    }
-
-    .story-content {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      z-index: 1;
+      @include mobile {
+         flex: none;
+         width: 50px;
+         height: 50px;
+         border-radius: 50%;
+      }
 
       img {
-        transition: transform 0.5s ease;
-        opacity: 0.8;
+         width: 100%;
+         height: 100%;
+         object-fit: cover;
       }
 
-      img:hover {
-        transform: scale(1.05);
-        opacity: 0.7;
+      span {
+         position: absolute;
+         bottom: 10px;
+         left: 10px;
+         color: white;
+         font-weight: 500;
+
+         @include mobile {
+            display: none;
+         }
       }
 
-      video {
-        transition: transform 0.5s ease;
-        opacity: 0.8;
+      button {
+         font-family: "Open Sans", sans-serif;
+         position: absolute;
+         bottom: 40px;
+         left: 10px;
+         color: white;
+         background-color: #5271ff;
+         border: none;
+         border-radius: 50%;
+         width: 30px;
+         height: 30px;
+         cursor: pointer;
+         font-size: 30px;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+
+         @include mobile {
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+         }
       }
 
-      video:hover {
-        transform: scale(1.05);
-        opacity: 0.7;
+      //Add avatar
+      .profile-pic {
+         position: absolute;
+         top: 5px;
+         left: 5px;
+         z-index: 2;
+         width: 50px;
+         height: 50px;
+         border-radius: 50%;
+         overflow: hidden;
       }
-    }
-  }
+
+      .profile-pic img {
+         width: 100%;
+         height: 100%;
+         object-fit: cover;
+         box-shadow: inset 2px 2px 4px black;
+      }
+
+      .story-content {
+         position: absolute;
+         top: 0;
+         left: 0;
+         width: 100%;
+         height: 100%;
+         display: flex;
+         align-items: center;
+         z-index: 1;
+         cursor: pointer;
+
+         img {
+            transition: transform 0.5s ease;
+            opacity: 0.8;
+         }
+
+         img:hover {
+            transform: scale(1.05);
+            opacity: 0.7;
+         }
+
+         video {
+            transition: transform 0.5s ease;
+            opacity: 0.8;
+         }
+
+         video:hover {
+            transform: scale(1.05);
+            opacity: 0.7;
+         }
+      }
+   }
 }
