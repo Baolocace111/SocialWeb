@@ -37,7 +37,13 @@ const NotificationTab = ({ notification, removeItemById }) => {
         console.log(error);
       });
   };
-  const contentdata = JSON.parse(notification.message);
+  const contentdata = (() => {
+    try {
+      return JSON.parse(notification.message);
+    } catch (e) {
+      return { message: notification.message };
+    }
+  })();
   const contentMessage = (() => {
     const { notitype } = notification;
     const {
