@@ -12,7 +12,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import "moment/locale/ja";
 import "moment/locale/vi";
 
-const UserStoryPage = () => {
+const Story = ({ userId, onActiveUserChange }) => {
    const { currentUser } = useContext(AuthContext);
    const [storyGroups, setStoryGroups] = useState([]);
    const [currentGroupIndex, setCurrentGroupIndex] = useState(0);
@@ -41,13 +41,32 @@ const UserStoryPage = () => {
       if (allStoriesData) {
          const groups = groupStoriesByUser(allStoriesData);
          setStoryGroups(groups);
+
+         if (userId) {
+            // User đã được chọn từ StoriesBar
+            const userGroupIndex = groups.findIndex(
+               group => group.some(story => story.userId === userId)
+            );
+            if (userGroupIndex !== -1) {
+               setCurrentGroupIndex(userGroupIndex);
+            }
+         } else {
+            // Không có user được chọn, hiển thị mặc định
+            setCurrentGroupIndex(0);
+         }
       }
-   }, [allStoriesData]);
+   }, [allStoriesData, userId]);
 
    useEffect(() => {
       setShowNextButton(storyGroups.length > 1 || (storyGroups.length === 1 && storyGroups[0].length > 1));
       setShowPrevButton(currentGroupIndex > 0 || currentStoryIndex > 0);
-   }, [storyGroups, currentGroupIndex, currentStoryIndex]);
+
+      // Kiểm tra xem storyGroups[currentGroupIndex] có tồn tại và có phần tử ở currentStoryIndex không
+      if (storyGroups[currentGroupIndex] && storyGroups[currentGroupIndex][currentStoryIndex]) {
+         const activeStory = storyGroups[currentGroupIndex][currentStoryIndex];
+         onActiveUserChange(activeStory.userId);
+      }
+   }, [storyGroups, currentGroupIndex, currentStoryIndex, onActiveUserChange]);
 
    const groupStoriesByUser = (stories) => {
       const groups = {};
@@ -168,4 +187,4 @@ const UserStoryPage = () => {
    );
 };
 
-export default UserStoryPage;
+export default Story;
