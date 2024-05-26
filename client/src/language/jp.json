@@ -255,6 +255,16 @@
   "Đã hiểu": "理解した",
   "Actions":"行動",
   "Đối thủ đã đầu hàng":"相手は降伏しました",
-  "Dứt điểm đối thủ":"Dứt điểm đối thủ",
-  "Đối thủ quá hay":"Đối thủ quá hay"
+  "Dứt điểm đối thủ":"対戦相手を破壊する",
+  "Đối thủ quá hay":"とても良い相手",
+  "đã thích bài viết của bạn":"があなたの記事を気に入っています",
+  "đã thích bài viết bạn đã chia sẻ":"があなたが共有した投稿に「いいね！」しました",
+  "đã chấp nhận lời mời kết bạn của bạn":"があなたの友達申請を承認しました",
+  "Cảnh báo: Chúng tôi vừa xóa 1 bài viết vi phạm tiêu chuẩn cộng đồng của bạn":"警告: コミュニティの標準に違反する投稿を削除しました",
+  "Báo cáo của bạn đang được xem xét. Xin cảm ơn vì đã báo cáo":"あなたの報告は検討中です。 ご報告いただきありがとうございます"
+  ,"Báo cáo của bạn đã được xử lý. Xin cảm ơn":"あなたのレポートは処理されました。 ありがとう",
+  "Yêu cầu tham gia của bạn đã được chấp thuận":"参加リクエストが承認されました",
+  "Yêu cầu tham gia của bạn bị từ chối":"参加リクエストは拒否されました",
+  "Bài viết của bạn đã được phê duyệt":"Bài viết của bạn đã được phê duyệt",
+  "Bài viết của bạn đã bị từ chối":"Bài viết của bạn đã bị từ chối"
 }

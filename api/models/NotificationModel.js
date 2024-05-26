@@ -2,10 +2,17 @@
 import { db } from "../connect.js";
 
 // Function to create a new notification
-export const createNotification = (userId, message, link, image, callback) => {
+export const createNotification = (
+  userId,
+  message,
+  link,
+  image,
+  type,
+  callback
+) => {
   const q =
-    "INSERT INTO notifications (userId, message, createdAt, `read`, link, image) VALUES (?, ?, NOW(), ?, ?,?)";
-  const values = [userId, message, false, link, image];
+    "INSERT INTO notifications (userId, message, createdAt, `read`, link, image,notitype) VALUES (?, ?, NOW(), ?, ?,?,?)";
+  const values = [userId, message, false, link, image, type];
 
   db.query(q, values, (err, data) => {
     if (err) return callback(err, null);
@@ -25,8 +32,7 @@ export const getAndMarkPaginatedNotifications = (
   const userLinkCondition =
     "notifications.link LIKE '/profile/%' OR notifications.link LIKE '/seepost/%'";
 
-  const qSelect =
-    `SELECT notifications.*,
+  const qSelect = `SELECT notifications.*,
             CASE
                 WHEN ${userLinkCondition} THEN users.profilePic
                 WHEN notifications.link LIKE '/groups/%' THEN teams.group_avatar
@@ -49,7 +55,9 @@ export const getAndMarkPaginatedNotifications = (
     if (err) return callback(err, null);
 
     // Đánh dấu các thông báo là đã đọc
-    const notificationIds = notifications.map(notification => notification.id);
+    const notificationIds = notifications.map(
+      (notification) => notification.id
+    );
     if (notificationIds.length > 0) {
       const qUpdate = "UPDATE notifications SET `read` = 1 WHERE id IN (?)";
       db.query(qUpdate, [notificationIds], (updateErr, updateResult) => {

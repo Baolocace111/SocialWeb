@@ -52,13 +52,7 @@ export const deletePostByAdminService = (postId, callback) => {
     if (err) return callback(err);
     plusReputation(data.userId, -1, (err, infor) => {
       if (err) return callback(err);
-      addNotificationService(
-        data.userId,
-        `Bài viết ${data.desc + " "}của bạn vi phạm tiêu chuẩn cộng đồng`,
-        "",
-        data.img,
-        (err, data) => {}
-      );
+      addNotificationService(data.userId, "", "", "", 2, (err, data) => {});
       return callback(null, "Delete successfully");
     });
   });

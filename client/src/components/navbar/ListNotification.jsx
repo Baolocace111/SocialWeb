@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import { useRef } from "react";
 import "moment/locale/ja"; // Import locale for Japanese
 import "moment/locale/vi"; // Import locale for Vietnamese
+import NotificationTab from "../Notification/Notification";
 const ListNotification = () => {
   const { trl, language } = useLanguage();
   useEffect(() => {
@@ -95,39 +96,11 @@ const ListNotification = () => {
         </div>
       </div>
       {notifications.map((notification) => (
-        <div className="item-notification" key={notification.id}>
-          <Link to={notification.link} style={{ cursor: "pointer" }}>
-            <img
-              src={
-                notification.link?.includes("/seepost/") ||
-                notification.link?.includes("/profile/")
-                  ? `${URL_OF_BACK_END}users/profilePic/${notification.interactionId}`
-                  : notification.link?.includes("/groups/")
-                  ? `${URL_OF_BACK_END}groups/${notification.interactionId}/avatar`
-                  : "/notificationtype/null.jpg"
-              }
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = "/notificationtype/null.jpg";
-              }}
-              alt={""}
-            />
-          </Link>
-          <div className="content-notification">
-            <div
-              className="message"
-              dangerouslySetInnerHTML={{ __html: notification.message }}
-            ></div>
-            <div className="date">
-              {moment(notification.createdAt).fromNow()}
-            </div>
-          </div>
-          <div className="action-notification">
-            <button onClick={() => handleDelete(notification.id)}>
-              <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
-            </button>
-          </div>
-        </div>
+        <NotificationTab
+          notification={notification}
+          key={notification.id}
+          removeItemById={removeItemById}
+        ></NotificationTab>
       ))}
       {loading && <NineCube />}
       {!loading && <button onClick={handleShowMore}>{trl("Show More")}</button>}

@@ -87,9 +87,10 @@ export const handleFeedbackController = async (req, res) => {
                 if (e) return res.status(500).json(e);
                 addNotificationService(
                   datafb.userid,
-                  "Báo cáo của bạn đang được xem xét,Xin cảm ơn vì đã báo cáo",
+                  "",
                   data.link,
                   data.img,
+                  3,
                   (e, data) => {
                     if (e) return res.status(500).json(e);
                     return res.status(200).json(setStatusData);
@@ -116,6 +117,7 @@ export const handleFeedbackController = async (req, res) => {
                   req.body.feedback.response ? req.body.feedback.response : "",
                   data.link,
                   data.img,
+                  -1,
                   (e, data) => {
                     if (e) {
                       return res.status(500).json(e);
@@ -141,6 +143,7 @@ export const handleFeedbackController = async (req, res) => {
                 req.body.feedback.response ? req.body.feedback.response : "",
                 data.link,
                 data.img,
+                4,
                 (e, noti) => {
                   if (e) {
                     return res.status(500).json(e);
