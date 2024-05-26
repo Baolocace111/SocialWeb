@@ -15,7 +15,24 @@
     h1 {
       margin-bottom: 20px; // Khoảng cách giữa tiêu đề và bảng
     }
-
+    .managePostBox {
+      position: relative;
+      .deleteBtn {
+        width: 50px;
+        background-color: firebrick;
+        color: #ddd;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        border-radius: 50%;
+        font-size: larger;
+        right: 15px;
+        top: 15px;
+        z-index: 100;
+      }
+    }
     table {
       width: 100%; // Bảng chiếm toàn bộ chiều rộng container
       border-collapse: collapse; // Loại bỏ khoảng cách giữa các cell

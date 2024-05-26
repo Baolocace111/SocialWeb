@@ -3,6 +3,8 @@ import { makeRequest } from "../../../axios";
 import MPost from "./MPost";
 import "./userTable.scss";
 import { useLanguage } from "../../../context/languageContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 const UserTable = ({ year, month }) => {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -73,9 +75,8 @@ const UserTable = ({ year, month }) => {
             // Xử lý sau khi xóa thành công
             //console.log("Post deleted:", response);
             // Cập nhật UI
-            setPosts((prevPosts) =>
-              prevPosts.filter((post) => post.id !== draggedPost.id)
-            );
+            fetchUserData();
+            fetchPostsByUser();
           })
           .catch((error) => {
             // Xử lý lỗi
@@ -106,6 +107,28 @@ const UserTable = ({ year, month }) => {
       ))}
     </div>
   );
+  const handleDeletePost = (id) => {
+    if (
+      window.confirm(
+        `${trl("Are you sure you want to delete the post with ID")}: ${id}?`
+      )
+    ) {
+      // Gọi API để xóa bài viết
+      makeRequest
+        .delete(`/admin/deletepost?postid=${id}`)
+        .then((response) => {
+          // Xử lý sau khi xóa thành công
+          //console.log("Post deleted:", response);
+          // Cập nhật UI
+          fetchUserData();
+          fetchPostsByUser();
+        })
+        .catch((error) => {
+          // Xử lý lỗi
+          console.error("Error deleting post:", error);
+        });
+    }
+  };
   return (
     <div className="manage_layout">
       {error && <h2>{error.toString()}</h2>}
@@ -158,10 +181,20 @@ const UserTable = ({ year, month }) => {
             <div>
               {posts.map((post) => (
                 <div
+                  className="managePostBox"
                   key={post.id}
                   draggable
                   onDragStart={() => handleDragStart(post)}
                 >
+                  {" "}
+                  <button
+                    className="deleteBtn"
+                    onClick={() => {
+                      handleDeletePost(post.id);
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
+                  </button>
                   <MPost post={post} />
                 </div>
               ))}

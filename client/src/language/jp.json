@@ -265,6 +265,8 @@
   ,"Báo cáo của bạn đã được xử lý. Xin cảm ơn":"あなたのレポートは処理されました。 ありがとう",
   "Yêu cầu tham gia của bạn đã được chấp thuận":"参加リクエストが承認されました",
   "Yêu cầu tham gia của bạn bị từ chối":"参加リクエストは拒否されました",
-  "Bài viết của bạn đã được phê duyệt":"Bài viết của bạn đã được phê duyệt",
-  "Bài viết của bạn đã bị từ chối":"Bài viết của bạn đã bị từ chối"
+  "Bài viết của bạn đã được phê duyệt":"あなたの記事が承認されました",
+  "Bài viết của bạn đã bị từ chối":"あなたの記事は拒否されました",
+  "Refresh":"リフレッシュ",
+  "Bạn đã bị mất kết nối...":"接続が失われました..."
 }
