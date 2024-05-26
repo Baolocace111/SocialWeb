@@ -11,6 +11,7 @@ export const addNotificationService = (
   message,
   link,
   image,
+  type,
   callback
 ) => {
   createNotification(
@@ -18,6 +19,7 @@ export const addNotificationService = (
     message ? message : "",
     link,
     image,
+    type,
     (err, data) => {
       if (err) return callback(err, null);
 

@@ -108,9 +108,13 @@ export const acceptFriendRequest = async (user_id1, user_id2) => {
       else
         addNotificationService(
           user_id2,
-          `<a target="_blank" href="/profile/${user_id1}">${data.name}</a> đã chấp nhận lời mời kết bạn của bạn`,
-          `/profile/${user_id1}`,
+          JSON.stringify({
+            userId: data.userId,
+            name: data.name,
+          }),
+          user_id1,
           `/upload/${data.profilePic}`,
+          1,
           (err, data) => {
             if (err) console.log(err);
           }

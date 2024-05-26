@@ -12,6 +12,7 @@
   "Thông báo": "Thông báo",
   "đang gọi bạn": "đang gọi bạn",
   "Nghe": "Nghe",
+  "đã chấp nhận lời mời kết bạn của bạn":"đã chấp nhận lời mời kết bạn của bạn",
   "Chấp nhận": "Chấp nhận",
   "explore_opportunities": "Khám phá các cơ hội mới và mở rộng tầm nhìn của bạn.",
   "Join_the_community": "Tham gia cộng đồng và khám phá những khả năng vô tận.",
@@ -256,5 +257,14 @@
   "Actions":"Thực hiện",
   "Đối thủ đã đầu hàng":"Đối thủ đã đầu hàng",
   "Dứt điểm đối thủ":"Dứt điểm đối thủ",
-  "Đối thủ quá hay":"Đối thủ quá hay"
+  "Đối thủ quá hay":"Đối thủ quá hay",
+  "đã thích bài viết bạn đã chia sẻ":"đã thích bài viết bạn đã chia sẻ",
+  "đã thích bài viết của bạn":"đã thích bài viết của bạn",
+  "Cảnh báo: Chúng tôi vừa xóa 1 bài viết vi phạm tiêu chuẩn cộng đồng của bạn":"Cảnh báo: Chúng tôi vừa xóa 1 bài viết vi phạm tiêu chuẩn cộng đồng của bạn",
+  "Báo cáo của bạn đang được xem xét. Xin cảm ơn vì đã báo cáo":"Báo cáo của bạn đang được xem xét. Xin cảm ơn vì đã báo cáo",
+  "Báo cáo của bạn đã được xử lý. Xin cảm ơn":"Báo cáo của bạn đã được xử lý. Xin cảm ơn",
+  "Yêu cầu tham gia của bạn đã được chấp thuận":"Yêu cầu tham gia của bạn đã được chấp thuận",
+  "Yêu cầu tham gia của bạn bị từ chối":"Yêu cầu tham gia của bạn bị từ chối",
+  "Bài viết của bạn đã được phê duyệt":"Bài viết của bạn đã được phê duyệt",
+  "Bài viết của bạn đã bị từ chối":"Bài viết của bạn đã bị từ chối"
 }
