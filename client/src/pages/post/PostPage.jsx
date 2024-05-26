@@ -1,3 +1,4 @@
+import "./postPage.scss";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -32,13 +33,13 @@ const PostPage = () => {
   };
 
   return (
-    <div>
+    <div className="postPage">
       {error ? (
-        trl("Something went wrong!")
+        <div className="textbox">{trl("Something went wrong!")}</div>
       ) : isLoading ? (
         <ThreePointLoading />
-      ) : data.length === 0 ? (
-        trl("Not found")
+      ) : data.createAt === 0 ? (
+        <div className="textbox">{trl("Not found")}</div>
       ) : (
         <div className="post-page">
           {(data.type === 0 || data.type === 2 || data.type === 3) && (

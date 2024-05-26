@@ -244,11 +244,12 @@ const Navbar = () => {
       setWS(socket);
       setWSConnection(true);
     }
+    if (!wsConnection) setWSConnection(true);
   };
   return (
     <div className="navbar">
       <ListBoxChat></ListBoxChat>
-      <PopupWindow show={!wsConnection}>
+      <PopupWindow show={!wsConnection} handleClose={restartSocket}>
         <div className="restartPopup" onClick={restartSocket}>
           <div className="restartTitle">{trl("Bạn đã bị mất kết nối...")}</div>
           <button type="button" className="button">
