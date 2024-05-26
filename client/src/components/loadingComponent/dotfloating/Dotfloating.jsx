@@ -1,7 +1,7 @@
 import "./dotfloating.scss";
 const Dotfloating = () => {
   return (
-    <span class="dotfloating">
+    <span className="dotfloating">
       <div className="p1"></div>
       <div className="p2"></div>
       <div className="p3"></div>

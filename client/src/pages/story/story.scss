@@ -2,7 +2,13 @@
 
 .story-page {
    @include themify($themes) {
-      background-color: themed("bgSoft");
+      background-color: black;
+      display: flex;
+      flex: 8;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      position: relative;
 
       @include mobile {
          padding: 10px;
@@ -11,49 +17,81 @@
       @include tablet {
          padding: 20px;
       }
-   }
 
-   min-height: 100vh;
-
-   .story-content {
-      position: relative;
-
-      .delete-button {
-         position: absolute;
-         top: 25px;
-         right: 12px;
-         background-color: lightcoral;
-         color: white;
-         padding: 5px 10px;
-         border-radius: 5px;
+      .nav-button {
+         background-color: lightgray;
+         border: none;
+         padding: 10px 20px;
          cursor: pointer;
-         z-index: 1000;
+         font-size: 24px;
+         border-radius: 50%;
+         transition: transform 0.3s ease;
+
+         &:hover {
+            background-color: white;
+         }
+
+         &.prev {
+            margin-right: 50px;
+
+            &:hover {
+               transform: scale(1.05) translateX(-5px);
+            }
+         }
+
+         &.next {
+            margin-left: 50px;
+
+            &:hover {
+               transform: scale(1.05) translateX(5px);
+            }
+         }
+
+         &.invisible {
+            visibility: hidden;
+         }
+      }
+
+      .story-content {
+         position: relative;
+
+         .delete-button {
+            position: absolute;
+            top: 25px;
+            right: 12px;
+            background-color: lightcoral;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1000;
+
+            &:hover {
+               background-color: red;
+            }
+         }
+      }
+
+      .close-button {
+         position: absolute;
+         top: 3%;
+         right: 28%;
+         border-radius: 50%;
+         width: 40px;
+         height: 40px;
+         background: grey;
+         border: none;
+         color: white;
+         font-size: 20px;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         cursor: pointer;
+         transition: background-color 0.4s;
 
          &:hover {
             background-color: red;
          }
-      }
-   }
-
-   .close-button {
-      position: absolute;
-      top: 3%;
-      right: 28%;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      background: grey;
-      border: none;
-      color: white;
-      font-size: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      transition: background-color 0.4s;
-
-      &:hover {
-         background-color: red;
       }
    }
 }

@@ -6,7 +6,6 @@ import {
    RouterProvider,
    Outlet,
    Navigate,
-   Link,
    useLocation,
    useNavigate,
 } from "react-router-dom";
@@ -30,8 +29,6 @@ import FriendsBar from "./components/friends/FriendsBar";
 
 import "./style.scss";
 import "./pages/story/story.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faX } from "@fortawesome/free-solid-svg-icons";
 
 import { useCookies } from "react-cookie";
 import { useContext, useState } from "react";
@@ -288,23 +285,7 @@ function App() {
          <div className={`theme-${darkMode ? "dark" : "light"}`}>
             <div style={{ display: "flex" }}>
                <StoriesBar />
-               <div
-                  className="story-page"
-                  style={{
-                     flex: 8,
-                     display: "flex",
-                     justifyContent: "center",
-                     alignItems: "center",
-                     position: "relative",
-                  }}
-               >
-                  <Story />
-                  <Link to="/">
-                     <button className="close-button">
-                        <FontAwesomeIcon icon={faX} />
-                     </button>
-                  </Link>
-               </div>
+               <Story />
             </div>
          </div>
       );
