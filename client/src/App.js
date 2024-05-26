@@ -281,11 +281,22 @@ function App() {
    };
 
    const StoryLayout = () => {
+      const [selectedUserId, setSelectedUserId] = useState(null);
+      const [activeStoryUserId, setActiveStoryUserId] = useState(null);
+      const location = useLocation();
+
+      useEffect(() => {
+         // Kiểm tra xem có state được truyền qua không
+         if (location.state && location.state.selectedUserId) {
+            setSelectedUserId(location.state.selectedUserId);
+         }
+      }, [location]);
+
       return (
          <div className={`theme-${darkMode ? "dark" : "light"}`}>
             <div style={{ display: "flex" }}>
-               <StoriesBar />
-               <Story />
+               <StoriesBar selectedUserId={activeStoryUserId} onUserSelect={setSelectedUserId} />
+               <Story userId={selectedUserId} onActiveUserChange={setActiveStoryUserId} />
             </div>
          </div>
       );
@@ -371,7 +382,7 @@ function App() {
          element: <ProfileLayout />,
       },
       {
-         path: "/stories/:userId",
+         path: "/stories",
          element: <StoryLayout />,
       },
       {
