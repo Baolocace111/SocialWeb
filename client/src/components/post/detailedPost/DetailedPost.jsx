@@ -63,6 +63,7 @@ const DetailedPost = ({ post }) => {
   const [selectedImage, setSelectedImage] = useState(
     URL_OF_BACK_END + `posts/videopost/` + post.id
   );
+  const [imageArea, setImageArea] = useState(true);
   const handleShare = () => {
     setShowSharePopup(!showSharePopup);
   };
@@ -225,38 +226,43 @@ const DetailedPost = ({ post }) => {
 
   return (
     <div className="detail-post">
-      <div className="image-area">
-        <div className="action-button">
-          <FontAwesomeIcon onClick={handleCloseClick} icon={faX} />
-          {post.type === 0 ? (
-            <div className="zoom">
-              <FontAwesomeIcon icon={faMagnifyingGlassPlus} />
-              <FontAwesomeIcon icon={faMagnifyingGlassMinus} />
-              <FontAwesomeIcon icon={faDownLeftAndUpRightToCenter} />
-            </div>
+      {imageArea && (
+        <div className="image-area">
+          <div className="action-button">
+            <FontAwesomeIcon onClick={handleCloseClick} icon={faX} />
+            {post.type === 0 ? (
+              <div className="zoom">
+                <FontAwesomeIcon icon={faMagnifyingGlassPlus} />
+                <FontAwesomeIcon icon={faMagnifyingGlassMinus} />
+                <FontAwesomeIcon icon={faDownLeftAndUpRightToCenter} />
+              </div>
+            ) : (
+              <div></div>
+            )}
+          </div>
+          {isVideo(post.img) ? (
+            <ReactPlayer
+              url={URL_OF_BACK_END + "posts/videopost/" + post.id}
+              playing={true}
+              controls={true}
+              className="react-player"
+            />
           ) : (
-            <div></div>
+            <img
+              src={URL_OF_BACK_END + `posts/videopost/` + post.id}
+              onError={(e) => {
+                setImageArea(false);
+                // e.target.onerror = null;
+                // e.target.src = "/upload/errorImage.png";
+              }}
+              alt={""}
+            />
           )}
         </div>
-        {isVideo(post.img) ? (
-          <ReactPlayer
-            url={URL_OF_BACK_END + "posts/videopost/" + post.id}
-            playing={true}
-            controls={true}
-            className="react-player"
-          />
-        ) : (
-          <img
-            src={URL_OF_BACK_END + `posts/videopost/` + post.id}
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = "/upload/errorImage.png";
-            }}
-            alt={""}
-          />
-        )}
-      </div>
-      <div className="content-area">
+      )}
+      <div
+        className={"content-area " + (imageArea ? "noneImage" : "haveImage")}
+      >
         <div className="userInfo">
           <img
             src={URL_OF_BACK_END + `users/profilePic/` + post.userId}
@@ -724,6 +730,6 @@ export default DetailedPost;
 
 function isVideo(img) {
   const videoExtensions = [".mp4", ".avi", ".mov", ".wmv", ".mkv"];
-  const fileExtension = img.substring(img.lastIndexOf("."));
-  return videoExtensions.includes(fileExtension.toLowerCase());
+  const fileExtension = img?.substring(img.lastIndexOf("."));
+  return videoExtensions.includes(fileExtension?.toLowerCase());
 }

@@ -1,121 +1,124 @@
 @import "../../../style.scss";
 
 .detail-post {
-    @include themify($themes) {
-        background-color: themed("bg");
+  @include themify($themes) {
+    background-color: themed("bg");
+    display: flex;
+    min-height: 100vh;
+
+    .image-area {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 70%;
+      background: black;
+      color: white;
+
+      .react-player {
+        min-width: 100%;
+        min-height: 100%;
+      }
+
+      img {
+        width: 70%;
+        object-fit: cover;
+        object-position: center;
+      }
+
+      .action-button {
         display: flex;
-        min-height: 100vh;
+        align-items: center;
+        position: absolute;
+        left: 0;
+        top: 0;
+        padding: 15px 0 15px 25px;
+        width: inherit;
+        font-size: 23px;
+        z-index: 999;
+        cursor: pointer;
 
-        .image-area {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 70%;
-            background: black;
-            color: white;
-
-            .react-player {
-                min-width: 100%;
-                min-height: 100%;
-            }
-
-            img {
-                width: 70%;
-                object-fit: cover;
-                object-position: center;
-            }
-
-            .action-button {
-                display: flex;
-                align-items: center;
-                position: absolute;
-                left: 0;
-                top: 0;
-                padding: 15px 0 15px 25px;
-                width: inherit;
-                font-size: 23px;
-                z-index: 999;
-                cursor: pointer;
-
-                .zoom {
-                    display: flex;
-                    gap: 25px;
-                    margin-left: auto;
-                    padding-right: 45px;
-                }
-            }
+        .zoom {
+          display: flex;
+          gap: 25px;
+          margin-left: auto;
+          padding-right: 45px;
         }
-
-        .content-area {
-            width: 30%;
-            background-color: themed("bg");
-            display: flex;
-            flex-direction: column;
-
-            .userInfo {
-                display: flex;
-                gap: 20px;
-                align-items: center;
-                padding: 20px;
-
-                img {
-                    width: 50px;
-                    height: 50px;
-                    border-radius: 50%;
-                    object-fit: cover;
-                    margin: 0;
-                }
-
-                .details {
-                    display: flex;
-                    flex-direction: column;
-
-                    .name {
-                        font-size: 20px;
-                        font-weight: 600;
-                        cursor: pointer;
-                    }
-
-                    .date {
-                        font-size: 12px;
-                    }
-                }
-
-                .more {
-                    margin-left: auto;
-                }
-            }
-
-            .post-content {
-                padding: 0 20px;
-                font-size: 20px;
-                font-weight: 400;
-            }
-
-            .post-info {
-                display: flex;
-                align-items: center;
-                margin: 20px 20px 0 20px;
-                padding: 10px 0;
-                gap: 30px;
-                border: solid;
-                border-width: 1px;
-                border-color: gainsboro;
-                border-left-width: 0px;
-                border-right-width: 0px;
-
-                .item {
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
-                    cursor: pointer;
-                    font-size: 14px;
-                }
-            }
-
-            .post-comment {
-                margin: 0 20px;
-            }
-        }
+      }
     }
+
+    .content-area {
+      width: 30%;
+      background-color: themed("bg");
+      display: flex;
+      flex-direction: column;
+
+      .userInfo {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        padding: 20px;
+
+        img {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          object-fit: cover;
+          margin: 0;
+        }
+
+        .details {
+          display: flex;
+          flex-direction: column;
+
+          .name {
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+          }
+
+          .date {
+            font-size: 12px;
+          }
+        }
+
+        .more {
+          margin-left: auto;
+        }
+      }
+
+      .post-content {
+        padding: 0 20px;
+        font-size: 20px;
+        font-weight: 400;
+      }
+
+      .post-info {
+        display: flex;
+        align-items: center;
+        margin: 20px 20px 0 20px;
+        padding: 10px 0;
+        gap: 30px;
+        border: solid;
+        border-width: 1px;
+        border-color: gainsboro;
+        border-left-width: 0px;
+        border-right-width: 0px;
+
+        .item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          cursor: pointer;
+          font-size: 14px;
+        }
+      }
+
+      .post-comment {
+        margin: 0 20px;
+      }
+    }
+    .noneImage {
+      width: 100%;
+    }
+  }
 }
