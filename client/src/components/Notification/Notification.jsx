@@ -124,14 +124,7 @@ const NotificationTab = ({ notification, removeItemById }) => {
         style={{ cursor: "pointer" }}
       >
         <img
-          src={
-            notification.link?.includes("/seepost/") ||
-            notification.link?.includes("/profile/")
-              ? `${URL_OF_BACK_END}users/profilePic/${notification.interactionId}`
-              : notification.link?.includes("/groups/")
-              ? `${URL_OF_BACK_END}groups/${notification.interactionId}/avatar`
-              : "/notificationtype/null.jpg"
-          }
+          src={`${URL_OF_BACK_END}${notification.image}`}
           onError={(e) => {
             e.target.onerror = null;
             e.target.src = "/notificationtype/null.jpg";
