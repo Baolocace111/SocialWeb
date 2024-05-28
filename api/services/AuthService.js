@@ -16,7 +16,7 @@ export const AuthService = {
 
       return "Successfully !!!";
     } catch (err) {
-      throw err;
+      throw new Error(err);
     }
   },
 

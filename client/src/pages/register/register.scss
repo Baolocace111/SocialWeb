@@ -85,22 +85,48 @@
       form {
         display: flex;
         flex-direction: column;
+        position: relative;
         gap: 15px;
+        div {
+          width: 80%;
+          display: flex;
+          align-items: center;
 
-        input {
-          border: 2px solid #ccc;
-          border-radius: 30px;
-          padding: 10px 15px;
-          font-size: 16px;
-          transition: border-color 0.3s;
+          button {
+            width: 0;
+            height: 40px;
+            transition: width 0.5s ease-in-out;
+            padding: 0;
+            position: relative;
+            margin-top: 0px;
+            overflow: hidden;
+          }
+          &:hover {
+            button {
+              width: 50px;
+            }
+          }
+          input {
+            transition: width 0.5s ease-in-out;
+            width: 100%;
+            border: 2px solid #ccc;
+            border-radius: 30px;
+            padding: 10px 15px;
+            font-size: 16px;
+            transition: border-color 0.3s;
 
-          &:focus {
-            border-color: #938eef;
-            outline: none;
+            &:focus {
+              border-color: #938eef;
+              outline: none;
+            }
           }
         }
 
         .message {
+          color: #4fd956;
+          font-size: 0.9rem;
+        }
+        .error {
           color: #d9534f;
           font-size: 0.9rem;
         }
