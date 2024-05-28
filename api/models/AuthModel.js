@@ -1,6 +1,16 @@
 import { db } from "../connect.js";
 
 export const AuthModel = {
+  checkIfEmailExists(email) {
+    return new Promise((resolve, reject) => {
+      const q = "SELECT * FROM users WHERE email = ?";
+      db.query(q, [email], (err, data) => {
+        if (err) reject(err);
+
+        resolve(data.length > 0);
+      });
+    });
+  },
   checkIfUserExists(username) {
     return new Promise((resolve, reject) => {
       const q = "SELECT * FROM users WHERE username = ?";
