@@ -74,7 +74,7 @@ export const approveJoinRequest = (adminUserId, joinRequestId, callback) => {
                   groupId: joinRequest.group_id,
                 }),
                 `/groups/${joinRequest.group_id}`,
-                group[0].group_avatar,
+                `groups/${joinRequest.group_id}/avatar`,
                 5,
                 (err, notificationResult) => {
                   if (err) {
@@ -127,7 +127,7 @@ export const rejectJoinRequest = (adminUserId, joinRequestId, callback) => {
                   groupId: joinRequest.group_id,
                 }),
                 `/groups/${joinRequest.group_id}`,
-                group[0].group_avatar,
+                `groups/${joinRequest.group_id}/avatar`,
                 6,
                 (err, notificationResult) => {
                   if (err) {
