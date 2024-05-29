@@ -112,8 +112,8 @@ export const acceptFriendRequest = async (user_id1, user_id2) => {
             userId: data.userId,
             name: data.name,
           }),
-          user_id1,
-          `/upload/${data.profilePic}`,
+          `/profile/${user_id1}`,
+          `users/profilePic/${user_id1}`,
           1,
           (err, data) => {
             if (err) console.log(err);
