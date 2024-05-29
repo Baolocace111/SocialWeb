@@ -1,5 +1,14 @@
 import { db } from "../connect.js";
-
+export const getUserByEmail = (email, callback) => {
+  const q = "Select * from users where email=?";
+  db.query(q, [email], (err, data) => {
+    if (err) return callback(err, null);
+    if (!Array.isArray(data)) return callback("Error", null);
+    if (data.length === 0) return callback("Can't find your account", null);
+    const { password, ...info } = data[0];
+    return callback(null, info);
+  });
+};
 export const getUserById = (userId, callback) => {
   const q = "SELECT * FROM users WHERE id=?";
 
@@ -254,6 +263,14 @@ export const updateCoverPic = (userId, coverPic, callback) => {
 export const updatePasswordUser = (userid, newpassword, callback) => {
   const q = "Update users SET `password`=? Where id=?";
   db.query(q, [newpassword, userid], (err, data) => {
+    if (err) return callback(err, null);
+    if (data.affectedRows > 0) return callback(null, "Updated!");
+    return callback("Wrong password", null);
+  });
+};
+export const updatePasswordEmail = (email, newpassword, callback) => {
+  const q = "Update users SET `password`=? Where email=?";
+  db.query(q, [newpassword, email], (err, data) => {
     if (err) return callback(err, null);
     if (data.affectedRows > 0) return callback(null, "Updated!");
     return callback("Wrong password", null);

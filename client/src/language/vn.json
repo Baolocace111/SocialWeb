@@ -279,5 +279,11 @@
   "Bạn chưa nhập Email": "Bạn chưa nhập Email",
   "Wrong code! Try again": "Mã xác nhận sai. Hãy thử lại",
   "Your email hasn't been registed": "Email của bạn chưa được đăng ký",
-  "This email does not have a confirmation code": "Email này không có mã xác nhận"
+  "This email does not have a confirmation code": "Email này không có mã xác nhận",
+  "Forget password": "Quên mật khẩu",
+  "user not found": "Không tìm thấy người dùng",
+  "Wrong password": "Sai mật khẩu",
+  "Updated!": "Đã cập nhật!",
+  "You can update only your profile!": "Bạn chỉ có thể thay đổi thông tin của bạn!",
+  "Your password is too weak": "Mật khẩu của bạn quá yếu"
 }

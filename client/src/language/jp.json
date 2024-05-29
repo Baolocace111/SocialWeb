@@ -279,5 +279,11 @@
   "Bạn chưa nhập Email": "メールアドレスを入力してください",
   "Wrong code! Try again": "認証コードが間違っています。 もう一度やり直してください",
   "Your email hasn't been registed": "あなたのメールアドレスは登録されていません",
-  "This email does not have a confirmation code": "このメールには確認コードがありません"
+  "This email does not have a confirmation code": "このメールには確認コードがありません",
+  "Forget password": "パスワードをお忘れですか",
+  "user not found": "ユーザーが見つかりません",
+  "Wrong password": "間違ったパスワード",
+  "Updated!": "更新!",
+  "You can update only your profile!": "プロフィールのみ更新できます!",
+  "Your password is too weak": "あなたのパスワードは安全度が低いです"
 }

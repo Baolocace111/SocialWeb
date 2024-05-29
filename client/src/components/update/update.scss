@@ -12,6 +12,16 @@
     align-items: center;
     justify-content: center;
     z-index: 999;
+    .overloading {
+      width: 100%;
+      height: 100%;
+      background-color: #00000075;
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1500;
+    }
 
     .wrapper {
       margin: auto;
@@ -86,7 +96,7 @@
           }
 
           .edit-avatar {
-            color: #1877F2;
+            color: #1877f2;
             margin-left: auto;
             font-weight: 600;
             padding: 10px 15px;

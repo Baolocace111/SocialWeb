@@ -42,6 +42,7 @@ export const AuthModel = {
 
       db.query(q, [username], (err, data) => {
         if (err) reject(err);
+        if (!Array.isArray(data)) reject("Error");
         if (data.length === 0) reject("User is not found");
         resolve(data[0]);
       });

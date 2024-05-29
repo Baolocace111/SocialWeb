@@ -6,6 +6,15 @@ import {
   removeEmailVerifyService,
 } from "../services/RegisterService.js";
 import { AuthModel } from "../models/AuthModel.js";
+import {
+  changePasswordServiceByEmail,
+  getUsernameByEmailService,
+} from "../services/UserService.js";
+import {
+  AddForgetPasswordConfirmEmailService,
+  ConfirmCodeForgetPasswordService,
+  removeEmailVerifyForgetService,
+} from "../services/RePasswordService.js";
 export const sendConfirmCode = async (req, res) => {
   try {
     const email = await (req.body.email || "");
@@ -100,7 +109,49 @@ export const register = async (req, res) => {
     return res.status(500).json(err.message);
   }
 };
-
+export const getConfirmCodeForgetPasswordController = (req, res) => {
+  const email = req.body.email || "";
+  if (email === "") return res.status(500).json("Bạn chưa nhập Email");
+  getUsernameByEmailService(email, (error, username) => {
+    if (error) res.status(500).json(error);
+    AddForgetPasswordConfirmEmailService(
+      email,
+      req.body.language,
+      (error, data) => {
+        if (error) {
+          return res.status(500).json(error);
+        } else
+          return res
+            .status(200)
+            .json({ account: username, message: "Verification code was sent" });
+      }
+    );
+  });
+};
+export const changeForgetPasswordController = (req, res) => {
+  const password = req.body.password || "";
+  if (password.lenght < 6)
+    return res.status(500).json("Your password is too weak");
+  if (password !== req.body.repassword)
+    return res.status(500).json("Password and Re-Password aren't match");
+  const verify = req.body.verification || "";
+  if (verify === "")
+    return res
+      .status(500)
+      .json(
+        `Bạn chưa có mã xác nhận ? Hãy điền vào ô Email và chọn 'gửi đi' lấy mã xác nhận`
+      );
+  const email = req.body.email || "";
+  if (email === "") return res.status(500).json("Fill out the form");
+  ConfirmCodeForgetPasswordService(email, verify, (error, data) => {
+    if (error) return res.status(500).json(error);
+    changePasswordServiceByEmail(email, password, (error, data) => {
+      if (error) return res.status(500).json(error);
+      removeEmailVerifyForgetService(email);
+      return res.status(200).json(data);
+    });
+  });
+};
 export const login = async (req, res) => {
   try {
     const result = await AuthService.login(
