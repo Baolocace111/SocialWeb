@@ -6,7 +6,7 @@ const Gallery = () => {
   const { currentUser } = useContext(AuthContext);
   return (
     <div className="gallery">
-      <ImageContainer userid={currentUser.id} />
+      <ImageContainer userId={currentUser.id} />
     </div>
   );
 };
