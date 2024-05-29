@@ -5,10 +5,12 @@ import {
   addComment,
   deleteComment,
   getCommentByCommentId,
+  getCommentUserById,
+  addImageComment,
 } from "../models/CommentModel.js";
 import { SECRET_KEY } from "./AuthService.js";
-export const getCommentsService = (postId, callback) => {
-  getCommentsByPostId(postId, (err, data) => {
+export const getCommentsService = (userId, postId, callback) => {
+  getCommentsByPostId(userId, postId, (err, data) => {
     if (err) return callback(err, null);
     return callback(null, data);
   });
@@ -28,6 +30,13 @@ export const addCommentWithTokenService = (token, desc, postId, callback) => {
     });
   });
 };
+export const addImageCommentService = (userid, desc, img, postId, callback) => {
+  const createdAt = moment(Date.now()).format("YYYY-MM-DD HH:mm:ss");
+  addImageComment(desc, createdAt, userid, postId, img, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data);
+  });
+};
 export const getCommentByIdService = (commentId, callback) => {
   getCommentByCommentId(commentId, (err, data) => {
     if (err) return callback(err, null);
@@ -39,5 +48,17 @@ export const deleteCommentByUser = (user_id, commentId, callback) => {
   deleteComment(commentId, user_id, (err, data) => {
     if (err) return callback(err, null);
     return callback(null, data);
+  });
+};
+export const getUserImageCommentByIdService = (userid, commentid, callback) => {
+  getCommentUserById(userid, commentid, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data.image);
+  });
+};
+export const getAdminImageCommentByIdService = (id, callback) => {
+  getCommentByCommentId(id, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data.image);
   });
 };

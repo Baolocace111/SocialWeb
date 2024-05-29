@@ -68,7 +68,7 @@ const Share = () => {
       try {
         return await makeRequest.post("/posts/videopost", newPost);
       } catch (error) {
-        alert(error.response.data);
+        alert(trl(error.response.data));
         setPosting(false);
       }
     },
@@ -222,7 +222,7 @@ const Share = () => {
                   if (isImageAndVideo(selectedFile)) {
                     setFile(selectedFile);
                   } else {
-                    alert("Unacceptable file");
+                    alert(trl("Unacceptable file"));
                   }
                 }}
               />

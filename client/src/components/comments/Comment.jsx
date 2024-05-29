@@ -97,6 +97,16 @@ const Comment = ({ comment, postUserID }) => {
         </span>
 
         <p>{comment.desc}</p>
+        {comment.image && (
+          <img
+            src={URL_OF_BACK_END + `comments/image?id=` + comment.id}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "/upload/errorImage.png";
+            }}
+            alt={URL_OF_BACK_END + `comments/image?id=` + comment.id}
+          ></img>
+        )}
       </div>
 
       <div className="editting">
