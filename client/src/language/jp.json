@@ -285,5 +285,6 @@
   "Wrong password": "間違ったパスワード",
   "Updated!": "更新!",
   "You can update only your profile!": "プロフィールのみ更新できます!",
-  "Your password is too weak": "あなたのパスワードは安全度が低いです"
+  "Your password is too weak": "あなたのパスワードは安全度が低いです",
+  "Unacceptable file": "ファイルはサポートされていません"
 }

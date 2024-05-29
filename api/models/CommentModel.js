@@ -1,14 +1,53 @@
 import { db } from "../connect.js";
+export const getCommentUserById = (userId, commentId, callback) => {
+  const q = `
+  SELECT c.*, u.id AS userId, u.name
+  FROM comments AS c
+  JOIN users AS u ON (u.id = c.userId)
+  JOIN posts p ON (c.postId = p.id)
+  LEFT JOIN friendships f ON (p.userId = f.friend_id AND f.user_id = ? AND f.status = 1)
+  LEFT JOIN relationships r ON (p.userId = r.followedUserId)
+  WHERE c.id = ? 
+    AND (p.status = 0 
+      OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) 
+      OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?))))
+  ORDER BY c.createdAt DESC`;
 
-export const getCommentsByPostId = (postId, callback) => {
-  const q = `SELECT c.*, u.id AS userId, name FROM comments AS c JOIN users AS u ON (u.id = c.userId)
-    WHERE c.postId = ? ORDER BY c.createdAt DESC`;
-
-  db.query(q, [postId], (err, data) => {
+  db.query(q, [userId, commentId, userId, userId, userId], (err, data) => {
     if (err) return callback(err, null);
+
+    if (data.length === 0)
+      return callback(null, {
+        error: true,
+        desc: "Không tìm thấy thông tin của bình luận",
+      });
+
+    return callback(null, data[0]);
+  });
+};
+
+export const getCommentsByPostId = (userId, postId, callback) => {
+  const q = `
+    SELECT c.*, u.id AS userId, u.name
+    FROM comments AS c
+    JOIN users AS u ON (u.id = c.userId)
+    JOIN posts p ON (c.postId = p.id)
+    LEFT JOIN friendships f ON (p.userId = f.friend_id AND f.user_id = ? AND f.status = 1)
+    LEFT JOIN relationships r ON (p.userId = r.followedUserId)
+    WHERE c.postId = ? 
+      AND (p.status = 0 
+        OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) 
+        OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?))))
+    ORDER BY c.createdAt DESC`;
+
+  db.query(q, [userId, postId, userId, userId, userId], (err, data) => {
+    if (err) return callback(err, null);
+    if (data.length === 0) return callback(null, []);
+
     return callback(null, data);
   });
 };
+
 export const getCommentByCommentId = (commentId, callback) => {
   const q = `SELECT c.*, u.id AS userId, u.name AS userName, post.*, post.postName
   FROM comments AS c 
@@ -62,13 +101,90 @@ export const getCommentByCommentId = (commentId, callback) => {
   });
 };
 export const addComment = (desc, createdAt, userId, postId, callback) => {
-  const q =
-    "INSERT INTO comments (`desc`, `createdAt`, `userId`, `postId`) VALUES (?, ?, ?, ?)";
-  const values = [desc, createdAt, userId, postId];
+  const q = `
+    INSERT INTO comments (\`desc\`, \`createdAt\`, \`userId\`, \`postId\`)
+    SELECT ?, ?, ?, ?
+    FROM posts p
+    LEFT JOIN friendships f ON (p.userId = f.friend_id AND f.user_id = ? AND f.status = 1)
+    LEFT JOIN relationships r ON (p.userId = r.followedUserId)
+    WHERE p.id = ?
+      AND (p.status = 0 
+        OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) 
+        OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?))))
+    LIMIT 1
+  `;
+
+  const values = [
+    desc,
+    createdAt,
+    userId,
+    postId,
+    userId,
+    postId,
+    userId,
+    userId,
+    userId,
+  ];
 
   db.query(q, values, (err, data) => {
     if (err) return callback(err, null);
-    return callback(null, "Comment has been created.");
+
+    if (data.affectedRows === 0) {
+      return callback(null, {
+        error: true,
+        desc: "Bạn không có quyền thêm bình luận vào bài viết này hoặc bài viết không tồn tại",
+      });
+    }
+
+    return callback(null, "Bình luận đã được tạo.");
+  });
+};
+
+export const addImageComment = (
+  desc,
+  createdAt,
+  userId,
+  postId,
+  image,
+  callback
+) => {
+  const q = `
+    INSERT INTO comments (\`desc\`, \`createdAt\`, \`userId\`, \`postId\`, \`image\`)
+    SELECT ?, ?, ?, ?, ?
+    FROM posts p
+    LEFT JOIN friendships f ON (p.userId = f.friend_id AND f.user_id = ? AND f.status = 1)
+    LEFT JOIN relationships r ON (p.userId = r.followedUserId)
+    WHERE p.id = ?
+      AND (p.status = 0 
+        OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) 
+        OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?))))
+    LIMIT 1
+  `;
+
+  const values = [
+    desc,
+    createdAt,
+    userId,
+    postId,
+    image,
+    userId,
+    postId,
+    userId,
+    userId,
+    userId,
+  ];
+
+  db.query(q, values, (err, data) => {
+    if (err) return callback(err, null);
+
+    if (data.affectedRows === 0) {
+      return callback(null, {
+        error: true,
+        desc: "Bạn không có quyền thêm bình luận vào bài viết này hoặc bài viết không tồn tại",
+      });
+    }
+
+    return callback(null, "Bình luận đã được tạo.");
   });
 };
 

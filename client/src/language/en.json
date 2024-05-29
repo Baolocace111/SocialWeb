@@ -285,5 +285,6 @@
   "Wrong password": "Wrong password",
   "Updated!": "Updated!",
   "You can update only your profile!": "You can only update your profile!",
-  "Your password is too weak": "Your password is too weak"
+  "Your password is too weak": "Your password is too weak",
+  "Unacceptable file": "Unacceptable file"
 }
