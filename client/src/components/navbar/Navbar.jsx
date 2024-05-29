@@ -308,7 +308,11 @@ const Navbar = () => {
             onKeyPress={handleKeyPress}
           />
         </div>
-        <HomeOutlinedIcon />
+        <HomeOutlinedIcon
+          onClick={() => {
+            window.scrollTo(0, 0);
+          }}
+        />
         {darkMode ? (
           <WbSunnyOutlinedIcon onClick={toggle} />
         ) : (

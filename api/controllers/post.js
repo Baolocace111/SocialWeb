@@ -18,6 +18,7 @@ import {
   addGroupPostService,
   addGroupVideoPostService,
   getGroupPostsService,
+  getImagePostIDByUserService,
 } from "../services/PostService.js";
 import { AuthService } from "../services/AuthService.js";
 import { upload } from "../Multer.js";
@@ -25,6 +26,24 @@ import path from "path";
 import fs from "fs";
 import { SECRET_KEY } from "../services/AuthService.js";
 import { normalBackgroundUser } from "./backgroundController.js";
+export const getImageFromUserController = (req, res) => {
+  normalBackgroundUser(req, res, (error, userId) => {
+    if (error) return res.status(500).json(error);
+
+    if (!Number.isInteger(req.body.page))
+      return res.status(500).json("Offset is invalid");
+    getImagePostIDByUserService(
+      userId,
+      req.body.userid,
+      req.body.page,
+      (error, data) => {
+        if (error) return res.status(500).json(error);
+
+        return res.status(200).json(data);
+      }
+    );
+  });
+};
 export const getPostByIdController = (req, res) => {
   const postId = req.params.postId;
   const token = req.cookies.accessToken;

@@ -16,6 +16,7 @@ import {
   getGroupPostsController,
   addGroupPostController,
   addGroupVideoPostController,
+  getImageFromUserController,
 } from "../controllers/post.js";
 
 const router = express.Router();
@@ -36,4 +37,5 @@ router.get("/videopost/:postId", getVideoFromPostController);
 router.post("/group-post", addGroupPostController);
 router.post("/group-videopost", addGroupVideoPostController);
 router.get("/:groupId/group-posts", getGroupPostsController);
+router.post("/user/image", getImageFromUserController);
 export default router;

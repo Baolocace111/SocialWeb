@@ -62,6 +62,7 @@ import FriendDashBoard from "./pages/friend/friendDashboard/FriendDashboard";
 import UnderContructionPage from "./pages/Error/UnderContruction";
 import AdminFeedback from "./pages/admin/adminFeedback/AdminFeedback";
 import OnlyFanPage from "./pages/home/onlyFan/OnlyFan";
+import Gallery from "./pages/gallery/Gallery";
 
 function App() {
    const { currentUser } = useContext(AuthContext);
@@ -305,8 +306,14 @@ function App() {
       return (
          <div className={`theme-${darkMode ? "dark" : "light"}`}>
             <div style={{ display: "flex" }}>
-               <StoriesBar selectedUserId={activeStoryUserId} onUserSelect={setSelectedUserId} />
-               <Story userId={selectedUserId} onActiveUserChange={setActiveStoryUserId} />
+               <StoriesBar
+                  selectedUserId={activeStoryUserId}
+                  onUserSelect={setSelectedUserId}
+               />
+               <Story
+                  userId={selectedUserId}
+                  onActiveUserChange={setActiveStoryUserId}
+               />
             </div>
          </div>
       );
@@ -351,7 +358,7 @@ function App() {
             },
             {
                path: "/gallery",
-               element: <UnderContructionPage></UnderContructionPage>,
+               element: <Gallery />,
             },
             {
                path: "/video",
@@ -511,7 +518,7 @@ function App() {
       },
       {
          path: "/notification/post/:postId",
-         element: <PostNotificationLayout />
+         element: <PostNotificationLayout />,
       },
       {
          path: "/error",

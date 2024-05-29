@@ -153,7 +153,13 @@
         font-size: 20px;
         color: themed("logo");
       }
-
+      svg {
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        &:hover {
+          transform: scale(1.2);
+        }
+      }
       .search {
         display: flex;
         align-items: center;

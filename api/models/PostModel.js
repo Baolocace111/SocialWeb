@@ -1,5 +1,33 @@
 import { db } from "../connect.js";
 import moment from "moment";
+export const getImagePostByUserLimitModel = (
+  userId,
+  myId,
+  offset,
+  limit,
+  callback
+) => {
+  const q = `
+SELECT DISTINCT p.*, u.id AS userid, u.name, u.profilePic
+  FROM posts p
+  LEFT JOIN friendships f ON (p.userId=f.friend_id AND f.user_id = ? AND f.status = 1)
+  LEFT JOIN users u ON (p.userId = u.id)
+  WHERE (p.type =2) AND (p.userId = ?) AND (p.status = 0 OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?)))) ORDER BY p.createdAt DESC limit ? offset ?`;
+
+  db.query(
+    q,
+    [myId, userId, myId, myId, myId, limit, (offset - 1) * limit],
+    (error, results) => {
+      if (error) return callback(error, null);
+      return callback(
+        null,
+        results.map((post) => {
+          return post.id;
+        })
+      );
+    }
+  );
+};
 export const getPostById = (userId, postId, callback) => {
   const q = `SELECT DISTINCT p.*, u.id AS userid, u.name,  f.user_id
     FROM posts p
@@ -39,21 +67,21 @@ export const getPostByIdAdmin = (postid, callback) => {
     return callback(null, data[0]);
   });
 };
-export const getPosts = (userId, userInfo, callback) => {
-  const q =
-    userId !== "undefined"
-      ? `SELECT p.*, u.id AS userId, name FROM posts AS p JOIN users AS u ON (u.id = p.userId) WHERE p.userId = ? ORDER BY p.createdAt DESC`
-      : `SELECT DISTINCT p.*, u.id AS userId, name FROM posts AS p JOIN users 
-      AS u ON (u.id = p.userId) 
-      LEFT JOIN relationships AS r ON (p.userId = r.followedUserId) WHERE r.followerUserId = ? OR p.userId = ? ORDER BY p.createdAt DESC`;
+// export const getPosts = (userId, userInfo, callback) => {
+//   const q =
+//     userId !== "undefined"
+//       ? `SELECT p.*, u.id AS userId, name FROM posts AS p JOIN users AS u ON (u.id = p.userId) WHERE p.userId = ? ORDER BY p.createdAt DESC`
+//       : `SELECT DISTINCT p.*, u.id AS userId, name FROM posts AS p JOIN users
+//       AS u ON (u.id = p.userId)
+//       LEFT JOIN relationships AS r ON (p.userId = r.followedUserId) WHERE r.followerUserId = ? OR p.userId = ? ORDER BY p.createdAt DESC`;
 
-  const values = userId !== "undefined" ? [userId] : [userInfo.id, userInfo.id];
+//   const values = userId !== "undefined" ? [userId] : [userInfo.id, userInfo.id];
 
-  db.query(q, values, (err, data) => {
-    if (err) return callback(err, null);
-    return callback(null, data);
-  });
-};
+//   db.query(q, values, (err, data) => {
+//     if (err) return callback(err, null);
+//     return callback(null, data);
+//   });
+// };
 export const getPostsWithPrivateByUser = (userId, myId, callback) => {
   const q = `
   SELECT DISTINCT p.*, u.id AS userid, u.name, u.profilePic
@@ -271,7 +299,7 @@ export const updatePost = (postId, updatedPost, callback) => {
   });
 };
 export const updateImagePost = (postId, img, user_id, callback) => {
-  const q = "UPDATE posts SET `img` = ? WHERE id = ? AND userId = ?";
+  const q = "UPDATE posts SET `img` = ? WHERE id = ? AND userId = ? AND type=2";
   const values = [img, postId, user_id];
 
   db.query(q, values, (err, data) => {
@@ -435,7 +463,7 @@ export const deletePostbyAdmin = (postId, callback) => {
 };
 export const deleteImageOfPost = (postId, userId, callback) => {
   const q =
-    "UPDATE posts SET img = NULL WHERE `id` = ? AND `userId`=? AND (`desc` IS NOT NULL AND `desc` <>'') ;";
+    "UPDATE posts SET img = NULL,  type = 0   WHERE id = ?   AND userId = ?   AND `desc` IS NOT NULL  AND `desc` <> ''";
   db.query(q, [postId, userId], (err, deleted) => {
     if (err) return callback(err, null);
 
