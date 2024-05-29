@@ -2,10 +2,10 @@ import "./postPage.scss";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { makeRequest } from "../../axios";
-import DetailedPost from "../../components/post/detailedPost/DetailedPost";
-import ThreePointLoading from "../../components/loadingComponent/threepointLoading/ThreePointLoading";
-import { useLanguage } from "../../context/languageContext";
+import { makeRequest } from "../../../axios";
+import DetailedPost from "../../../components/post/detailedPost/DetailedPost";
+import ThreePointLoading from "../../../components/loadingComponent/threepointLoading/ThreePointLoading";
+import { useLanguage } from "../../../context/languageContext";
 
 const PostPage = () => {
   const { trl } = useLanguage();
