@@ -7,8 +7,8 @@ const ShowGroupPosts = ({ isLoading, error, posts }) => {
         <div className="posts">
             {error ? (
                 "Something went wrong!"
-            ) : isLoading ? (
-                <ThreePointLoading></ThreePointLoading>
+            ) : isLoading && posts?.length === 0 ? (
+                <ThreePointLoading/>
             ) : Array.isArray(posts) ? (
                 posts.map((post) => (
                     <div key={post.id}>

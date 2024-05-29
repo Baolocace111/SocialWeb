@@ -36,8 +36,8 @@ export const addLikeWithTokenService = (token, postId, callback) => {
                     name: data.name,
                   }),
                   post.type === 1
-                    ? `/seepost/${post.img}`
-                    : `/seepost/${post.id}`,
+                    ? `/notification/post/${post.img}`
+                    : `/notification/post/${post.id}`,
                   `users/profilePic/${userInfo.id}`,
                   0,
                   (err, data) => {

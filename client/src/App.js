@@ -38,7 +38,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import FriendInvite from "./pages/friend/friendinvite/FriendInvite";
 import FriendSuggest from "./pages/friend/friendSuggest/FriendSuggest";
 import SearchPost from "./pages/search/searchPost/SearchPost";
-import PostPage from "./pages/post/PostPage";
+import PostPage from "./pages/post/detailedPost/PostPage";
+import NotifiedPost from "./pages/post/notifiedPost/NotifiedPost";
 import Error from "./pages/Error/Error";
 import AdminOnly from "./pages/Error/AdminOnly";
 import AdminHome from "./pages/admin/adminHome/AdminHome";
@@ -122,6 +123,15 @@ function App() {
          <div className={`theme-${darkMode ? "dark" : "light"}`}>
             <Navbar />
             <Profile />
+         </div>
+      );
+   };
+
+   const PostNotificationLayout = () => {
+      return (
+         <div className={`theme-${darkMode ? "dark" : "light"}`}>
+            <Navbar />
+            <NotifiedPost />
          </div>
       );
    };
@@ -498,6 +508,10 @@ function App() {
       {
          path: "/seepost/:postId",
          element: <PostLayout />,
+      },
+      {
+         path: "/notification/post/:postId",
+         element: <PostNotificationLayout />
       },
       {
          path: "/error",

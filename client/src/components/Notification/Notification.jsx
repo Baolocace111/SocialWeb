@@ -14,7 +14,6 @@ import {
   faUserTie,
   faRecycle,
   faHandshake,
-  faUserSlash,
   faHandshakeSimpleSlash,
   faNewspaper,
   faTextSlash,
