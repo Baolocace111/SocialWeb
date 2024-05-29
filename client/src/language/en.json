@@ -279,5 +279,11 @@
   "Bạn chưa nhập Email": "Please enter Email",
   "Wrong code! Try again": "Verification code is wrong. Try again",
   "Your email hasn't been registed": "Your email hasn't been registed",
-  "This email does not have a confirmation code": "This email does not have a confirmation code"
+  "This email does not have a confirmation code": "This email does not have a confirmation code",
+  "Forget password": "Forget password",
+  "user not found": "User not found",
+  "Wrong password": "Wrong password",
+  "Updated!": "Updated!",
+  "You can update only your profile!": "You can only update your profile!",
+  "Your password is too weak": "Your password is too weak"
 }

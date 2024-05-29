@@ -10,6 +10,18 @@ export const getUser = (req, res) => {
     return res.json(data);
   });
 };
+export const getUsernameByEmailService = (email, callback) => {
+  userModel.getUserByEmail(email, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data.username);
+  });
+};
+export const getUserIDByEmailService = (email, callback) => {
+  userModel.getUserByEmail(email, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data.id);
+  });
+};
 export const getCoverPicOrProfilePic = (userid, COrP, callback) => {
   userModel.getUserById(userid, (err, data) => {
     if (err) return callback(err, null);
@@ -83,6 +95,19 @@ export const changePasswordService = async (userid, newps, oldps, callback) => {
     const salt = await bcrypt.genSaltSync(10);
     const hashednewPassword = await bcrypt.hashSync(newps, salt);
     userModel.updatePasswordUser(userid, hashednewPassword, (err, data) => {
+      if (err) return callback(err, null);
+      return callback(null, data);
+    });
+  } catch (error) {
+    console.log(error);
+    return callback(error, null);
+  }
+};
+export const changePasswordServiceByEmail = async (email, newps, callback) => {
+  try {
+    const salt = await bcrypt.genSaltSync(10);
+    const hashednewPassword = await bcrypt.hashSync(newps, salt);
+    userModel.updatePasswordEmail(email, hashednewPassword, (err, data) => {
       if (err) return callback(err, null);
       return callback(null, data);
     });

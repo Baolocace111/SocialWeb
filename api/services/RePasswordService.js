@@ -21,12 +21,15 @@ const transporter = nodemailer.createTransport({
     pass: "sbnhizrhthorcecl", // Mật khẩu email của bạn
   },
 });
-const listRegister = new Map();
-
-export const AddConfirmEmail = (email, language, callback) => {
-  if (listRegister.has(email)) listRegister.delete(email);
+const listForgetPassword = new Map();
+export const AddForgetPasswordConfirmEmailService = (
+  email,
+  language,
+  callback
+) => {
+  if (listForgetPassword.has(email)) listForgetPassword.delete(email);
   const confirmCode = generateRandomCode(8);
-  listRegister.set(email, confirmCode);
+  listForgetPassword.set(email, confirmCode);
   const mailOptions = {
     from: "toiguibanthongbao@gmail.com",
     to: email,
@@ -49,9 +52,9 @@ export const AddConfirmEmail = (email, language, callback) => {
     return callback(null, info);
   });
 };
-export const ConfirmCodeService = (email, code, callback) => {
-  if (listRegister.has(email)) {
-    if (listRegister.get(email) === code) {
+export const ConfirmCodeForgetPasswordService = (email, code, callback) => {
+  if (listForgetPassword.has(email)) {
+    if (listForgetPassword.get(email) === code) {
       return callback(null, "That true");
     } else {
       return callback("Wrong code! Try again", null);
@@ -60,6 +63,6 @@ export const ConfirmCodeService = (email, code, callback) => {
     return callback("This email does not have a confirmation code", null);
   }
 };
-export const removeEmailVerifyService = (email) => {
-  if (listRegister.has(email)) listRegister.delete(email);
+export const removeEmailVerifyForgetService = (email) => {
+  if (listForgetPassword.has(email)) listForgetPassword.delete(email);
 };

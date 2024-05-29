@@ -105,6 +105,15 @@ const Register = () => {
             </div>
             <div>
               <input
+                type="text"
+                placeholder={trl("Name")}
+                name="name"
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div>
+              <input
                 type="email"
                 placeholder={trl("Email")}
                 name="email"
@@ -125,41 +134,38 @@ const Register = () => {
                 />
               </div>
             )}
-            <div>
-              <input
-                type="text"
-                placeholder={trl("Name")}
-                name="name"
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div>
-              <input
-                type="password"
-                placeholder={trl("Password")}
-                name="password"
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div>
-              <input
-                type="password"
-                placeholder={trl("Confirm Password")}
-                name="repassword"
-                onChange={handleChange}
-                required
-              />
-            </div>
+            {confirmCodeInput && (
+              <div>
+                <input
+                  type="password"
+                  placeholder={trl("Password")}
+                  name="password"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            )}
+            {confirmCodeInput && (
+              <div>
+                <input
+                  type="password"
+                  placeholder={trl("Confirm Password")}
+                  name="repassword"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            )}
             {message && (
               <div className={error ? "error" : "message"}>{trl(message)}</div>
             )}
           </form>
-          <button onClick={handleClick}>
-            {" "}
-            {registerLoading ? <Dotfloating /> : <h3>{trl("Sign Up")}</h3>}
-          </button>
+          {confirmCodeInput && (
+            <button onClick={handleClick}>
+              {" "}
+              {registerLoading ? <Dotfloating /> : <h3>{trl("Sign Up")}</h3>}
+            </button>
+          )}
         </div>
       </div>
     </div>

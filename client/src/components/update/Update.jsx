@@ -13,6 +13,8 @@ import { FormThemeProvider } from "react-form-component";
 import Form, { Input } from "react-form-component";
 import { useLanguage } from "../../context/languageContext";
 
+import BallInBar from "../loadingComponent/ballInBar/BallInBar";
+
 const useStyles = makeStyles({
   root: {
     flexGrow: 1,
@@ -28,6 +30,7 @@ const Update = ({ setOpenUpdate, user }) => {
     website: user.website || "",
   });
   const [CPerror, setCPError] = useState(null);
+  const [onLoading, setOnLoading] = useState(false);
   const [changePassword, setChangePassword] = useState({
     password: "",
     repassword: "",
@@ -124,7 +127,16 @@ const Update = ({ setOpenUpdate, user }) => {
 
   const imageProfileMutation = useMutation(
     (image) => {
-      return makeRequest.put("/users/profilePic", image);
+      setOnLoading(true);
+      return makeRequest
+        .put("/users/profilePic", image)
+        .then((response) => {
+          setOnLoading(false);
+        })
+        .catch((e) => {
+          alert(trl(e.response?.data));
+          setOnLoading(false);
+        });
     },
     {
       onSuccess: () => {
@@ -135,7 +147,16 @@ const Update = ({ setOpenUpdate, user }) => {
   );
   const imageCoverMutation = useMutation(
     (image) => {
-      return makeRequest.put("/users/coverPic", image);
+      setOnLoading(true);
+      return makeRequest
+        .put("/users/coverPic", image)
+        .then((response) => {
+          setOnLoading(false);
+        })
+        .catch((e) => {
+          alert(trl(e.response?.data));
+          setOnLoading(false);
+        });
     },
     {
       onSuccess: () => {
@@ -147,7 +168,16 @@ const Update = ({ setOpenUpdate, user }) => {
 
   const mutation = useMutation(
     (user) => {
-      return makeRequest.put("/users", user);
+      setOnLoading(true);
+      return makeRequest
+        .put("/users", user)
+        .then((response) => {
+          setOnLoading(false);
+        })
+        .catch((e) => {
+          alert(trl(e.response?.data));
+          setOnLoading(false);
+        });
     },
     {
       onSuccess: () => {
@@ -158,11 +188,20 @@ const Update = ({ setOpenUpdate, user }) => {
   );
   const ChangePasswordmutation = useMutation(
     (CPassword) => {
-      return makeRequest.post("/users/changepassword", CPassword);
+      setOnLoading(true);
+      return makeRequest
+        .post("/users/changepassword", CPassword)
+        .then((response) => {
+          setOnLoading(false);
+        })
+        .catch((e) => {
+          setOnLoading(false);
+        });
     },
     {
       onSuccess: () => {
         try {
+          setOnLoading(true);
           makeRequest.post("/auth/logout");
           window.location.href = "/login";
         } catch (err) {
@@ -186,6 +225,12 @@ const Update = ({ setOpenUpdate, user }) => {
 
   return (
     <div className="update">
+      {onLoading && (
+        <div className="overloading">
+          <BallInBar></BallInBar>
+        </div>
+      )}
+
       <div className="wrapper">
         <div className="menu">
           <Paper className={classes.root}>

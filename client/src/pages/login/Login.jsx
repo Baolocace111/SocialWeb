@@ -8,6 +8,7 @@ import { useLanguage } from "../../context/languageContext";
 import PopupWindow from "../../components/PopupComponent/PopupWindow";
 import CircleProgressBar from "../../components/loadingComponent/CircleProgressBar/CircleProgressBar";
 import Dotfloating from "../../components/loadingComponent/dotfloating/Dotfloating";
+import ForgetPassword from "../../components/ForgetPassword/ForgetPassword";
 const Login = () => {
   const { trl } = useLanguage();
   const [inputs, setInputs] = useState({
@@ -17,6 +18,7 @@ const Login = () => {
   const [err, setErr] = useState(null);
   const [checkConnection, setCheckConnection] = useState(true);
   const [loginLoading, setLoginLoading] = useState(false);
+  const [forgetPassword, setForgetPassword] = useState(false);
   const navigate = useNavigate();
   const closePopup = () => {
     setCheckConnection(false);
@@ -44,8 +46,15 @@ const Login = () => {
 
   return (
     <div className="login">
-      <PopupWindow show={checkConnection}>
+      <PopupWindow show={checkConnection} handleClose={() => {}}>
         <CircleProgressBar handleClose={closePopup}></CircleProgressBar>
+      </PopupWindow>
+      <PopupWindow show={forgetPassword} handleClose={() => {}}>
+        <ForgetPassword
+          handleReturn={() => {
+            setForgetPassword(false);
+          }}
+        ></ForgetPassword>
       </PopupWindow>
       <div className="float">
         <LanguageSwitcher text={true}></LanguageSwitcher>
@@ -77,8 +86,16 @@ const Login = () => {
               required
             />
             {err && <div className="error">{trl(err)}</div>}
-
-            <button type="submit" onClick={handleLogin}>
+            <div className="fgpass">
+              <h5
+                onClick={() => {
+                  setForgetPassword(true);
+                }}
+              >
+                {trl("Forget password")}
+              </h5>
+            </div>
+            <button type="button" onClick={handleLogin}>
               {loginLoading ? (
                 <Dotfloating></Dotfloating>
               ) : (
