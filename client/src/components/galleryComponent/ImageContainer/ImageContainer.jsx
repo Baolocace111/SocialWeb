@@ -1,78 +1,57 @@
-import { useLanguage } from "../../../context/languageContext";
 import "./imageContainer.scss";
-import { useState } from "react";
+import { useLanguage } from "../../../context/languageContext";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import ThreePointLoading from "../../loadingComponent/threepointLoading/ThreePointLoading";
 import { makeRequest } from "../../../axios";
+import { Waypoint } from "react-waypoint";
+import { useState } from "react";
+import ImagePost from "../ImagePost/ImagePost";
 
-const ImageContainer = ({ userid }) => {
-  const { trl } = useLanguage();
+const ImageContainer = ({ userId }) => {
+   const { trl } = useLanguage();
+   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  const {
-    data,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-    isFetchingNextPage,
-    status,
-  } = useInfiniteQuery(
-    ["imagePostid", userid],
-    ({ pageParam = 1 }) =>
-      makeRequest
-        .post("/posts/user/image", {
-          userid,
-          page: pageParam,
-        })
-        .then((res) => {
-          console.log(res.data);
-          return res.data;
-        }),
-    {
-      getNextPageParam: (lastPage) => {
-        if (!lastPage) return undefined;
-        if (lastPage.posts.length === 0 || lastPage.next === -1) {
-          return undefined;
-        }
-        return lastPage.next;
-      },
-    }
-  );
+   const fetchImages = async ({ pageParam = 1 }) => {
+      const requestBody = {
+         userid: userId,
+         page: pageParam,
+      };
+      const res = await makeRequest.post(`/posts/user/image`, requestBody);
+      return res.data;
+   };
 
-  return (
-    <div className="imageContainer">
-      <div className="menu">
-        <span>{trl("Gallery")}</span>
+   const {
+      data,
+      fetchNextPage,
+      hasNextPage,
+      isFetchingNextPage,
+   } = useInfiniteQuery(
+      ["user-images", userId],
+      fetchImages,
+      {
+         getNextPageParam: (lastPage) => lastPage.next !== -1 ? lastPage.next : undefined,
+         refetchOnWindowFocus: false,
+      }
+   );
+
+   const handleWaypointEnter = () => {
+      if (hasNextPage && !isLoadingMore) {
+         setIsLoadingMore(true);
+         fetchNextPage();
+      }
+   };
+
+   return (
+      <div className="image-container">
+         <span className="title">{trl("Ảnh")}/{trl("Video")}</span>
+         <ImagePost
+            isLoading={isFetchingNextPage || isLoadingMore}
+            images={data ? data.pages.flatMap((page) => page.posts) : []}
+         />
+         {hasNextPage && <Waypoint onEnter={handleWaypointEnter} />}
+         {isLoadingMore && <ThreePointLoading />}
       </div>
-      <div className="container">
-        <div className="row">
-          <div>
-            {isFetching ? (
-              <div>Loading...</div>
-            ) : Error ? (
-              <div>Error: {error}</div>
-            ) : (
-              data.pages.map((page, index) => (
-                <div key={index}>
-                  {page.posts.map((postId) => (
-                    <div key={postId}>Post ID: {postId}</div>
-                  ))}
-                </div>
-              ))
-            )}
-            <button
-              onClick={() => fetchNextPage()}
-              disabled={!hasNextPage || isFetchingNextPage}
-            >
-              {isFetchingNextPage
-                ? "Loading more..."
-                : hasNextPage
-                ? "Load More"
-                : "Nothing more to load"}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+   );
 };
+
 export default ImageContainer;

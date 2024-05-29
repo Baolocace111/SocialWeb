@@ -128,11 +128,11 @@ function App() {
       );
    };
 
-   const PostNotificationLayout = () => {
+   const GalleryLayout = () => {
       return (
          <div className={`theme-${darkMode ? "dark" : "light"}`}>
             <Navbar />
-            <NotifiedPost />
+            <Gallery />
          </div>
       );
    };
@@ -266,6 +266,15 @@ function App() {
       );
    };
 
+   const PostNotificationLayout = () => {
+      return (
+         <div className={`theme-${darkMode ? "dark" : "light"}`}>
+            <Navbar />
+            <NotifiedPost />
+         </div>
+      );
+   };
+
    const SearchLayout = () => {
       const location = useLocation();
       const pathSegments = location.pathname.split("/");
@@ -357,10 +366,6 @@ function App() {
                element: <UnderContructionPage></UnderContructionPage>,
             },
             {
-               path: "/gallery",
-               element: <Gallery />,
-            },
-            {
                path: "/video",
                element: <UnderContructionPage></UnderContructionPage>,
             },
@@ -392,11 +397,15 @@ function App() {
       },
       {
          path: "/onlyfan",
-         element: <OnlyFanPage></OnlyFanPage>,
+         element: <OnlyFanPage />,
       },
       {
          path: "/profile/:userId",
          element: <ProfileLayout />,
+      },
+      {
+         path: "/gallery",
+         element: <GalleryLayout />,
       },
       {
          path: "/stories",
