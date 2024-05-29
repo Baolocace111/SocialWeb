@@ -1,0 +1,11 @@
+@import "../../../style.scss";
+
+.notifiedPost {
+   @include themify($themes) {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 25px auto;
+      width: 50%;
+   }
+}

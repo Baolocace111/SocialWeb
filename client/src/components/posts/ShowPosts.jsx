@@ -10,7 +10,7 @@ const ShowPosts = ({ isLoading, error, posts, hidden }) => {
     <div className="posts">
       {error ? (
         <h1> {trl("Something went wrong!")}</h1>
-      ) : isLoading && posts?.lenght === 0 ? (
+      ) : isLoading && posts?.length === 0 ? (
         <ThreePointLoading />
       ) : Array.isArray(posts) ? (
         posts
