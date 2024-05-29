@@ -21,6 +21,7 @@ import {
   addGroupPost,
   addGroupVideoPost,
   getGroupPosts,
+  getImagePostByUserLimitModel,
 } from "../models/PostModel.js";
 
 export const getPostsService = (userId, userInfo, offset, callback) => {
@@ -124,6 +125,13 @@ export const getPostByIdService = (userId, postId, callback) => {
   getPostById(userId, postId, (err, data) => {
     if (err) return callback(err);
     return callback(null, data);
+  });
+};
+export const getImagePostIDByUserService = (myId, userId, offset, callback) => {
+  getImagePostByUserLimitModel(userId, myId, offset, 10, (err, data) => {
+    if (err) return callback(err, null);
+    const next = data.length < 10 ? -1 : offset + 1;
+    return callback(null, { posts: data, next: next });
   });
 };
 export const updatePrivatePostService = (postId, userId, state, callback) => {
