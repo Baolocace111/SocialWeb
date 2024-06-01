@@ -3,6 +3,9 @@
   "Từ chối": "Deny",
   "Xóa bạn": "Unfriend",
   "Image": "Image",
+  "image": "image",
+  "video": "video",
+  "Page": "Page",
   "Cài đặt riêng tư": "Privacy settings",
   "Đoạn chat": "Chat segment",
   "Đóng góp ý kiến": "Feedback",
@@ -286,5 +289,6 @@
   "Updated!": "Updated!",
   "You can update only your profile!": "You can only update your profile!",
   "Your password is too weak": "Your password is too weak",
-  "Unacceptable file": "Unacceptable file"
+  "Unacceptable file": "Unacceptable file",
+  "File Management": "File Management"
 }

@@ -286,5 +286,9 @@
   "Updated!": "更新!",
   "You can update only your profile!": "プロフィールのみ更新できます!",
   "Your password is too weak": "あなたのパスワードは安全度が低いです",
-  "Unacceptable file": "ファイルはサポートされていません"
+  "Unacceptable file": "ファイルはサポートされていません",
+  "File Management": "ファイル管理",
+  "image": "画像",
+  "video": "ビデオ",
+  "Page": "ページ"
 }

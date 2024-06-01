@@ -1,5 +1,5 @@
 import "./posts.scss";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
 import { useState } from "react";
 import { Waypoint } from "react-waypoint";
