@@ -286,5 +286,9 @@
   "Updated!": "Đã cập nhật!",
   "You can update only your profile!": "Bạn chỉ có thể thay đổi thông tin của bạn!",
   "Your password is too weak": "Mật khẩu của bạn quá yếu",
-  "Unacceptable file": "Tệp không hỗ trợ"
+  "Unacceptable file": "Tệp không hỗ trợ",
+  "File Management": "Quản lý tệp tin",
+  "image": "hình ảnh",
+  "video": "video",
+  "Page": "Trang"
 }

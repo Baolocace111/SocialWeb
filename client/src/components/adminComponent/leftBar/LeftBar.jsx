@@ -68,6 +68,15 @@ const AdminLeftBar = () => {
         {" "}
         {trl("Feedback Management")}{" "}
       </div>
+      <div
+        className="click-tag"
+        onClick={() => {
+          window.location.href = "/admin/files";
+        }}
+      >
+        {" "}
+        {trl("File Management")}{" "}
+      </div>
       {false && (
         <div
           className="click-tag"

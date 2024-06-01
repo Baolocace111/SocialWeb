@@ -195,6 +195,16 @@ const FeedbackInformation = ({ feedback }) => {
               </span>
 
               <p>{comment.desc}</p>
+              {comment.image && (
+                <img
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "/upload/errorImage.png";
+                  }}
+                  src={`${URL_OF_BACK_END}admin/commentimage/get/${comment.id}`}
+                  alt=""
+                ></img>
+              )}
             </div>
           </div>
 

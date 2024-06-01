@@ -12,8 +12,18 @@ import {
   getFeedbackbyStatusController,
   handleFeedbackController,
 } from "../controllers/admin/adminFeedback.js";
-import { getCommentByCommentIdController } from "../controllers/admin/adminComment.js";
+import {
+  getCommentByCommentIdController,
+  getImageCommentByCommentIdController,
+} from "../controllers/admin/adminComment.js";
 import { getPostByIdAdminController } from "../controllers/admin/adminPost.js";
+import {
+  deleteFileFromFilePathController,
+  findOriginFromFilePathController,
+  getFileFromFilePathController,
+  getImageFileController,
+  getVideoFileController,
+} from "../controllers/admin/adminFile.js";
 const router = express.Router();
 //Post management
 router.delete("/deletepost", deletePostAdminController);
@@ -30,4 +40,11 @@ router.post("/feedback/handle", handleFeedbackController);
 router.delete("/feedback/delete/:id", deleteFeedbackController);
 //Comment management
 router.get("/comment/get/:id", getCommentByCommentIdController);
+router.get("/commentimage/get/:id", getImageCommentByCommentIdController);
+//File management
+router.get("/files/image", getImageFileController);
+router.get("/files/video", getVideoFileController);
+router.post("/files/origin", findOriginFromFilePathController);
+router.get("/files/getImage", getFileFromFilePathController);
+router.delete("/files/delete", deleteFileFromFilePathController);
 export default router;
