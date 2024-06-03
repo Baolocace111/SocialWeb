@@ -28,7 +28,7 @@ export const getCommentUserById = (userId, commentId, callback) => {
 
 export const getCommentsByPostId = (userId, postId, callback) => {
   const q = `
-    SELECT c.*, u.id AS userId, u.name
+    SELECT DISTINCT c.*, u.id AS userId, u.name
     FROM comments AS c
     JOIN users AS u ON (u.id = c.userId)
     JOIN posts p ON (c.postId = p.id)

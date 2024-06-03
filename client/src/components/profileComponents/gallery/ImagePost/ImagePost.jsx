@@ -1,7 +1,7 @@
 import "./imagePost.scss";
 import React from "react";
 import ReactPlayer from "react-player/lazy";
-import { URL_OF_BACK_END } from "../../../axios";
+import { URL_OF_BACK_END } from "../../../../axios";
 
 const ImagePost = ({ isLoading, images }) => {
   if (isLoading) return <div>Đang tải...</div>;
