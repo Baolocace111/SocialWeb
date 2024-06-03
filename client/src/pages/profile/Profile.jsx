@@ -24,7 +24,8 @@ import Tab from "@material-ui/core/Tab";
 import Update from "../../components/update/Update";
 import Posts from "../../components/posts/Posts";
 import ProfileInfo from "../../components/profileComponents/profileInfo/ProfileInfo";
-import ImageContainer from "../../components/galleryComponent/ImageContainer/ImageContainer";
+import ImageContainer from "../../components/profileComponents/gallery/ImageContainer/ImageContainer";
+import ProfileIntroduction from "../../components/profileComponents/introduction/ProfileIntroduction";
 
 import Share from "../../components/share/Share";
 import { ChatContext } from "../../components/navbar/ChatContext";
@@ -245,7 +246,7 @@ const Profile = () => {
                )}
                {value === 1 && (
                   <div className="profileContainer">
-                     <UnderContruction />
+                     <ProfileIntroduction />
                   </div>
                )}
                {value === 2 && (

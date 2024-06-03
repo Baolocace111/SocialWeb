@@ -1,4 +1,4 @@
-import ImageContainer from "../../components/galleryComponent/ImageContainer/ImageContainer";
+import ImageContainer from "../../components/profileComponents/gallery/ImageContainer/ImageContainer.jsx";
 import "./gallery.scss";
 import { AuthContext } from "../../context/authContext";
 import { useContext } from "react";

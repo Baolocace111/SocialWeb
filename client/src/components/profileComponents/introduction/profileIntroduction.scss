@@ -1,0 +1,107 @@
+@import "../../../style.scss";
+
+.profile-introduction {
+   @include themify($themes) {
+      display: flex;
+      border: 1px solid #ccd0d5;
+      border-radius: 8px;
+      background-color: themed("bg");
+      width: 80%;
+      margin: 0 auto;
+
+      .tabs {
+         flex: 1;
+         display: flex;
+         flex-direction: column;
+         padding: 10px;
+         border-right: 1px solid lightgray;
+
+         .tab {
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+
+            &:hover {
+               background-color: #f5f6f7;
+            }
+
+            &.active {
+               font-weight: 600;
+               color: #1877F2;
+               background-color: #ECF3FF;
+            }
+         }
+      }
+
+      .content {
+         display: flex;
+         flex-direction: column;
+         flex: 3;
+         padding: 10px 20px;
+         gap: 20px;
+
+         .subject {
+            display: flex;
+            flex-direction: column;
+
+            .title {
+               font-weight: 600;
+               font-size: 18px;
+               margin-bottom: 15px;
+            }
+
+            .infor-section {
+               display: flex;
+               flex-direction: column;
+               gap: 15px;
+
+               .info {
+                  display: flex;
+                  align-items: flex-start;
+                  gap: 20px;
+
+                  .detail-section {
+                     display: flex;
+                     flex-direction: column;
+                     gap: 10px;
+
+                     .detail {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 5px;
+
+                        .main {
+                           color: themed("textColor");
+                           font-size: 17px;
+                           font-weight: 500;
+                        }
+
+                        .sub {
+                           color: themed("textColorSoft");
+                           font-size: 14px;
+                        }
+                     }
+                  }
+
+                  .edit-button {
+                     display: flex;
+                     height: 35px;
+                     width: 35px;
+                     align-items: center;
+                     justify-content: center;
+                     border-radius: 50%;
+                     background-color: themed("bgSoft");
+                     cursor: pointer;
+                     margin-left: auto;
+
+                     &:hover {
+                        background-color: gainsboro;
+                     }
+                  }
+               }
+            }
+         }
+      }
+   }
+}
