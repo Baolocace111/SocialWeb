@@ -12,6 +12,10 @@ import "./comment.scss";
 import PopupWindow from "../PopupComponent/PopupWindow";
 import { useQueryClient } from "@tanstack/react-query";
 import CommentReporter from "../postPopup/reportComponent/commentReporter/CommentReporter";
+import { useQuery } from "@tanstack/react-query";
+import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
+import { useMutation } from "@tanstack/react-query";
 const Comment = ({ comment, postUserID }) => {
   const { currentUser } = useContext(AuthContext);
   const { trl, language } = useLanguage();
@@ -40,9 +44,32 @@ const Comment = ({ comment, postUserID }) => {
         setDelete(false);
       });
   };
+  const { isLoading, data } = useQuery(["likes", comment.id], () =>
+    makeRequest.get("/likes?commentId=" + comment.id).then((res) => {
+      return res.data;
+    })
+  );
   const handleReport = () => {
     setShowReportPopup(!showReportPopup);
   };
+
+  //Use Mutation
+  const mutation = useMutation(
+    (liked) => {
+      if (liked) return makeRequest.delete("/likes?commentId=" + comment.id);
+      return makeRequest.post("/likes", { commentId: comment.id });
+    },
+    {
+      onSuccess: () => {
+        // Invalidate and refetch
+        queryClient.invalidateQueries(["likes"]);
+      },
+    }
+  );
+  const handleLike = () => {
+    mutation.mutate(data.includes(currentUser.id));
+  };
+
   return (
     <div className="comment" key={comment.id}>
       <PopupWindow
@@ -123,6 +150,27 @@ const Comment = ({ comment, postUserID }) => {
             onClick={handleReport}
           ></FontAwesomeIcon>
         )}
+      </div>
+      <div className="action">
+        <div className="item">
+          {isLoading ? (
+            trl("Loading")
+          ) : data.includes(currentUser.id) ? (
+            <FavoriteOutlinedIcon
+              className="shake-heart"
+              style={{ color: "red" }}
+              onClick={handleLike}
+            />
+          ) : (
+            <FavoriteBorderOutlinedIcon
+              className="white-color-heart"
+              onClick={handleLike}
+            />
+          )}
+          {data?.length < 2
+            ? trl([data?.length, " ", "Like"])
+            : trl([data?.length, " ", "Likes"])}
+        </div>
       </div>
     </div>
   );
