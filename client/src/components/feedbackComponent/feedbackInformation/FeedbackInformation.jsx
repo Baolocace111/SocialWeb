@@ -9,18 +9,23 @@ import StarRating from "../../adminComponent/display/StarRating";
 import ShowPosts from "../../posts/ShowPosts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { useContext } from "react";
+import { AuthContext } from "../../../context/authContext";
+import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
+import { useQuery } from "@tanstack/react-query";
 const FeedbackInformation = ({ feedback }) => {
   const { trl, language } = useLanguage();
   const [post, setPost] = useState(null);
   const [user, setUser] = useState(null);
   const [comment, setComment] = useState(null);
-
+  const [Commentdata, setCommentData] = useState(null);
   const [team, setTeam] = useState(null);
   const [stories, setStories] = useState(null);
   const [action, setAction] = useState(feedback.status);
   const [response, setResponse] = useState(feedback.response);
   const [imageFeedback, setImageFeedback] = useState(true);
-
+  const { currentUser } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const handleDeleteFeedback = () => {
@@ -34,6 +39,7 @@ const FeedbackInformation = ({ feedback }) => {
         alert(e.response.data);
       });
   };
+
   const handleClickDO = () => {
     makeRequest
       .post("admin/feedback/handle", {
@@ -64,7 +70,9 @@ const FeedbackInformation = ({ feedback }) => {
         .get(`admin/comment/get/${feedback.comment_id}`)
         .then((res) => {
           setComment(res.data);
-
+          makeRequest.get("/likes?commentId=" + comment.id).then((res) => {
+            setCommentData(res.data);
+          });
           setIsLoading(false);
         })
         .catch((error) => {
@@ -205,6 +213,19 @@ const FeedbackInformation = ({ feedback }) => {
                   alt=""
                 ></img>
               )}
+              <div className="item">
+                {Commentdata?.includes(currentUser.id) ? (
+                  <FavoriteOutlinedIcon
+                    className="shake-heart"
+                    style={{ color: "red" }}
+                  />
+                ) : (
+                  <FavoriteBorderOutlinedIcon className="white-color-heart" />
+                )}
+                {Commentdata?.length < 2
+                  ? trl([Commentdata?.length, " ", "Like"])
+                  : trl([Commentdata?.length, " ", "Likes"])}
+              </div>
             </div>
           </div>
 

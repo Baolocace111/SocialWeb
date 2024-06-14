@@ -1,5 +1,12 @@
 import jwt from "jsonwebtoken";
-import { getLikesByPostId, addLike, deleteLike } from "../models/LikeModel.js";
+import {
+  getLikesByPostId,
+  addLike,
+  deleteLike,
+  getLikesByCommentId,
+  deleteLikeComment,
+  addLikeComment,
+} from "../models/LikeModel.js";
 import { getPostByIdService } from "./PostService.js";
 import { addNotificationService } from "./NotificationService.js";
 import { getUserById } from "../models/UserModel.js";
@@ -10,7 +17,18 @@ export const getLikesService = (postId, callback) => {
     return callback(null, data);
   });
 };
-
+export const getLikesCommentService = (commentId, callback) => {
+  getLikesByCommentId(commentId, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data);
+  });
+};
+export const addLikeCommentService = (userId, commentId, callback) => {
+  addLikeComment(userId, commentId, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data);
+  });
+};
 export const addLikeWithTokenService = (token, postId, callback) => {
   if (!token) return callback("Not logged in!", null);
 
@@ -64,4 +82,14 @@ export const deleteLikeWithTokenService = (token, postId, callback) => {
       return callback(null, data);
     });
   });
+};
+export const deleteLikeCommentService = (userId, commentId, callback) => {
+  deleteLikeComment(
+    userId,
+    commentId,
+    deleteLike(userInfo.id, postId, (err, data) => {
+      if (err) return callback(err, null);
+      return callback(null, data);
+    })
+  );
 };
