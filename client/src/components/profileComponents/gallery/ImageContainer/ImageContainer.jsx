@@ -1,8 +1,8 @@
 import "./imageContainer.scss";
-import { useLanguage } from "../../../context/languageContext";
+import { useLanguage } from "../../../../context/languageContext";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import ThreePointLoading from "../../loadingComponent/threepointLoading/ThreePointLoading";
-import { makeRequest } from "../../../axios";
+import ThreePointLoading from "../../../loadingComponent/threepointLoading/ThreePointLoading";
+import { makeRequest } from "../../../../axios";
 import { Waypoint } from "react-waypoint";
 import { useState } from "react";
 import ImagePost from "../ImagePost/ImagePost";

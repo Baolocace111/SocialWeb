@@ -80,6 +80,43 @@ const FeedbackInformation = ({ feedback }) => {
         });
     } else if (feedback.post_id) {
       makeRequest
+        .post("admin/feedback/handle", {
+          type: parseInt(action),
+          feedback: { id: feedback.id, response: response },
+        })
+        .then((response) => {
+          window.location.reload();
+        })
+        .catch((e) => {
+          console.log(e.response);
+          alert(e.response.data);
+        });
+    }
+  });
+  useEffect(() => {
+    if (language === "jp") {
+      moment.locale("ja");
+    } else if (language === "vn") {
+      moment.locale("vi");
+    } else {
+      moment.locale("en");
+    }
+  }, [language]);
+  useEffect(() => {
+    setImageFeedback(true);
+    if (feedback.comment_id) {
+      makeRequest
+        .get(`admin/comment/get/${feedback.comment_id}`)
+        .then((res) => {
+          setComment(res.data);
+
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          setError(error.data);
+        });
+    } else if (feedback.post_id) {
+      makeRequest
         .get(`admin/post/${feedback.post_id}`)
         .then((res) => {
           setPost(res.data);
@@ -124,7 +161,7 @@ const FeedbackInformation = ({ feedback }) => {
           </div>
         </div>
         <div className="deleteBtn" onClick={handleDeleteFeedback}>
-          <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
+          <FontAwesomeIcon icon={faTrash} />
         </div>
       </div>
       <div className="feedbackinfor">
@@ -139,7 +176,7 @@ const FeedbackInformation = ({ feedback }) => {
           ></img>
         )}
         <div className="rate">
-          <StarRating rate={feedback.rate}></StarRating>
+          <StarRating rate={feedback.rate} />
         </div>
         <div className="state">
           {trl("State")}: {progressType(feedback.status)}
@@ -151,7 +188,7 @@ const FeedbackInformation = ({ feedback }) => {
             onChange={(e) => {
               setResponse(e.target.value);
             }}
-          ></input>
+          />
           <select
             value={action}
             onChange={(e) => {
@@ -168,11 +205,7 @@ const FeedbackInformation = ({ feedback }) => {
       </div>
       {feedback.post_id && (
         <div>
-          <ShowPosts
-            error={error}
-            isLoading={isLoading}
-            posts={[post]}
-          ></ShowPosts>
+          <ShowPosts error={error} isLoading={isLoading} posts={[post]} />
         </div>
       )}
       {feedback.comment_id && !isLoading && comment && (
@@ -211,7 +244,7 @@ const FeedbackInformation = ({ feedback }) => {
                   }}
                   src={`${URL_OF_BACK_END}admin/commentimage/get/${comment.id}`}
                   alt=""
-                ></img>
+                />
               )}
               <div className="item">
                 {Commentdata?.includes(currentUser.id) ? (
@@ -235,7 +268,7 @@ const FeedbackInformation = ({ feedback }) => {
               isLoading={null}
               posts={[comment.post]}
               hidden={true}
-            ></ShowPosts>
+            />
           }
         </div>
       )}

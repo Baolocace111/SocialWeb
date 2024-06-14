@@ -1,0 +1,17 @@
+.image-post {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   padding: 10px;
+   border: 1px solid lightgray;
+
+   img {
+      width: 180px;
+      height: 180px;
+   }
+
+   .react-player {
+      max-width: 180px;
+      max-height: 180px;
+   }
+}
