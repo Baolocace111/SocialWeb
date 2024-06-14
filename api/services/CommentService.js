@@ -7,6 +7,9 @@ import {
   getCommentByCommentId,
   getCommentUserById,
   addImageComment,
+  getCommentsByCommentId,
+  addCommentReply,
+  addImageReplyComment,
 } from "../models/CommentModel.js";
 import { SECRET_KEY } from "./AuthService.js";
 export const getCommentsService = (userId, postId, callback) => {
@@ -30,12 +33,47 @@ export const addCommentWithTokenService = (token, desc, postId, callback) => {
     });
   });
 };
+export const addReplyCommentService = (
+  desc,
+  postid,
+  commentid,
+  userid,
+  callback
+) => {
+  const createdAt = moment(Date.now()).format("YYYY-MM-DD HH:mm:ss");
+  addCommentReply(desc, createdAt, userid, postid, commentid, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data);
+  });
+};
 export const addImageCommentService = (userid, desc, img, postId, callback) => {
   const createdAt = moment(Date.now()).format("YYYY-MM-DD HH:mm:ss");
   addImageComment(desc, createdAt, userid, postId, img, (err, data) => {
     if (err) return callback(err, null);
     return callback(null, data);
   });
+};
+export const addReplyImageCommentService = (
+  userID,
+  desc,
+  img,
+  postId,
+  commentId,
+  callback
+) => {
+  const createdAt = moment(Date.now()).format("YYYY-MM-DD HH:mm:ss");
+  addImageReplyComment(
+    desc,
+    createdAt,
+    userID,
+    postId,
+    img,
+    commentId,
+    (err, data) => {
+      if (err) return callback(err, null);
+      return callback(null, data);
+    }
+  );
 };
 export const getCommentByIdService = (commentId, callback) => {
   getCommentByCommentId(commentId, (err, data) => {
@@ -60,5 +98,16 @@ export const getAdminImageCommentByIdService = (id, callback) => {
   getCommentByCommentId(id, (err, data) => {
     if (err) return callback(err, null);
     return callback(null, data.image);
+  });
+};
+export const getCommentsByCommentIdService = (
+  userid,
+  commentid,
+  postid,
+  callback
+) => {
+  getCommentsByCommentId(userid, postid, commentid, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data);
   });
 };

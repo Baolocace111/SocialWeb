@@ -77,6 +77,9 @@
     }
     .action {
       width: 100%;
+      margin-left: 10%;
+      display: flex;
+      gap: 10px;
       .item {
         display: flex;
         align-items: center;
@@ -101,6 +104,14 @@
       align-self: center;
       color: gray;
       font-size: 12px;
+    }
+    .replybox {
+      width: 100%;
+      display: flex;
+      justify-content: end;
+      .comments {
+        width: 90%;
+      }
     }
   }
 }
