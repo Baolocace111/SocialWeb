@@ -1,18 +1,20 @@
-import { useContext, useState } from "react";
-import "./comments.scss";
+import { useState } from "react";
+import { useContext } from "react";
+import { AuthContext } from "../../context/authContext";
+import { useLanguage } from "../../context/languageContext";
+import { useEffect } from "react";
+import moment from "moment";
 import "moment/locale/ja"; // Import locale for Japanese
 import "moment/locale/vi"; // Import locale for Vietnamese
-import ThreePointLoading from "../loadingComponent/threepointLoading/ThreePointLoading";
-import { AuthContext } from "../../context/authContext";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { URL_OF_BACK_END, makeRequest } from "../../axios";
-import moment from "moment";
-import { useEffect } from "react";
-import { useLanguage } from "../../context/languageContext";
-import Comment from "./Comment";
-import { faImages, faX } from "@fortawesome/free-solid-svg-icons";
+import { useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { makeRequest } from "../../axios";
+import { URL_OF_BACK_END } from "../../axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-const Comments = ({ postId, userId }) => {
+import { faImages, faX } from "@fortawesome/free-solid-svg-icons";
+import { useQuery } from "@tanstack/react-query";
+import Comment from "./Comment";
+const ReplyComments = ({ postId, userId, commentId }) => {
   const [desc, setDesc] = useState("");
   const [file, setFile] = useState(null);
   const { currentUser } = useContext(AuthContext);
@@ -26,21 +28,25 @@ const Comments = ({ postId, userId }) => {
       moment.locale("en");
     }
   }, [language]);
-
-  const { isLoading, error, data } = useQuery(["comments" + postId], () => {
-    return makeRequest.get("/comments/comment?postId=" + postId).then((res) => {
-      return res.data;
-    });
-  });
-
   const queryClient = useQueryClient();
-
+  const {
+    isLoading: ListCommentLoading,
+    error: ListCommentError,
+    data: ListCommentData,
+  } = useQuery(["comments" + commentId + "in" + postId], () => {
+    return makeRequest
+      .get("/comments/comment?postId=" + postId + "&commentId=" + commentId)
+      .then((res) => {
+        return res.data;
+      }); // Trả về Promise từ makeRequest.get()
+  });
   const mutation = useMutation(
     (newComment) => {
       if (!newComment.file) {
         return makeRequest
           .post("/comments/addComment", newComment)
           .catch((err) => {
+            console.log(err.response);
             alert(trl(err.response.data));
           });
       } else {
@@ -48,10 +54,11 @@ const Comments = ({ postId, userId }) => {
         formData.append("desc", newComment.desc);
         formData.append("file", newComment.file);
         formData.append("postId", postId);
-
+        formData.append("commentId", commentId);
         return makeRequest
           .post("/comments/addImageComment", formData)
           .catch((err) => {
+            console.log(err.response);
             alert(trl(err.response.data));
           });
       }
@@ -59,14 +66,13 @@ const Comments = ({ postId, userId }) => {
     {
       onSuccess: () => {
         // Invalidate and refetch
-        queryClient.invalidateQueries(["comments" + postId]);
+        queryClient.invalidateQueries(["comments" + commentId + "in" + postId]);
       },
     }
   );
-
   const handleClick = async (e) => {
     e.preventDefault();
-    mutation.mutate({ desc, postId, file });
+    mutation.mutate({ desc, postId, file, commentId });
     setDesc("");
     setFile(null);
   };
@@ -101,7 +107,7 @@ const Comments = ({ postId, userId }) => {
           />
           <input
             type="file"
-            id={"file" + postId}
+            id={"file" + commentId + "in" + postId}
             accept="image/*, video/*"
             style={{ display: "none" }}
             onChange={(e) => {
@@ -113,7 +119,7 @@ const Comments = ({ postId, userId }) => {
               }
             }}
           />
-          <label htmlFor={"file" + postId}>
+          <label htmlFor={"file" + commentId + "in" + postId}>
             <div className="item">
               <FontAwesomeIcon icon={faImages} color="green" size="xl" />
               <span>
@@ -146,23 +152,15 @@ const Comments = ({ postId, userId }) => {
         </div>
         <button onClick={handleClick}>{trl("Send")}</button>
       </div>
-      {error ? (
-        <div>{trl("Something went wrong")}</div>
-      ) : isLoading ? (
-        <ThreePointLoading />
-      ) : Array.isArray(data) ? (
-        data.map((comment) => (
-          <Comment
-            key={comment.id}
-            comment={comment}
-            postUserID={userId}
-          ></Comment>
-        ))
-      ) : (
-        <div>{trl("Something went wrong")}</div>
-      )}
+      {ListCommentData?.map((comment) => (
+        <Comment
+          key={comment.id}
+          comment={comment}
+          postUserID={userId}
+          replyId={commentId}
+        ></Comment>
+      ))}
     </div>
   );
 };
-
-export default Comments;
+export default ReplyComments;

@@ -5,6 +5,9 @@ import {
   deleteCommentByUser,
   addImageCommentService,
   getUserImageCommentByIdService,
+  addReplyCommentService,
+  addReplyImageCommentService,
+  getCommentsByCommentIdService,
 } from "../services/CommentService.js";
 import {
   normalBackgroundUser,
@@ -21,10 +24,23 @@ export const getComments = async (req, res) => {
       }
 
       const postId = req.query.postId;
-      getCommentsService(userId, postId, (err, data) => {
-        if (err) return res.status(500).json(err);
-        return res.status(200).json(data);
-      });
+      const commentId = req.query.commentId;
+      if (commentId) {
+        getCommentsByCommentIdService(
+          userId,
+          commentId,
+          postId,
+          (err, data) => {
+            if (err) return res.status(500).json(err);
+            return res.status(200).json(data);
+          }
+        );
+      } else {
+        getCommentsService(userId, postId, (err, data) => {
+          if (err) return res.status(500).json(err);
+          return res.status(200).json(data);
+        });
+      }
     });
   } catch (error) {
     return res.status(500).json({ error: error.message });
@@ -43,6 +59,7 @@ export const addComment = async (req, res) => {
       const token = req.cookies.accessToken;
       const desc = req.body.desc;
       const postId = req.body.postId;
+      const commentId = req.body.commentId;
 
       // Kiểm tra xem bình luận có tồn tại và không chỉ là khoảng trắng
       if (!desc.trim()) {
@@ -51,12 +68,21 @@ export const addComment = async (req, res) => {
           .json({ error: "Please provide a valid comment" });
       }
 
-      addCommentWithTokenService(token, desc, postId, (err, data) => {
-        if (err) {
-          return res.status(500).json({ error: "Comment is not valid" });
-        }
-        return res.status(200).json(data);
-      });
+      if (commentId) {
+        addReplyCommentService(desc, postId, commentId, userId, (err, data) => {
+          if (err) {
+            return res.status(500).json({ error: "Comment is not valid" });
+          }
+          return res.status(200).json(data);
+        });
+      } else {
+        addCommentWithTokenService(token, desc, postId, (err, data) => {
+          if (err) {
+            return res.status(500).json({ error: "Comment is not valid" });
+          }
+          return res.status(200).json(data);
+        });
+      }
     });
   } catch (error) {
     return res.status(500).json({ error: error.message });
@@ -75,16 +101,31 @@ export const deleteComment = (req, res) => {
 export const addImageCommentController = (req, res) => {
   uploadBackgroundUser(req, res, (error, userid, filePath) => {
     if (error) return res.status(500).json(error);
-    addImageCommentService(
-      userid,
-      req.body.desc,
-      filePath,
-      req.body.postId,
-      (error, data) => {
-        if (error) return res.status(500).json(error);
-        return res.status(200).json(data);
-      }
-    );
+    const commentId = req.body.commentId;
+    if (commentId) {
+      addReplyImageCommentService(
+        userid,
+        req.body.desc,
+        filePath,
+        req.body.postId,
+        commentId,
+        (error, data) => {
+          if (error) return res.status(500).json(error);
+          return res.status(200).json(data);
+        }
+      );
+    } else {
+      addImageCommentService(
+        userid,
+        req.body.desc,
+        filePath,
+        req.body.postId,
+        (error, data) => {
+          if (error) return res.status(500).json(error);
+          return res.status(200).json(data);
+        }
+      );
+    }
   });
 };
 export const getImageCommentController = (req, res) => {

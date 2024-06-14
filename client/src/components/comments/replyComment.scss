@@ -1,0 +1,42 @@
+@import "../../style.scss";
+
+.comments {
+  @include themify($themes) {
+    img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      cursor: pointer;
+    }
+
+    .write {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin: 20px 0px;
+      .inputcomment {
+        width: 100%;
+        height: 100%;
+        input {
+          width: 100%;
+          flex: 5;
+          padding: 10px;
+          border: 1px solid themed("border");
+          background-color: transparent;
+          color: themed("textColor");
+        }
+      }
+
+      button {
+        border: none;
+        background-color: #5271ff;
+        color: white;
+        padding: 10px;
+        cursor: pointer;
+        border-radius: 3px;
+      }
+    }
+  }
+}

@@ -16,10 +16,15 @@ import { useQuery } from "@tanstack/react-query";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import { useMutation } from "@tanstack/react-query";
-const Comment = ({ comment, postUserID }) => {
+import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
+import Comments from "./Comments";
+import ThreePointLoading from "../loadingComponent/threepointLoading/ThreePointLoading";
+import ReplyComments from "./ReplyComment";
+const Comment = ({ comment, postUserID, replyId }) => {
   const { currentUser } = useContext(AuthContext);
   const { trl, language } = useLanguage();
   const [isDelete, setDelete] = useState(false);
+  const [commentReplyOpen, setCommentReplyOpen] = useState(false);
   const queryClient = useQueryClient();
   const [showReportPopup, setShowReportPopup] = useState(false);
   useEffect(() => {
@@ -31,6 +36,27 @@ const Comment = ({ comment, postUserID }) => {
       moment.locale("en");
     }
   }, [language]);
+  const {
+    isLoading: ListCommentLoading,
+    error: ListCommentError,
+    data: ListCommentData,
+  } = useQuery(["comments" + comment.id + "in" + comment.postId], () => {
+    if (replyId) {
+      return Promise.resolve([]); // Trả về một Promise để đảm bảo callback luôn trả về một Promise
+    } else {
+      return makeRequest
+        .get(
+          "/comments/comment?postId=" +
+            comment.postId +
+            "&commentId=" +
+            comment.id
+        )
+        .then((res) => {
+          return res.data;
+        }); // Trả về Promise từ makeRequest.get()
+    }
+  });
+
   const handleDeleteComment = () => {
     makeRequest
       .delete(`/comments/${comment.id}`)
@@ -171,7 +197,31 @@ const Comment = ({ comment, postUserID }) => {
             ? trl([data?.length, " ", "Like"])
             : trl([data?.length, " ", "Likes"])}
         </div>
+        {!replyId && (
+          <div
+            className="item"
+            onClick={() => setCommentReplyOpen(!commentReplyOpen)}
+          >
+            <TextsmsOutlinedIcon />
+            {trl("See Comments")}
+          </div>
+        )}
       </div>
+      {commentReplyOpen && !replyId && (
+        <div className="replybox">
+          {ListCommentError ? (
+            <div>{trl("Something went wrong")}</div>
+          ) : ListCommentLoading ? (
+            <ThreePointLoading />
+          ) : (
+            <ReplyComments
+              postId={comment.postId}
+              userId={postUserID}
+              commentId={comment.id}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 };
