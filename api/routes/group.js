@@ -24,6 +24,7 @@ router.get(
   groupController.getJoinRequestsCount
 );
 router.get("/:groupId/post-counts", groupController.getPostCounts);
+router.get("/:groupId/postcounts", groupController.getPostCounts);
 router.post(
   "/:groupId/my-group-contents",
   groupController.getGroupPostsByStatus
