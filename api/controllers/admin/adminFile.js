@@ -29,6 +29,7 @@ export const findOriginFromFilePathController = (req, res) => {
     if (err) return res.status(500).json(err);
     findOriginFileService(req.body.filepath, (err, data) => {
       if (err) return res.status(500).json(err);
+
       return res.status(200).json(data);
     });
   });
@@ -45,13 +46,18 @@ export const getFileFromFilePathController = (req, res) => {
 };
 export const deleteFileFromFilePathController = (req, res) => {
   normalBackgroundAdmin(req, res, (err, userid) => {
-    if (err) return res.status(500).json(err);
+    if (err) {
+      return res.status(500).json(err);
+    }
     const data = req.body.path;
     if (!data) return res.status(500).json("Path not found");
-    if (!fs.existsSync(data))
+    if (!fs.existsSync(data)) {
       return res.status(404).json({ error: "File not found" });
+    }
     deleteFileByFilePath(data, (error, data) => {
-      if (error) return res.status(500).json(error);
+      if (error) {
+        return res.status(500).json(error);
+      }
       return res.status(200).json(data);
     });
   });
