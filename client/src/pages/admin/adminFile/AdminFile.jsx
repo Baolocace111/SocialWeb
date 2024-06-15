@@ -49,7 +49,7 @@ const AdminFile = () => {
           <div className="file-list">
             {" "}
             {data.files.map((file) => (
-              <FileBox key={file} path={file} type={type}></FileBox>
+              <FileBox key={file} path={file} type={type} page={page}></FileBox>
             ))}
           </div>
         )}

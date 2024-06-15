@@ -290,5 +290,9 @@
   "You can update only your profile!": "You can only update your profile!",
   "Your password is too weak": "Your password is too weak",
   "Unacceptable file": "Unacceptable file",
-  "File Management": "File Management"
+  "File Management": "File Management",
+  "Source": "Source",
+  "Could not found": "Could not found",
+  "Are you sure to DELETE this file?": "Are you sure to DELETE this file?",
+  "Deleted": "Deleted"
 }

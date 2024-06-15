@@ -12,6 +12,7 @@
   "Thông báo": "Thông báo",
   "đang gọi bạn": "đang gọi bạn",
   "Nghe": "Nghe",
+  "Source": "Nguồn",
   "đã chấp nhận lời mời kết bạn của bạn": "đã chấp nhận lời mời kết bạn của bạn",
   "Chấp nhận": "Chấp nhận",
   "explore_opportunities": "Khám phá các cơ hội mới và mở rộng tầm nhìn của bạn.",
@@ -290,5 +291,8 @@
   "File Management": "Quản lý tệp tin",
   "image": "hình ảnh",
   "video": "video",
-  "Page": "Trang"
+  "Page": "Trang",
+  "Could not found": "Không thể tìm thấy",
+  "Are you sure to DELETE this file?": "Bạn có chắc chắn XÓA tập tin này?",
+  "Deleted": "Đã xóa"
 }

@@ -11,6 +11,7 @@
   "Bạn": "貴方",
   "Thông báo": "通知",
   "Nghe": "答え",
+  "Source": "出典",
   "đang gọi bạn": "あなたに電話しています",
   "explore_opportunities": "新しい機会を探索し、視野を広げましょう。",
   "Join_the_community": "コミュニティに参加して、無限の可能性を探ってください。",
@@ -290,5 +291,8 @@
   "File Management": "ファイル管理",
   "image": "画像",
   "video": "ビデオ",
-  "Page": "ページ"
+  "Could not found": "見つからなかった",
+  "Page": "ページ",
+  "Are you sure to DELETE this file?": "このファイルを削除してもよろしいですか?",
+  "Deleted": "削除されました"
 }
