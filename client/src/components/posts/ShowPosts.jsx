@@ -6,14 +6,16 @@ import SharedPost from "../post/SharedPost";
 import { useLanguage } from "../../context/languageContext";
 const ShowPosts = ({ isLoading, error, posts, hidden }) => {
   const { trl } = useLanguage();
+  const handledPosts = posts.filter((post) => post !== null);
+
   return (
     <div className="posts">
       {error ? (
         <h1> {trl("Something went wrong!")}</h1>
-      ) : isLoading && posts?.length === 0 ? (
+      ) : isLoading && handledPosts?.length === 0 ? (
         <ThreePointLoading />
-      ) : Array.isArray(posts) ? (
-        posts
+      ) : Array.isArray(handledPosts) ? (
+        handledPosts
           .filter((post) => post.type !== 3)
           .map((post) => (
             <div key={post.id}>

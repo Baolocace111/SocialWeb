@@ -63,36 +63,7 @@ const FeedbackInformation = ({ feedback }) => {
       moment.locale("en");
     }
   }, []);
-  useEffect(() => {
-    setImageFeedback(true);
-    if (feedback.comment_id) {
-      makeRequest
-        .get(`admin/comment/get/${feedback.comment_id}`)
-        .then((res) => {
-          setComment(res.data);
-          makeRequest.get("/likes?commentId=" + comment.id).then((res) => {
-            setCommentData(res.data);
-          });
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          setError(error.data);
-        });
-    } else if (feedback.post_id) {
-      makeRequest
-        .post("admin/feedback/handle", {
-          type: parseInt(action),
-          feedback: { id: feedback.id, response: response },
-        })
-        .then((response) => {
-          window.location.reload();
-        })
-        .catch((e) => {
-          console.log(e.response);
-          alert(e.response.data);
-        });
-    }
-  });
+
   useEffect(() => {
     if (language === "jp") {
       moment.locale("ja");
