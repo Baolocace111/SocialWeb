@@ -97,7 +97,8 @@
   "Gallery": "ギャラリー (Gyararī)",
   "Videos": "ビデオ (Bideo)",
   "Messages": "メッセージ (Messēji)",
-  "Others": "その他 (Sono hoka)",
+  "Others": "その他",
+  "Other": "その他 ",
   "Fundraiser": "募金活動 (Bokin katsudō)",
   "Tutorials": "チュートリアル (Chūtoriaru)",
   "Courses": "コース (Kōsu)",
@@ -294,5 +295,13 @@
   "Could not found": "見つからなかった",
   "Page": "ページ",
   "Are you sure to DELETE this file?": "このファイルを削除してもよろしいですか?",
-  "Deleted": "削除されました"
+  "Deleted": "削除されました",
+  "Thông tin cơ bản": "基本情報",
+  "Birthday": "誕生日",
+  "Birth month": "誕生月",
+  "Birth year": "誕生年",
+  "Thông tin liên hệ": "連絡先情報",
+  "Các trang web và liên kết xã hội": "サイトとソーシャル リンク",
+  "Nơi đang sống": "現住所",
+  "Đang ở": "に住んでいる"
 }

@@ -294,5 +294,14 @@
   "Page": "Trang",
   "Could not found": "Không thể tìm thấy",
   "Are you sure to DELETE this file?": "Bạn có chắc chắn XÓA tập tin này?",
-  "Deleted": "Đã xóa"
+  "Deleted": "Đã xóa",
+  "Thông tin cơ bản": "Thông tin cơ bản",
+  "Other": "Khác",
+  "Birthday": "Ngày sinh",
+  "Birth month": "Tháng sinh",
+  "Birth year": "Năm sinh",
+  "Thông tin liên hệ": "Thông tin liên hệ",
+  "Các trang web và liên kết xã hội": "Các trang web và liên kết xã hội",
+  "Nơi đang sống": "Nơi đang sống",
+  "Đang ở": "Đang ở"
 }
