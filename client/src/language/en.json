@@ -107,6 +107,7 @@
   "Videos": "Videos",
   "Messages": "Messages",
   "Others": "Others",
+  "Other": "Other",
   "Fundraiser": "Fundraiser",
   "Tutorials": "Tutorials",
   "Courses": "Courses",
@@ -294,5 +295,13 @@
   "Source": "Source",
   "Could not found": "Could not found",
   "Are you sure to DELETE this file?": "Are you sure to DELETE this file?",
-  "Deleted": "Deleted"
+  "Deleted": "Deleted",
+  "Thông tin cơ bản": "Basic information",
+  "Birthday": "Birthday",
+  "Birth month": "Birth month",
+  "Birth year": "Birth year",
+  "Thông tin liên hệ": "Contact information",
+  "Các trang web và liên kết xã hội": "Sites and social links",
+  "Nơi đang sống": "Current Residence",
+  "Đang ở": "Live in"
 }
