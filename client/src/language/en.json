@@ -305,5 +305,8 @@
   "Nơi đang sống": "Current Residence",
   "Đang ở": "Live in",
   "Truy cập": "Access",
-  "Hủy yêu cầu": "Cancel request"
+  "Hủy yêu cầu": "Cancel request",
+  "Failed to fetch messages:": "Failed to fetch messages:",
+  "Failed to send message:": "Failed to send message:",
+  "You are not friends": "You are not friends"
 }

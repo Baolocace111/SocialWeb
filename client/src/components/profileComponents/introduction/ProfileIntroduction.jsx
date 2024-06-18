@@ -22,6 +22,8 @@ const ProfileIntroduction = ({ userId }) => {
   const { currentUser } = useContext(AuthContext);
   const [userInfo, setUserInfo] = useState({});
   const [currentTab, setCurrentTab] = useState(1);
+  const [editGender, setEditGender] = useState(false);
+  const [gender, setGender] = useState(userInfo.gender);
   const fetchUserData = async (userId, language) => {
     const response = await makeRequest.get(`users/find/${userId}`);
     const { birthDay, monthDay, birthYear } = extractAndFormatDateComponents(
@@ -46,7 +48,17 @@ const ProfileIntroduction = ({ userId }) => {
     // Invalidate the query to refetch the data
     queryClient.invalidateQueries(["userData", userId, language]);
   };
-
+  const changeGender = () => {
+    makeRequest
+      .post("users/gender", { gender: gender })
+      .then((res) => {
+        handleRefetch();
+        setEditGender(false);
+      })
+      .catch((e) => {
+        alert(e.response?.data);
+      });
+  };
   useEffect(() => {
     if (data) {
       setUserInfo(data);
@@ -92,20 +104,64 @@ const ProfileIntroduction = ({ userId }) => {
                 )}
                 <div className="detail-section">
                   <div className="detail">
-                    <span className="main">
-                      {userInfo.gender === 0
-                        ? trl("Nam")
-                        : userInfo.gender === 1
-                        ? trl("Nữ")
-                        : trl("Other")}
-                    </span>
+                    {!editGender ? (
+                      <span className="main">
+                        {userInfo.gender === 0
+                          ? trl("Nam")
+                          : userInfo.gender === 1
+                          ? trl("Nữ")
+                          : trl("Other")}
+                      </span>
+                    ) : (
+                      <select
+                        name="gender"
+                        id="gender"
+                        defaultValue={userInfo.gender}
+                        onChange={(event) => {
+                          setGender(event.target.value);
+                        }}
+                      >
+                        <option value="0">{trl("Nam")}</option>
+                        <option value="1">{trl("Nữ")}</option>
+                        <option value="2">{trl("Other")}</option>
+                      </select>
+                    )}
                     <span className="sub">{trl("Giới tính")}</span>
                   </div>
                 </div>
-                {currentUser.id === userId && (
-                  <div className="edit-button" style={{ marginTop: "5px" }}>
-                    <FontAwesomeIcon icon={faPen} />
-                  </div>
+                {editGender ? (
+                  <>
+                    <div className="edit-button-container">
+                      <div
+                        className="edit-button"
+                        style={{ marginTop: "5px" }}
+                        onClick={changeGender}
+                      >
+                        {trl("SAVE")}
+                      </div>
+                      <div
+                        className="edit-button"
+                        style={{ marginTop: "5px" }}
+                        onClick={() => {
+                          setEditGender(false);
+                        }}
+                      >
+                        {trl("CANCEL")}
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  currentUser.id === userId && (
+                    <div
+                      className="edit-button"
+                      style={{ marginTop: "5px" }}
+                      onClick={() => {
+                        setEditGender(true);
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faPen} />
+                    </div>
+                  )
                 )}
               </div>
               <div className="info">

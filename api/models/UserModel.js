@@ -300,3 +300,40 @@ export const setReputation = (userid, numberReputation, callback) => {
     return callback("Not found", null);
   });
 };
+export const setGenderModel = (userid, gender, callback) => {
+  // Kiểm tra giá trị gender
+
+  if (![0, 1, 2].includes(Number(gender))) {
+    return callback("Invalid gender value", null);
+  }
+
+  const q = "update users SET gender=? where id=?";
+  db.query(q, [gender, userid], (err, data) => {
+    if (err) return callback(err, null);
+    if (data.affectedRows > 0) return callback(null, "Updated!");
+    return callback("Not found", null);
+  });
+};
+export const setBirthdateModel = (userid, day, month, year, callback) => {
+  // Kiểm tra giá trị ngày, tháng, năm
+  if (
+    day < 1 ||
+    day > 31 ||
+    month < 1 ||
+    month > 12 ||
+    year < 1900 ||
+    year > new Date().getFullYear()
+  ) {
+    return callback("Invalid date value", null);
+  }
+
+  // Tạo giá trị birthdate theo định dạng YYYY-MM-DD
+  const birthdate = new Date(year, month - 1, day).toISOString().slice(0, 10);
+
+  const q = "update users SET birthdate=? where id=?";
+  db.query(q, [birthdate, userid], (err, data) => {
+    if (err) return callback(err, null);
+    if (data.affectedRows > 0) return callback(null, "Updated!");
+    return callback("Not found", null);
+  });
+};

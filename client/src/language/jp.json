@@ -305,5 +305,8 @@
   "Nơi đang sống": "現住所",
   "Đang ở": "に住んでいる",
   "Truy cập": "アクセス",
-  "Hủy yêu cầu": "リクエストのキャンセル"
+  "Hủy yêu cầu": "リクエストのキャンセル",
+  "Failed to fetch messages:": "メッセージの取得に失敗しました:",
+  "Failed to send message:": "メッセージを送信できませんでした:",
+  "You are not friends": "あなたは友達ではありません"
 }
