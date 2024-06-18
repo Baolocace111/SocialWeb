@@ -223,18 +223,11 @@ export const getFollowedUsers = (userId, callback) => {
 };
 
 export const updateUser = (userInfo, callback) => {
-  const q =
-    "UPDATE users SET `email`=?, `name`=?, `city`=?, `website`=? WHERE id=? ";
+  const q = "UPDATE users SET  `name`=?, `city`=?, `website`=? WHERE id=? ";
 
   db.query(
     q,
-    [
-      userInfo.email,
-      userInfo.name,
-      userInfo.city,
-      userInfo.website,
-      userInfo.id,
-    ],
+    [userInfo.name, userInfo.city, userInfo.website, userInfo.id],
     (err, data) => {
       if (err) return callback(err);
       if (data.affectedRows > 0) return callback(null, "Updated!");
@@ -315,10 +308,20 @@ export const setGenderModel = (userid, gender, callback) => {
   });
 };
 export const setBirthdateModel = (userid, day, month, year, callback) => {
-  // Kiểm tra giá trị ngày, tháng, năm
+  // Kiểm tra nếu giá trị day, month, year là null hoặc không xác định
   if (
-    day < 1 ||
-    day > 31 ||
+    day == null ||
+    month == null ||
+    year == null ||
+    isNaN(day) ||
+    isNaN(month) ||
+    isNaN(year)
+  ) {
+    return callback("Date values must be non-null and numbers", null);
+  }
+
+  // Kiểm tra giá trị tháng và năm hợp lệ
+  if (
     month < 1 ||
     month > 12 ||
     year < 1900 ||
@@ -327,11 +330,33 @@ export const setBirthdateModel = (userid, day, month, year, callback) => {
     return callback("Invalid date value", null);
   }
 
-  // Tạo giá trị birthdate theo định dạng YYYY-MM-DD
-  const birthdate = new Date(year, month - 1, day).toISOString().slice(0, 10);
+  // Kiểm tra giá trị ngày hợp lệ theo tháng và năm
+  const daysInMonth = new Date(year, month, 0).getDate();
+  if (day < 1 || day > daysInMonth) {
+    return callback("Invalid day value for the given month and year", null);
+  }
+
+  // Tạo giá trị birthdate theo định dạng YYYY-MM-DD sử dụng UTC
+  const birthdate = new Date(Date.UTC(year, month - 1, day))
+    .toISOString()
+    .slice(0, 10);
 
   const q = "update users SET birthdate=? where id=?";
   db.query(q, [birthdate, userid], (err, data) => {
+    if (err) return callback(err, null);
+    if (data.affectedRows > 0) return callback(null, "Updated!");
+    return callback("Not found", null);
+  });
+};
+export const setWebsiteModel = (userid, website, callback) => {
+  // Kiểm tra nếu giá trị website là null hoặc không hợp lệ
+  if (!website || typeof website !== "string") {
+    return callback("Invalid website value", null);
+  }
+
+  // Tạo query cập nhật giá trị website
+  const q = "update users SET website=? where id=?";
+  db.query(q, [website, userid], (err, data) => {
     if (err) return callback(err, null);
     if (data.affectedRows > 0) return callback(null, "Updated!");
     return callback("Not found", null);

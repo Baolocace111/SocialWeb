@@ -140,3 +140,9 @@ export const setBirthdateService = (userId, date, month, year, callback) => {
     return callback(null, data);
   });
 };
+export const setWebsiteService = (userid, website, callback) => {
+  userModel.setWebsiteModel(userid, website, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data);
+  });
+};

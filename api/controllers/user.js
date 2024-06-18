@@ -3,6 +3,7 @@ import { AuthService } from "../services/AuthService.js";
 import path from "path";
 import { upload } from "../Multer.js";
 import { normalBackgroundUser } from "./backgroundController.js";
+import { error } from "console";
 export const getUser = (req, res) => {
   userService.getUser(req, res);
 };
@@ -159,6 +160,30 @@ export const ChangeGenderController = (req, res) => {
   normalBackgroundUser(req, res, (err, userId) => {
     if (err) return res.status(500).json(err);
     userService.setGenderService(userId, req.body.gender, (error, data) => {
+      if (error) return res.status(500).json(error);
+      return res.status(200).json(data);
+    });
+  });
+};
+export const ChangeBirthDateController = (req, res) => {
+  normalBackgroundUser(req, res, (error, userId) => {
+    if (error) return res.status(500).json(error);
+    userService.setBirthdateService(
+      userId,
+      req.body.birthDay,
+      req.body.monthDay,
+      req.body.birthYear,
+      (error, data) => {
+        if (error) return res.status(500).json(error);
+        return res.status(200).json(data);
+      }
+    );
+  });
+};
+export const ChangeWebsiteController = (req, res) => {
+  normalBackgroundUser(req, res, (error, userid) => {
+    if (error) return res.status(500).json(error);
+    userService.setWebsiteService(userid, req.body.website, (error, data) => {
       if (error) return res.status(500).json(error);
       return res.status(200).json(data);
     });
