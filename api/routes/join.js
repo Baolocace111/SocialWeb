@@ -4,7 +4,7 @@ import * as joinController from "../controllers/join.js";
 const router = express.Router();
 
 router.post('/join', joinController.createJoin);
-router.delete('/', joinController.deleteJoin);
+router.delete('/join', joinController.deleteJoin);
 router.put('/join/approve', joinController.approveJoinRequest);
 router.delete('/join/reject', joinController.rejectJoinRequest);
 router.get('/groups/:groupId/join-requests', joinController.getJoinRequestsByGroupId);
