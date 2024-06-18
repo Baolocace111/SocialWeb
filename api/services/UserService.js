@@ -128,3 +128,15 @@ export const searchUserByNameEmailIdService = (key, page, callback) => {
       return callback(null, data);
     });
 };
+export const setGenderService = (userId, gender, callback) => {
+  userModel.setGenderModel(userId, gender, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data);
+  });
+};
+export const setBirthdateService = (userId, date, month, year, callback) => {
+  userModel.setBirthdateModel(userId, date, month, year, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data);
+  });
+};

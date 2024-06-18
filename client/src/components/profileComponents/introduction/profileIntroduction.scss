@@ -1,107 +1,125 @@
 @import "../../../style.scss";
 
 .profile-introduction {
-   @include themify($themes) {
+  @include themify($themes) {
+    display: flex;
+    border: 1px solid #ccd0d5;
+    border-radius: 8px;
+    background-color: themed("bg");
+    width: 80%;
+    margin: 0 auto;
+
+    .tabs {
+      flex: 1;
       display: flex;
-      border: 1px solid #ccd0d5;
-      border-radius: 8px;
-      background-color: themed("bg");
-      width: 80%;
-      margin: 0 auto;
+      flex-direction: column;
+      padding: 10px;
+      border-right: 1px solid lightgray;
 
-      .tabs {
-         flex: 1;
-         display: flex;
-         flex-direction: column;
-         padding: 10px;
-         border-right: 1px solid lightgray;
+      .tab {
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
 
-         .tab {
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
+        &:hover {
+          background-color: #f5f6f7;
+        }
 
-            &:hover {
-               background-color: #f5f6f7;
-            }
-
-            &.active {
-               font-weight: 600;
-               color: #1877F2;
-               background-color: #ECF3FF;
-            }
-         }
+        &.active {
+          font-weight: 600;
+          color: #1877f2;
+          background-color: #ecf3ff;
+        }
       }
+    }
 
-      .content {
-         display: flex;
-         flex-direction: column;
-         flex: 3;
-         padding: 10px 20px;
-         gap: 20px;
+    .content {
+      display: flex;
+      flex-direction: column;
+      flex: 3;
+      padding: 10px 20px;
+      gap: 20px;
 
-         .subject {
+      .subject {
+        display: flex;
+        flex-direction: column;
+
+        .title {
+          font-weight: 600;
+          font-size: 18px;
+          margin-bottom: 15px;
+        }
+
+        .infor-section {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+
+          .info {
             display: flex;
-            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
 
-            .title {
-               font-weight: 600;
-               font-size: 18px;
-               margin-bottom: 15px;
+            .detail-section {
+              display: flex;
+              flex-direction: column;
+              gap: 10px;
+
+              .detail {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+
+                .main {
+                  color: themed("textColor");
+                  font-size: 17px;
+                  font-weight: 500;
+                }
+
+                .sub {
+                  color: themed("textColorSoft");
+                  font-size: 14px;
+                }
+              }
             }
+            .edit-button-container {
+              display: flex;
+              margin-left: auto;
+              .edit-button {
+                display: flex;
+                height: 35px;
+                width: 60px;
+                align-items: center;
+                justify-content: center;
+                border-radius: 17px;
+                background-color: themed("bgSoft");
+                cursor: pointer;
+                margin-left: auto;
 
-            .infor-section {
-               display: flex;
-               flex-direction: column;
-               gap: 15px;
-
-               .info {
-                  display: flex;
-                  align-items: flex-start;
-                  gap: 20px;
-
-                  .detail-section {
-                     display: flex;
-                     flex-direction: column;
-                     gap: 10px;
-
-                     .detail {
-                        display: flex;
-                        flex-direction: column;
-                        gap: 5px;
-
-                        .main {
-                           color: themed("textColor");
-                           font-size: 17px;
-                           font-weight: 500;
-                        }
-
-                        .sub {
-                           color: themed("textColorSoft");
-                           font-size: 14px;
-                        }
-                     }
-                  }
-
-                  .edit-button {
-                     display: flex;
-                     height: 35px;
-                     width: 35px;
-                     align-items: center;
-                     justify-content: center;
-                     border-radius: 50%;
-                     background-color: themed("bgSoft");
-                     cursor: pointer;
-                     margin-left: auto;
-
-                     &:hover {
-                        background-color: gainsboro;
-                     }
-                  }
-               }
+                &:hover {
+                  background-color: gainsboro;
+                }
+              }
             }
-         }
+            .edit-button {
+              display: flex;
+              height: 35px;
+              width: 35px;
+              align-items: center;
+              justify-content: center;
+              border-radius: 50%;
+              background-color: themed("bgSoft");
+              cursor: pointer;
+              margin-left: auto;
+
+              &:hover {
+                background-color: gainsboro;
+              }
+            }
+          }
+        }
       }
-   }
+    }
+  }
 }

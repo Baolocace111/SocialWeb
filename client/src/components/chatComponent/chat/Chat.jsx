@@ -17,7 +17,10 @@ import {
   faMaximize,
 } from "@fortawesome/free-solid-svg-icons";
 import BallInBar from "../../loadingComponent/ballInBar/BallInBar";
+import { useLanguage } from "../../../context/languageContext";
+
 const Chat = ({ friend, onRemoveChatBox }) => {
+  const { trl } = useLanguage();
   const [messages, setMessages] = useState([]);
   const [isFull, setIsFull] = useState(true);
   const wsRef = useRef(null);
@@ -25,6 +28,7 @@ const Chat = ({ friend, onRemoveChatBox }) => {
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
+  const [error, setError] = useState(null);
   const friendId = friend.id;
   const [autoScrollToBottom, setAutoScrollToBottom] = useState(true);
   const [hasMoreOldMessages, setHasMoreOldMessages] = useState(true);
@@ -46,7 +50,15 @@ const Chat = ({ friend, onRemoveChatBox }) => {
     fetchMessages();
     // eslint-disable-next-line
   }, []);
+  useEffect(() => {
+    // Hàm setTimeout để thực hiện hành động sau 5 giây (5000 milliseconds)
+    const timer = setTimeout(() => {
+      setError(null);
+    }, 3000);
 
+    // Cleanup timer nếu component bị unmount trước khi timer kết thúc
+    return () => clearTimeout(timer);
+  }, [error]);
   useEffect(() => {
     if (!wsRef.current) {
       const socket = new WebSocket(WEBSOCKET_BACK_END + `/chat/${friendId}`);
@@ -68,7 +80,9 @@ const Chat = ({ friend, onRemoveChatBox }) => {
           });
           setAutoScrollToBottom(true);
         } catch (error) {
-          console.error("Failed to fetch messages:", error);
+          setError(
+            trl("Failed to fetch messages:") + trl(error.response?.data)
+          );
         }
       };
 
@@ -112,7 +126,7 @@ const Chat = ({ friend, onRemoveChatBox }) => {
         return updatedMessages;
       });
     } catch (error) {
-      console.error("Failed to fetch messages:", error);
+      setError(trl("Failed to fetch messages:") + trl(error.response?.data));
     }
   };
 
@@ -146,11 +160,14 @@ const Chat = ({ friend, onRemoveChatBox }) => {
           setAutoScrollToBottom(true);
         } catch (error) {
           setSending(false);
-          console.error("Failed to fetch messages:", error);
+          setError(
+            trl("Failed to fetch messages:") + trl(error.response?.data)
+          );
         }
       } catch (error) {
         setSending(false);
-        console.error("Failed to send message:", error);
+        console.log(error);
+        setError(trl("Failed to send message:") + trl(error.response?.data));
       }
     }
   };
@@ -224,6 +241,7 @@ const Chat = ({ friend, onRemoveChatBox }) => {
             <BallInBar></BallInBar>
           </div>
         )}
+        {error && <div className="errortab">{error}</div>}
         <input
           type="text"
           value={newMessage}

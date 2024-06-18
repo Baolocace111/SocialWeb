@@ -155,3 +155,12 @@ export const getCoverPicController = async (req, res) => {
     return res.status(500).json(error);
   }
 };
+export const ChangeGenderController = (req, res) => {
+  normalBackgroundUser(req, res, (err, userId) => {
+    if (err) return res.status(500).json(err);
+    userService.setGenderService(userId, req.body.gender, (error, data) => {
+      if (error) return res.status(500).json(error);
+      return res.status(200).json(data);
+    });
+  });
+};

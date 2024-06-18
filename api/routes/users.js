@@ -10,6 +10,7 @@ import {
   updateCoverPicController,
   getProfilePicController,
   getCoverPicController,
+  ChangeGenderController,
 } from "../controllers/user.js";
 
 const router = express.Router();
@@ -24,5 +25,6 @@ router.get("/coverPic/:id", getCoverPicController);
 router.get("/followed-users/:userId", getFollowedUsers);
 router.get("/searchuser/:name", findUserByName);
 router.post("/changepassword", changePasswordController);
+router.post("/gender", ChangeGenderController);
 
 export default router;

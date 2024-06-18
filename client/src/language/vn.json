@@ -305,5 +305,8 @@
   "Nơi đang sống": "Nơi đang sống",
   "Đang ở": "Đang ở",
   "Truy cập": "Truy cập",
-  "Hủy yêu cầu": "Hủy yêu cầu"
+  "Hủy yêu cầu": "Hủy yêu cầu",
+  "Failed to fetch messages:": "Không thể tải tin nhắn:",
+  "Failed to send message:": "Không thể gửi tin nhắn:",
+  "You are not friends": "Các bạn không phải bạn của nhau"
 }
