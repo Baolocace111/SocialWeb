@@ -24,6 +24,17 @@ const ProfileIntroduction = ({ userId }) => {
   const [currentTab, setCurrentTab] = useState(1);
   const [editGender, setEditGender] = useState(false);
   const [gender, setGender] = useState(userInfo.gender);
+  const [editBirthdate, setEditBirthdate] = useState(false);
+  const [birthDay, setBirthDay] = useState(userInfo.birthDay);
+  const [monthDay, setMonthDay] = useState(userInfo.monthDay);
+  const [birthYear, setBirthYear] = useState(userInfo.birthYear);
+
+  const [editContactInfo, setEditContactInfo] = useState(false);
+  const [email, setEmail] = useState(userInfo.email);
+  const [website, setWebsite] = useState(userInfo.website);
+
+  const [editLocation, setEditLocation] = useState(false);
+  const [city, setCity] = useState(userInfo.city);
   const fetchUserData = async (userId, language) => {
     const response = await makeRequest.get(`users/find/${userId}`);
     const { birthDay, monthDay, birthYear } = extractAndFormatDateComponents(
@@ -59,6 +70,42 @@ const ProfileIntroduction = ({ userId }) => {
         alert(e.response?.data);
       });
   };
+  const changeBirthdate = () => {
+    makeRequest
+      .post("users/birthdate", { birthDay, monthDay, birthYear })
+      .then((res) => {
+        handleRefetch();
+        setEditBirthdate(false);
+      })
+      .catch((e) => {
+        alert(e.response?.data);
+      });
+  };
+
+  const changeContactInfo = () => {
+    makeRequest
+      .post("users/contact", { website })
+      .then((res) => {
+        handleRefetch();
+        setEditContactInfo(false);
+      })
+      .catch((e) => {
+        alert(e.response?.data);
+      });
+  };
+
+  const changeLocation = () => {
+    makeRequest
+      .post("users/location", { city })
+      .then((res) => {
+        handleRefetch();
+        setEditLocation(false);
+      })
+      .catch((e) => {
+        alert(e.response?.data);
+      });
+  };
+
   useEffect(() => {
     if (data) {
       setUserInfo(data);
@@ -172,22 +219,75 @@ const ProfileIntroduction = ({ userId }) => {
                 />
                 <div className="detail-section">
                   <div className="detail">
-                    <span className="main">{userInfo.birthDay}</span>
+                    {!editBirthdate ? (
+                      <span className="main">{userInfo.birthDay}</span>
+                    ) : (
+                      <input
+                        type="text"
+                        value={birthDay}
+                        onChange={(e) => setBirthDay(e.target.value)}
+                      />
+                    )}
                     <span className="sub">{trl("Birthday")}</span>
                   </div>
                   <div className="detail">
-                    <span className="main">{userInfo.monthDay}</span>
+                    {!editBirthdate ? (
+                      <span className="main">{userInfo.monthDay}</span>
+                    ) : (
+                      <input
+                        type="text"
+                        value={monthDay}
+                        onChange={(e) => setMonthDay(e.target.value)}
+                      />
+                    )}
                     <span className="sub">{trl("Birth month")}</span>
                   </div>
                   <div className="detail">
-                    <span className="main">{userInfo.birthYear}</span>
+                    {!editBirthdate ? (
+                      <span className="main">{userInfo.birthYear}</span>
+                    ) : (
+                      <input
+                        type="text"
+                        value={birthYear}
+                        onChange={(e) => setBirthYear(e.target.value)}
+                      />
+                    )}
                     <span className="sub">{trl("Birth year")}</span>
                   </div>
                 </div>
-                {currentUser.id === userId && (
-                  <div className="edit-button" style={{ marginTop: "5px" }}>
-                    <FontAwesomeIcon icon={faPen} />
-                  </div>
+                {editBirthdate ? (
+                  <>
+                    <div className="edit-button-container">
+                      <div
+                        className="edit-button"
+                        style={{ marginTop: "5px" }}
+                        onClick={changeBirthdate}
+                      >
+                        {trl("SAVE")}
+                      </div>
+                      <div
+                        className="edit-button"
+                        style={{ marginTop: "5px" }}
+                        onClick={() => {
+                          setEditBirthdate(false);
+                        }}
+                      >
+                        {trl("CANCEL")}
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  currentUser.id === userId && (
+                    <div
+                      className="edit-button"
+                      style={{ marginTop: "5px" }}
+                      onClick={() => {
+                        setEditBirthdate(true);
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faPen} />
+                    </div>
+                  )
                 )}
               </div>
             </div>
@@ -215,11 +315,6 @@ const ProfileIntroduction = ({ userId }) => {
                     <span className="sub">Email</span>
                   </div>
                 </div>
-                {currentUser.id === userId && (
-                  <div className="edit-button" style={{ marginTop: "5px" }}>
-                    <FontAwesomeIcon icon={faPen} />
-                  </div>
-                )}
               </div>
             </div>
           </div>
@@ -236,12 +331,46 @@ const ProfileIntroduction = ({ userId }) => {
                 />
                 <div className="detail-section">
                   <div className="detail">
-                    <span className="main">{userInfo.website}</span>
+                    {!editContactInfo ? (
+                      <span className="main">{userInfo.website}</span>
+                    ) : (
+                      <input
+                        type="text"
+                        value={website}
+                        onChange={(e) => setWebsite(e.target.value)}
+                      />
+                    )}
                     <span className="sub">{userInfo.link}</span>
                   </div>
                 </div>
-                {currentUser.id === userId && (
-                  <div className="edit-button" style={{ marginTop: "5px" }}>
+                {editContactInfo && (
+                  <div className="edit-button-container">
+                    <div
+                      className="edit-button"
+                      style={{ marginTop: "5px" }}
+                      onClick={changeContactInfo}
+                    >
+                      {trl("SAVE")}
+                    </div>
+                    <div
+                      className="edit-button"
+                      style={{ marginTop: "5px" }}
+                      onClick={() => {
+                        setEditContactInfo(false);
+                      }}
+                    >
+                      {trl("CANCEL")}
+                    </div>
+                  </div>
+                )}
+                {currentUser.id === userId && !editContactInfo && (
+                  <div
+                    className="edit-button"
+                    style={{ marginTop: "5px" }}
+                    onClick={() => {
+                      setEditContactInfo(true);
+                    }}
+                  >
                     <FontAwesomeIcon icon={faPen} />
                   </div>
                 )}
