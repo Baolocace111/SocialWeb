@@ -1,138 +1,140 @@
 @import "../../../style.scss";
 
 .create-group-preview {
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin: 20px;
+   @include themify($themes) {
+      background-color: themed("bg");
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin: 20px;
 
-    .preview {
-        border-radius: 8px;
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        background-color: none;
+      .preview {
+         border-radius: 8px;
+         border: 1px solid rgba(0, 0, 0, 0.1);
 
-        .group-header {
+         .group-header {
             border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 
             .group-cover {
-                width: 100%;
-                height: 350px;
+               width: 100%;
+               height: 350px;
 
-                img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    border-radius: 8px;
-                }
+               img {
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+                  border-radius: 8px;
+               }
             }
 
             .group-info {
-                padding: 10px 0;
-                margin: 10px 20px;
+               padding: 10px 0;
+               margin: 10px 20px;
 
-                .group-name {
-                    font-size: 24px;
-                    font-weight: bold;
-                    margin: 10px 0;
-                }
+               .group-name {
+                  font-size: 24px;
+                  font-weight: bold;
+                  margin: 10px 0;
+                  color: themed("textColor");
+               }
 
-                .group-privacy {
-                    display: flex;
-                    align-items: center;
-                    font-size: 16px;
-                    color: #606770;
+               .group-privacy {
+                  display: flex;
+                  align-items: center;
+                  font-size: 16px;
+                  color: themed("textColorSoft");
 
-                    .member {
-                        font-weight: 600;
-                    }
-                }
+                  .member {
+                     font-weight: 600;
+                  }
+               }
             }
 
             .group-tabs {
-                display: flex;
-                border-top: 1px solid #ccd0d5;
-                margin: 0 20px;
+               display: flex;
+               border-top: 1px solid #ccd0d5;
+               margin: 0 20px;
 
-                .tab {
-                    padding: 15px;
-                    border: none;
-                    background: none;
-                    cursor: pointer;
-                    font-size: 16px;
-                    color: #4b4f56;
-                    margin-right: 8px;
+               .tab {
+                  padding: 15px;
+                  border: none;
+                  background: none;
+                  color: themed("textColor");
+                  cursor: pointer;
+                  font-size: 16px;
+                  margin-right: 8px;
 
-                    &:hover {
-                        background-color: #f5f6f7;
-                    }
+                  &:hover {
+                     background-color: #f5f6f7;
+                  }
 
-                    &.active {
-                        border-bottom: 2px solid #1877f2;
-                        color: #1877f2;
-                    }
-                }
+                  &.active {
+                     border-bottom: 2px solid #1877f2;
+                     color: #1877f2;
+                  }
+               }
             }
-        }
+         }
 
-        .group-body {
+         .group-body {
             display: flex;
             justify-content: space-between;
             width: 100%;
-            background-color: #f5f6f7;
+            background-color: themed("bgSoft");
             border-radius: 0 0 8px 8px;
             padding: 20px;
             box-sizing: border-box;
 
             .post-block {
-                flex: 65%;
-                margin-right: 10px;
+               flex: 65%;
+               margin-right: 10px;
             }
 
             .group-intro {
-                flex: 35%;
-                margin-left: 10px;
-                background-color: #ffffff;
-                border: 1px solid rgba(0, 0, 0, 0.1);
-                border-radius: 8px;
-                padding: 15px;
+               flex: 35%;
+               margin-left: 10px;
+               background-color: themed("bg");
+               border: 1px solid rgba(0, 0, 0, 0.1);
+               border-radius: 8px;
+               padding: 15px;
 
-                .title {
-                    font-size: 17px;
-                    font-weight: 600;
-                }
+               .title {
+                  font-size: 17px;
+                  font-weight: 600;
+                  color: themed("textColor");
+               }
 
-                .intro-privacy {
-                    margin: 10px 0;
-                    display: flex;
-                    align-items: flex-start;
-                    gap: 15px;
+               .intro-privacy {
+                  margin: 10px 0;
+                  display: flex;
+                  align-items: flex-start;
+                  gap: 15px;
 
-                    .content {
-                        display: flex;
-                        flex-direction: column;
+                  .content {
+                     display: flex;
+                     flex-direction: column;
 
-                        .intro-title {
-                            font-size: 16px;
-                            font-weight: bold;
-                            color: #333333;
-                            // margin-top: 20px;
-                            margin-bottom: 5px;
-                        }
+                     .intro-title {
+                        font-size: 16px;
+                        font-weight: bold;
+                        color: themed("textColor");
+                        margin-bottom: 5px;
+                     }
 
-                        .intro-content {
-                            font-size: 14px;
-                            color: #666666;
-                            margin-bottom: 10px;
-                        }
-                    }
-                }
+                     .intro-content {
+                        font-size: 14px;
+                        margin-bottom: 10px;
+                        color: themed("textColorSoft");
+                     }
+                  }
+               }
             }
-        }
+         }
 
-        .disabled {
+         .disabled {
             pointer-events: none;
             opacity: 0.5;
-        }
-    }
+         }
+      }
+   }
 }

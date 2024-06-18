@@ -79,6 +79,23 @@ const GroupDetail = () => {
       }
    };
 
+   const handleCancelJoinGroup = async () => {
+      try {
+         const config = {
+            data: {
+               groupId: groupId,
+            }
+         };
+         await makeRequest.delete("/joins/join", config);
+         setJoinStatus(null);
+      } catch (error) {
+         console.error(
+            "Error canceling to join group:",
+            error.response ? error.response.data : error.message
+         );
+      }
+   };
+
    const handleTabChange = (tab) => {
       setActiveTab(tab);
    };
@@ -324,8 +341,8 @@ const GroupDetail = () => {
                         <span>{trl("+ Mời")}</span>
                      </div>
                   ) : joinStatus === 0 ? (
-                     <div className="invite">
-                        <span>{trl("Chờ duyệt")}</span>
+                     <div className="invite" onClick={handleCancelJoinGroup}>
+                        <span>{trl("Hủy yêu cầu")}</span>
                      </div>
                   ) : (
                      <div className="invite" onClick={handleJoinGroup}>

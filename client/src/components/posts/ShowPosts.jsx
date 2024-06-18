@@ -6,7 +6,7 @@ import SharedPost from "../post/SharedPost";
 import { useLanguage } from "../../context/languageContext";
 const ShowPosts = ({ isLoading, error, posts, hidden }) => {
   const { trl } = useLanguage();
-  const handledPosts = posts.filter((post) => post !== null);
+  const handledPosts = posts ? posts.filter((post) => post !== null) : [];
 
   return (
     <div className="posts">
