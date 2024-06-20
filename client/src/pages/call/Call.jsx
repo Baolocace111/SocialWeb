@@ -260,7 +260,7 @@ const Call = () => {
             ></CountdownTimer>
           )}
         </div>
-        <div>
+        <div className="button-box">
           <button onClick={onCloseCallPopup}>{trl("Cancel")}</button>
         </div>
       </PopupWindow>
@@ -268,7 +268,7 @@ const Call = () => {
         <div className="popup-content">
           <h1>{question && trl(question)}</h1>
         </div>
-        <div>
+        <div className="button-box">
           <button
             onClick={() => {
               handleAnswerTheQuestion(true);

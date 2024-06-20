@@ -2,14 +2,24 @@ import "./imagePost.scss";
 import React from "react";
 import ReactPlayer from "react-player/lazy";
 import { URL_OF_BACK_END } from "../../../../axios";
+import { useLanguage } from "../../../../context/languageContext";
 
 const ImagePost = ({ isLoading, images }) => {
-  if (isLoading) return <div>Đang tải...</div>;
-
+  const { trl } = useLanguage();
+  if (isLoading) return <div>{trl("Loading")}...</div>;
+  const handleClick = (id) => {
+    window.location.href = `/seepost/${id}`;
+  };
   return (
     <div className="image-posts">
       {images.map((post) => (
-        <div key={post.id} className="image-post">
+        <div
+          key={post.id}
+          className="image-post"
+          onClick={() => {
+            handleClick(post.id);
+          }}
+        >
           {post.type === "image" && (
             <img
               src={`${URL_OF_BACK_END}posts/videopost/${post.id}`}
