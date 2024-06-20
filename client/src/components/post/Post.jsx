@@ -85,10 +85,6 @@ const Post = ({ post, hidden }) => {
     }
   }, [openEdit, post]);
 
-  const handleReport = () => {
-    setShowReportPopup(!showReportPopup);
-  };
-
   const handleShare = () => {
     setShowSharePopup(!showSharePopup);
   };
@@ -116,6 +112,10 @@ const Post = ({ post, hidden }) => {
   };
   const handleSeeDialogClose = () => {
     setOpenSeeEdit(false);
+  };
+  const handleReport = () => {
+    handleMenuClose();
+    setShowReportPopup(!showReportPopup);
   };
 
   const [file, setFile] = useState(null);

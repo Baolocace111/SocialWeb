@@ -259,14 +259,6 @@ const Update = ({ setOpenUpdate, user }) => {
                 fields={["name", "city", "website"]}
               >
                 <Input
-                  name="email"
-                  type="email"
-                  label="E-mail"
-                  id="email"
-                  initialValue={texts.email || ""}
-                  onChange={(value) => handleChange(value, "email")}
-                />
-                <Input
                   name="name"
                   type="text"
                   label={trl("Name")}

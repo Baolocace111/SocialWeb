@@ -59,7 +59,6 @@ const PostReporter = ({ post, setShowReportPopup, showReportPopup }) => {
       </div>
       <div className="popup-content">
         <RateStarInput onHandle={setRate}></RateStarInput>
-
         <TextareaAutosize
           className="text-input"
           minRows={1}

@@ -75,7 +75,6 @@ const CommentReporter = ({ comment, setShowReportPopup, showReportPopup }) => {
             type="file"
             accept="image/*,video/*"
             onChange={(e) => {
-              console.log(e);
               handleReportFileChange(e);
             }}
           />

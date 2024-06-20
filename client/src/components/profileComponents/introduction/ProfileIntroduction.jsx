@@ -30,7 +30,7 @@ const ProfileIntroduction = ({ userId }) => {
   const [birthYear, setBirthYear] = useState(userInfo.birthYear);
 
   const [editContactInfo, setEditContactInfo] = useState(false);
-  const [email, setEmail] = useState(userInfo.email);
+
   const [website, setWebsite] = useState(userInfo.website);
 
   const [editLocation, setEditLocation] = useState(false);
@@ -396,14 +396,51 @@ const ProfileIntroduction = ({ userId }) => {
                 />
                 <div className="detail-section">
                   <div className="detail">
-                    <span className="main">{userInfo.city}</span>
+                    {!editLocation ? (
+                      <span className="main">{userInfo.city}</span>
+                    ) : (
+                      <input
+                        type="text"
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
+                      />
+                    )}
                     <span className="sub">{trl("Đang ở")}</span>
                   </div>
                 </div>
-                {currentUser.id === userId && (
-                  <div className="edit-button" style={{ marginTop: "5px" }}>
-                    <FontAwesomeIcon icon={faPen} />
-                  </div>
+                {editLocation ? (
+                  <>
+                    <div className="edit-button-container">
+                      <div
+                        className="edit-button"
+                        style={{ marginTop: "5px" }}
+                        onClick={changeLocation}
+                      >
+                        {trl("SAVE")}
+                      </div>
+                      <div
+                        className="edit-button"
+                        style={{ marginTop: "5px" }}
+                        onClick={() => {
+                          setEditLocation(false);
+                        }}
+                      >
+                        {trl("CANCEL")}
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  currentUser.id === userId && (
+                    <div
+                      className="edit-button"
+                      style={{ marginTop: "5px" }}
+                      onClick={() => {
+                        setEditLocation(true);
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faPen} />
+                    </div>
+                  )
                 )}
               </div>
             </div>
