@@ -8,7 +8,7 @@ export const ValidateInputs = (...inputs) => {
         return reject("Value is null"); // Trả về false nếu có bất kỳ biến nào trống hoặc undefined
       }
       // Kiểm tra xem có ký tự đặc biệt nào không hợp lệ không
-      const regex = /^[a-zA-Z0-9_ ]*$/; // Regex chỉ cho phép chữ cái, số, dấu cách và dấu gạch dưới
+      const regex = /^[\p{L}\p{N}_\s]*$/u; // Regex chỉ cho phép chữ cái, số, dấu cách và dấu gạch dưới
       if (!regex.test(input)) {
         return reject(`${input} is invalid`); // Trả về false nếu có ký tự không hợp lệ
       }
@@ -24,7 +24,7 @@ export const ValidateInputAllowNull = (...inputs) => {
       // Kiểm tra xem biến có là undefined hoặc trống không
 
       // Kiểm tra xem có ký tự đặc biệt nào không hợp lệ không
-      const regex = /^[a-zA-Z0-9_ ]*$/; // Regex chỉ cho phép chữ cái, số, dấu cách và dấu gạch dưới
+      const regex = /^[\p{L}\p{N}_\s]*$/u; // Regex chỉ cho phép chữ cái, số, dấu cách và dấu gạch dưới
       if (!regex.test(input)) {
         return reject(`Value ${i + 1} is invalid`); // Trả về false nếu có ký tự không hợp lệ
       }

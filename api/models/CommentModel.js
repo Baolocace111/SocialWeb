@@ -212,55 +212,62 @@ export const addCommentReply = (
   });
 };
 
-export const addImageComment = (
-  desc,
-  createdAt,
-  userId,
-  postId,
-  image,
-  commentId,
-  callback
-) => {
-  const q = `
-    INSERT INTO comments (\`desc\`, \`createdAt\`, \`userId\`, \`postId\`, \`image\`,\`commentId\`)
-    SELECT ?, ?, ?, ?, ?,?
-    FROM posts p
-    LEFT JOIN friendships f ON (p.userId = f.friend_id AND f.user_id = ? AND f.status = 1)
-    LEFT JOIN relationships r ON (p.userId = r.followedUserId)
-    WHERE p.id = ?
-      AND (p.status = 0 
-        OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) 
-        OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?))))
-    LIMIT 1
-  `;
+// export const addImageComment = (
+//   desc,
+//   createdAt,
+//   userId,
+//   postId,
+//   image,
+//   commentId,
+//   callback
+// ) => {
+//   const q = `
+//     INSERT INTO comments (\`desc\`, \`createdAt\`, \`userId\`, \`postId\`, \`image\`, \`commentId\`)
+//     SELECT ?, ?, ?, ?, ?, ?
+//     FROM posts p
+//     LEFT JOIN friendships f ON (p.userId = f.friend_id AND f.user_id = ? AND f.status = 1)
+//     LEFT JOIN relationships r ON (p.userId = r.followedUserId)
+//     WHERE p.id = ?
+//       AND (p.status = 0
+//         OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL))
+//         OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?))))
+//     LIMIT 1
+//   `;
 
-  const values = [
-    desc,
-    createdAt,
-    userId,
-    postId,
-    image,
-    commentId,
-    userId,
-    postId,
-    userId,
-    userId,
-    userId,
-  ];
+//   const values = [
+//     desc,
+//     createdAt,
+//     userId,
+//     postId,
+//     image,
+//     commentId,
+//     userId,
+//     postId,
+//     userId,
+//     userId,
+//     userId,
+//   ];
 
-  db.query(q, values, (err, data) => {
-    if (err) return callback(err, null);
+//   db.query(q, values, (err, data) => {
+//     console.log("Query executed"); // Thêm log để kiểm tra xem hàm này có được gọi không
+//     if (err) {
+//       console.log("Error:", err); // In ra lỗi nếu có
+//       return callback(err, null);
+//     }
 
-    if (data.affectedRows === 0) {
-      return callback(null, {
-        error: true,
-        desc: "Bạn không có quyền thêm bình luận vào bài viết này hoặc bài viết không tồn tại",
-      });
-    }
+//     if (data.affectedRows === 0) {
+//       return callback(
+//         {
+//           error: true,
+//           desc: "Bạn không có quyền thêm bình luận vào bài viết này hoặc bài viết không tồn tại",
+//         },
+//         null
+//       );
+//     }
 
-    return callback(null, "Bình luận đã được tạo.");
-  });
-};
+//     return callback(null, "Bình luận đã được tạo.");
+//   });
+// };
 export const addImageReplyComment = (
   desc,
   createdAt,

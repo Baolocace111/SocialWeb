@@ -41,7 +41,7 @@ const Comments = ({ postId, userId }) => {
         return makeRequest
           .post("/comments/addComment", newComment)
           .catch((err) => {
-            alert(trl(err.response.data));
+            alert(trl(err.response?.data));
           });
       } else {
         const formData = new FormData();
@@ -52,6 +52,7 @@ const Comments = ({ postId, userId }) => {
         return makeRequest
           .post("/comments/addImageComment", formData)
           .catch((err) => {
+            console.log(err);
             alert(trl(err.response.data));
           });
       }
@@ -101,7 +102,7 @@ const Comments = ({ postId, userId }) => {
           />
           <input
             type="file"
-            id={"file" + postId}
+            id={"file" + postId + "comment"}
             accept="image/*, video/*"
             style={{ display: "none" }}
             onChange={(e) => {
@@ -113,7 +114,7 @@ const Comments = ({ postId, userId }) => {
               }
             }}
           />
-          <label htmlFor={"file" + postId}>
+          <label htmlFor={"file" + postId + "comment"}>
             <div className="item">
               <FontAwesomeIcon icon={faImages} color="green" size="xl" />
               <span>

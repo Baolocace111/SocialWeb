@@ -6,7 +6,6 @@ import {
   deleteComment,
   getCommentByCommentId,
   getCommentUserById,
-  addImageComment,
   getCommentsByCommentId,
   addCommentReply,
   addImageReplyComment,
@@ -48,10 +47,19 @@ export const addReplyCommentService = (
 };
 export const addImageCommentService = (userid, desc, img, postId, callback) => {
   const createdAt = moment(Date.now()).format("YYYY-MM-DD HH:mm:ss");
-  addImageComment(desc, createdAt, userid, postId, img, (err, data) => {
-    if (err) return callback(err, null);
-    return callback(null, data);
-  });
+
+  addImageReplyComment(
+    desc,
+    createdAt,
+    userid,
+    postId,
+    img,
+    null,
+    (err, data) => {
+      if (err) return callback(err, null);
+      return callback(null, data);
+    }
+  );
 };
 export const addReplyImageCommentService = (
   userID,
