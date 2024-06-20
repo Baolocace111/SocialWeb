@@ -67,6 +67,7 @@ const SharedPost = ({ post, hidden }) => {
   const { currentUser } = useContext(AuthContext);
   const queryClient = useQueryClient();
   const handleReport = () => {
+    handleMenuClose();
     setShowReportPopup(!showReportPopup);
   };
   const { isLoading, data } = useQuery(["likes", post.id], () =>

@@ -65,7 +65,8 @@
         margin-bottom: -20px;
         color: themed("textColor");
 
-        Input {
+        Input,
+        input {
           border-radius: 5px;
         }
 

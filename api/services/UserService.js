@@ -146,3 +146,9 @@ export const setWebsiteService = (userid, website, callback) => {
     return callback(null, data);
   });
 };
+export const setCityService = (userid, location, callback) => {
+  userModel.setCityModel(userid, location, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, data);
+  });
+};

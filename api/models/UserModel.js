@@ -362,3 +362,17 @@ export const setWebsiteModel = (userid, website, callback) => {
     return callback("Not found", null);
   });
 };
+export const setCityModel = (userid, locate, callback) => {
+  // Kiểm tra nếu giá trị website là null hoặc không hợp lệ
+  if (!locate || typeof locate !== "string") {
+    return callback("Invalid website value", null);
+  }
+
+  // Tạo query cập nhật giá trị website
+  const q = "update users SET city=? where id=?";
+  db.query(q, [locate, userid], (err, data) => {
+    if (err) return callback(err, null);
+    if (data.affectedRows > 0) return callback(null, "Updated!");
+    return callback("Not found", null);
+  });
+};

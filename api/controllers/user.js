@@ -189,3 +189,12 @@ export const ChangeWebsiteController = (req, res) => {
     });
   });
 };
+export const ChangeLocationController = (req, res) => {
+  normalBackgroundUser(req, res, (error, userid) => {
+    if (error) return res.status(500).json(error);
+    userService.setCityService(userid, req.body.city, (error, data) => {
+      if (error) return res.status(500).json(error);
+      return res.status(200).json(data);
+    });
+  });
+};

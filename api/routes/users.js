@@ -13,6 +13,7 @@ import {
   ChangeGenderController,
   ChangeBirthDateController,
   ChangeWebsiteController,
+  ChangeLocationController,
 } from "../controllers/user.js";
 
 const router = express.Router();
@@ -30,5 +31,6 @@ router.post("/changepassword", changePasswordController);
 router.post("/gender", ChangeGenderController);
 router.post("/birthdate", ChangeBirthDateController);
 router.post("/contact", ChangeWebsiteController);
+router.post("/location", ChangeLocationController);
 
 export default router;
