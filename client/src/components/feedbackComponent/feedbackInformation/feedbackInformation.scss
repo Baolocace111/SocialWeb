@@ -1,137 +1,241 @@
-.feedback {
-  padding: 20px;
-  background-color: #f2f2f2;
+// Variables
+$primary-color: #f7f7f7;
+$hover-color: #e7e7e7;
+$border-color: #ccc;
+$box-shadow-color: rgba(0, 0, 0, 0.1);
+
+$primary-bg-color: #ffffff;
+$secondary-bg-color: #f0f0f0;
+$primary-text-color: #333;
+$secondary-text-color: #666;
+$highlight-color: #ffcc00;
+$error-color: #ff0000;
+$success-color: #00cc00;
+$info-color: #0099ff;
+
+// Mixins
+@mixin button-styles {
+  margin: 10px 0;
+  padding: 10px 15px;
   border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  .tabUserInfor {
-    display: flex;
-    justify-content: space-between;
-    .userinfor {
+  border: 1px solid $border-color;
+  background-color: $primary-color;
+  color: $primary-text-color;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: $hover-color;
+  }
+}
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// Styles
+.feedback {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  background-color: $primary-bg-color;
+  border-radius: 10px;
+  box-shadow: 0 0 10px $box-shadow-color;
+  margin-bottom: 20px;
+
+  .feedback-left {
+    flex: 1;
+
+    .tabUserInfor {
       display: flex;
+      justify-content: space-between;
       align-items: center;
+      margin-bottom: 15px;
+
+      .userinfor {
+        display: flex;
+        align-items: center;
+
+        img {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          margin-right: 15px;
+          border: 2px solid $border-color;
+          transition: transform 0.3s ease;
+          &:hover {
+            transform: scale(1.1);
+          }
+        }
+
+        .details {
+          display: flex;
+          flex-direction: column;
+
+          .name {
+            color: $info-color;
+            cursor: pointer;
+            font-weight: bold;
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+
+          .date {
+            color: $secondary-text-color;
+            font-size: 14px;
+          }
+        }
+      }
+
+      .deleteBtn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: $error-color;
+        color: #fff;
+        cursor: pointer;
+        @include flex-center;
+        transition: opacity 0.3s ease;
+        opacity: 0.6;
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+
+    .feedbackinfor {
+      margin-top: 15px;
+
+      .desc {
+        font-size: 16px;
+        color: $primary-text-color;
+        margin-bottom: 10px;
+      }
 
       img {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        margin-right: 15px;
+        max-width: 100%;
+        height: 150px;
+        object-fit: contain;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px $box-shadow-color;
       }
 
-      .details {
+      .rate {
+        margin: 10px 0;
+      }
+
+      .state {
+        color: $error-color;
+        font-weight: bold;
+      }
+
+      .response {
+        margin-top: 15px;
         display: flex;
         flex-direction: column;
-        .name {
-          color: blue;
+        gap: 10px;
+
+        input {
+          width: auto;
+          padding: 10px;
+          border: 1px solid $border-color;
+          border-radius: 5px;
+        }
+
+        select {
+          padding: 10px;
+          border: 1px solid $border-color;
+          border-radius: 5px;
+        }
+
+        button {
+          @include button-styles;
+        }
+      }
+    }
+  }
+
+  .feedback-right {
+    flex: 1;
+
+    .commentbox {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .comment {
+        display: flex;
+        gap: 15px;
+
+        .avatar {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          border: 2px solid $border-color;
           cursor: pointer;
-          width: fit-content;
-          border-radius: 10px;
+          transition: transform 0.3s ease;
           &:hover {
-            background-color: #ccc;
+            transform: scale(1.1);
           }
         }
-        .date {
-          color: #767676;
-        }
-      }
-    }
-    .deleteBtn {
-      width: 50px;
-      display: flex;
-      position: relative;
-      left: 0;
-      justify-content: center;
-      align-items: center;
-      border-radius: 50%;
-      height: 50px;
-      background-color: rgb(255, 0, 0);
-      opacity: 0.6;
-      &:hover {
-        opacity: 1;
-      }
-    }
-  }
-  .feedbackinfor {
-    margin-top: 15px;
-    .desc {
-      font-size: 16px;
-      color: #444;
-      margin-bottom: 10px;
-    }
 
-    img {
-      max-width: 100%;
-      height: auto;
-    }
-
-    .rate {
-      margin: 10px 0;
-    }
-
-    .state {
-      color: red;
-      font-weight: bold;
-    }
-
-    .response {
-      margin-top: 15px;
-      input {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 3px;
-      }
-    }
-  }
-  .commentbox {
-    display: flex;
-    flex-direction: column;
-    .comment {
-      display: flex;
-      flex-direction: row;
-      .avatar {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        border-color: black;
-        border-width: 4px;
-        border-style: solid;
-      }
-      .infocomment {
-        flex: 5;
-        display: flex;
-        flex-direction: column;
-        gap: 3px;
-        align-items: flex-start;
-        background-color: themed("bgSoft");
-        padding: 10px;
-        border-radius: 20px;
-        flex-wrap: wrap;
-
-        justify-content: flex-start;
-
-        span {
-          font-weight: 600;
-          cursor: pointer;
-        }
-
-        p {
-          color: themed("textColorSoft");
-        }
-        .item {
+        .infocomment {
+          flex: 1;
           display: flex;
-          align-items: center;
-          gap: 10px;
-          cursor: pointer;
-          font-size: 15px;
+          flex-direction: column;
+          gap: 5px;
+          background-color: $secondary-bg-color;
+          padding: 10px;
+          border-radius: 10px;
+          box-shadow: 0 0 5px $box-shadow-color;
 
-          .shake-heart:hover {
-            animation: tilt-shaking 0.25s;
-            animation-iteration-count: infinite;
+          span {
+            font-weight: bold;
+            cursor: pointer;
+            color: $primary-text-color;
+            &:hover {
+              text-decoration: underline;
+            }
           }
 
-          .white-color-heart:hover {
-            animation: change-to-red 1s;
-            animation-iteration-count: 1;
+          .date {
+            color: $secondary-text-color;
+            font-size: 14px;
+          }
+
+          p {
+            color: $primary-text-color;
+          }
+
+          img {
+            max-width: 100%;
+            height: 150px;
+            object-fit: contain;
+            border-radius: 5px;
+            box-shadow: 0 0 5px $box-shadow-color;
+          }
+
+          .item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 15px;
+
+            .shake-heart:hover {
+              animation: tilt-shaking 0.25s;
+              animation-iteration-count: infinite;
+            }
+
+            .white-color-heart:hover {
+              animation: change-to-red 1s;
+              animation-iteration-count: 1;
+            }
           }
         }
       }

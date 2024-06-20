@@ -5,7 +5,6 @@ const AdminHome = () => {
   const { trl } = useLanguage();
   return (
     <div style={{ marginLeft: "80px" }}>
-      <span>{trl("Welcome Admin")}</span>
       <div style={{ width: "100%", height: "100%", display: "flex" }}>
         <PostManage></PostManage>
       </div>

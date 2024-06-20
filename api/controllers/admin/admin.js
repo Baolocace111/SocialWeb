@@ -51,12 +51,10 @@ export const deletePostAdminController = async (req, res) => {
     await AuthService.verifyAdminToken(req.cookies.accessToken);
 
     deletePostByAdminService(req.query.postid, (err, data) => {
-      console.log(err);
       if (err) return res.status(500).json(err);
       return res.status(200).json(data);
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json(error);
   }
 };

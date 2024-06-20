@@ -25,8 +25,9 @@ const AdminFeedback = () => {
       }
       const response = await makeRequest.get(url);
       setFeedbacks(response.data);
+      setSelectedFeedback(null);
     } catch (error) {
-      console.error(`Error getting feedbacks: ${error}`);
+      alert(`Error getting feedbacks: ${error}`);
     }
   }, [page, status]);
 
@@ -81,7 +82,7 @@ const AdminFeedback = () => {
               </td>
               <td>{feedback.id}</td>
               <td>{feedback.desc}</td>
-              <td>
+              <td className="username-cell">
                 <img
                   className="userimg"
                   src={URL_OF_BACK_END + `users/profilePic/` + feedback.userid}
@@ -116,7 +117,10 @@ const AdminFeedback = () => {
         {trl("Next")}
       </button>
       {selectedFeedback && (
-        <FeedbackInformation feedback={selectedFeedback}></FeedbackInformation>
+        <FeedbackInformation
+          feedback={selectedFeedback}
+          reload={getFeedbacks}
+        ></FeedbackInformation>
       )}
     </div>
   );

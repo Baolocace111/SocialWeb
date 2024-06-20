@@ -3,8 +3,9 @@ import UserTable from "./UserTable";
 import "./postManage.scss";
 import { useLanguage } from "../../../context/languageContext";
 const PostManage = () => {
-  const [selectedMonth, setSelectedMonth] = useState("");
-  const [selectedYear, setSelectedYear] = useState("");
+  const toDay = new Date();
+  const [selectedMonth, setSelectedMonth] = useState(toDay.getMonth() + 1);
+  const [selectedYear, setSelectedYear] = useState(toDay.getFullYear());
   const { trl } = useLanguage();
   const months = [
     { value: 1, label: trl("January") },
