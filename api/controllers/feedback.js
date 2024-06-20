@@ -30,6 +30,7 @@ export const addPostFeedbackController = async (req, res) => {
 export const addCommentFeedbackController = async (req, res) => {
   uploadBackgroundUser(req, res, (err, userid, path) => {
     if (err) return res.status(500).json(err);
+
     ValidateInputAllowNull(req.body.desc, req.body.rate, req.body.id)
       .then(() => {
         addCommentFeedbackService(

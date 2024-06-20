@@ -34,6 +34,7 @@ import { ChatContext } from "./ChatContext";
 import PopupWindow from "../PopupComponent/PopupWindow";
 import LanguageSwitcher from "../languageSwitcher/LanguageSwitcher";
 import { useLanguage } from "../../context/languageContext";
+import { useParams } from "react-router-dom";
 const Navbar = () => {
   const { toggle, darkMode } = useContext(DarkModeContext);
   const { currentUser, logout } = useContext(AuthContext);
@@ -48,6 +49,7 @@ const Navbar = () => {
   const [callName, setCallName] = useState("");
   const { trl } = useLanguage();
   const [wsConnection, setWSConnection] = useState(false);
+  const searchDefault = useParams().searchText || "";
   const update_request_number = async () => {
     try {
       const response = await makeRequest.get("/friendship/count");
@@ -132,7 +134,7 @@ const Navbar = () => {
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState(searchDefault);
 
   const handleSearch = () => {
     if (searchText.trim() !== "") {

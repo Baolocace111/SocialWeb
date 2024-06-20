@@ -101,6 +101,7 @@ export const deleteComment = (req, res) => {
 export const addImageCommentController = (req, res) => {
   uploadBackgroundUser(req, res, (error, userid, filePath) => {
     if (error) return res.status(500).json(error);
+
     const commentId = req.body.commentId;
     if (commentId) {
       addReplyImageCommentService(
