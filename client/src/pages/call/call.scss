@@ -61,10 +61,11 @@
 
   .popup-content {
     background-color: #fff;
-    border-radius: 8px;
+    border-radius: 8px 8px 0 0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
     padding: 30px;
+
     h1 {
       font-size: 24px; /* Tăng kích thước font */
       /* Các thuộc tính khác không thay đổi */
@@ -81,6 +82,15 @@
     button {
       margin-top: 20px;
     }
+  }
+  .button-box {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    padding: 10px;
+    background-color: #fff;
+    visibility: visible;
+    border-radius: 0 0 8px 8px;
   }
   .control-panel {
     position: fixed;
