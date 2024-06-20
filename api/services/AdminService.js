@@ -50,9 +50,10 @@ export const getPostByUserAdminService = (
 export const deletePostByAdminService = (postId, callback) => {
   deletePostbyAdmin(Number(postId), (err, data) => {
     if (err) return callback(err);
-    plusReputation(data.userId, -1, (err, infor) => {
+
+    plusReputation(data[0].userId, -1, (err, infor) => {
       if (err) return callback(err);
-      addNotificationService(data.userId, "", "", "", 2, (err, data) => {});
+      addNotificationService(data[0].userId, "", "", "", 2, (err, data) => {});
       return callback(null, "Delete successfully");
     });
   });

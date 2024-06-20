@@ -43,6 +43,8 @@ const UserTable = ({ year, month }) => {
       // Update currentPostPage state here if necessary
       setCurrentPostPage(postPage);
     } catch (error) {
+      console.log(postPage);
+      console.log(error.response?.data);
       setError(error.response?.data || trl("An unexpected error occurred"));
     }
   };
@@ -76,7 +78,7 @@ const UserTable = ({ year, month }) => {
             //console.log("Post deleted:", response);
             // Cập nhật UI
             fetchUserData();
-            fetchPostsByUser();
+            fetchPostsByUser(selectedUser.id, currentPostPage);
           })
           .catch((error) => {
             // Xử lý lỗi
@@ -121,7 +123,7 @@ const UserTable = ({ year, month }) => {
           //console.log("Post deleted:", response);
           // Cập nhật UI
           fetchUserData();
-          fetchPostsByUser();
+          fetchPostsByUser(selectedUser.id, currentPostPage);
         })
         .catch((error) => {
           // Xử lý lỗi

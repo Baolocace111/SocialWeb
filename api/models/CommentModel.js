@@ -85,6 +85,7 @@ export const getCommentByCommentId = (commentId, callback) => {
       p.type as posttype, 
       p.updateAt as postUpdateAt,
       p.userId as uid,
+      p.img as postimage,
       u2.id AS postUserId, 
       u2.name AS postName
       FROM posts AS p
@@ -109,6 +110,7 @@ export const getCommentByCommentId = (commentId, callback) => {
         updateAt: data[0].postUpdateAt,
         userId: data[0].postUserId,
         name: data[0].postName,
+        img: data[0].postimage,
       },
     };
 
@@ -121,6 +123,7 @@ export const getCommentByCommentId = (commentId, callback) => {
     delete result.postUpdateAt;
     delete result.postUserId;
     delete result.postName;
+    delete result.postimage;
 
     return callback(null, result);
   });

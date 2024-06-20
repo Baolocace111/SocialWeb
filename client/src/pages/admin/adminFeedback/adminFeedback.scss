@@ -1,60 +1,113 @@
+// Variables
+$primary-color: #f7f7f7;
+$hover-color: #e7e7e7;
+$border-color: #ccc;
+$box-shadow-color: rgba(0, 0, 0, 0.1);
+$status-0-color: #ffcccc;
+$status-0-hover-color: #ff7474;
+$status-1-color: #ccf7ff;
+$status-1-hover-color: #7febfe;
+$status-2-color: #cdffcc;
+$status-2-hover-color: #86ff84;
+
+$primary-bg-color: #ffffff;
+$secondary-bg-color: #f0f0f0;
+$primary-text-color: #333;
+$secondary-text-color: #666;
+
+// Mixins
+@mixin button-styles {
+  margin: 10px 0;
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: 1px solid $border-color;
+  background-color: $primary-color;
+  color: $primary-text-color;
+
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: $hover-color;
+  }
+}
+
+@mixin table-cell {
+  padding: 15px;
+  border-bottom: 2px solid #eee;
+  text-align: left;
+
+  color: $secondary-text-color;
+}
+
+@mixin status-color($color, $hover-color) {
+  background-color: $color;
+  &:hover {
+    background-color: $hover-color;
+  }
+}
+
+// Styles
 .adminfeedback {
   display: block;
   margin: 0 auto;
   max-width: 90%;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 15px $box-shadow-color;
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 10px;
+  background-color: $primary-bg-color;
+
+  h1 {
+    color: $primary-text-color;
+    text-align: center;
+    margin-bottom: 20px;
+  }
 
   select,
   button {
-    margin: 10px 0;
-    padding: 8px 12px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    background-color: #f7f7f7;
-    cursor: pointer;
-    &:hover {
-      background-color: #e7e7e7;
-    }
+    @include button-styles;
   }
 
   table {
     width: 100%;
     border-collapse: collapse;
+    box-shadow: 0 0 10px $box-shadow-color;
+    border-radius: 5px;
+    overflow: hidden;
+
     th,
     td {
-      padding: 15px;
-      border-bottom: 2px solid #eee;
-      text-align: left;
+      @include table-cell;
     }
-  }
 
-  tr {
-    &:hover {
-      background-color: #f0f0f0;
+    th {
+      background-color: $secondary-bg-color;
+      font-weight: bold;
+    }
+
+    tr {
+      &:nth-child(even) {
+        background-color: $primary-bg-color;
+      }
+      &:nth-child(odd) {
+        background-color: $secondary-bg-color;
+      }
+      &:hover {
+        background-color: $hover-color;
+      }
     }
   }
 
   .status-0 {
-    background-color: #ffcccc;
-  }
-  .status-0:hover {
-    background-color: #ff7474;
+    @include status-color($status-0-color, $status-0-hover-color);
   }
 
   .status-1 {
-    background-color: #ccf7ff;
-  }
-  .status-1:hover {
-    background-color: #7febfe;
+    @include status-color($status-1-color, $status-1-hover-color);
   }
 
   .status-2 {
-    background-color: #cdffcc;
-  }
-  .status-2:hover {
-    background-color: #86ff84;
+    @include status-color($status-2-color, $status-2-hover-color);
   }
 
   .userimg {
@@ -62,7 +115,19 @@
     width: 40px;
     height: 40px;
     margin-right: 8px;
+    border: 2px solid $border-color;
+    transition: transform 0.3s ease;
+    &:hover {
+      transform: scale(1.1);
+    }
   }
+
+  .username-cell {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
   .delbtn {
     width: 50px;
     display: flex;
@@ -70,8 +135,29 @@
     align-items: center;
     height: 50px;
     background-color: white;
+    border: 1px solid $border-color;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
     &:hover {
       background-color: #9a9a9a;
+    }
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+
+    button {
+      @include button-styles;
+      margin: 0 5px;
+    }
+
+    span {
+      font-size: 16px;
+      color: $primary-text-color;
+      margin: 0 10px;
     }
   }
 }
