@@ -3,40 +3,66 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { makeRequest } from "../../../axios";
 import { useLanguage } from "../../../context/languageContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faMars,
+  faVenus,
+  faMarsAndVenus,
+  faCheck,
+  faTimes,
+  faUserTie,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
+import { URL_OF_BACK_END } from "../../../axios";
+
 const AdminUserManagement = () => {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
+  const [searchKey, setSearchKey] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { trl } = useLanguage();
+  const fetchData = async () => {
+    try {
+      const response = await makeRequest.post("/admin/users/getuser", {
+        page: currentPage,
+        key: searchKey,
+      });
+      setUsers(response.data.users);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      alert(trl("Error fetching data: "), trl(error));
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await makeRequest.post("/admin/users/getuser", {
-          page: currentPage,
-          key: "", // Set key for search if needed
-        });
-        setUsers(response.data.users);
-        // set other data like currentPage, totalPages, etc.
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-      }
-    };
-
     fetchData();
-  }, [currentPage]);
+  }, [currentPage, searchKey]);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
 
   const handleSearch = (key) => {
-    // Call API with the search key and update state
+    setSearchKey(key);
+    setCurrentPage(1); // Reset to first page on new search
+  };
+
+  const handleReputation = (userId, reputation) => {
+    makeRequest
+      .post("/admin/users/reputation", { id: userId, reputation })
+      .then((res) => {
+        fetchData();
+      })
+      .catch((e) => {
+        alert(e.response?.data);
+      });
   };
 
   return (
-    <div style={{ marginLeft: "80px" }}>
+    <div className="admin-user-management">
+      {isLoading && <div className="loadingfull"></div>}
       <SearchBar onSearch={handleSearch} />
-      <UserList users={users} />
+      <UserList users={users} changeReputation={handleReputation} />
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
@@ -45,71 +71,104 @@ const AdminUserManagement = () => {
     </div>
   );
 };
-const UserList = ({ users }) => {
+
+const UserList = ({ users, changeReputation }) => {
   const { trl } = useLanguage();
+  const goProfilePage = (id) => {
+    window.open(`/profile/${id}`, "_blank");
+  };
   return (
-    <div>
+    <div className="user-list">
       {users.map((user) => (
-        <div
-          key={user.id}
-          style={{
-            marginBottom: "20px",
-            padding: "10px",
-            border: "1px solid #ccc",
-          }}
-        >
+        <div key={user.id} className="user-card">
           <img
-            src={`http://localhost:8800/api/admin/profilePic/${user.id}`}
+            src={`${URL_OF_BACK_END}users/profilePic/${user.id}`}
+            onClick={() => {
+              goProfilePage(user.id);
+            }}
             onError={(e) => {
               e.target.onerror = null;
               e.target.src = "/upload/errorImage.png";
             }}
             alt={`${user.username}${trl("'s profile")}`}
-            style={{ width: "100px", height: "100px", objectFit: "cover" }}
+            className="profile-pic"
           />
-          <h3>{user.name}</h3>
-          <p>
-            {trl("Username")}: {user.username}
-          </p>
-          <p>Email: {user.email}</p>
-          {user.city && (
+          <h3
+            onClick={() => {
+              goProfilePage(user.id);
+            }}
+          >
+            {user.name}
+          </h3>
+          <div className="more-info">
             <p>
-              {trl("City")}: {user.city}
+              {trl("Username")}: {user.username}
             </p>
-          )}
-          {user.website && (
+            <p>Email: {user.email}</p>
+            {user.city && (
+              <p>
+                {trl("City")}: {user.city}
+              </p>
+            )}
+            {user.website && (
+              <p>
+                Website:{" "}
+                <a
+                  href={user.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {user.website}
+                </a>
+              </p>
+            )}
             <p>
-              Website:{" "}
-              <a href={user.website} target="_blank" rel="noopener noreferrer">
-                {user.website}
-              </a>
+              {trl("Gender")}:
+              {user.gender === 0 && <FontAwesomeIcon icon={faMars} />}
+              {user.gender === 1 && <FontAwesomeIcon icon={faVenus} />}
+              {user.gender === 2 && <FontAwesomeIcon icon={faMarsAndVenus} />}
             </p>
-          )}
-          <p>
-            {trl("Gender")}: {user.gender === 0 ? "Male" : "Female"}
-          </p>
-          <p>
-            {trl("State")}: {user.state === 0 ? "Inactive" : "Active"}
-          </p>
-          {user.birthdate && (
             <p>
-              {trl("Birthdate")}:{" "}
-              {new Date(user.birthdate).toLocaleDateString()}
+              {trl("State")}:
+              {user.state === 0 ? (
+                <FontAwesomeIcon icon={faTimes} className="state-inactive" />
+              ) : (
+                <FontAwesomeIcon icon={faCheck} className="state-active" />
+              )}
             </p>
-          )}
-          <p>
-            {trl("Joined on")}: {new Date(user.create_at).toLocaleDateString()}
-          </p>
-          <p>
-            {trl("Last updated")}:{" "}
-            {new Date(user.update_at).toLocaleDateString()}
-          </p>
-          <p>
-            {trl("Role")}: {user.role === 1 ? "Admin" : "User"}
-          </p>
-          <p>
-            {trl("Reputation")}: {user.reputation}
-          </p>
+            {user.birthdate && (
+              <p>
+                {trl("Birthdate")}:{" "}
+                {new Date(user.birthdate).toLocaleDateString()}
+              </p>
+            )}
+            <p>
+              {trl("Joined on")}:{" "}
+              {new Date(user.create_at).toLocaleDateString()}
+            </p>
+            <p>
+              {trl("Last updated")}:{" "}
+              {new Date(user.update_at).toLocaleDateString()}
+            </p>
+            <p>
+              {trl("Role")}:
+              {user.role === 1 ? (
+                <FontAwesomeIcon icon={faUserTie} />
+              ) : (
+                <FontAwesomeIcon icon={faUser} />
+              )}
+            </p>
+            <p>
+              {trl("Reputation")}:
+              {user.reputation <= 3 ? user.reputation : `3+`}
+            </p>
+            <div className="actionbox">
+              <button>{trl(["+1", " ", "Reputation"])}</button>
+              <button>{trl(["-1", " ", "Reputation"])}</button>
+              <button>{trl("Ban")}</button>
+              <button>{trl("Unban")}</button>
+            </div>
+          </div>
         </div>
       ))}
     </div>
@@ -125,34 +184,27 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   }
 
   return (
-    <nav>
-      <ul
-        style={{
-          listStyleType: "none",
-          display: "flex",
-          justifyContent: "center",
-          padding: 0,
-        }}
-      >
+    <nav className="pagination">
+      <ul>
         {currentPage > 1 && (
-          <li style={{ margin: "0 5px" }}>
+          <li>
             <button onClick={() => onPageChange(currentPage - 1)}>
               {trl("Previous")}
             </button>
           </li>
         )}
         {pageNumbers.map((number) => (
-          <li key={number} style={{ margin: "0 5px" }}>
+          <li key={number}>
             <button
               onClick={() => onPageChange(number)}
-              style={{ fontWeight: currentPage === number ? "bold" : "normal" }}
+              className={currentPage === number ? "active" : ""}
             >
               {number}
             </button>
           </li>
         ))}
         {currentPage < totalPages && (
-          <li style={{ margin: "0 5px" }}>
+          <li>
             <button onClick={() => onPageChange(currentPage + 1)}>
               {trl("Next")}
             </button>
@@ -172,14 +224,16 @@ const SearchBar = ({ onSearch }) => {
   };
 
   return (
-    <div>
+    <div className="search-bar-user">
       <input
         type="text"
         value={input}
         onChange={(e) => setInput(e.target.value)}
+        placeholder={trl("Search users...")}
       />
       <button onClick={handleSearch}>{trl("Search")}</button>
     </div>
   );
 };
+
 export default AdminUserManagement;

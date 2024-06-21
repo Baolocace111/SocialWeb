@@ -4,7 +4,10 @@ import {
   getPostByAdminController,
   getUserPostingAdminController,
 } from "../controllers/admin/admin.js";
-import { searchUserBykeyController } from "../controllers/admin/adminUser.js";
+import {
+  ChangeReputationController,
+  searchUserBykeyController,
+} from "../controllers/admin/adminUser.js";
 import {
   deleteFeedbackController,
   getFeedbackController,
@@ -32,6 +35,7 @@ router.get("/post/:id", getPostByIdAdminController);
 router.post("/post", getPostByAdminController);
 //User management
 router.post("/users/getuser", searchUserBykeyController);
+router.post("/users/reputation", ChangeReputationController);
 //Feedback management
 router.get("/feedback/get/:page", getFeedbackController);
 router.get("/feedback/getbystatus", getFeedbackbyStatusController);

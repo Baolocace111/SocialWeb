@@ -308,5 +308,9 @@
   "Hủy yêu cầu": "Hủy yêu cầu",
   "Failed to fetch messages:": "Không thể tải tin nhắn:",
   "Failed to send message:": "Không thể gửi tin nhắn:",
-  "You are not friends": "Các bạn không phải bạn của nhau"
+  "You are not friends": "Các bạn không phải bạn của nhau",
+  "Search": "Tìm kiếm",
+  "Search users...": "Tìm người dùng...",
+  "Ban": "Cấm",
+  "Unban": "Hủy Cấm"
 }
