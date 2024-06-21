@@ -9,7 +9,7 @@ const LanguageSwitcher = ({ text }) => {
   const languages = {
     en: { name: "English", flagImg: "/flags/Flag-United-Kingdom.webp" },
     vn: { name: "Tiếng Việt", flagImg: "/flags/Flag_of_Vietnam.svg.png" },
-    jp: { name: "日本", flagImg: "/flags/Flag_of_Japan.svg" },
+    jp: { name: "日本語", flagImg: "/flags/Flag_of_Japan.svg" },
   };
 
   const toggleDropdown = () => setOpen(!open);
@@ -26,7 +26,7 @@ const LanguageSwitcher = ({ text }) => {
         onClick={toggleDropdown}
       >
         <img src={languages[language].flagImg} alt={languages[language].name} />
-        <span>{text && languages[language].name}</span>
+        {text && <span> {languages[language].name}</span>}
       </div>
       {open && (
         <div className="dropdown">

@@ -1,44 +1,80 @@
+// Variables
+$primary-color: #f7f7f7;
+$hover-color: #e7e7e7;
+$border-color: #ccc;
+$box-shadow-color: rgba(0, 0, 0, 0.1);
+$dropdown-bg-color: #ffffff;
+$dropdown-hover-bg-color: #e0e0e0;
+$text-color: #333;
+$highlight-color: #ffcc00;
+$transition-duration: 0.3s;
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin transition($property, $duration, $timing-function) {
+  transition: $property $duration $timing-function;
+}
+
+// Styles
 .language-switcher {
   position: relative;
+  width: fit-content;
+
   .current {
-    display: flex;
-    align-items: center;
+    @include flex-center;
     cursor: pointer;
-    padding: 5px;
-    border: 0px solid #ccc;
-    width: fit-content;
-    justify-content: flex-start;
+    padding: 10px 15px;
+    border: 1px solid $border-color;
+    border-radius: 5px;
+    background-color: $primary-color;
+    color: $text-color;
+    @include transition(all, $transition-duration, ease);
+    box-shadow: 0 2px 5px $box-shadow-color;
+    gap: 10px;
     img {
       width: 20px;
-      margin-right: 5px;
+    }
+
+    &:hover {
+      background-color: $hover-color;
     }
   }
+
   .text {
-    width: 110px;
+    width: 150px;
   }
+
   .dropdown {
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
-    border: 0px solid #ccc;
-    background: none;
+    border: 1px solid $border-color;
+    background-color: $dropdown-bg-color;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px $box-shadow-color;
     z-index: 10;
+    margin-top: 5px;
+    overflow: hidden;
 
     .option {
-      display: flex;
-      align-items: center;
-      padding: 5px;
+      @include flex-center;
+      padding: 10px 15px;
       cursor: pointer;
-      transition: background-color 1s;
-
+      color: $text-color;
+      @include transition(background-color, $transition-duration, ease);
+      gap: 10px;
       &:hover {
-        background-color: #898989;
+        background-color: $dropdown-hover-bg-color;
       }
 
       img {
         width: 20px;
-        margin-right: 5px;
       }
     }
   }
