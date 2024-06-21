@@ -6,7 +6,7 @@ import {
   getPostById,
   getPostByIdAdmin,
 } from "../models/PostModel.js";
-import { plusReputation } from "../models/UserModel.js";
+import { plusReputation, setReputation } from "../models/UserModel.js";
 export const getUserPostingByAdminService = (year, month, page, callback) => {
   if (Number(year) === NaN || Number(month) === NaN || Number(page) === NaN)
     return callback("Wrong year or month", null);
@@ -56,6 +56,12 @@ export const deletePostByAdminService = (postId, callback) => {
       addNotificationService(data[0].userId, "", "", "", 2, (err, data) => {});
       return callback(null, "Delete successfully");
     });
+  });
+};
+export const changeReputationService = (userid, reputation, callback) => {
+  setReputation(userid, reputation, (error, data) => {
+    if (error) return callback(error, null);
+    return callback(null, data);
   });
 };
 export const getPostByIdAdminService = (postId, callback) => {

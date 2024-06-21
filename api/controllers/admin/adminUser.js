@@ -4,6 +4,8 @@ import {
   ValidateInputs,
 } from "../../services/ValidateService.js";
 import { AuthService } from "../../services/AuthService.js";
+import { normalBackgroundAdmin } from "../backgroundController.js";
+import { changeReputationService } from "../../services/AdminService.js";
 
 export const searchUserBykeyController = async (req, res) => {
   try {
@@ -12,7 +14,7 @@ export const searchUserBykeyController = async (req, res) => {
     await ValidateInputs(Number(req.body.page));
 
     await ValidateInputAllowNull(req.body.key);
-    //console.log("here");
+
     searchUserByNameEmailIdService(req.body.key, req.body.page, (err, data) => {
       if (err) return res.status(500).json(err);
       return res.status(200).json(data);
@@ -20,4 +22,13 @@ export const searchUserBykeyController = async (req, res) => {
   } catch (error) {
     return res.status(500).json(error);
   }
+};
+export const ChangeReputationController = (req, res) => {
+  normalBackgroundAdmin(req, res, (error, userid) => {
+    if (error) return res.status(500).json(error);
+    changeReputationService(req.body.id, req.body.reputation, (error, data) => {
+      if (error) return res.status(500).json(error);
+      return res.status(200).json(data);
+    });
+  });
 };

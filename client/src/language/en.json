@@ -308,5 +308,9 @@
   "Hủy yêu cầu": "Cancel request",
   "Failed to fetch messages:": "Failed to fetch messages:",
   "Failed to send message:": "Failed to send message:",
-  "You are not friends": "You are not friends"
+  "You are not friends": "You are not friends",
+  "Search": "Search",
+  "Search users...": "Search users...",
+  "Ban": "Ban",
+  "Unban": "Unban"
 }

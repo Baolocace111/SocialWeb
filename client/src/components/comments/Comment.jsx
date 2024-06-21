@@ -56,7 +56,11 @@ const Comment = ({ comment, postUserID, replyId }) => {
         }); // Trả về Promise từ makeRequest.get()
     }
   });
-
+  const isVideoContent = comment.image
+    ? comment.image.endsWith(".mp4") ||
+      comment.image.endsWith(".avi") ||
+      comment.image.endsWith(".mov")
+    : false;
   const handleDeleteComment = () => {
     makeRequest
       .delete(`/comments/${comment.id}`)
@@ -150,16 +154,22 @@ const Comment = ({ comment, postUserID, replyId }) => {
         </span>
 
         <p>{comment.desc}</p>
-        {comment.image && (
-          <img
-            src={URL_OF_BACK_END + `comments/image?id=` + comment.id}
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = "/upload/errorImage.png";
-            }}
-            alt={URL_OF_BACK_END + `comments/image?id=` + comment.id}
-          ></img>
-        )}
+        {comment.image &&
+          (!isVideoContent ? (
+            <img
+              src={URL_OF_BACK_END + `comments/image?id=` + comment.id}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "/upload/errorImage.png";
+              }}
+              alt={URL_OF_BACK_END + `comments/image?id=` + comment.id}
+            ></img>
+          ) : (
+            <video
+              controls
+              src={URL_OF_BACK_END + `comments/image?id=` + comment.id}
+            ></video>
+          ))}
       </div>
 
       <div className="editting">

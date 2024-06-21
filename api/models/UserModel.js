@@ -286,6 +286,10 @@ export const plusReputation = (userid, numberReputation, callback) => {
   });
 };
 export const setReputation = (userid, numberReputation, callback) => {
+  if (!Number.isInteger(numberReputation)) {
+    return callback("Error: numberReputation must be an integer", null);
+  }
+
   const q = "update users SET reputation=? where id=?";
   db.query(q, [numberReputation, userid], (err, data) => {
     if (err) return callback(err, null);
@@ -293,6 +297,7 @@ export const setReputation = (userid, numberReputation, callback) => {
     return callback("Not found", null);
   });
 };
+
 export const setGenderModel = (userid, gender, callback) => {
   // Kiểm tra giá trị gender
 
