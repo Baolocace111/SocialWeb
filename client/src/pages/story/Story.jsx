@@ -28,14 +28,25 @@ const Story = ({ userId, onActiveUserChange }) => {
    });
 
    const deleteStoryMutation = useMutation(
-      (storyId) => makeRequest.delete(`/stories/story/${storyId}`), {
-      onSuccess: (data, storyId) => {
-         queryClient.invalidateQueries("stories");
-         // Cập nhật danh sách story sau khi xóa thành công
-         const updatedStoryGroups = storyGroups.map(group => group.filter(story => story.id !== storyId));
-         setStoryGroups(updatedStoryGroups);
-      },
-   });
+      (storyId) => makeRequest.delete(`/stories/story/${storyId}`),
+      {
+         onSuccess: (data, storyId) => {
+            queryClient.invalidateQueries("stories");
+            const updatedStoryGroups = storyGroups
+               .map((group) => group.filter((story) => story.id !== storyId))
+               .filter((group) => group.length > 0);
+            setStoryGroups(updatedStoryGroups);
+
+            // Update indices if necessary
+            if (updatedStoryGroups.length <= currentGroupIndex) {
+               setCurrentGroupIndex(Math.max(0, updatedStoryGroups.length - 1));
+               setCurrentStoryIndex(0);
+            } else if (updatedStoryGroups[currentGroupIndex].length <= currentStoryIndex) {
+               setCurrentStoryIndex(Math.max(0, updatedStoryGroups[currentGroupIndex].length - 1));
+            }
+         },
+      }
+   );
 
    useEffect(() => {
       if (allStoriesData) {
@@ -43,25 +54,24 @@ const Story = ({ userId, onActiveUserChange }) => {
          setStoryGroups(groups);
 
          if (userId) {
-            // User đã được chọn từ StoriesBar
-            const userGroupIndex = groups.findIndex(
-               group => group.some(story => story.userId === userId)
+            const userGroupIndex = groups.findIndex((group) =>
+               group.some((story) => story.userId === userId)
             );
             if (userGroupIndex !== -1) {
                setCurrentGroupIndex(userGroupIndex);
             }
          } else {
-            // Không có user được chọn, hiển thị mặc định
             setCurrentGroupIndex(0);
          }
       }
    }, [allStoriesData, userId]);
 
    useEffect(() => {
-      setShowNextButton(storyGroups.length > 1 || (storyGroups.length === 1 && storyGroups[0].length > 1));
+      setShowNextButton(
+         storyGroups.length > 1 || (storyGroups.length === 1 && storyGroups[0].length > 1)
+      );
       setShowPrevButton(currentGroupIndex > 0 || currentStoryIndex > 0);
 
-      // Kiểm tra xem storyGroups[currentGroupIndex] có tồn tại và có phần tử ở currentStoryIndex không
       if (storyGroups[currentGroupIndex] && storyGroups[currentGroupIndex][currentStoryIndex]) {
          const activeStory = storyGroups[currentGroupIndex][currentStoryIndex];
          onActiveUserChange(activeStory.userId);
@@ -70,7 +80,7 @@ const Story = ({ userId, onActiveUserChange }) => {
 
    const groupStoriesByUser = (stories) => {
       const groups = {};
-      stories.forEach(story => {
+      stories.forEach((story) => {
          if (!groups[story.userId]) {
             groups[story.userId] = [];
          }
@@ -90,39 +100,33 @@ const Story = ({ userId, onActiveUserChange }) => {
    };
 
    const handleStoryChange = (direction) => {
-      if (direction === 'next') {
-         setCurrentStoryIndex(prevIndex => {
+      if (direction === "next") {
+         setCurrentStoryIndex((prevIndex) => {
             const isLastStoryInGroup = prevIndex === storyGroups[currentGroupIndex].length - 1;
             const isLastGroup = currentGroupIndex === storyGroups.length - 1;
 
             if (!isLastStoryInGroup) {
-               // Có story tiếp theo trong group hiện tại
                setShowPrevButton(true);
                return prevIndex + 1;
             } else if (!isLastGroup) {
-               // Chuyển đến group tiếp theo
-               setCurrentGroupIndex(prevGroupIndex => prevGroupIndex + 1);
-               setShowPrevButton(true); // Có thể quay lại group trước
+               setCurrentGroupIndex((prevGroupIndex) => prevGroupIndex + 1);
+               setShowPrevButton(true);
                return 0;
             } else {
-               // Đây là story cuối cùng
                setShowNextButton(false);
             }
             return prevIndex;
          });
-      } else if (direction === 'prev') {
-         setCurrentStoryIndex(prevIndex => {
+      } else if (direction === "prev") {
+         setCurrentStoryIndex((prevIndex) => {
             if (prevIndex > 0) {
-               // Có story trước đó trong group hiện tại
                setShowNextButton(true);
                return prevIndex - 1;
             } else if (currentGroupIndex > 0) {
-               // Chuyển đến group trước
-               setCurrentGroupIndex(prevGroupIndex => prevGroupIndex - 1);
-               setShowNextButton(true); // Có thể tiến đến group tiếp theo
+               setCurrentGroupIndex((prevGroupIndex) => prevGroupIndex - 1);
+               setShowNextButton(true);
                return storyGroups[currentGroupIndex - 1].length - 1;
             } else {
-               // Đây là story đầu tiên
                setShowPrevButton(false);
             }
             return prevIndex;
@@ -132,7 +136,7 @@ const Story = ({ userId, onActiveUserChange }) => {
 
    const handleDeleteClick = async () => {
       try {
-         const currentStoryId = storyGroups[currentGroupIndex][currentStoryIndex]?.id;
+         const currentStoryId = storyGroups[currentGroupIndex]?.[currentStoryIndex]?.id;
          if (currentStoryId) {
             await deleteStoryMutation.mutateAsync(currentStoryId);
             setCurrentStoryIndex(Math.max(0, currentStoryIndex - 1));
@@ -142,16 +146,19 @@ const Story = ({ userId, onActiveUserChange }) => {
       }
    };
 
-   const isCurrentUserStory = storyGroups[currentGroupIndex]?.some(story => story.userId === currentUser.id);
+   const isCurrentUserStory = storyGroups[currentGroupIndex]?.some((story) => story.userId === currentUser.id);
 
    return (
       <div className="story-page">
-         <button className={`nav-button prev ${!showPrevButton && 'invisible'}`} onClick={() => handleStoryChange('prev')}>
+         <button
+            className={`nav-button prev ${!showPrevButton && "invisible"}`}
+            onClick={() => handleStoryChange("prev")}
+         >
             <FontAwesomeIcon icon={faAngleLeft} />
          </button>
          <div className="story-content">
             {isLoading && <FlipCube />}
-            {storyGroups.length > 0 && (
+            {storyGroups.length > 0 && storyGroups[currentGroupIndex]?.length > 0 && (
                <Stories
                   key={`group_${currentGroupIndex}`}
                   storyContainerStyles={{ borderRadius: "10px", backgroundColor: "#303338" }}
@@ -161,21 +168,22 @@ const Story = ({ userId, onActiveUserChange }) => {
                   defaultInterval={7000}
                   keyboardNavigation={true}
                   currentIndex={currentStoryIndex}
-                  onStoryEnd={() => handleStoryChange('next')}
-                  onNext={() => handleStoryChange('next')}
-                  onPrevious={() => handleStoryChange('prev')}
+                  onStoryEnd={() => handleStoryChange("next")}
+                  onNext={() => handleStoryChange("next")}
+                  onPrevious={() => handleStoryChange("prev")}
                   loop={false}
                />
             )}
-            {
-               isCurrentUserStory && (
-                  <div className="delete-button" onClick={handleDeleteClick}>
-                     <span>Delete</span>
-                  </div>
-               )
-            }
+            {isCurrentUserStory && (
+               <div className="delete-button" onClick={handleDeleteClick}>
+                  <span>Delete</span>
+               </div>
+            )}
          </div>
-         <button className={`nav-button next ${!showNextButton && 'invisible'}`} onClick={() => handleStoryChange('next')}>
+         <button
+            className={`nav-button next ${!showNextButton && "invisible"}`}
+            onClick={() => handleStoryChange("next")}
+         >
             <FontAwesomeIcon icon={faAngleRight} />
          </button>
          <Link to="/">
