@@ -14,15 +14,17 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { URL_OF_BACK_END } from "../../../axios";
-
+import Dotfloating from "../../../components/loadingComponent/dotfloating/Dotfloating";
 const AdminUserManagement = () => {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchKey, setSearchKey] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { trl } = useLanguage();
+
   const fetchData = async () => {
+    setIsLoading(true); // Bắt đầu hiển thị màn hình tải
     try {
       const response = await makeRequest.post("/admin/users/getuser", {
         page: currentPage,
@@ -32,8 +34,11 @@ const AdminUserManagement = () => {
       setTotalPages(response.data.totalPages);
     } catch (error) {
       alert(trl("Error fetching data: "), trl(error));
+    } finally {
+      setIsLoading(false); // Tắt màn hình tải sau khi request hoàn thành
     }
   };
+
   useEffect(() => {
     fetchData();
   }, [currentPage, searchKey]);
@@ -47,20 +52,28 @@ const AdminUserManagement = () => {
     setCurrentPage(1); // Reset to first page on new search
   };
 
-  const handleReputation = (userId, reputation) => {
-    makeRequest
-      .post("/admin/users/reputation", { id: userId, reputation })
-      .then((res) => {
-        fetchData();
-      })
-      .catch((e) => {
-        alert(e.response?.data);
+  const handleReputation = async (userId, reputation) => {
+    setIsLoading(true); // Bắt đầu hiển thị màn hình tải
+    try {
+      await makeRequest.post("/admin/users/reputation", {
+        id: userId,
+        reputation,
       });
+      fetchData();
+    } catch (e) {
+      alert(e.response?.data);
+    } finally {
+      setIsLoading(false); // Tắt màn hình tải sau khi request hoàn thành
+    }
   };
 
   return (
     <div className="admin-user-management">
-      {isLoading && <div className="loadingfull"></div>}
+      {isLoading && (
+        <div className="loadingfull">
+          <Dotfloating />
+        </div>
+      )}
       <SearchBar onSearch={handleSearch} />
       <UserList users={users} changeReputation={handleReputation} />
       <Pagination
@@ -163,10 +176,34 @@ const UserList = ({ users, changeReputation }) => {
               {user.reputation <= 3 ? user.reputation : `3+`}
             </p>
             <div className="actionbox">
-              <button>{trl(["+1", " ", "Reputation"])}</button>
-              <button>{trl(["-1", " ", "Reputation"])}</button>
-              <button>{trl("Ban")}</button>
-              <button>{trl("Unban")}</button>
+              <button
+                onClick={() => {
+                  changeReputation(user.id, user.reputation + 1);
+                }}
+              >
+                {trl(["+1", " ", "Reputation"])}
+              </button>
+              <button
+                onClick={() => {
+                  changeReputation(user.id, user.reputation - 1);
+                }}
+              >
+                {trl(["-1", " ", "Reputation"])}
+              </button>
+              <button
+                onClick={() => {
+                  changeReputation(user.id, 0);
+                }}
+              >
+                {trl("Ban")}
+              </button>
+              <button
+                onClick={() => {
+                  changeReputation(user.id, 3);
+                }}
+              >
+                {trl("Unban")}
+              </button>
             </div>
           </div>
         </div>

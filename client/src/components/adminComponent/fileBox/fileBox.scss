@@ -1,7 +1,15 @@
 .fileBox {
   position: relative;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 10px;
   .mainimage {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9;
 
     img,
     video {
@@ -11,14 +19,16 @@
   }
   .float-file-button {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 10px;
+    left: 10px;
     display: flex;
     flex-direction: column;
+    gap: 10px;
 
-    button {
-      width: 50px;
-      height: 50px;
+    .deleteButton,
+    .sourceButton {
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       border: none;
       background-color: #007bff;
@@ -30,33 +40,29 @@
         background-color: #0056b3;
       }
     }
-
     .source {
       display: flex;
-      justify-content: flex-start;
       align-items: center;
-      height: 50px;
       position: relative;
 
-      div {
+      .originText {
         width: 0;
         background-color: black;
         color: white;
-        height: 50px;
+        height: 40px;
         display: flex;
         justify-content: center;
         align-items: center;
-
         overflow: hidden;
         transition: width 0.5s ease-in-out;
-
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border-radius: 20px;
+        padding: 0;
       }
 
-      &:hover div {
+      &:hover .originText {
         width: fit-content;
         padding-right: 20px;
-        border-radius: 25px 25px 25px 25px;
       }
     }
   }

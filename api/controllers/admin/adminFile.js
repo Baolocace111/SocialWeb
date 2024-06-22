@@ -6,6 +6,7 @@ import {
 } from "../../services/FileService.js";
 import { normalBackgroundAdmin } from "../backgroundController.js";
 import fs from "fs";
+import path from "path";
 export const getImageFileController = (req, res) => {
   normalBackgroundAdmin(req, res, (err, userid) => {
     if (err) return res.status(500).json(err);
@@ -24,41 +25,51 @@ export const getVideoFileController = (req, res) => {
     });
   });
 };
+const isImageOrVideo = (filePath) => {
+  const ext = path.extname(filePath).toLowerCase();
+  const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp"];
+  const videoExtensions = [".mp4", ".avi", ".mov", ".mkv"];
+  return imageExtensions.includes(ext) || videoExtensions.includes(ext);
+};
+
 export const findOriginFromFilePathController = (req, res) => {
   normalBackgroundAdmin(req, res, (err, userid) => {
     if (err) return res.status(500).json(err);
-    findOriginFileService(req.body.filepath, (err, data) => {
+    const { filepath } = req.body;
+    if (!isImageOrVideo(filepath))
+      return res.status(500).json("Path không phù hợp");
+    findOriginFileService(filepath, (err, data) => {
       if (err) return res.status(500).json(err);
-
       return res.status(200).json(data);
     });
   });
 };
+
 export const getFileFromFilePathController = (req, res) => {
   normalBackgroundAdmin(req, res, (err, userid) => {
     if (err) return res.status(500).json(err);
     const data = req.query.path;
-    if (!data) return res.status(500).json("Path not found");
+    if (!data) return res.status(500).json("Path không phù hợp");
+    if (!isImageOrVideo(data))
+      return res.status(500).json("Path không phù hợp");
     if (!fs.existsSync(data))
       return res.status(404).json({ error: "File not found" });
     return res.sendFile(data);
   });
 };
+
 export const deleteFileFromFilePathController = (req, res) => {
   normalBackgroundAdmin(req, res, (err, userid) => {
-    if (err) {
-      return res.status(500).json(err);
-    }
+    if (err) return res.status(500).json(err);
     const data = req.body.path;
-    if (!data) return res.status(500).json("Path not found");
-    if (!fs.existsSync(data)) {
+    if (!data) return res.status(500).json("Path không phù hợp");
+    if (!isImageOrVideo(data))
+      return res.status(500).json("Path không phù hợp");
+    if (!fs.existsSync(data))
       return res.status(404).json({ error: "File not found" });
-    }
-    deleteFileByFilePath(data, (error, data) => {
-      if (error) {
-        return res.status(500).json(error);
-      }
-      return res.status(200).json(data);
+    deleteFileByFilePath(data, (error, result) => {
+      if (error) return res.status(500).json(error);
+      return res.status(200).json(result);
     });
   });
 };
