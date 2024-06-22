@@ -23,6 +23,7 @@ const Stories = () => {
    const { currentUser } = useContext(AuthContext);
    const inputRef = useRef(null);
    const navigate = useNavigate();
+   const [currentSlide, setCurrentSlide] = useState(0);
 
    const handleStoryClick = (userId) => {
       navigate('/stories', { state: { selectedUserId: userId } });
@@ -32,40 +33,28 @@ const Stories = () => {
       makeRequest.get("/stories/story").then((res) => res.data)
    );
 
-   // Get user info
    const [users, setUsers] = useState({});
+   const [userLatestStories, setUserLatestStories] = useState({});
    const [fetchedUserIds, setFetchedUserIds] = useState(new Set());
-
-   useEffect(() => {
-      const fetchUser = async (userId) => {
-         try {
-            // console.log(`Fetching user with ID: ${userId}`);
-            const response = await makeRequest.get(`/users/find/${userId}`);
-            const user = response.data;
-            // console.log(`Fetched user data for ID ${userId}:`, user);
-            setUsers((prevUsers) => ({
-               ...prevUsers,
-               [userId]: user,
-            }));
-         } catch (error) {
-            console.error("Error fetching user:", error);
-         }
-      };
-
-      if (data) {
-         // console.log('Fetched stories:', data);
-         const newUsersToFetch = data.filter(story => !fetchedUserIds.has(story.userId));
-         if (newUsersToFetch.length > 0) {
-            const userIdsToFetch = newUsersToFetch.map(story => story.userId);
-            userIdsToFetch.forEach(userId => setFetchedUserIds(prev => new Set(prev).add(userId)));
-            Promise.all(userIdsToFetch.map(fetchUser));
-         }
-      }
-   }, [data, fetchedUserIds]);
-
-   // Show dialog add-story
    const [selectedImage, setSelectedImage] = useState(null);
    const [openAdd, setOpenAdd] = useState(false);
+   const [file, setFile] = useState(null);
+   const queryClient = useQueryClient();
+
+   const mutation = useMutation(
+      async (newStory) => {
+         try {
+            return await makeRequest.post("/stories/add", newStory);
+         } catch (error) {
+            alert(error.response.data);
+         }
+      },
+      {
+         onSuccess: () => {
+            queryClient.invalidateQueries(["stories"]);
+         },
+      }
+   );
 
    const handleDialogOpen = () => {
       setOpenAdd(true);
@@ -82,48 +71,63 @@ const Stories = () => {
       setSelectedImage(URL.createObjectURL(file));
    };
 
-   // Add story using react-query mutations and use upload function
-   const [file, setFile] = useState(null);
-   const queryClient = useQueryClient();
-
-   const mutation = useMutation(
-      async (newStory) => {
-         try {
-            return await makeRequest.post("/stories/add", newStory);
-         } catch (error) {
-            // console.log(error.response.data);
-            alert(error.response.data);
-         }
-      },
-      {
-         onSuccess: () => {
-            // Invalidate and refetch
-            queryClient.invalidateQueries(["stories"]);
-         },
-      }
-   );
-
    const handleAddStoryClick = async (e) => {
       e.preventDefault();
       const formData = new FormData();
       formData.append("file", file);
-      // console.log('Adding story with file:', file);
       mutation.mutate(formData);
       setFile(null);
       setSelectedImage(null);
       setOpenAdd(false);
    };
 
+   useEffect(() => {
+      const fetchUser = async (userId) => {
+         try {
+            const response = await makeRequest.get(`/users/find/${userId}`);
+            const user = response.data;
+            setUsers((prevUsers) => ({
+               ...prevUsers,
+               [userId]: user,
+            }));
+         } catch (error) {
+            console.error("Error fetching user:", error);
+         }
+      };
+
+      if (data) {
+         // Sắp xếp data theo thời gian tạo mới nhất
+         const sortedData = [...data].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+         const newUsersToFetch = sortedData.filter(story => !fetchedUserIds.has(story.userId));
+         if (newUsersToFetch.length > 0) {
+            const userIdsToFetch = newUsersToFetch.map(story => story.userId);
+            userIdsToFetch.forEach(userId => setFetchedUserIds(prev => new Set(prev).add(userId)));
+            Promise.all(userIdsToFetch.map(fetchUser));
+         }
+      }
+   }, [data, fetchedUserIds]);
+
+   useEffect(() => {
+      if (data && Object.keys(users).length > 0) {
+         const latestStories = {};
+         data.forEach((story) => {
+            if (!latestStories[story.userId] || story.id > latestStories[story.userId].id) {
+               latestStories[story.userId] = story;
+            }
+         });
+         setUserLatestStories(latestStories);
+      }
+   }, [data, users]);
+
    const settings = {
-      dots: true, // Show pagination dots
-      infinite: false, // Enable infinite loop
-      speed: 500, // Transition speed in milliseconds
-      slidesToShow: 4, // Number of stories to show on a slide
-      slidesToScroll: 1, // Number of stories to scroll when dragging or clicking the arrows
+      dots: true,
+      infinite: false,
+      speed: 500,
+      slidesToShow: 4,
+      slidesToScroll: 1,
       cssEase: "ease-in-out",
    };
-
-   const [currentSlide, setCurrentSlide] = useState(0);
 
    const slides = [
       <div className="story" key={1}>
@@ -226,32 +230,23 @@ const Stories = () => {
    } else if (isLoading) {
       return <FlipCube />;
    } else {
-      const userLatestStories = {};
-      data.forEach((story) => {
-         const user = users[story.userId];
-         if (user) {
-            if (!userLatestStories[user.id] || story.id > userLatestStories[user.id].id) {
-               userLatestStories[user.id] = story;
-            }
+      Object.keys(userLatestStories).forEach((userId) => {
+         const user = users[userId];
+         const latestStory = userLatestStories[userId];
+         if (!user || !latestStory) {
+            return; // Skip if user or story data is not available
          }
-      });
-
-      Object.keys(userLatestStories).forEach((storyId) => {
-         const user = users[storyId];
-         const latestStory = userLatestStories[storyId];
          slides.push(
-            <div className="story" key={latestStory.userId} onClick={() => handleStoryClick(latestStory.userId)}>
+            <div className="story" key={latestStory.id} onClick={() => handleStoryClick(latestStory.userId)}>
                <div className="profile-pic">
-                  {user && (
-                     <img
-                        src={URL_OF_BACK_END + `users/profilePic/` + latestStory.userId}
-                        onError={(e) => {
-                           e.target.onerror = null;
-                           e.target.src = "/upload/errorImage.png";
-                        }}
-                        alt=""
-                     />
-                  )}
+                  <img
+                     src={URL_OF_BACK_END + `users/profilePic/` + latestStory.userId}
+                     onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "/upload/errorImage.png";
+                     }}
+                     alt=""
+                  />
                </div>
                <div className="story-content">
                   {latestStory.img.endsWith("mp4") ||
@@ -271,14 +266,12 @@ const Stories = () => {
                         alt=""
                      />
                   )}
-                  <span>{latestStory.name}</span>
+                  <span>{user.name}</span>
                </div>
             </div>
          );
       });
    }
-
-   // console.log('Rendering Stories component with slides:', slides);
 
    return (
       <div className="stories">
@@ -302,3 +295,4 @@ function isImageAndVideo(file) {
 function isImage(file) {
    return file && file["type"].split("/")[0] === "image";
 }
+
