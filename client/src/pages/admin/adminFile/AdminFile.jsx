@@ -24,7 +24,7 @@ const AdminFile = () => {
       <h1>{trl("File Management") + " - " + trl(type)}</h1>
       <div className="changeType">
         <button
-          className={type === "image" ? "ison" : "isoff"}
+          className={`typeButton ${type === "image" ? "ison" : "isoff"}`}
           onClick={() => {
             setType("image");
           }}
@@ -32,7 +32,7 @@ const AdminFile = () => {
           {trl("image")}
         </button>
         <button
-          className={type === "video" ? "ison" : "isoff"}
+          className={`typeButton ${type === "video" ? "ison" : "isoff"}`}
           onClick={() => {
             setType("video");
           }}
@@ -40,14 +40,13 @@ const AdminFile = () => {
           {trl("video")}
         </button>
       </div>
-      <div>
+      <div className="content">
         {isLoading ? (
           <NineCube />
         ) : error ? (
-          <div>{trl("Error")}</div>
+          <div className="error">{trl("Error")}</div>
         ) : (
           <div className="file-list">
-            {" "}
             {data.files.map((file) => (
               <FileBox key={file} path={file} type={type} page={page}></FileBox>
             ))}
@@ -56,15 +55,17 @@ const AdminFile = () => {
       </div>
       <div className="pagination">
         <button
+          className="paginationButton"
           onClick={() => setPage((old) => Math.max(old - 1, 1))}
           disabled={page === 1}
         >
           {trl("Previous")}
         </button>
-        <span>
+        <span className="pageIndicator">
           {trl("Page")} {page}
         </span>
         <button
+          className="paginationButton"
           onClick={() =>
             setPage((old) => (!data || !data.files.length ? old : old + 1))
           }

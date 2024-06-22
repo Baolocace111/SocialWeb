@@ -48,7 +48,7 @@ const FileBox = ({ type, path, page }) => {
               e.target.src = "/upload/errorImage.png";
             }}
             alt=""
-          ></img>
+          />
         ) : (
           <video
             controls
@@ -57,12 +57,14 @@ const FileBox = ({ type, path, page }) => {
         )}
       </div>
       <div className="float-file-button">
-        <button onClick={handleDeleteFile}>
+        <button className="deleteButton" onClick={handleDeleteFile}>
           <FontAwesomeIcon icon={faTrash} />
         </button>
         <div className="source">
-          <button onClick={handleGetSource}>{trl("Source")}</button>
-          {origin && <div>{origin}</div>}
+          <button className="sourceButton" onClick={handleGetSource}>
+            {trl("Source")}
+          </button>
+          {origin && <div className="originText">{origin}</div>}
         </div>
       </div>
     </div>

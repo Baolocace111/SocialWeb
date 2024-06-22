@@ -5,8 +5,88 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
   border-radius: 8px;
-  .file-list {
+  background-color: #f9f9f9;
+
+  h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .changeType {
     display: flex;
-    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 20px;
+
+    .typeButton {
+      padding: 10px 20px;
+      margin: 0 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &.ison {
+        background-color: #007bff;
+        color: white;
+      }
+
+      &.isoff {
+        background-color: #e0e0e0;
+        color: #333;
+      }
+
+      &:hover {
+        background-color: #0056b3;
+        color: white;
+      }
+    }
+  }
+
+  .content {
+    .error {
+      color: red;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .file-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+
+    .paginationButton {
+      padding: 10px 20px;
+      margin: 0 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:disabled {
+        background-color: #e0e0e0;
+        cursor: not-allowed;
+      }
+
+      &:not(:disabled):hover {
+        background-color: #007bff;
+        color: white;
+      }
+    }
+
+    .pageIndicator {
+      font-size: 18px;
+      color: #333;
+    }
   }
 }
