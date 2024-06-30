@@ -32,7 +32,7 @@ const PostEdit = ({ post, setShowEditPopup, showEditPopup }) => {
    const handleImageChange = (e) => {
       if (deleteImage) {
          const file = e.target.files[0];
-         setSelectedImage(URL.createObjectURL(file));
+         if (file) setSelectedImage(URL.createObjectURL(file));
          // console.log(selectedImage);
       }
    };
@@ -49,6 +49,7 @@ const PostEdit = ({ post, setShowEditPopup, showEditPopup }) => {
       {
          onSuccess: () => {
             // Invalidate and refetch
+            queryClient.invalidateQueries(["posts"]);
             queryClient.invalidateQueries(["my-pending-posts"]);
          },
       }
@@ -63,6 +64,7 @@ const PostEdit = ({ post, setShowEditPopup, showEditPopup }) => {
       {
          onSuccess: () => {
             // Invalidate and refetch
+            queryClient.invalidateQueries(["posts"]);
             queryClient.invalidateQueries(["my-pending-posts"]);
          },
       }
