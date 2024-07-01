@@ -7,7 +7,58 @@ export const createMessage = (content, userId1, userId2, callback) => {
 
   db.query(q, values, (err, data) => {
     if (err) return callback(err, null);
-    return callback(null, "Message has been create");
+    return callback(null, "Message has been created");
+  });
+};
+export const createImageMessage = (userId1, userId2, image, callback) => {
+  const q =
+    "Insert into messages(sender_id,receiver_id,image,status) VALUES (?,?,?,?)";
+  const values = [userId1, userId2, image, 0];
+
+  db.query(q, values, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, "Message has been created");
+  });
+};
+export const createReplyMessage = (
+  userId1,
+  userId2,
+  content,
+  replyid,
+  type,
+  callback
+) => {
+  const q = `INSERT INTO messages (sender_id, receiver_id, ${
+    type === 1 ? "image" : "message"
+  }, status, replyid) VALUES (?, ?, ?, 0, ?)`;
+  const values = [userId1, userId2, content, replyid];
+
+  db.query(q, values, (err, data) => {
+    if (err) return callback(err, null);
+    return callback(null, "Reply message has been created");
+  });
+};
+
+export const getImageFromMessageId = (userid, id, callback) => {
+  const selectQuery =
+    "SELECT * FROM messages WHERE (receiver_id = ? OR sender_id = ?) AND id = ?";
+  const values = [userid, userid, id];
+
+  db.query(selectQuery, values, (err, data) => {
+    if (err) return callback(err, null);
+    if (data.length === 0) return callback(null, "No message found");
+    return callback(null, data[0].image);
+  });
+};
+export const getMessageFromMessageId = (userid, id, callback) => {
+  const selectQuery =
+    "SELECT * FROM messages WHERE (receiver_id = ? OR sender_id = ?) AND id = ?";
+  const values = [userid, userid, id];
+
+  db.query(selectQuery, values, (err, data) => {
+    if (err) return callback(err, null);
+    if (data.length === 0) return callback(null, "No message found");
+    return callback(null, data[0]);
   });
 };
 export const getMessages = (userId1, userId2, offset, limit, callback) => {
@@ -33,7 +84,6 @@ export const getMessages = (userId1, userId2, offset, limit, callback) => {
 
       db.query(updateQuery, updateValues, (updateErr, updateResult) => {
         if (updateErr) return callback(updateErr, null);
-        //console.log(updateResult);
       });
     }
     return callback(null, data);
@@ -51,7 +101,7 @@ export const deleteMessage = (messageId, callback) => {
 };
 
 export const updateMessage = (messageId, content, callback) => {
-  const q = "UPDATE messages SET content = ? WHERE id = ?";
+  const q = "UPDATE messages SET message = ? WHERE id = ?";
   const values = [content, messageId];
 
   db.query(q, values, (err, data) => {
@@ -59,6 +109,45 @@ export const updateMessage = (messageId, content, callback) => {
     return callback(null, "Message has been updated");
   });
 };
+export const evictMessage = (messageId, userid, callback) => {
+  const q =
+    "UPDATE messages SET message = NULL, image = NULL, isdelete = 1 WHERE id = ? AND sender_id = ?";
+  const values = [messageId, userid];
+
+  db.query(q, values, (err, data) => {
+    if (err) return callback(err, null);
+
+    if (data.affectedRows === 0)
+      return callback("No message found or user is not the sender", null);
+    return callback(null, "Message has been evicted");
+  });
+};
+export const denyMessage = (messageId, userid, callback) => {
+  const q =
+    "UPDATE messages SET message = NULL, image = NULL, isdelete = 2 WHERE id = ? AND receiver_id = ?";
+  const values = [messageId, userid];
+
+  db.query(q, values, (err, data) => {
+    if (err) return callback(err, null);
+
+    if (data.affectedRows === 0)
+      return callback("No message found or user is not the receiver", null);
+    return callback(null, "Message has been evicted");
+  });
+};
+export const deleteAllMessage = (userId1, userId2, callback) => {
+  const q =
+    "DELETE FROM messages WHERE (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?)";
+  const values = [userId1, userId2, userId2, userId1];
+
+  db.query(q, values, (err, data) => {
+    if (err) return callback(err, null);
+    if (data.affectedRows === 0)
+      return callback(null, "No messages found between the users");
+    return callback(null, "All messages between the users have been deleted");
+  });
+};
+
 export const getLatestMessagesWithUsers = (userId, callback) => {
   const query = `
     SELECT 

@@ -92,6 +92,10 @@
       .showMore:hover {
         color: themed("textColorSoft");
       }
+      .selected {
+        border: dashed;
+        border-color: rgb(90, 0, 0);
+      }
     }
 
     .new-message {
@@ -103,6 +107,7 @@
       justify-content: flex-start;
       align-items: center;
       transition: max-height 0.5s ease;
+
       .loadingpopup {
         top: 0px;
         left: 0px;
