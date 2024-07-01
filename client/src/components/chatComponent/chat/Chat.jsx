@@ -33,9 +33,40 @@ const Chat = ({ friend, onRemoveChatBox }) => {
   const [autoScrollToBottom, setAutoScrollToBottom] = useState(true);
   const [hasMoreOldMessages, setHasMoreOldMessages] = useState(true);
   const messageContainerRef = useRef(null);
+  const [selectedMessage, SetSelectedMessage] = useState(null);
+  const messageRefs = useRef({});
+
   const handleCloseChatBox = () => {
     if (wsRef.current) wsRef.current.close();
     if (onRemoveChatBox) onRemoveChatBox();
+  };
+  const scrollToMessage = (messageId) => {
+    const messageElement = messageRefs.current[messageId];
+
+    if (messageElement) {
+      SetSelectedMessage(messageId);
+      messageElement.scrollIntoView({ behavior: "smooth", block: "center" });
+      messageElement.focus();
+    } else {
+      setError(messageId + "-" + trl("Not found"));
+    }
+  };
+  const getMessageById = (id) => {
+    // Tìm kiếm tin nhắn trong danh sách messages
+    if (!id) return null;
+    const message = messages.find((msg) => msg.id === id);
+    if (message) {
+      return message;
+    }
+
+    try {
+      // Nếu không tìm thấy, gọi API để lấy dữ liệu tin nhắn từ server
+      const response = makeRequest.get(`/messages/mess/${id}`);
+      return response.data;
+    } catch (error) {
+      setError(id + " - " + trl("Not found"));
+      return null;
+    }
   };
 
   useEffect(() => {
@@ -47,86 +78,76 @@ const Chat = ({ friend, onRemoveChatBox }) => {
   }, [messages, autoScrollToBottom]);
 
   useEffect(() => {
-    fetchMessages();
+    fetchMessages(true);
+    setupWebSocket();
     // eslint-disable-next-line
   }, []);
+
   useEffect(() => {
-    // Hàm setTimeout để thực hiện hành động sau 5 giây (5000 milliseconds)
+    // Clear error message after 3 seconds
     const timer = setTimeout(() => {
       setError(null);
     }, 3000);
-
-    // Cleanup timer nếu component bị unmount trước khi timer kết thúc
     return () => clearTimeout(timer);
   }, [error]);
-  useEffect(() => {
+  const handleClickToCall = () => {
+    window.open(`/call/${friendId}`, "_blank");
+  };
+  const setupWebSocket = () => {
     if (!wsRef.current) {
       const socket = new WebSocket(WEBSOCKET_BACK_END + `/chat/${friendId}`);
-
       socket.onopen = () => {};
-
       socket.onmessage = async (event) => {
         try {
           const response = await makeRequest.post("/messages", {
             friend_id: friendId,
             offset: 0,
           });
-          await setMessages((prevMessages) => {
+          setMessages((prevMessages) => {
             const updatedMessages = removeDuplicateUnits([
-              ...prevMessages,
               ...response.data,
+              ...prevMessages,
             ]);
             return updatedMessages;
           });
-          setAutoScrollToBottom(true);
+          //setAutoScrollToBottom(true);
         } catch (error) {
           setError(
             trl("Failed to fetch messages:") + trl(error.response?.data)
           );
         }
       };
-
       socket.onclose = () => {};
-
       wsRef.current = socket;
     }
-  }, [friendId]);
-
-  const handleClickToCall = () => {
-    window.open(`/call/${friendId}`, "_blank");
   };
 
-  const fetchMessages = async () => {
+  const fetchMessages = async (initial = false) => {
+    setLoading(true);
     try {
       const response = await makeRequest.post("/messages", {
         friend_id: friendId,
-        offset: offset,
+        offset: initial ? 0 : offset,
       });
       const newMessages = response.data;
       setMessages((prevMessages) => {
-        const updatedMessages = removeDuplicateUnits([
-          ...prevMessages,
-          ...newMessages,
-        ]);
-        const newOffset = offset + 10;
-        setOffset(newOffset);
-
-        if (newMessages.length === 0) {
-          setHasMoreOldMessages(false);
-        }
-        setLoading(false);
-        if (
-          !autoScrollToBottom &&
-          messageContainerRef.current &&
-          hasMoreOldMessages
-        ) {
-          const newScrollPosition = 200;
-          messageContainerRef.current.scrollTop = newScrollPosition;
-        }
+        const updatedMessages = initial
+          ? removeDuplicateUnits(newMessages)
+          : removeDuplicateUnits([...prevMessages, ...newMessages]);
         return updatedMessages;
       });
+      setOffset((prevOffset) => prevOffset + 10);
+      if (newMessages.length === 0) {
+        setHasMoreOldMessages(false);
+      }
+      setLoading(false);
+      if (!initial && messageContainerRef.current && hasMoreOldMessages) {
+        const newScrollPosition = 200;
+        messageContainerRef.current.scrollTop = newScrollPosition;
+      }
     } catch (error) {
       setError(trl("Failed to fetch messages:") + trl(error.response?.data));
+      setLoading(false);
     }
   };
 
@@ -135,38 +156,27 @@ const Chat = ({ friend, onRemoveChatBox }) => {
     fetchMessages();
   };
 
+  const reloadMessages = () => {
+    setOffset(0);
+    setHasMoreOldMessages(true);
+    fetchMessages(true);
+  };
+
   const sendMessage = async () => {
     if (newMessage !== "" && !sending) {
-      await setSending(true);
+      setSending(true);
       try {
         await makeRequest.post("/messages/send", {
           message: newMessage,
           ruserid: friendId,
+          replyid: selectedMessage,
         });
         setNewMessage("");
-        try {
-          const response = await makeRequest.post("/messages", {
-            friend_id: friendId,
-            offset: 0,
-          });
-          await setMessages((prevMessages) => {
-            const updatedMessages = removeDuplicateUnits([
-              ...prevMessages,
-              ...response.data,
-            ]);
-            return updatedMessages;
-          });
-          setSending(false);
-          setAutoScrollToBottom(true);
-        } catch (error) {
-          setSending(false);
-          setError(
-            trl("Failed to fetch messages:") + trl(error.response?.data)
-          );
-        }
+        SetSelectedMessage(null);
+        reloadMessages();
+        setSending(false);
       } catch (error) {
         setSending(false);
-        console.log(error);
         setError(trl("Failed to send message:") + trl(error.response?.data));
       }
     }
@@ -213,7 +223,7 @@ const Chat = ({ friend, onRemoveChatBox }) => {
         </div>
       </div>
       <div className="messages" ref={messageContainerRef}>
-        {!loading && messages.length > 0 && (
+        {!loading && messages.length > 0 && hasMoreOldMessages && (
           <Waypoint onEnter={handleShowMore} />
         )}
         {messages &&
@@ -221,16 +231,32 @@ const Chat = ({ friend, onRemoveChatBox }) => {
             const isLastInSequence =
               index === messages.length - 1 ||
               messages[index + 1].is_yours !== message.is_yours;
-
             const showAvatarForFriend = isLastInSequence && !message.is_yours;
 
             return (
-              <Message
+              <div
+                className={
+                  "message" +
+                  (selectedMessage === message.id ? " selected" : "")
+                }
                 key={message.id}
-                messageShow={message}
-                friendProfilePic={friend.id}
-                showAvatar={showAvatarForFriend}
-              />
+                ref={(el) => (messageRefs.current[message.id] = el)}
+              >
+                <Message
+                  messageShow={message}
+                  friendProfilePic={friend.id}
+                  showAvatar={showAvatarForFriend}
+                  reload={reloadMessages}
+                  setError={setError}
+                  selectMessage={() => {
+                    if (selectedMessage === message.id)
+                      SetSelectedMessage(null);
+                    else SetSelectedMessage(message.id);
+                  }}
+                  scrollTo={scrollToMessage}
+                  replyMessage={getMessageById(message.replyid)}
+                />
+              </div>
             );
           })}
         {loading && <NineCube />}
@@ -238,10 +264,11 @@ const Chat = ({ friend, onRemoveChatBox }) => {
       <div className="new-message">
         {sending && (
           <div className="loadingpopup">
-            <BallInBar></BallInBar>
+            <BallInBar />
           </div>
         )}
         {error && <div className="errortab">{error}</div>}
+
         <input
           type="text"
           value={newMessage}
@@ -249,6 +276,7 @@ const Chat = ({ friend, onRemoveChatBox }) => {
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyPress={handleKeyPress}
         />
+
         <button className="send-button" onClick={sendMessage}>
           <span>
             <FontAwesomeIcon icon={faPaperPlane} />
@@ -263,14 +291,11 @@ export default Chat;
 
 function removeDuplicateUnits(arr) {
   const uniqueUnits = new Map();
-
   for (const unit of arr) {
     uniqueUnits.set(unit.id, unit);
   }
-
   const sortedArr = Array.from(uniqueUnits.values()).sort(
     (a, b) => new Date(a.created_at) - new Date(b.created_at)
   );
-
   return sortedArr;
 }

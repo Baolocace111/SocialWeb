@@ -3,11 +3,23 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 import "moment/locale/ja"; // Import locale for Japanese
 import "moment/locale/vi"; // Import locale for Vietnamese
-import { URL_OF_BACK_END } from "../../../axios";
+import { URL_OF_BACK_END, makeRequest } from "../../../axios";
 import { useLanguage } from "../../../context/languageContext";
-const Message = ({ messageShow, friendProfilePic, showAvatar }) => {
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBan, faReply } from "@fortawesome/free-solid-svg-icons";
+
+const Message = ({
+  messageShow,
+  friendProfilePic,
+  showAvatar,
+  reload,
+  setError,
+  selectMessage,
+  replyMessage,
+  scrollTo,
+}) => {
   const [show, setShow] = useState(false);
-  const { language } = useLanguage();
+  const { trl, language } = useLanguage();
   useEffect(() => {
     if (language === "jp") {
       moment.locale("ja");
@@ -17,6 +29,7 @@ const Message = ({ messageShow, friendProfilePic, showAvatar }) => {
       moment.locale("en");
     }
   }, [language]);
+
   useEffect(() => {
     let timeoutId;
 
@@ -34,11 +47,65 @@ const Message = ({ messageShow, friendProfilePic, showAvatar }) => {
   const handleShow = () => {
     setShow(true);
   };
+  const isDelete = {
+    type: messageShow.isdelete ? true : false,
+    message:
+      messageShow.isdelete === 1
+        ? trl("message is revoked")
+        : messageShow.isdelete === 2
+        ? trl("message is denied")
+        : "",
+  };
+  const handleEnvictOrDeny = () => {
+    if (window.confirm(trl("Are you sure to delete this message"))) {
+      if (messageShow.is_yours) {
+        makeRequest
+          .delete("/messages/evict/" + messageShow.id)
+          .then((res) => {
+            setError(trl("Successful"));
+            reload();
+          })
+          .catch((error) => {
+            setError(
+              trl("Failed to handle messages:") + trl(error.response?.data)
+            );
+          });
+      } else {
+        makeRequest
+          .delete("/messages/deny/" + messageShow.id)
+          .then((res) => {
+            setError(trl("Successful"));
+            reload();
+          })
+          .catch((error) => {
+            setError(
+              trl("Failed to handle messages:") + trl(error.response?.data)
+            );
+          });
+      }
+    }
+  };
   return (
-    <div className="messageContainer" onClick={handleShow}>
+    <div
+      className={
+        "messageContainer" + (messageShow.is_yours ? " messagerevese" : "")
+      }
+      onClick={handleShow}
+    >
       {messageShow.is_yours ? (
-        <div className="messageis_yours">
-          <div className="mess-content">{messageShow.message}</div>
+        <div className={"messageis_yours" + (isDelete.type ? " isdel" : "")}>
+          <div className="mess-content">
+            {messageShow.replyid && (
+              <span
+                onClick={() => {
+                  scrollTo(messageShow.replyid);
+                }}
+              >
+                {replyMessage?.message}
+              </span>
+            )}
+            {isDelete.type ? isDelete.message : messageShow.message}
+          </div>
           {show && (
             <span className="date">
               {moment
@@ -50,7 +117,7 @@ const Message = ({ messageShow, friendProfilePic, showAvatar }) => {
           )}
         </div>
       ) : (
-        <div className="messageis_friends">
+        <div className={"messageis_friends" + (isDelete.type ? " isdel" : "")}>
           <div className={showAvatar ? "avatar" : "avatar placeholder"}>
             {showAvatar ? (
               <img
@@ -64,7 +131,20 @@ const Message = ({ messageShow, friendProfilePic, showAvatar }) => {
             ) : null}
           </div>
           <div className="content-and-date">
-            <div className="mess-content">{messageShow.message}</div>
+            <div className="mess-content">
+              {messageShow.replyid && (
+                <span
+                  onClick={() => {
+                    scrollTo(messageShow.replyid);
+                  }}
+                >
+                  {replyMessage?.message}
+                </span>
+              )}
+              <div>
+                {isDelete.type ? isDelete.message : messageShow.message}
+              </div>
+            </div>
             {show && (
               <span className="date">
                 {moment
@@ -74,6 +154,16 @@ const Message = ({ messageShow, friendProfilePic, showAvatar }) => {
                   .format("dddd, Do YYYY h:mm:ss a")}
               </span>
             )}
+          </div>
+        </div>
+      )}
+      {!isDelete.type && (
+        <div className="actionbutton">
+          <div onClick={selectMessage}>
+            <FontAwesomeIcon icon={faReply}></FontAwesomeIcon>
+          </div>
+          <div onClick={handleEnvictOrDeny}>
+            <FontAwesomeIcon icon={faBan}></FontAwesomeIcon>
           </div>
         </div>
       )}
