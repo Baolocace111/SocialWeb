@@ -18,7 +18,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import BallInBar from "../../loadingComponent/ballInBar/BallInBar";
 import { useLanguage } from "../../../context/languageContext";
-
+import { faImages } from "@fortawesome/free-solid-svg-icons";
 const Chat = ({ friend, onRemoveChatBox }) => {
   const { trl } = useLanguage();
   const [messages, setMessages] = useState([]);
@@ -30,6 +30,7 @@ const Chat = ({ friend, onRemoveChatBox }) => {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState(null);
   const friendId = friend.id;
+  const [file, setFile] = useState(null);
   const [autoScrollToBottom, setAutoScrollToBottom] = useState(true);
   const [hasMoreOldMessages, setHasMoreOldMessages] = useState(true);
   const messageContainerRef = useRef(null);
@@ -163,15 +164,24 @@ const Chat = ({ friend, onRemoveChatBox }) => {
   };
 
   const sendMessage = async () => {
-    if (newMessage !== "" && !sending) {
+    if ((newMessage !== "" || file) && !sending) {
       setSending(true);
       try {
-        await makeRequest.post("/messages/send", {
-          message: newMessage,
-          ruserid: friendId,
-          replyid: selectedMessage,
-        });
+        if (!file) {
+          await makeRequest.post("/messages/send", {
+            message: newMessage,
+            ruserid: friendId,
+            replyid: selectedMessage,
+          });
+        } else {
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append("ruserid", friendId);
+          if (selectedMessage) formData.append("replyid", selectedMessage);
+          await makeRequest.post("/messages/sendimage", formData);
+        }
         setNewMessage("");
+        setFile(null);
         SetSelectedMessage(null);
         reloadMessages();
         setSending(false);
@@ -244,6 +254,7 @@ const Chat = ({ friend, onRemoveChatBox }) => {
               >
                 <Message
                   messageShow={message}
+                  setLoading={setSending}
                   friendProfilePic={friend.id}
                   showAvatar={showAvatarForFriend}
                   reload={reloadMessages}
@@ -268,15 +279,56 @@ const Chat = ({ friend, onRemoveChatBox }) => {
           </div>
         )}
         {error && <div className="errortab">{error}</div>}
+        {file ? (
+          <div className="preview">
+            {isImage(file) ? (
+              <img
+                className="file"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "/upload/errorImage.png";
+                }}
+                alt={""}
+                src={URL.createObjectURL(file)}
+              />
+            ) : (
+              <video className="file" src={URL.createObjectURL(file)} />
+            )}
+          </div>
+        ) : (
+          <input
+            type="text"
+            value={newMessage}
+            placeholder="Aa"
+            onChange={(e) => setNewMessage(e.target.value)}
+            onKeyPress={handleKeyPress}
+          />
+        )}
 
         <input
-          type="text"
-          value={newMessage}
-          placeholder="Aa"
-          onChange={(e) => setNewMessage(e.target.value)}
-          onKeyPress={handleKeyPress}
+          type="file"
+          id={`messagefor${friendId}`}
+          accept="image/*, video/*"
+          style={{ display: "none" }}
+          onChange={(e) => {
+            const selectedFile = e.target.files[0];
+            if (isImageAndVideo(selectedFile)) {
+              setFile(selectedFile);
+            } else {
+              alert(trl("Unacceptable file"));
+            }
+          }}
         />
-
+        {file && (
+          <button className="close-button" onClick={() => setFile(null)}>
+            <FontAwesomeIcon icon={faX} />
+          </button>
+        )}
+        <label htmlFor={`messagefor${friendId}`} hidden={file ? true : false}>
+          <div className="item">
+            <FontAwesomeIcon icon={faImages} color="blue" size="xl" />
+          </div>
+        </label>
         <button className="send-button" onClick={sendMessage}>
           <span>
             <FontAwesomeIcon icon={faPaperPlane} />
@@ -298,4 +350,14 @@ function removeDuplicateUnits(arr) {
     (a, b) => new Date(a.created_at) - new Date(b.created_at)
   );
   return sortedArr;
+}
+function isImageAndVideo(file) {
+  return (
+    file &&
+    (file["type"].split("/")[0] === "image" ||
+      file["type"].split("/")[0] === "video")
+  );
+}
+function isImage(file) {
+  return file && file["type"].split("/")[0] === "image";
 }

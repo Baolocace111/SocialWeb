@@ -15,7 +15,7 @@ import {
   normalBackgroundUser,
   uploadBackgroundUser,
 } from "./backgroundController.js";
-
+import fs from "fs";
 export const sendMessageController = async (req, res) => {
   try {
     const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
@@ -67,9 +67,11 @@ export const sendMessageController = async (req, res) => {
 export const sendImageMessageController = (req, res) => {
   uploadBackgroundUser(req, res, (error, userid, file) => {
     if (error) return res.status(500).json(error);
+    if (!file) return res.status(404).json("File not found");
     const r_userId = req.body.ruserid;
 
     const replyid = req.body.replyid;
+
     if (!replyid) {
       sendImageMessageService(userid, r_userId, file, (err, data) => {
         if (err) return res.status(500).json(err);

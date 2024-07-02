@@ -7,6 +7,7 @@ import { URL_OF_BACK_END, makeRequest } from "../../../axios";
 import { useLanguage } from "../../../context/languageContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBan, faReply } from "@fortawesome/free-solid-svg-icons";
+import ShowImageMessage from "../showImageMessage/ShowImageMessage";
 
 const Message = ({
   messageShow,
@@ -17,6 +18,7 @@ const Message = ({
   selectMessage,
   replyMessage,
   scrollTo,
+  setLoading,
 }) => {
   const [show, setShow] = useState(false);
   const { trl, language } = useLanguage();
@@ -59,28 +61,34 @@ const Message = ({
   const handleEnvictOrDeny = () => {
     if (window.confirm(trl("Are you sure to delete this message"))) {
       if (messageShow.is_yours) {
+        setLoading(true);
         makeRequest
           .delete("/messages/evict/" + messageShow.id)
           .then((res) => {
             setError(trl("Successful"));
             reload();
+            setLoading(false);
           })
           .catch((error) => {
             setError(
               trl("Failed to handle messages:") + trl(error.response?.data)
             );
+            setLoading(false);
           });
       } else {
+        setLoading(true);
         makeRequest
           .delete("/messages/deny/" + messageShow.id)
           .then((res) => {
             setError(trl("Successful"));
             reload();
+            setLoading(false);
           })
           .catch((error) => {
             setError(
               trl("Failed to handle messages:") + trl(error.response?.data)
             );
+            setLoading(false);
           });
       }
     }
@@ -91,6 +99,7 @@ const Message = ({
         "messageContainer" + (messageShow.is_yours ? " messagerevese" : "")
       }
       onClick={handleShow}
+      onDoubleClick={selectMessage}
     >
       {messageShow.is_yours ? (
         <div className={"messageis_yours" + (isDelete.type ? " isdel" : "")}>
@@ -101,10 +110,31 @@ const Message = ({
                   scrollTo(messageShow.replyid);
                 }}
               >
-                {replyMessage?.message}
+                {replyMessage?.image ? (
+                  <ShowImageMessage
+                    id={replyMessage?.id}
+                    image={replyMessage?.image}
+                  />
+                ) : replyMessage?.isdelete ? (
+                  replyMessage?.isdelete === 1 ? (
+                    trl("message is revoked")
+                  ) : replyMessage?.isdelete === 2 ? (
+                    trl("message is denied")
+                  ) : (
+                    ""
+                  )
+                ) : (
+                  replyMessage?.message
+                )}
               </span>
             )}
-            {isDelete.type ? isDelete.message : messageShow.message}
+            {messageShow.image ? (
+              <ShowImageMessage id={messageShow.id} image={messageShow.image} />
+            ) : isDelete.type ? (
+              isDelete.message
+            ) : (
+              messageShow.message
+            )}
           </div>
           {show && (
             <span className="date">
@@ -138,11 +168,35 @@ const Message = ({
                     scrollTo(messageShow.replyid);
                   }}
                 >
-                  {replyMessage?.message}
+                  {replyMessage?.image ? (
+                    <ShowImageMessage
+                      id={replyMessage?.id}
+                      image={replyMessage?.image}
+                    />
+                  ) : replyMessage?.isdelete ? (
+                    replyMessage?.isdelete === 1 ? (
+                      trl("message is revoked")
+                    ) : replyMessage?.isdelete === 2 ? (
+                      trl("message is denied")
+                    ) : (
+                      ""
+                    )
+                  ) : (
+                    replyMessage?.message
+                  )}
                 </span>
               )}
               <div>
-                {isDelete.type ? isDelete.message : messageShow.message}
+                {messageShow.image ? (
+                  <ShowImageMessage
+                    id={messageShow.id}
+                    image={messageShow.image}
+                  />
+                ) : isDelete.type ? (
+                  isDelete.message
+                ) : (
+                  messageShow.message
+                )}
               </div>
             </div>
             {show && (
@@ -159,9 +213,9 @@ const Message = ({
       )}
       {!isDelete.type && (
         <div className="actionbutton">
-          <div onClick={selectMessage}>
+          {/* <div onClick={selectMessage}>
             <FontAwesomeIcon icon={faReply}></FontAwesomeIcon>
-          </div>
+          </div> */}
           <div onClick={handleEnvictOrDeny}>
             <FontAwesomeIcon icon={faBan}></FontAwesomeIcon>
           </div>
