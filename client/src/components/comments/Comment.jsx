@@ -17,7 +17,7 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import { useMutation } from "@tanstack/react-query";
 import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
-import Comments from "./Comments";
+
 import ThreePointLoading from "../loadingComponent/threepointLoading/ThreePointLoading";
 import ReplyComments from "./ReplyComment";
 const Comment = ({ comment, postUserID, replyId }) => {
