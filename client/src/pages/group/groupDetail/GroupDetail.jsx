@@ -1,23 +1,17 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useLanguage } from "../../../context/languageContext";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { makeRequest } from "../../../axios.js";
+import { makeRequest, URL_OF_BACK_END } from "../../../axios.js";
 import { AuthContext } from "../../../context/authContext.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-   faCircle,
-   faEye,
-   faLock,
-   faEarthAmericas,
-   faPen,
-   faUpload,
-   faImage,
-   faUsersLine,
+   faCircle, faEye, faLock, faEarthAmericas, faPen, faUpload,
+   faImage, faUsersLine, faEllipsis, faCirclePlay, faDoorOpen,
+   faAddressCard
 } from "@fortawesome/free-solid-svg-icons";
 import NineCube from "../../../components/loadingComponent/nineCube/NineCube.jsx";
 import GroupShare from "../../../components/groups/GroupShare/GroupShare.jsx";
-import { URL_OF_BACK_END } from "../../../axios.js";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import "./groupDetail.scss";
 import GroupAbout from "../groupAbout/GroupAbout.jsx";
@@ -25,6 +19,7 @@ import GroupPosts from "../../../components/groups/GroupPosts/GroupPosts.jsx";
 
 const GroupDetail = () => {
    const { trl } = useLanguage();
+   const navigate = useNavigate();
    const { currentUser } = useContext(AuthContext);
    const { groupId } = useParams();
    const [selectedImage, setSelectedImage] = useState(null);
@@ -36,6 +31,9 @@ const GroupDetail = () => {
    const togglePopover = () => {
       setShowPopover(!showPopover);
    };
+
+   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
    const {
       data: groupData,
@@ -91,6 +89,23 @@ const GroupDetail = () => {
       } catch (error) {
          console.error(
             "Error canceling to join group:",
+            error.response ? error.response.data : error.message
+         );
+      }
+   };
+
+   const handleLeaveGroup = async () => {
+      try {
+         const config = {
+            data: {
+               groupId: groupId,
+            }
+         };
+         await makeRequest.delete("/joins/join", config);
+         window.location.reload();
+      } catch (error) {
+         console.error(
+            "Error canceling to leave group:",
             error.response ? error.response.data : error.message
          );
       }
@@ -387,6 +402,32 @@ const GroupDetail = () => {
                      <div className="tab-title">
                         <span>{trl("File")}</span>
                      </div>
+                  </div>
+                  <div className="group-action">
+                     <button className="filter-button" onClick={toggleDropdown}>
+                        <FontAwesomeIcon icon={faEllipsis} />
+                        <div className={`dropdown-menu ${isDropdownOpen ? 'show' : ''}`}>
+                           {currentUser.id === groupData.created_by ?
+                              <>
+                                 <div className="option">
+                                    <FontAwesomeIcon icon={faCirclePlay} />
+                                    <span>{trl("Tạm dừng nhóm")}</span>
+                                 </div>
+                              </> :
+                              <>
+                                 <div className="option" onClick={() => navigate(`/groups/${groupId}/my-content/pending`)}>
+                                    <FontAwesomeIcon icon={faAddressCard} />
+                                    <span>{trl("Nội dung của bạn")}</span>
+                                 </div>
+                              </>
+                           }
+                           <hr />
+                           <div className="option" onClick={handleLeaveGroup}>
+                              <FontAwesomeIcon icon={faDoorOpen} />
+                              <span>{trl("Rời nhóm")}</span>
+                           </div>
+                        </div>
+                     </button>
                   </div>
                </div>
             </div>
