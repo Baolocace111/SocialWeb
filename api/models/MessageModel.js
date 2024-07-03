@@ -154,6 +154,8 @@ export const getLatestMessagesWithUsers = (userId, callback) => {
       m.id AS message_id,
       m.sender_id,
       m.receiver_id,
+      m.image,
+      m.isdelete,
       m.message,
       m.created_at AS message_created_at,
       m.status,

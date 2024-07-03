@@ -17,9 +17,11 @@ export const FileOriginFileModel = (path, callback) => {
   SELECT 'coverPic' AS name, id FROM users WHERE coverPic = ?
   UNION ALL
   SELECT 'profilePic' AS name, id FROM users WHERE profilePic = ?
+  UNION ALL
+  SELECT 'message' AS name, id FROM messages WHERE image = ?
 `;
 
-  db.query(query, Array(7).fill(formattedPath), (err, result) => {
+  db.query(query, Array(8).fill(formattedPath), (err, result) => {
     if (err) return callback(err, null);
 
     if (result.length > 0) {

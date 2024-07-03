@@ -43,6 +43,7 @@
   "Password": "Password",
   "Confirm Password": "Confirm password",
   "Sign In": "Sign In",
+  "message": "message",
   "Are you sure to delete this message": "Are you sure you want to retrieve this message?",
   "Sign Up": "Sign Up",
   "User is not found": "User not found",
@@ -317,5 +318,6 @@
   "Search": "Search",
   "Search users...": "Search users...",
   "Ban": "Ban",
-  "Unban": "Unban"
+  "Unban": "Unban",
+  "Bạn có muốn xóa tất cả tin nhắn của người này không ?": "Do you want to delete all messages from this person?"
 }

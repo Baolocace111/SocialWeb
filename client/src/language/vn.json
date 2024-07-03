@@ -203,6 +203,7 @@
   "Successful": "Thành công",
   "message is revoked": "Tin nhắn bị thu hồi",
   "message is denied": "Tin nhắn bị từ chối",
+  "message": "Tin nhắn",
   "Failed to handle messages:": "Không thể xử lý tin nhắn:",
   "Delete": "Xóa",
   "delete": "xóa",
@@ -317,5 +318,6 @@
   "Search": "Tìm kiếm",
   "Search users...": "Tìm người dùng...",
   "Ban": "Cấm",
-  "Unban": "Hủy Cấm"
+  "Unban": "Hủy Cấm",
+  "Bạn có muốn xóa tất cả tin nhắn của người này không ?": "Bạn có muốn xóa tất cả tin nhắn của người này không ?"
 }

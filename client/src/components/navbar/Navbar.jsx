@@ -150,10 +150,9 @@ const Navbar = () => {
 
   ///Show messages in navbar
   const [mess, setMess] = useState(null);
-  let [messLoading, setMessLoading] = useState(true);
+  const [messLoading, setMessLoading] = useState(true);
   const [messError, setMessError] = useState(null);
   const updateMessage = () => {
-    //console.log("call");
     makeRequest
       .get("/messages/lastest")
       .then((res) => {
@@ -465,8 +464,10 @@ const Navbar = () => {
 
           {content === "chat" && mess && (
             <ListMessages
+              reset={updateMessage}
               handleClose={handleClose}
               ListMessages={mess.list}
+              setLoading={setMessLoading}
             ></ListMessages>
           )}
         </Popover>
