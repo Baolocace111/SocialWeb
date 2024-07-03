@@ -254,6 +254,67 @@
                   }
                }
 
+               .group-action {
+                  display: flex;
+                  align-items: center;
+                  margin-left: auto;
+
+                  .filter-button {
+                     position: relative;
+                     display: flex;
+                     align-items: center;
+                     gap: 10px;
+                     margin-left: auto;
+                     padding: 10px 15px;
+                     border: none;
+                     outline: none;
+                     border-radius: 10px;
+                     background-color: #EBEDF0;
+                     cursor: pointer;
+                     font-size: 15px;
+                     font-weight: 600;
+
+                     &:hover {
+                        background-color: #CCD0D5;
+                     }
+
+                     .dropdown-menu {
+                        display: none;
+                        position: absolute;
+                        top: 100%;
+                        right: 0;
+                        box-shadow: -8px 0 10px -5px rgba(0, 0, 0, 0.2);
+                        background-color: #fff;
+                        width: 220px;
+                        border: none;
+                        outline: none;
+                        border-radius: 10px;
+                        padding: 10px;
+
+                        .option {
+                           padding: 10px;
+                           border-radius: 5px;
+                           display: flex;
+                           justify-content: flex-start;
+                           align-items: center;
+                           gap: 10px;
+
+                           &:hover {
+                              background-color: themed("bgSoft");
+                           }
+                        }
+
+                        hr{
+                           border: 1px solid gainsboro;
+                        }
+
+                        &.show {
+                           display: block;
+                        }
+                     }
+                  }
+               }
+
                &.no-border {
                   border-top: none;
                }
