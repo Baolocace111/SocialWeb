@@ -13,7 +13,7 @@ const FileBox = ({ type, path, page }) => {
       makeRequest
         .post("/admin/files/origin", { filepath: path })
         .then((res) => {
-          setOrigin(res.data[0].name + ":" + res.data[0].id);
+          setOrigin(trl(res.data[0].name) + " : " + res.data[0].id);
         })
         .catch((e) => {
           setOrigin(trl(e.response.data));

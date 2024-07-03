@@ -5,16 +5,17 @@ import {
   faMaximize,
   faPenToSquare,
   faMagnifyingGlass,
+  faEraser,
 } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import { useContext } from "react";
 import { ChatContext } from "./ChatContext";
-import { URL_OF_BACK_END } from "../../axios";
+import { URL_OF_BACK_END, makeRequest } from "../../axios";
 import { useLanguage } from "../../context/languageContext";
 import { useEffect } from "react";
 import "moment/locale/ja"; // Import locale for Japanese
 import "moment/locale/vi"; // Import locale for Vietnamese
-const ListMessages = ({ handleClose, ListMessages }) => {
+const ListMessages = ({ handleClose, ListMessages, reset, setLoading }) => {
   const { trl } = useLanguage();
 
   return (
@@ -49,13 +50,15 @@ const ListMessages = ({ handleClose, ListMessages }) => {
             key={mess.message_id}
             mess={mess}
             handleClose={handleClose}
+            reset={reset}
+            setLoading={setLoading}
           ></Messages>
         );
       })}
     </div>
   );
 };
-const Messages = ({ mess, handleClose }) => {
+const Messages = ({ mess, handleClose, reset, setLoading }) => {
   const { trl, language } = useLanguage();
   useEffect(() => {
     if (language === "jp") moment.locale("ja");
@@ -66,7 +69,28 @@ const Messages = ({ mess, handleClose }) => {
   const handleAddChatBox = (user) => {
     setChattingUser(removeDuplicateUnits([...chattingUser, ...[user]]));
   };
-
+  const handleEraser = () => {
+    if (
+      window.confirm(
+        trl("Bạn có muốn xóa tất cả tin nhắn của người này không ?") +
+          " - " +
+          mess.name
+      )
+    ) {
+      setLoading(true);
+      makeRequest
+        .delete(`messages/deleteall/${mess.user_id}`)
+        .then(() => {
+          reset();
+        })
+        .catch((e) => {
+          alert(e.response?.data);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  };
   return (
     <div
       className="userContainer"
@@ -92,11 +116,18 @@ const Messages = ({ mess, handleClose }) => {
         <div className="name">{mess.name}</div>
         <div className={`mess ${mess.status === 0 ? "not-read" : ""}`}>
           {mess.isme !== 0 && `${trl("Bạn")}: `}
-          {mess.message}
+          {mess.isdelete
+            ? ". . ."
+            : mess.image
+            ? trl("image") + "/" + trl("video")
+            : mess.message}
         </div>
         <div className="time">{moment(mess.message_created_at).fromNow()}</div>
       </div>
       {!mess.isme && mess.status === 0 && <div className="new-message"></div>}
+      <div className="btndel" onClick={handleEraser}>
+        <FontAwesomeIcon icon={faEraser}></FontAwesomeIcon>
+      </div>
     </div>
   );
 };

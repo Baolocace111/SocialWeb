@@ -16,6 +16,7 @@
   "Bạn": "貴方",
   "Thông báo": "通知",
   "Nghe": "答え",
+  "message": "メッセージ",
   "Source": "出典",
   "đang gọi bạn": "あなたに電話しています",
   "explore_opportunities": "新しい機会を探索し、視野を広げましょう。",
@@ -317,5 +318,6 @@
   "Search": "検索",
   "Search users...": "ユーザーを検索...",
   "Ban": "禁止",
-  "Unban": "禁止解除"
+  "Unban": "禁止解除",
+  "Bạn có muốn xóa tất cả tin nhắn của người này không ?": "この人からのメッセージをすべて削除しますか?"
 }

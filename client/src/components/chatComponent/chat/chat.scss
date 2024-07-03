@@ -170,6 +170,19 @@
       button:hover {
         background-color: themed("border");
       }
+      .close-button {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        border: none;
+        background-color: rgba(124, 0, 0, 0.664);
+        &:hover {
+          background-color: darken(
+            $color: rgba(124, 0, 0, 0.664),
+            $amount: 30%
+          );
+        }
+      }
     }
     &.notFull {
       .messages {
