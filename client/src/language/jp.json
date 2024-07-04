@@ -320,5 +320,11 @@
   "Ban": "禁止",
   "Unban": "禁止解除",
   "Bạn có muốn xóa tất cả tin nhắn của người này không ?": "この人からのメッセージをすべて削除しますか?",
-  "Tạm dừng nhóm": "グループを一時停止する"
+  "Tạm dừng nhóm": "グループを一時停止する",
+  "Mời một thành viên khác để làm quản trị viên trước khi bạn rời đi nhé.": "退会する前に、別のメンバーを管理者として招待します。",
+  "Chọn quản trị viên mới": "新しい管理者の選択",
+  "Quản trị viên đang chờ": "管理者が待っています",
+  "Hoàn tác": "元に戻す",
+  "Rời nhóm": "グループを離れる",
+  "Hủy": "キャンセル"
 }
