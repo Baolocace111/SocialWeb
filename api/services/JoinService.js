@@ -145,3 +145,29 @@ export const rejectJoinRequest = (adminUserId, joinRequestId, callback) => {
       );
    });
 };
+
+export const changeGroupLeader = (currentLeaderId, newLeaderId, groupId, callback) => {
+   joinModel.checkIfUserIsGroupLeader(currentLeaderId, groupId, (err, isLeader) => {
+      if (err) {
+         return callback(err, null);
+      }
+      if (!isLeader) {
+         return callback(new Error("Only the current group leader can change the leader!"), null);
+      }
+
+      joinModel.checkIfUserIsInGroup(newLeaderId, groupId, (err, isInGroup) => {
+         if (err) {
+            return callback(err, null);
+         }
+         if (!isInGroup) {
+            return callback(new Error("The new leader must be a member of the group!"), null);
+         }
+
+         joinModel.changeGroupLeader(currentLeaderId, newLeaderId, groupId, (err, results) => {
+            if (err) return callback(err);
+            return callback(null, results);
+         });
+      });
+   });
+};
+

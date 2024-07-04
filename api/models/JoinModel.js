@@ -102,3 +102,54 @@ export const rejectJoinRequest = (joinRequestId, callback) => {
       return callback(null, results);
    });
 };
+
+export const checkIfUserIsInGroup = (userId, groupId, callback) => {
+   const query = "SELECT * FROM joins WHERE user_id = ? AND group_id = ?";
+   db.query(query, [userId, groupId], (err, results) => {
+      if (err) return callback(err);
+      if (results.length > 0) return callback(null, true);
+      return callback(null, false);
+   });
+};
+
+export const changeGroupLeader = (currentLeaderId, newLeaderId, groupId, callback) => {
+   db.beginTransaction((err) => {
+      if (err) return callback(err);
+
+      const query1 = "UPDATE joins SET role = 0 WHERE user_id = ? AND group_id = ?";
+      db.query(query1, [currentLeaderId, groupId], (err, results) => {
+         if (err) {
+            return db.rollback(() => {
+               return callback(err);
+            });
+         }
+
+         const query2 = "UPDATE joins SET role = 1 WHERE user_id = ? AND group_id = ?";
+         db.query(query2, [newLeaderId, groupId], (err, results) => {
+            if (err) {
+               return db.rollback(() => {
+                  return callback(err);
+               });
+            }
+
+            const query3 = "UPDATE teams SET created_by = ? WHERE id = ?";
+            db.query(query3, [newLeaderId, groupId], (err, results) => {
+               if (err) {
+                  return db.rollback(() => {
+                     return callback(err);
+                  });
+               }
+
+               db.commit((err) => {
+                  if (err) {
+                     return db.rollback(() => {
+                        return callback(err);
+                     });
+                  }
+                  return callback(null, { message: "Group leader changed successfully!" });
+               });
+            });
+         });
+      });
+   });
+};

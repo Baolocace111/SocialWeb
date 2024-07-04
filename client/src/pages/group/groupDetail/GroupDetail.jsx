@@ -11,6 +11,8 @@ import {
    faAddressCard
 } from "@fortawesome/free-solid-svg-icons";
 import NineCube from "../../../components/loadingComponent/nineCube/NineCube.jsx";
+import PopupWindow from "../../../components/PopupComponent/PopupWindow.jsx";
+import GroupLeave from "./GroupLeave/GroupLeave.jsx";
 import GroupShare from "../../../components/groups/GroupShare/GroupShare.jsx";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import "./groupDetail.scss";
@@ -34,6 +36,11 @@ const GroupDetail = () => {
 
    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
    const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
+
+   const [showLeavePopup, setShowLeavePopup] = useState(false);
+   const handleLeave = () => {
+      setShowLeavePopup(!showLeavePopup);
+   };
 
    const {
       data: groupData,
@@ -422,13 +429,20 @@ const GroupDetail = () => {
                               </>
                            }
                            <hr />
-                           <div className="option" onClick={handleLeaveGroup}>
+                           <div className="option" onClick={currentUser.id === groupData.created_by ? handleLeave : handleLeaveGroup}>
                               <FontAwesomeIcon icon={faDoorOpen} />
                               <span>{trl("Rời nhóm")}</span>
                            </div>
                         </div>
                      </button>
                   </div>
+                  <PopupWindow handleClose={handleLeave} show={showLeavePopup}>
+                     <GroupLeave
+                        groupId={groupId}
+                        setShowLeavePopup={setShowLeavePopup}
+                        showLeavePopup={showLeavePopup}
+                     />
+                  </PopupWindow>
                </div>
             </div>
          </div>

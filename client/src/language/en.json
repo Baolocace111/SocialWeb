@@ -320,5 +320,11 @@
   "Ban": "Ban",
   "Unban": "Unban",
   "Bạn có muốn xóa tất cả tin nhắn của người này không ?": "Do you want to delete all messages from this person?",
-  "Tạm dừng nhóm": "Pause group"
+  "Tạm dừng nhóm": "Pause group",
+  "Mời một thành viên khác để làm quản trị viên trước khi bạn rời đi nhé.": "Please invite a member to become new group leader when you leave.",
+  "Chọn quản trị viên mới": "Assign new group leader",
+  "Quản trị viên đang chờ": "Waiting group leader",
+  "Hoàn tác": "Undo",
+  "Rời nhóm": "Leave group",
+  "Hủy": "Cancel"
 }
