@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLanguage } from "../../../../context/languageContext";
-import "./myPendingPost.scss";
+import "./myDeclinedPost.scss";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import PopupWindow from "../../../PopupComponent/PopupWindow";
 import PostEdit from "../../../postPopup/editComponent/PostEdit";
@@ -10,7 +10,7 @@ import moment from "moment";
 import "moment/locale/ja";
 import "moment/locale/vi";
 
-const MyPendingPost = ({ post }) => {
+const MyDeclinedPost = ({ post }) => {
    const { trl } = useLanguage();
    const queryClient = useQueryClient();
    const [showEditPopup, setShowEditPopup] = useState(false);
@@ -36,7 +36,7 @@ const MyPendingPost = ({ post }) => {
    };
 
    return (
-      <div className="my-pending-post">
+      <div className="my-declined-post">
          <div className="post-info">
             <img
                src={`${URL_OF_BACK_END}users/profilePic/${post.user_id}`}
@@ -53,7 +53,10 @@ const MyPendingPost = ({ post }) => {
          </div>
          <div className="post-content">
             <span className="post-desc">{post.desc}</span>
-            <img src={URL_OF_BACK_END + `posts/videopost/` + post.id} alt="" />
+            <img
+               src={URL_OF_BACK_END + `posts/videopost/` + post.id}
+               alt=""
+            />
          </div>
          <div className="post-action">
             <button className="accept" onClick={handleEdit}>
@@ -78,4 +81,4 @@ const MyPendingPost = ({ post }) => {
    );
 };
 
-export default MyPendingPost;
+export default MyDeclinedPost;

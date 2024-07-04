@@ -22,6 +22,7 @@ import GroupRequest from "./pages/group/groupRequest/GroupRequest";
 import GroupPendingPost from "./pages/group/groupPendingPost/GroupPendingPost";
 import MyPendingPosts from "./pages/group/groupContent/myPendingPost/MyPendingPosts";
 import MyPostedPosts from "./pages/group/groupContent/myPostedPost/MyPostedPosts";
+import MyDeclinedPosts from "./pages/group/groupContent/myDeclinedPost/MyDeclinedPosts";
 import Search from "./pages/search/searchUser/Search";
 import SearchGroup from "./pages/search/searchGroup/SearchGroup";
 import SearchBar from "./components/searchComponents/searchBar/SearchBar";
@@ -467,7 +468,7 @@ function App() {
             },
             {
                path: "/groups/:groupId/my-content/declined",
-               element: <FriendInvite />,
+               element: <MyDeclinedPosts />,
             },
          ],
       },

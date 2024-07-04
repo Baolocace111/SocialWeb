@@ -8,6 +8,7 @@ router.post("/search", groupController.searchGroupsController);
 router.get("/joined", groupController.getGroups);
 router.get("/recommended-groups", groupController.getRecommendedGroupsController);
 router.get("/:groupId", groupController.getGroupById);
+router.delete("/:groupId/delete", groupController.deleteGroupById);
 router.put("/:groupId/update/avatar", groupController.updateGroupAvatarController);
 router.get("/:groupId/avatar", groupController.getGroupAvatarController);
 router.get("/:groupId/pending-posts", groupController.getPendingGroupPosts);

@@ -8,6 +8,27 @@ export const getGroupById = (groupId, userId, callback) => {
    });
 };
 
+export const deleteGroupById = (groupId, userId, callback) => {
+   groupModel.checkIfUserIsGroupLeader(userId, groupId, (err, isLeader) => {
+      if (err) return callback(err);
+      if (!isLeader) return callback("Only group leaders can delete the group");
+
+      groupModel.checkIfOnlyLeaderRemains(groupId, (err, isOnlyLeader) => {
+         if (err) return callback(err);
+         if (!isOnlyLeader) return callback("Group cannot be deleted because there are other members");
+
+         groupModel.deletePostsByGroupId(groupId, (err, results) => {
+            if (err) return callback(err);
+
+            groupModel.deleteGroupById(groupId, (err, data) => {
+               if (err) return callback(err);
+               return callback(null, data);
+            });
+         });
+      });
+   });
+};
+
 export const getGroups = (userId, callback) => {
    groupModel.getGroupsByUserId(userId, (err, data) => {
       if (err) return callback(err, null);

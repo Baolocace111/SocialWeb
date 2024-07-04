@@ -24,6 +24,26 @@ export const getGroupAvatarById = (groupId, callback) => {
    });
 };
 
+export const deletePostsByGroupId = (groupId, callback) => {
+   const query = `
+       DELETE p FROM posts p
+       JOIN group_posts gp ON p.id = gp.post_id
+       WHERE gp.group_id = ?
+   `;
+   db.query(query, [groupId], (err, results) => {
+      if (err) return callback(err);
+      return callback(null, results);
+   });
+};
+
+export const deleteGroupById = (groupId, callback) => {
+   const query = "DELETE FROM teams WHERE id = ?";
+   db.query(query, [groupId], (err, results) => {
+      if (err) return callback(err);
+      return callback(null, results);
+   });
+};
+
 export const getGroupsByUserId = (userId, callback) => {
    const q = "SELECT * FROM teams INNER JOIN joins ON teams.id = joins.group_id WHERE joins.user_id = ? AND joins.status = 1";
 
@@ -85,6 +105,16 @@ export const checkIfUserIsGroupLeader = (userId, groupId, callback) => {
       return callback(null, false); // Người dùng không phải là trưởng nhóm
    });
 };
+
+export const checkIfOnlyLeaderRemains = (groupId, callback) => {
+   const query = "SELECT COUNT(*) AS memberCount FROM joins WHERE group_id = ?";
+   db.query(query, [groupId], (err, results) => {
+      if (err) return callback(err);
+      if (results[0].memberCount === 1) return callback(null, true); // Chỉ còn 1 thành viên trong nhóm
+      return callback(null, false); // Còn nhiều hơn 1 thành viên trong nhóm
+   });
+};
+
 export const updateGroupAvatar = (groupId, avatar, callback) => {
    const q = "UPDATE teams SET `group_avatar`=? WHERE id=? ";
 
