@@ -33,6 +33,31 @@ export const getGroupsByUserId = (userId, callback) => {
    });
 }
 
+export const getGroupsByFollowedUsers = (userId, callback) => {
+   const q = `
+   SELECT DISTINCT teams.*
+   FROM teams
+   INNER JOIN joins AS j1 ON teams.id = j1.group_id
+   INNER JOIN relationships AS r ON j1.user_id = r.followedUserId
+   LEFT JOIN joins AS j2 ON teams.id = j2.group_id AND j2.user_id = ? AND j2.status = 1
+   WHERE r.followerUserId = ? AND j1.status = 1 AND j2.id IS NULL
+   `;
+
+   db.query(q, [userId, userId], (err, data) => {
+      if (err) return callback(err, null);
+      return callback(null, data);
+   });
+};
+
+export const getAllGroups = (callback) => {
+   const q = "SELECT * FROM teams";
+
+   db.query(q, (err, data) => {
+      if (err) return callback(err, null);
+      return callback(null, data);
+   });
+};
+
 export const createGroup = (groupName, privacyLevel, createdBy, callback) => {
    const q = "INSERT INTO teams(group_name, created_by, creation_at, group_avatar, privacy_level) VALUES (?, ?, NOW(), 'https://hoanghamobile.com/tin-tuc/wp-content/uploads/2023/08/hinh-nen-anime-dep.jpg', ?)";
 

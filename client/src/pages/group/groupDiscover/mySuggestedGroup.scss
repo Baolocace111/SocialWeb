@@ -1,6 +1,6 @@
 @import "../../../style.scss";
 
-.my-group {
+.my-suggested-group {
    @include themify($themes) {
       background-color: themed("bgSoft");
       color: themed("textColor");

@@ -15,6 +15,31 @@ export const getGroups = (userId, callback) => {
    });
 };
 
+export const getRecommendedGroups = (userId, callback) => {
+   groupModel.getGroupsByFollowedUsers(userId, (err, followedGroups) => {
+      if (err) return callback(err, null);
+
+      if (followedGroups.length <= 18) {
+         return callback(null, followedGroups);
+      }
+
+      groupModel.getAllGroups((err, allGroups) => {
+         if (err) return callback(err, null);
+         const recommendedGroups = mergeAndDeduplicate(followedGroups, allGroups);
+         callback(null, recommendedGroups.slice(0, 18));
+      });
+   });
+};
+
+function mergeAndDeduplicate(arr1, arr2) {
+   const map = new Map();
+
+   arr1.forEach(item => map.set(item.id, item));
+   arr2.forEach(item => map.set(item.id, item));
+
+   return Array.from(map.values());
+}
+
 export const createGroup = (groupName, privacyLevel, createdBy, callback) => {
    groupModel.createGroup(groupName, privacyLevel, createdBy, (err, data) => {
       if (err) return callback(err, null);
