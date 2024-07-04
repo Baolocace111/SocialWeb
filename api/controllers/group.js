@@ -43,6 +43,28 @@ export const getGroups = async (req, res) => {
    }
 };
 
+export const getRecommendedGroupsController = async (req, res) => {
+   try {
+      const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+
+      AuthService.IsAccountBanned(userId, async (err, data) => {
+         if (err) {
+            return res.status(500).json({ error: "This account is banned" });
+         }
+
+         groupService.getRecommendedGroups(userId, (err, data) => {
+            if (err) {
+               return res.status(500).json({ error: err });
+            }
+            return res.status(200).json(data);
+         });
+      });
+   } catch (error) {
+      return res.status(500).json(error);
+   }
+};
+
+
 export const createGroup = async (req, res) => {
    try {
       const { group_name, privacy_level } = req.body;

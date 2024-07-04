@@ -1,23 +1,23 @@
-import "./myGroup.scss";
+import "./mySuggestedGroup.scss";
 import "../../../components/groups/GroupsJoined/groupsJoined.scss";
 import NineCube from "../../../components/loadingComponent/nineCube/NineCube.jsx";
 import { makeRequest } from "../../../axios.js";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import GroupsJoined from "../../../components/groups/GroupsJoined/GroupsJoined";
+import GroupSuggested from "../../../components/groups/GroupSuggest/GroupSuggested";
 
-const MyGroup = () => {
-    const { isLoading, data } = useQuery(["groups-joined"], () =>
-        makeRequest.get("/groups/joined").then((res) => {
+const MySuggestedGroup = () => {
+    const { isLoading, data } = useQuery(["groups-suggested"], () =>
+        makeRequest.get("/groups/recommended-groups").then((res) => {
             return res.data;
         })
     );
 
     return (
-        <div className="my-group">
+        <div className="my-suggested-group">
             <div className="row">
                 {data?.map((group) => (
-                    <GroupsJoined group={group} key={group.id} />
+                    <GroupSuggested group={group} key={group.id} />
                 ))}
             </div>
             {isLoading && <NineCube />}
@@ -25,6 +25,6 @@ const MyGroup = () => {
         </div>
     );
 }
-export default MyGroup;
+export default MySuggestedGroup;
 
 
