@@ -24,6 +24,26 @@ export const getGroupById = async (req, res) => {
    }
 }
 
+export const deleteGroupById = async (req, res) => {
+   try {
+      const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
+
+      AuthService.IsAccountBanned(userId, async (err, data) => {
+         if (err) {
+            return res.status(500).json({ error: "This account is banned" });
+         }
+
+         const groupId = req.params.groupId;
+         groupService.deleteGroupById(groupId, userId, (err, data) => {
+            if (err) return res.status(500).json({ error: err });
+            return res.status(200).json({ message: 'Group and related data deleted successfully' });
+         });
+      });
+   } catch (error) {
+      return res.status(500).json(error);
+   }
+};
+
 export const getGroups = async (req, res) => {
    try {
       const userId = await AuthService.verifyUserToken(req.cookies.accessToken);

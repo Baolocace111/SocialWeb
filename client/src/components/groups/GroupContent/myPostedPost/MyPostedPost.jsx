@@ -15,6 +15,10 @@ const MyPostedPost = ({ post }) => {
          <div className="post-info">
             <img
                src={`${URL_OF_BACK_END}users/profilePic/${post.user_id}`}
+               onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "/upload/errorImage.png";
+               }}
                alt="User"
             />
             <div className="detail">

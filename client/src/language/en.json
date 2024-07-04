@@ -326,5 +326,11 @@
   "Quản trị viên đang chờ": "Waiting group leader",
   "Hoàn tác": "Undo",
   "Rời nhóm": "Leave group",
-  "Hủy": "Cancel"
+  "Hủy": "Cancel",
+  "Không có bài viết nào để hiển thị": "There's no post to display",
+  "Nội dung của bạn": "Your content",
+  "Quản lý và xem bài viết của bạn trong nhóm này.": "Manage and see your posts in this group.",
+  "Đang chờ": "Pending",
+  "Đã đăng": "Posted",
+  "Bị từ chối": "Rejected"
 }

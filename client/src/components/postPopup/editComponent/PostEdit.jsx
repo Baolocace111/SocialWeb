@@ -51,6 +51,7 @@ const PostEdit = ({ post, setShowEditPopup, showEditPopup }) => {
             // Invalidate and refetch
             queryClient.invalidateQueries(["posts"]);
             queryClient.invalidateQueries(["my-pending-posts"]);
+            queryClient.invalidateQueries(["my-declined-posts"]);
          },
       }
    );
@@ -66,6 +67,7 @@ const PostEdit = ({ post, setShowEditPopup, showEditPopup }) => {
             // Invalidate and refetch
             queryClient.invalidateQueries(["posts"]);
             queryClient.invalidateQueries(["my-pending-posts"]);
+            queryClient.invalidateQueries(["my-declined-posts"]);
          },
       }
    );

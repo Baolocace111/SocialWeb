@@ -7,7 +7,7 @@ import { AuthContext } from "../../../context/authContext.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
    faCircle, faEye, faLock, faEarthAmericas, faPen, faUpload,
-   faImage, faUsersLine, faEllipsis, faCirclePlay, faDoorOpen,
+   faImage, faUsersLine, faEllipsis, faDoorOpen,
    faAddressCard
 } from "@fortawesome/free-solid-svg-icons";
 import NineCube from "../../../components/loadingComponent/nineCube/NineCube.jsx";
@@ -147,6 +147,21 @@ const GroupDetail = () => {
       }
    );
 
+   const deleteGroupMutation = useMutation(
+      () => {
+         return makeRequest.delete(`/groups/${groupId}/delete`);
+      },
+      {
+         onSuccess: () => {
+            queryClient.invalidateQueries("groups");
+            navigate(-1);
+         },
+         onError: (error) => {
+            console.error("Error deleting group:", error.response ? error.response.data : error.message);
+         },
+      }
+   );
+
    const handleSave = async () => {
       if (!selectedImageFile) return;
 
@@ -163,6 +178,10 @@ const GroupDetail = () => {
 
    const handleCancel = () => {
       setSelectedImage(null);
+   };
+
+   const handleDeleteGroup = () => {
+      deleteGroupMutation.mutate();
    };
 
    if (isGroupLoading || isMembersLoading || isLoadingPostCounts)
@@ -414,25 +433,30 @@ const GroupDetail = () => {
                      <button className="filter-button" onClick={toggleDropdown}>
                         <FontAwesomeIcon icon={faEllipsis} />
                         <div className={`dropdown-menu ${isDropdownOpen ? 'show' : ''}`}>
-                           {currentUser.id === groupData.created_by ?
-                              <>
-                                 <div className="option">
-                                    <FontAwesomeIcon icon={faCirclePlay} />
-                                    <span>{trl("Tạm dừng nhóm")}</span>
-                                 </div>
-                              </> :
+                           {currentUser.id !== groupData.created_by ?
                               <>
                                  <div className="option" onClick={() => navigate(`/groups/${groupId}/my-content/pending`)}>
                                     <FontAwesomeIcon icon={faAddressCard} />
                                     <span>{trl("Nội dung của bạn")}</span>
                                  </div>
+                                 <hr />
+                              </> :
+                              <></>
+                           }
+                           {currentUser.id === groupData.created_by && members.length === 1 ?
+                              <>
+                                 <div className="option" onClick={handleDeleteGroup}>
+                                    <FontAwesomeIcon icon={faDoorOpen} />
+                                    <span>{trl("Xóa nhóm")}</span>
+                                 </div>
+                              </> :
+                              <>
+                                 <div className="option" onClick={currentUser.id === groupData.created_by ? handleLeave : handleLeaveGroup}>
+                                    <FontAwesomeIcon icon={faDoorOpen} />
+                                    <span>{trl("Rời nhóm")}</span>
+                                 </div>
                               </>
                            }
-                           <hr />
-                           <div className="option" onClick={currentUser.id === groupData.created_by ? handleLeave : handleLeaveGroup}>
-                              <FontAwesomeIcon icon={faDoorOpen} />
-                              <span>{trl("Rời nhóm")}</span>
-                           </div>
                         </div>
                      </button>
                   </div>
