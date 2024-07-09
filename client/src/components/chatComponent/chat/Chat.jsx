@@ -99,6 +99,9 @@ const Chat = ({ friend, onRemoveChatBox }) => {
       const socket = new WebSocket(WEBSOCKET_BACK_END + `/chat/${friendId}`);
       socket.onopen = () => {};
       socket.onmessage = async (event) => {
+        if (event.data === "clear") {
+          setMessages([]);
+        }
         try {
           const response = await makeRequest.post("/messages", {
             friend_id: friendId,

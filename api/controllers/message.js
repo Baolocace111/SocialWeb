@@ -142,6 +142,8 @@ export const DeleteAllHistoryMessageController = (req, res) => {
     if (error) return res.status(500).json(error);
     DeleteAllMessageService(userid, req.params.id, (error, message) => {
       if (error) return res.status(500).json(error);
+      sendMessageToUser(req.params.id + " chatwith " + userid, "clear");
+      sendMessageToUser(userid + " chatwith " + req.params.id, "clear");
       return res.status(200).json(message);
     });
   });
