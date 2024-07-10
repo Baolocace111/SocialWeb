@@ -10,6 +10,7 @@ import { makeRequest } from "../../../axios";
 import { useNavigate } from "react-router-dom";
 import "moment/locale/ja"; // Import locale for Japanese
 import "moment/locale/vi"; // Import locale for Vietnamese
+import { useLoadingContext } from "../../../context/loadingContext";
 const GroupCreate = ({
   setGroupPrivacy,
   groupPrivacy,
@@ -21,7 +22,8 @@ const GroupCreate = ({
   const [showDropdown, setShowDropdown] = useState(false);
   const [inputValue, setInputValue] = useState(groupName || "");
   const navigate = useNavigate();
-
+  const { setContextLoading, openContextPopup, closePopup } =
+    useLoadingContext();
   const handleGroupNameChange = (event) => {
     setInputValue(event.target.value);
   };
@@ -39,8 +41,38 @@ const GroupCreate = ({
   const displayPrivacy = groupPrivacy || trl("Chọn quyền riêng tư");
 
   // Mutation để tạo nhóm mới
-  const createGroupMutation = useMutation((newGroup) =>
-    makeRequest.post("/groups/create", newGroup)
+  const createGroupMutation = useMutation(
+    (newGroup) => {
+      return makeRequest.post("/groups/create", newGroup);
+    },
+    {
+      onMutate: () => {
+        setContextLoading(true); // Bật trạng thái loading
+      },
+      onSuccess: (data) => {
+        openContextPopup(
+          trl("Nhóm đã được tạo"),
+          "ok",
+          () => {
+            closePopup(); // Đóng popup
+            navigate("/groups/joins"); // Điều hướng đến trang nhóm
+          },
+          () => {}
+        );
+        setContextLoading(false); // Tắt trạng thái loading
+      },
+      onError: (error) => {
+        openContextPopup(
+          trl("Có lỗi xảy ra") + ":" + trl(error.response?.data),
+          "ok",
+          () => {
+            closePopup(); // Đóng popup
+          },
+          () => {}
+        );
+        setContextLoading(false); // Tắt trạng thái loading
+      },
+    }
   );
 
   // Hàm xử lý khi bấm nút "Tạo"
@@ -56,7 +88,6 @@ const GroupCreate = ({
       privacy_level: privacyLevel,
       created_by: currentUser.id,
     });
-    navigate("/");
   };
 
   return (
