@@ -57,7 +57,7 @@ const LeftBar = () => {
             <img src={Groups} alt="" />
             <span>{trl("Groups")}</span>
           </div>
-          <div
+          {/* <div
             className="item"
             onClick={() => {
               window.location.href = "/market";
@@ -65,8 +65,8 @@ const LeftBar = () => {
           >
             <img src={Market} alt="" />
             <span>{trl("Marketplace")}</span>
-          </div>
-          <div
+          </div> */}
+          {/* <div
             className="item"
             onClick={() => {
               window.location.href = "/watch";
@@ -74,8 +74,8 @@ const LeftBar = () => {
           >
             <img src={Watch} alt="" />
             <span>{trl("Watch")}</span>
-          </div>
-          <div
+          </div> */}
+          {/* <div
             className="item"
             onClick={() => {
               window.location.href = "/memories";
@@ -83,12 +83,12 @@ const LeftBar = () => {
           >
             <img src={Memories} alt="" />
             <span>{trl("Memories")}</span>
-          </div>
+          </div> */}
         </div>
         <hr />
         <div className="menu">
-          <span>Your shortcuts</span>
-          <div
+          <span>{trl("Your shortcuts")}</span>
+          {/* <div
             className="item"
             onClick={() => {
               window.location.href = "/event";
@@ -96,7 +96,7 @@ const LeftBar = () => {
           >
             <img src={Events} alt="" />
             <span>{trl("Events")}</span>
-          </div>
+          </div> */}
           <div
             className="item"
             onClick={() => {
@@ -115,7 +115,7 @@ const LeftBar = () => {
             <img src={Gallery} alt="" />
             <span>{trl("Gallery")}</span>
           </div>
-          <div
+          {/* <div
             className="item"
             onClick={() => {
               window.location.href = "/video";
@@ -123,8 +123,8 @@ const LeftBar = () => {
           >
             <img src={Videos} alt="" />
             <span>{trl("Videos")}</span>
-          </div>
-          <div
+          </div> */}
+          {/* <div
             className="item"
             onClick={() => {
               window.location.href = "/messages";
@@ -132,10 +132,10 @@ const LeftBar = () => {
           >
             <img src={Messages} alt="" />
             <span>{trl("Messages")}</span>
-          </div>
+          </div> */}
         </div>
         <hr />
-        <div className="menu">
+        {/* <div className="menu">
           <span>{"Others"}</span>
           <div className="item">
             <img
@@ -165,7 +165,7 @@ const LeftBar = () => {
             <img src={Courses} alt="" />
             <span>{trl("Courses")}</span>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

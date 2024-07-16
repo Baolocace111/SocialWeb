@@ -22,6 +22,7 @@ import {
   addGroupVideoPost,
   getGroupPosts,
   getImagePostByUserLimitModel,
+  markPostAsRead,
 } from "../models/PostModel.js";
 
 export const getPostsService = (userId, userInfo, offset, callback) => {
@@ -187,6 +188,12 @@ export const addGroupVideoPostService = (post, callback) => {
 export const getGroupPostsService = (groupId, offset, callback) => {
   const limit = 3;
   getGroupPosts(groupId, offset, limit, (err, posts) => {
+    if (err) return callback(err);
+    return callback(null, posts);
+  });
+};
+export const markPostAsReadService = (userId, postId, callback) => {
+  markPostAsRead(userId, postId, (err, posts) => {
     if (err) return callback(err);
     return callback(null, posts);
   });

@@ -6,7 +6,7 @@ import "moment/locale/vi"; // Import locale for Vietnamese
 import { URL_OF_BACK_END, makeRequest } from "../../../axios";
 import { useLanguage } from "../../../context/languageContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBan, faReply } from "@fortawesome/free-solid-svg-icons";
+import { faBan, faReply, faX } from "@fortawesome/free-solid-svg-icons";
 import ShowImageMessage from "../showImageMessage/ShowImageMessage";
 
 const Message = ({
@@ -213,11 +213,11 @@ const Message = ({
       )}
       {!isDelete.type && (
         <div className="actionbutton">
-          {/* <div onClick={selectMessage}>
-            <FontAwesomeIcon icon={faReply}></FontAwesomeIcon>
-          </div> */}
           <div onClick={handleEnvictOrDeny}>
-            <FontAwesomeIcon icon={faBan}></FontAwesomeIcon>
+            <FontAwesomeIcon icon={faX}></FontAwesomeIcon>
+          </div>
+          <div onClick={selectMessage}>
+            <FontAwesomeIcon icon={faReply}></FontAwesomeIcon>
           </div>
         </div>
       )}

@@ -357,7 +357,7 @@ const Profile = () => {
                   </div>
                )}
                {value === 3 && (
-                  <div style={{ display: "flex" }}>
+                  <div className="profileContainer">
                      <ImageContainer userId={userId} />
                   </div>
                )}

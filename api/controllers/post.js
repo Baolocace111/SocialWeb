@@ -19,6 +19,7 @@ import {
   addGroupVideoPostService,
   getGroupPostsService,
   getImagePostIDByUserService,
+  markPostAsReadService,
 } from "../services/PostService.js";
 import { AuthService } from "../services/AuthService.js";
 import { upload } from "../Multer.js";
@@ -74,7 +75,16 @@ export const getPosts = (req, res) => {
     });
   });
 };
-
+export const readAPostController = (req, res) => {
+  normalBackgroundUser(req, res, (error, userid) => {
+    if (error) return res.status(500).json(error);
+    //console.log("user " + userid + " is reading post " + req.params.id);
+    markPostAsReadService(userid, req.params.id, (error, data) => {
+      if (error) return res.status(500).json(error);
+      return res.status(200).json(data);
+    });
+  });
+};
 export const addPost = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in!");
