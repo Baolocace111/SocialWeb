@@ -33,7 +33,10 @@ const storage = multer.diskStorage({
 });
 
 // Hàm middleware để xử lý upload file
-export const upload = multer({ storage }).single("file"); // 'file' là tên field của input file trong form
+export const upload = multer({
+  storage,
+  limits: { fileSize: 2 * 1024 * 1024 * 1024 },
+}).single("file"); // 'file' là tên field của input file trong form
 
 // Hàm để lấy file từ đường dẫn
 export const getFile = (filePath) => {

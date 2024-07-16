@@ -91,9 +91,9 @@ const ListNotification = () => {
     <div className="list-notification">
       <div className="title-notification">
         <span>{trl("Thông báo")}</span>
-        <div className="more">
+        {/* <div className="more">
           <MoreHorizIcon />
-        </div>
+        </div> */}
       </div>
       {notifications.map((notification) => (
         <NotificationTab

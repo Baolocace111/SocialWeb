@@ -192,6 +192,9 @@ const Profile = () => {
                     color: value === 0 ? "#f50057" : "inherit",
                   }}
                   label={trl("Bài viết")}
+                  onClick={() => {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
                 />
                 <Tab
                   style={{
@@ -199,6 +202,9 @@ const Profile = () => {
                     color: value === 1 ? "#f50057" : "inherit",
                   }}
                   label={trl("Suggestion")}
+                  onClick={() => {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
                 />
                 <Tab
                   style={{
@@ -206,6 +212,9 @@ const Profile = () => {
                     color: value === 2 ? "#f50057" : "inherit",
                   }}
                   label={trl("Bạn bè")}
+                  onClick={() => {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
                 />
                 <Tab
                   style={{
@@ -213,14 +222,20 @@ const Profile = () => {
                     color: value === 3 ? "#f50057" : "inherit",
                   }}
                   label={trl("Image")}
+                  onClick={() => {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
                 />
-                <Tab
+                {/* <Tab
                   style={{
                     fontWeight: "700",
                     color: value === 4 ? "#f50057" : "inherit",
                   }}
                   label={trl("Others")}
-                />
+                  onClick={() => {
+             window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+                /> */}
               </Tabs>
             </Paper>
           </div>
@@ -255,7 +270,7 @@ const Profile = () => {
             </div>
           )}
           {value === 3 && (
-            <div style={{ display: "flex" }}>
+            <div className="profileContainer">
               <ImageContainer userId={userId} />
             </div>
           )}

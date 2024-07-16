@@ -1,199 +1,200 @@
 @import "../../style.scss";
 
 .profile {
-   @include themify($themes) {
-      background-color: themed("bgSoft");
+  @include themify($themes) {
+    background-color: themed("bgSoft");
 
-      .images {
-         width: 100%;
-         height: 460px;
-         position: relative;
-         display: flex;
-         justify-content: center;
-         background-color: themed("bg");
+    .images {
+      width: 100%;
+      height: 460px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      background-color: themed("bg");
 
-         .cover {
-            width: 70%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 0 0 30px 30px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-         }
-
-         .profilePicContainer {
-            border-radius: 50%;
-            width: 200px;
-            height: 200px;
-            background: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: absolute;
-            top: 86%;
-            left: 18%;
-
-            .profilePic {
-               border-radius: 50%;
-               width: 190px;
-               height: 190px;
-               object-fit: cover;
-            }
-         }
+      .cover {
+        width: 70%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 0 0 30px 30px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
 
-      .uInfo {
-         height: 150px;
-         width: 100%;
-         -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
-         -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
-         box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
-         background-color: themed("bg");
-         color: themed("textColor");
-         display: flex;
-         align-items: center;
-         gap: 200px;
+      .profilePicContainer {
+        border-radius: 50%;
+        width: 200px;
+        height: 200px;
+        background: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 86%;
+        left: 18%;
 
-         @include mobile {
+        .profilePic {
+          border-radius: 50%;
+          width: 190px;
+          height: 190px;
+          object-fit: cover;
+        }
+      }
+    }
+
+    .uInfo {
+      height: 150px;
+      width: 100%;
+      -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+      -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+      box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+      background-color: themed("bg");
+      color: themed("textColor");
+      display: flex;
+      align-items: center;
+      gap: 200px;
+
+      @include mobile {
+        flex-direction: column;
+        height: 30vh;
+        padding: 20px;
+        margin-top: 100px;
+      }
+
+      .center {
+        display: flex;
+        flex-direction: column;
+        margin-left: 33%;
+        gap: 5px;
+
+        .uNameContainer {
+          width: 320px;
+          word-break: break-all;
+
+          .uName {
+            font-size: 30px;
+            font-weight: 700;
+            width: 100%;
+          }
+        }
+
+        .uFriends {
+          font-size: 17px;
+          color: #606770;
+          margin: 0;
+        }
+      }
+
+      .edit {
+        border: none;
+        background-color: #5271ff;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 5px;
+        height: fit-content;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .action {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        .follow {
+          border: none;
+          background-color: #5271ff;
+          color: white;
+          padding: 12px 20px;
+          border-radius: 5px;
+          height: fit-content;
+          font-size: 15px;
+          font-weight: 600;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .chat {
+          border: none;
+          background-color: #ebedf0;
+          color: black;
+          padding: 12px 20px;
+          border-radius: 5px;
+          height: fit-content;
+          font-size: 15px;
+          font-weight: 600;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+      }
+    }
+
+    .menu {
+      width: 100%;
+      height: fit-content;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: themed("bg");
+      color: themed("textColor");
+    }
+
+    .profileContainer {
+      padding: 30px 220px;
+      margin-bottom: auto;
+      .profile-post {
+        width: 100%;
+        display: flex;
+        gap: 20px;
+
+        .column1 {
+          flex-basis: 40%;
+        }
+
+        .column2 {
+          flex-basis: 60%;
+
+          .sharePostsContainer {
+            display: flex;
             flex-direction: column;
-            height: 30vh;
-            padding: 20px;
-            margin-top: 100px;
-         }
-
-         .center {
-            display: flex;
-            flex-direction: column;
-            margin-left: 33%;
-            gap: 5px;
-
-            .uNameContainer {
-               width: 320px;
-               word-break: break-all;
-
-               .uName {
-                  font-size: 30px;
-                  font-weight: 700;
-                  width: 100%;
-               }
-            }
-
-            .uFriends {
-               font-size: 17px;
-               color: #606770;
-               margin: 0;
-            }
-         }
-
-         .edit {
-            border: none;
-            background-color: #5271ff;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 5px;
-            height: fit-content;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-         }
-
-         .action {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-
-            .follow {
-               border: none;
-               background-color: #5271ff;
-               color: white;
-               padding: 12px 20px;
-               border-radius: 5px;
-               height: fit-content;
-               font-size: 15px;
-               font-weight: 600;
-               cursor: pointer;
-               display: flex;
-               align-items: center;
-               gap: 10px;
-            }
-
-            .chat {
-               border: none;
-               background-color: #EBEDF0;
-               color: black;
-               padding: 12px 20px;
-               border-radius: 5px;
-               height: fit-content;
-               font-size: 15px;
-               font-weight: 600;
-               cursor: pointer;
-               display: flex;
-               align-items: center;
-               gap: 10px;
-            }
-         }
+          }
+        }
       }
 
-      .menu {
-         width: 100%;
-         height: fit-content;
-         display: flex;
-         align-items: center;
-         justify-content: center;
-         background-color: themed("bg");
-         color: themed("textColor");
+      @include mobile {
+        padding: 10px;
       }
 
-      .profileContainer {
-         padding: 30px 220px;
-
-         .profile-post {
-            display: flex;
-            gap: 20px;
-
-            .column1 {
-               flex-basis: 40%;
-            }
-
-            .column2 {
-               flex-basis: 60%;
-
-               .sharePostsContainer {
-                  display: flex;
-                  flex-direction: column;
-               }
-            }
-         }
-
-         @include mobile {
-            padding: 10px;
-         }
-
-         @include tablet {
-            padding: 20px;
-         }
+      @include tablet {
+        padding: 20px;
       }
+    }
 
-      .chat-boxes {
-         position: fixed;
-         display: inline-flex;
-         bottom: 0;
-         z-index: 1;
-         right: 50px;
+    .chat-boxes {
+      position: fixed;
+      display: inline-flex;
+      bottom: 0;
+      z-index: 1;
+      right: 50px;
 
-         .chat-box {
-            width: 290px;
-            height: fit-content;
-            position: relative;
-            display: inline-flex;
-            background: white;
-            border-radius: 10px 10px 0 0;
-            overflow: hidden;
-            flex-direction: column;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-         }
+      .chat-box {
+        width: 290px;
+        height: fit-content;
+        position: relative;
+        display: inline-flex;
+        background: white;
+        border-radius: 10px 10px 0 0;
+        overflow: hidden;
+        flex-direction: column;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
       }
-   }
+    }
+  }
 }

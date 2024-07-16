@@ -48,7 +48,7 @@ const Navbar = () => {
   const [callId, setCallId] = useState(0);
   const [callName, setCallName] = useState("");
   const { trl } = useLanguage();
-  const [wsConnection, setWSConnection] = useState(false);
+  const [wsConnection, setWSConnection] = useState(true);
   const searchDefault = useParams().searchText || "";
   const update_request_number = async () => {
     try {
@@ -309,17 +309,13 @@ const Navbar = () => {
             onKeyPress={handleKeyPress}
           />
         </div>
-        <HomeOutlinedIcon
-          onClick={() => {
-            window.scrollTo(0, 0);
-          }}
-        />
+        <HomeOutlinedIcon onClick={() => (window.location.href = "/")} />
         {darkMode ? (
           <WbSunnyOutlinedIcon onClick={toggle} />
         ) : (
           <DarkModeOutlinedIcon onClick={toggle} />
         )}
-        <GridViewOutlinedIcon />
+        {/* <GridViewOutlinedIcon /> */}
 
         <LanguageSwitcher></LanguageSwitcher>
       </div>
@@ -396,7 +392,11 @@ const Navbar = () => {
         >
           {content === "profile" && (
             <List>
-              <ListItemButton>
+              <ListItemButton
+                onClick={() => {
+                  window.location.href = `/profile/${currentUser.id}`;
+                }}
+              >
                 <ListItemIcon
                   style={{ fontSize: "20px", marginRight: "-25px" }}
                 >
@@ -423,7 +423,7 @@ const Navbar = () => {
                   style={{ marginRight: "100px" }}
                 />
               </ListItemButton>
-              <ListItemButton>
+              {/* <ListItemButton>
                 <ListItemIcon
                   style={{ fontSize: "20px", marginRight: "-25px" }}
                 >
@@ -444,7 +444,7 @@ const Navbar = () => {
                   primary={trl("Đóng góp ý kiến")}
                   style={{ marginRight: "100px" }}
                 />
-              </ListItemButton>
+              </ListItemButton> */}
               <ListItemButton onClick={handleLogout}>
                 <ListItemIcon
                   style={{ fontSize: "20px", marginRight: "-25px" }}

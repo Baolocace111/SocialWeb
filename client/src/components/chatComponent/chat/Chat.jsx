@@ -15,10 +15,13 @@ import {
   faMinimize,
   faPaperPlane,
   faMaximize,
+  faMinus,
+  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import BallInBar from "../../loadingComponent/ballInBar/BallInBar";
 import { useLanguage } from "../../../context/languageContext";
 import { faImages } from "@fortawesome/free-solid-svg-icons";
+import { faOpenid } from "@fortawesome/free-brands-svg-icons";
 const Chat = ({ friend, onRemoveChatBox }) => {
   const { trl } = useLanguage();
   const [messages, setMessages] = useState([]);
@@ -225,7 +228,7 @@ const Chat = ({ friend, onRemoveChatBox }) => {
             }}
           >
             <span>
-              <FontAwesomeIcon icon={isFull ? faMinimize : faMaximize} />
+              <FontAwesomeIcon icon={isFull ? faMinus : faPlus} />
             </span>
           </button>
           <button onClick={handleCloseChatBox}>
