@@ -121,16 +121,26 @@ export const getPostsWithPrivateByUserLimit = (
 };
 
 export const getPostsWithPrivateLimit = (userId, offset, limit, callback) => {
-  const q = `SELECT DISTINCT p.*, u.id AS userid, u.name, u.profilePic, f.user_id
+  const q = `
+    SELECT DISTINCT p.*, u.id AS userid, u.name, u.profilePic, f.user_id,
+      CASE WHEN pv.user_id IS NULL THEN 1 ELSE 0 END AS is_unread
     FROM posts p
-    LEFT JOIN friendships f ON (p.userId=f.friend_id AND f.user_id = ? AND f.status = 1)
+    LEFT JOIN friendships f ON (p.userId = f.friend_id AND f.user_id = ? AND f.status = 1)
     LEFT JOIN users u ON (p.userId = u.id)
     LEFT JOIN relationships r ON (p.userId = r.followedUserId)
-    WHERE (p.type <> 3) AND (r.followerUserId = ? OR p.userId = ?) AND (p.status = 0 OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?)))) ORDER BY p.createdAt DESC limit ? offset ?`;
+    LEFT JOIN post_views pv ON (p.id = pv.post_id AND pv.user_id = ?)
+    WHERE (p.type <> 3)
+      AND (r.followerUserId = ? OR p.userId = ?)
+      AND (p.status = 0
+        OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL))
+        OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?))))
+    ORDER BY is_unread DESC, p.createdAt DESC
+    LIMIT ? OFFSET ?`;
 
   db.query(
     q,
     [
+      userId,
       userId,
       userId,
       userId,
@@ -146,18 +156,30 @@ export const getPostsWithPrivateLimit = (userId, offset, limit, callback) => {
     }
   );
 };
+
 export const getPostsWithPrivate = (userId, callback) => {
-  const q = `SELECT DISTINCT p.*, u.id AS userid, u.name, u.profilePic, f.user_id
+  const q = `
+    SELECT DISTINCT p.*, u.id AS userid, u.name, u.profilePic, f.user_id,
+      CASE WHEN pv.user_id IS NULL THEN 1 ELSE 0 END AS is_unread
     FROM posts p
-    LEFT JOIN friendships f ON (p.userId=f.friend_id AND f.user_id = ? AND f.status = 1)
+    LEFT JOIN friendships f ON (p.userId = f.friend_id AND f.user_id = ? AND f.status = 1)
     LEFT JOIN users u ON (p.userId = u.id)
     LEFT JOIN relationships r ON (p.userId = r.followedUserId)
-    WHERE (r.followerUserId = ? OR p.userId = ?) AND (p.status = 0 OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL)) OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?)))) ORDER BY p.createdAt DESC`;
+    LEFT JOIN post_views pv ON (p.id = pv.post_id AND pv.user_id = ?)
+    WHERE (r.followerUserId = ? OR p.userId = ?)
+      AND (p.status = 0
+        OR (p.status = 1 AND (p.userId = ? OR f.user_id IS NOT NULL))
+        OR (p.status = 2 AND (p.userId = ? OR p.id IN (SELECT post_id FROM post_private WHERE user_id = ?))))
+    ORDER BY is_unread DESC, p.createdAt DESC`;
 
-  db.query(q, [userId, userId, userId, userId, userId, userId], (err, data) => {
-    if (err) return callback(err, null);
-    return callback(null, data);
-  });
+  db.query(
+    q,
+    [userId, userId, userId, userId, userId, userId, userId],
+    (err, data) => {
+      if (err) return callback(err, null);
+      return callback(null, data);
+    }
+  );
 };
 
 export const addPost = (post, callback) => {
@@ -550,5 +572,15 @@ export const checkIfUserIsGroupOwner = (userId, groupId, callback) => {
     if (err) return callback(err);
     const isOwner = results.length > 0;
     callback(null, isOwner);
+  });
+};
+export const markPostAsRead = (userId, postId, callback) => {
+  const q = `INSERT INTO post_views (user_id, post_id)
+             VALUES (?, ?)
+             ON DUPLICATE KEY UPDATE viewed_at = CURRENT_TIMESTAMP`;
+
+  db.query(q, [userId, postId], (err, result) => {
+    if (err) return callback(err, null);
+    return callback(null, result);
   });
 };

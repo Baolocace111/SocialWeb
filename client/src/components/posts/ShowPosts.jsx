@@ -4,10 +4,14 @@ import "./posts.scss";
 import ThreePointLoading from "../loadingComponent/threepointLoading/ThreePointLoading";
 import SharedPost from "../post/SharedPost";
 import { useLanguage } from "../../context/languageContext";
+import { Waypoint } from "react-waypoint";
+import { makeRequest } from "../../axios";
 const ShowPosts = ({ isLoading, error, posts, hidden }) => {
   const { trl } = useLanguage();
   const handledPosts = posts ? posts.filter((post) => post !== null) : [];
-
+  const readAPost = (id) => {
+    makeRequest.get("/posts/read/" + id);
+  };
   return (
     <div className="posts">
       {error ? (
@@ -20,9 +24,23 @@ const ShowPosts = ({ isLoading, error, posts, hidden }) => {
           .map((post) => (
             <div key={post.id}>
               {post.type === 2 || post.type === 0 ? (
-                <Post post={post} hidden={hidden} />
+                <div>
+                  <Post post={post} hidden={hidden} />
+                  <Waypoint
+                    onEnter={() => {
+                      readAPost(post.id);
+                    }}
+                  ></Waypoint>
+                </div>
               ) : (
-                <SharedPost post={post} hidden={hidden} />
+                <div>
+                  <SharedPost post={post} hidden={hidden} />
+                  <Waypoint
+                    onEnter={() => {
+                      readAPost(post.id);
+                    }}
+                  ></Waypoint>
+                </div>
               )}
             </div>
           ))
