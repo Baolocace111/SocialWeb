@@ -103,6 +103,51 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            margin-left: -220px;
+
+            .buttonBox {
+               display: flex;
+               align-items: center;
+               justify-content: center;
+               gap: 10px;
+
+               Button {
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  text-align: center;
+                  gap: 10px;
+                  padding: 10px 15px;
+                  background-color: #ECF3FF;
+
+                  span {
+                     font-size: 14px;
+                     font-weight: 700;
+                  }
+               }
+
+               Button.deny-friend {
+                  color: red;
+                  background-color: #FEF2D1;
+               }
+
+               Button.deny-friend:hover {
+                  background-color: #F5C33B;
+               }
+
+               Button.delete-friend {
+                  color: red;
+                  background-color: #FBCCD2;
+               }
+
+               Button.delete-friend:hover {
+                  background-color: lightcoral;
+               }
+
+               Button:hover {
+                  background-color: lightblue;
+               }
+            }
 
             .follow {
                border: none;

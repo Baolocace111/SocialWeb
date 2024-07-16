@@ -333,5 +333,7 @@
   "Quản lý và xem bài viết của bạn trong nhóm này.": "Quản lý và xem bài viết của bạn trong nhóm này.",
   "Đang chờ": "Đang chờ",
   "Đã đăng": "Đã đăng",
-  "Bị từ chối": "Bị từ chối"
+  "Bị từ chối": "Bị từ chối",
+  "Password and Re-Password aren't match": "Xác nhận lại mật khẩu mới chưa đúng",
+  "You aren't changing your password": "Bạn chưa thay đổi mật khẩu của mình"
 }
