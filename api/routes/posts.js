@@ -17,6 +17,7 @@ import {
   addGroupPostController,
   addGroupVideoPostController,
   getImageFromUserController,
+  readAPostController,
 } from "../controllers/post.js";
 
 const router = express.Router();
@@ -26,6 +27,7 @@ router.put("/private/:postId", updatePrivatePostController);
 router.post("/privatelist/:postId", addListPostPrivateController);
 router.post("/private/:postId", getListPrivatePostController);
 router.get("/", getPosts);
+router.get("/read/:id", readAPostController);
 //router.post("/post", addPost);
 router.delete("/:postId", deletePost);
 router.post("/content", searchPostsbyContentController);
