@@ -2,12 +2,13 @@ import * as userModel from "../models/UserModel.js";
 import { checkFriendshipStatus } from "./FriendshipService.js";
 import { AuthModel } from "../models/AuthModel.js";
 import bcrypt from "bcryptjs";
-export const getUser = (req, res) => {
-  const userId = req.params.userId;
+export const getUser = (req, res, userId) => {
+  const friendId = req.params.userId;
 
-  userModel.getUserById(userId, (err, data) => {
+  userModel.getUserById(friendId, async (err, data) => {
     if (err) return res.status(500).json(err);
-    return res.json(data);
+    const status = await checkFriendshipStatus(userId, friendId);
+    return res.json({ ...data, friendshipStatus: status });
   });
 };
 export const getUsernameByEmailService = (email, callback) => {

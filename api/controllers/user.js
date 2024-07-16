@@ -5,7 +5,10 @@ import { upload } from "../Multer.js";
 import { normalBackgroundUser } from "./backgroundController.js";
 import { error } from "console";
 export const getUser = (req, res) => {
-  userService.getUser(req, res);
+   normalBackgroundUser(req, res, (error, userId)=> {
+      if (error) return res.status(500).json(error);
+      userService.getUser(req, res, userId);
+   })
 };
 
 export const getUsers = async (req, res) => {

@@ -333,5 +333,7 @@
   "Quản lý và xem bài viết của bạn trong nhóm này.": "このグループの投稿を管理および表示します。",
   "Đang chờ": "待っている",
   "Đã đăng": "投稿しました",
-  "Bị từ chối": "拒否されました"
+  "Bị từ chối": "拒否されました",
+  "Password and Re-Password aren't match": "パスワードとパスワードが一致しません",
+  "You aren't changing your password": "パスワードを変更していません"
 }

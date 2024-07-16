@@ -333,5 +333,7 @@
   "Quản lý và xem bài viết của bạn trong nhóm này.": "Manage and see your posts in this group.",
   "Đang chờ": "Pending",
   "Đã đăng": "Posted",
-  "Bị từ chối": "Rejected"
+  "Bị từ chối": "Rejected",
+  "Password and Re-Password aren't match": "Password and Re-Password aren't match",
+  "You aren't changing your password": "You aren't changing your password"
 }

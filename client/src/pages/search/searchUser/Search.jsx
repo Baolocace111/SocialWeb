@@ -7,26 +7,26 @@ import "./search.scss";
 import { useLanguage } from "../../../context/languageContext";
 
 const Search = () => {
-  const { searchText } = useParams();
-  const { trl } = useLanguage();
-  const { isLoading, error, data } = useQuery(["users"], () =>
-    makeRequest.get("/users/searchuser/" + searchText).then((res) => {
-      return res.data;
-    })
-  );
-  return (
-    <div className="search-container">
-      <div className="search-text">Mọi người</div>
-      <div className="cards">
-        {error ? (
-          trl("Có lỗi xảy ra")
-        ) : isLoading ? (
-          <NineCube />
-        ) : (
-          data.map((user) => <UserTab user={user} key={user.id}></UserTab>)
-        )}
+   const { searchText } = useParams();
+   const { trl } = useLanguage();
+   const { isLoading, error, data } = useQuery(["users"], () =>
+      makeRequest.get("/users/searchuser/" + searchText).then((res) => {
+         return res.data;
+      })
+   );
+   return (
+      <div className="search-container">
+         <div className="search-text">{trl("Mọi người")}</div>
+         <div className="cards">
+            {error ? (
+               trl("Có lỗi xảy ra")
+            ) : isLoading ? (
+               <NineCube />
+            ) : (
+               data.map((user) => <UserTab user={user} key={user.id} />)
+            )}
+         </div>
       </div>
-    </div>
-  );
+   );
 };
 export default Search;
