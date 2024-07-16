@@ -58,24 +58,34 @@ export const sendFriendRequestTo = async (req, res) => {
         return res.status(500).json({ error: "This account is banned" });
       }
 
-      // Nếu tài khoản không bị cấm, tiếp tục xử lý
-      const value = await sendFriendRequest(userId, friendId);
-      await addRelationshipService(userId, friendId, (error, data) => {});
-      const response = {
-        value: value,
-      };
+      // Kiểm tra số lượng bạn bè của userId
+      getCountFriendService(userId, async (err, count) => {
+        if (err) {
+          return res.status(500).json({ error: "Failed to count friends" });
+        }
 
-      await sendMessageToUser(
-        "index" + friendId,
-        "A Request has sent or cancelled"
-      );
-      return res.status(200).json(response);
+        if (count >= 1000) {
+          return res.status(400).json({ error: "Friend limit reached" });
+        }
+
+        // Nếu tài khoản không bị cấm và chưa đạt giới hạn bạn bè, tiếp tục xử lý
+        const value = await sendFriendRequest(userId, friendId);
+        await addRelationshipService(userId, friendId, (error, data) => {});
+        const response = {
+          value: value,
+        };
+
+        await sendMessageToUser(
+          "index" + friendId,
+          "A Request has sent or cancelled"
+        );
+        return res.status(200).json(response);
+      });
     });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
 };
-
 export const acceptFriendRequestFrom = async (req, res) => {
   try {
     const userId = await AuthService.verifyUserToken(req.cookies.accessToken);
@@ -87,13 +97,35 @@ export const acceptFriendRequestFrom = async (req, res) => {
         return res.status(500).json({ error: "This account is banned" });
       }
 
-      // Nếu tài khoản không bị cấm, tiếp tục xử lý
-      const value = await acceptFriendRequest(userId, friendId);
-      addRelationshipService(userId, friendId, (error, data) => {});
-      const response = {
-        value: value,
-      };
-      return res.status(200).json(response);
+      // Kiểm tra số lượng bạn bè của userId
+      getCountFriendService(userId, async (err, count) => {
+        if (err) {
+          return res.status(500).json({ error: "Failed to count friends" });
+        }
+
+        if (count >= 1000) {
+          return res.status(400).json({ error: "Friend limit reached" });
+        }
+
+        // Kiểm tra số lượng bạn bè của friendId
+        getCountFriendService(friendId, async (err, friendCount) => {
+          if (err) {
+            return res.status(500).json({ error: "Failed to count friends" });
+          }
+
+          if (friendCount >= 1000) {
+            return res.status(400).json({ error: "Friend limit reached" });
+          }
+
+          // Nếu tài khoản không bị cấm và chưa đạt giới hạn bạn bè, tiếp tục xử lý
+          const value = await acceptFriendRequest(userId, friendId);
+          addRelationshipService(userId, friendId, (error, data) => {});
+          const response = {
+            value: value,
+          };
+          return res.status(200).json(response);
+        });
+      });
     });
   } catch (error) {
     return res.status(500).json({ error: error.message });

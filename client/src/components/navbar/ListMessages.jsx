@@ -22,7 +22,7 @@ const ListMessages = ({ handleClose, ListMessages, reset, setLoading }) => {
     <div className="list-messages">
       <div className="title-messages">
         <span>{trl("Đoạn chat")}</span>
-        <div className="more">
+        {/* <div className="more">
           <div className="icon">
             <MoreHorizIcon />
           </div>
@@ -32,7 +32,7 @@ const ListMessages = ({ handleClose, ListMessages, reset, setLoading }) => {
           <div className="icon">
             <FontAwesomeIcon icon={faPenToSquare} />
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="input-container">
         <input
