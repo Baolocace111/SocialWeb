@@ -14,12 +14,17 @@ import {
   faEye,
   faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
+import { useContext } from "react";
+import { AuthContext } from "../../context/authContext";
+import { useQuery } from "@tanstack/react-query";
+import { URL_OF_BACK_END } from "../../axios";
 const Call = () => {
   const { trl } = useLanguage();
   const { RTCPeerConnection, RTCSessionDescription } = window;
   const { id } = useParams();
   const [ws, setWs] = useState(null);
   const wsRef = useRef(null);
+  const { currentUser } = useContext(AuthContext);
   const [callPopup, SetCallingPopup] = useState(false);
   const [localStream, setLocalStream] = useState(null);
   const microphone = useRef(null);
@@ -34,6 +39,15 @@ const Call = () => {
   const [Video, setVideo] = useState(true);
   const [popupQuestion, setPopupQuestion] = useState(true);
   const [question, setQuestion] = useState("Bạn có camera không?");
+  const {
+    isLoading,
+    data: friendinfo,
+    error: userError,
+  } = useQuery(["user"], () =>
+    makeRequest.get("/users/find/" + id).then((res) => {
+      return res.data;
+    })
+  );
   const handleAnswerTheQuestion = (answer) => {
     if (question === "Bạn có camera không?") {
       if (answer) {
@@ -287,9 +301,53 @@ const Call = () => {
       </PopupWindow>
       <div className="video-container">
         <div className="local-video">
+          <div className="userInfo">
+            <img
+              src={URL_OF_BACK_END + `users/profilePic/` + currentUser.id}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "/upload/errorImage.png";
+              }}
+              alt={""}
+            />
+            <div className="details">
+              <span
+                className="name"
+                onClick={() => {
+                  window.location.href = `/profile/${currentUser.id}`;
+                }}
+              >
+                {currentUser.name}
+              </span>
+            </div>
+          </div>
           <video autoPlay ref={localVideoRef} muted></video>
         </div>
         <div className="remote-video">
+          {userError ? (
+            <div className="userInfo"> {trl("Có lỗi xảy ra")}</div>
+          ) : (
+            <div className="userInfo">
+              <img
+                src={URL_OF_BACK_END + `users/profilePic/` + id}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "/upload/errorImage.png";
+                }}
+                alt={""}
+              />
+              <div className="details">
+                <span
+                  className="name"
+                  onClick={() => {
+                    window.location.href = `/profile/${id}`;
+                  }}
+                >
+                  {isLoading ? trl("Loading") + "..." : friendinfo?.name}
+                </span>
+              </div>
+            </div>
+          )}
           <video autoPlay ref={remoteVideoRef}></video>
         </div>
       </div>
