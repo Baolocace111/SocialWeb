@@ -335,5 +335,9 @@
   "Đã đăng": "投稿しました",
   "Bị từ chối": "拒否されました",
   "Password and Re-Password aren't match": "パスワードとパスワードが一致しません",
-  "You aren't changing your password": "パスワードを変更していません"
+  "You aren't changing your password": "パスワードを変更していません",
+  "Cuộc gọi đã kết thúc": "通話は終了しました",
+  "Đối phương đã thoát": "敵は逃げた",
+  "Thoát": "出る",
+  "Close": "閉める"
 }
