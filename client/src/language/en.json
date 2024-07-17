@@ -335,5 +335,9 @@
   "Đã đăng": "Posted",
   "Bị từ chối": "Rejected",
   "Password and Re-Password aren't match": "Password and Re-Password aren't match",
-  "You aren't changing your password": "You aren't changing your password"
+  "You aren't changing your password": "You aren't changing your password",
+  "Cuộc gọi đã kết thúc": "Call ended",
+  "Đối phương đã thoát": "Your friend has quit the call",
+  "Thoát": "Quit",
+  "Close": "Close"
 }

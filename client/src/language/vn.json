@@ -335,5 +335,9 @@
   "Đã đăng": "Đã đăng",
   "Bị từ chối": "Bị từ chối",
   "Password and Re-Password aren't match": "Xác nhận lại mật khẩu mới chưa đúng",
-  "You aren't changing your password": "Bạn chưa thay đổi mật khẩu của mình"
+  "You aren't changing your password": "Bạn chưa thay đổi mật khẩu của mình",
+  "Cuộc gọi đã kết thúc": "Cuộc gọi đã kết thúc",
+  "Đối phương đã thoát": "Đối phương đã thoát",
+  "Thoát": "Thoát",
+  "Close": "Đóng"
 }
